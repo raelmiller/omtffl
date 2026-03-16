@@ -577,12 +577,12 @@ function renderForm(data) {
   const head = document.getElementById('form-head');
   head.innerHTML = `<th>Team</th>${last5GWs.map(g=>`<th style="text-align:center">GW${g}</th>`).join('')}<th style="text-align:right">Pts</th>`;
 
-  const sortedByForm = [...standings].map(s=>{
+ const sortedByForm = [...standings].map(s=>{
     let pts=0;
     const cells = last5GWs.map(gw=>{
       const r = gwResults[gw]?.[s.league_entry];
       if(!r) return {html:`<td>—</td>`};
-      if(r==='W') pts+=2;
+      if(r==='W') pts+=3;
       else if(r==='D') pts+=1;
       const cls=r==='W'?'w':r==='L'?'l':'d';
       return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`};
