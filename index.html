@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMTFFL XVI — League Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #0d0f12;
+    --surface: #141720;
+    --surface2: #1c2030;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #7fffb2;
+    --accent2: #ff6b6b;
+    --accent3: #ffd166;
+    --blue: #60a5fa;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    background: rgba(13,15,18,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); }
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+  .status-dot.live { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  nav button {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    letter-spacing: 0.03em;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* METRIC GRID */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+  }
+  .metric-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .metric-value { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text); }
+  .metric-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .metric-value.accent { color: var(--accent); }
+  .metric-value.sm { font-size: 14px; padding-top: 4px; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  thead tr { border-bottom: 1px solid var(--border2); }
+  th {
+    font-family: var(--font-head);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tr.me td { background: rgba(127,255,178,0.04); }
+  tr.me td:first-child { border-left: 2px solid var(--accent); }
+  tbody tr:hover td { background: var(--surface2); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: var(--font-head);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .w { background: rgba(127,255,178,0.12); color: var(--accent); }
+  .l { background: rgba(255,107,107,0.12); color: var(--accent2); }
+  .d { background: rgba(255,209,102,0.12); color: var(--accent3); }
+  .b-green { background: rgba(127,255,178,0.12); color: var(--accent); }
+  .b-red { background: rgba(255,107,107,0.12); color: var(--accent2); }
+  .b-amber { background: rgba(255,209,102,0.12); color: var(--accent3); }
+  .b-gray { background: var(--surface2); color: var(--muted); }
+
+  /* CHART WRAPPER */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* RANK BADGE */
+  .rank { font-family: var(--font-head); font-weight: 700; }
+  .pos-up { color: var(--accent); }
+  .pos-down { color: var(--accent2); }
+  .pos-flat { color: var(--muted); }
+
+  /* LOADING */
+  #loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 1rem;
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { color: var(--muted); font-size: 12px; }
+
+  #error-msg {
+    display: none;
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.2);
+    border-radius: 10px;
+    padding: 1.5rem;
+    color: var(--accent2);
+    margin: 2rem 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  #app { display: none; }
+
+  /* GW BADGE STRIP */
+  .form-strip { display: flex; gap: 3px; }
+  .form-pip {
+    width: 18px; height: 18px;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    font-family: var(--font-head);
+    font-weight: 700;
+  }
+  .fp-w { background: rgba(127,255,178,0.18); color: var(--accent); }
+  .fp-l { background: rgba(255,107,107,0.18); color: var(--accent2); }
+  .fp-d { background: rgba(255,209,102,0.18); color: var(--accent3); }
+
+  /* GW SELECTOR */
+  .gw-info {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .gw-info strong { color: var(--accent); font-family: var(--font-head); }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 11px;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OMTFFL <span>XVI</span></div>
+  <div class="status-pill">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">Loading...</span>
+  </div>
+</header>
+
+<nav id="nav" style="display:none">
+  <button class="active" onclick="switchTab('standings', this)">League table</button>
+  <button onclick="switchTab('form', this)">Form &amp; trends</button>
+  <button onclick="switchTab('volatility', this)">Volatility</button>
+  <button onclick="switchTab('luck', this)">Luck index</button>
+</nav>
+
+<main>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Fetching live league data...</p>
+  </div>
+
+  <div id="error-msg"></div>
+
+  <div id="app">
+
+    <!-- STANDINGS -->
+    <div class="tab-panel active" id="tab-standings">
+      <div class="metrics" id="standings-metrics"></div>
+      <div class="section-label">Full standings</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Team</th><th>Manager</th>
+            <th style="text-align:center">W</th><th style="text-align:center">D</th><th style="text-align:center">L</th>
+            <th style="text-align:right">PF</th><th style="text-align:right">PA</th>
+            <th style="text-align:right">+/−</th><th style="text-align:right">Pts</th>
+            <th>Last 5</th>
+          </tr></thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="tab-panel" id="tab-form">
+      <div class="section-label">League position over time</div>
+      <div class="chart-wrap" style="height:340px"><canvas id="rankChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">Last 5 gameweeks form</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr id="form-head"></tr></thead>
+          <tbody id="form-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VOLATILITY -->
+    <div class="tab-panel" id="tab-volatility">
+      <div class="metrics" id="vol-metrics"></div>
+      <div class="section-label">Score standard deviation by team — higher = more unpredictable</div>
+      <div class="chart-wrap" style="height:560px"><canvas id="volChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">Full breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Team</th><th style="text-align:right">Avg score</th>
+            <th style="text-align:right">Std dev</th><th style="text-align:right">Min</th>
+            <th style="text-align:right">Max</th><th style="text-align:right">Range</th>
+          </tr></thead>
+          <tbody id="vol-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LUCK -->
+    <div class="tab-panel" id="tab-luck">
+      <div class="metrics" id="luck-metrics"></div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.7">
+        Luck index = actual wins minus expected wins. Expected wins = how often your weekly score would have beaten any random opponent that week. Positive = luckier than deserved. Negative = unlucky.
+      </p>
+      <div class="section-label">Luck index by team</div>
+      <div class="chart-wrap" style="height:520px"><canvas id="luckChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">Full breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Team</th>
+            <th style="text-align:right">Actual W</th>
+            <th style="text-align:right">Expected W</th>
+            <th style="text-align:right">Luck index</th>
+            <th>Verdict</th>
+          </tr></thead>
+          <tbody id="luck-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /app -->
+</main>
+
+<footer id="footer" style="display:none">
+  OMTFFL XVI · Data via FPL Draft API · Updates on page load
+</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+// Replace this with your Vercel proxy URL after deploying
+const PROXY_URL = 'https://omtffl-proxy.vercel.app/api/league';
+const LEAGUE_ID = 39004;
+// ────────────────────────────────────────────────────────────────────────────
+
+let leagueData = null;
+let charts = {};
+
+async function fetchData() {
+  try {
+    const url = `${PROXY_URL}?id=${LEAGUE_ID}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch(e) {
+    throw new Error(`Could not reach proxy: ${e.message}. Make sure PROXY_URL is set correctly in the HTML.`);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loading').style.display = 'none';
+  const el = document.getElementById('error-msg');
+  el.style.display = 'block';
+  el.innerHTML = `<strong>Could not load data</strong><br><br>${msg}<br><br>
+    <span style="color:var(--muted)">If you haven't set up the proxy yet, open this file and update PROXY_URL at the top of the script.</span>`;
+}
+
+function setStatus(live) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (live) {
+    dot.classList.add('live');
+    txt.textContent = 'Live data';
+  } else {
+    txt.textContent = 'Offline';
+  }
+}
+
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function mean(arr) { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+function stdDev(arr) {
+  const m = mean(arr);
+  return Math.sqrt(arr.reduce((s,v)=>s+(v-m)**2,0)/arr.length);
+}
+function fmt1(n) { return parseFloat(n.toFixed(1)); }
+function fmtSign(n) { return (n>0?'+':'')+fmt1(n); }
+
+function buildEntryMap(entries) {
+  const map = {};
+  entries.forEach(e => {
+    map[e.id] = {
+      entryId: e.entry_id,
+      name: e.entry_name,
+      player: `${e.player_first_name} ${e.player_last_name}`,
+      short: e.short_name
+    };
+  });
+  return map;
+}
+
+function getPlayedMatches(matches) {
+  return matches.filter(m => m.finished || m.started);
+}
+
+function getMaxPlayedGW(matches) {
+  const played = getPlayedMatches(matches);
+  return played.length ? Math.max(...played.map(m=>m.event)) : 0;
+}
+
+function buildGWResults(matches, maxGW) {
+  const res = {};
+  for(let gw=1;gw<=maxGW;gw++) res[gw]={};
+  matches.filter(m=>m.event<=maxGW&&(m.finished||m.started)).forEach(m=>{
+    const e1=m.league_entry_1, e2=m.league_entry_2;
+    const p1=m.league_entry_1_points, p2=m.league_entry_2_points;
+    if(p1>p2){res[m.event][e1]='W';res[m.event][e2]='L';}
+    else if(p2>p1){res[m.event][e2]='W';res[m.event][e1]='L';}
+    else{res[m.event][e1]='D';res[m.event][e2]='D';}
+  });
+  return res;
+}
+
+function buildGWPts(matches, maxGW) {
+  const pts = {};
+  for(let gw=1;gw<=maxGW;gw++) pts[gw]={};
+  matches.filter(m=>m.event<=maxGW&&(m.finished||m.started)).forEach(m=>{
+    pts[m.event][m.league_entry_1]=m.league_entry_1_points;
+    pts[m.event][m.league_entry_2]=m.league_entry_2_points;
+  });
+  return pts;
+}
+
+function getRanks(entryIds, matches, upToGW) {
+  const cp={}, cf={};
+  entryIds.forEach(id=>{cp[id]=0;cf[id]=0;});
+  matches.filter(m=>m.event<=upToGW&&(m.finished||m.started)).forEach(m=>{
+    const e1=m.league_entry_1,e2=m.league_entry_2;
+    const p1=m.league_entry_1_points,p2=m.league_entry_2_points;
+    const pts1=p1>p2?2:p1<p2?0:1, pts2=2-pts1;
+    cp[e1]+=pts1;cp[e2]+=pts2;cf[e1]+=p1;cf[e2]+=p2;
+  });
+  const sorted=entryIds.map(id=>({id,pts:cp[id],pf:cf[id]})).sort((a,b)=>b.pts-a.pts||b.pf-a.pf);
+  const ranks={};sorted.forEach((s,i)=>ranks[s.id]=i+1);
+  return ranks;
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderStandings(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const maxGW = getMaxPlayedGW(matches);
+  const gwResults = buildGWResults(matches, maxGW);
+  const entryIds = league_entries.map(e=>e.id);
+
+  // Metrics
+  const totalPF = standings.reduce((s,r)=>s+r.points_for,0);
+  const gamesPlayed = standings[0]?.matches_played||0;
+  const avgPts = standings.reduce((s,r)=>s+r.points_for,0)/standings.length/maxGW;
+  document.getElementById('standings-metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Gameweek</div><div class="metric-value accent">${maxGW}</div><div class="metric-sub">of 38 played</div></div>
+    <div class="metric"><div class="metric-label">League leader</div><div class="metric-value sm">${entryMap[standings[0]?.league_entry]?.name||'—'}</div><div class="metric-sub">${standings[0]?.total||0} pts</div></div>
+    <div class="metric"><div class="metric-label">Avg score / week</div><div class="metric-value">${fmt1(avgPts)}</div><div class="metric-sub">all teams</div></div>
+    <div class="metric"><div class="metric-label">Total goals scored</div><div class="metric-value">${totalPF.toLocaleString()}</div><div class="metric-sub">pts across league</div></div>
+  `;
+
+  // Last 5 form per team
+  const last5GWs = Array.from({length:5},(_,i)=>maxGW-4+i).filter(g=>g>=1);
+  const formMap = {};
+  entryIds.forEach(id=>{
+    formMap[id] = last5GWs.map(gw=>gwResults[gw]?.[id]||null);
+  });
+
+  // Body
+  const tbody = document.getElementById('standings-body');
+  tbody.innerHTML = '';
+  standings.forEach((s,i)=>{
+    const e = entryMap[s.league_entry];
+    if(!e) return;
+    const diff = s.points_for - s.points_against;
+    const form = formMap[s.league_entry];
+    const formHtml = form.map(r=>{
+      if(!r) return `<div class="form-pip" style="background:var(--surface2)"></div>`;
+      const cls = r==='W'?'fp-w':r==='L'?'fp-l':'fp-d';
+      return `<div class="form-pip ${cls}">${r}</div>`;
+    }).join('');
+    const tr = document.createElement('tr');
+    if(e.entryId === 196569) tr.classList.add('me');
+    tr.innerHTML = `
+      <td class="rank">${i+1}</td>
+      <td style="font-weight:500">${e.name}</td>
+      <td style="color:var(--muted)">${e.player}</td>
+      <td style="text-align:center">${s.matches_won}</td>
+      <td style="text-align:center">${s.matches_drawn}</td>
+      <td style="text-align:center">${s.matches_lost}</td>
+      <td style="text-align:right">${s.points_for}</td>
+      <td style="text-align:right">${s.points_against}</td>
+      <td style="text-align:right;color:${diff>=0?'var(--accent)':'var(--accent2)'}">${diff>0?'+':''}${diff}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${s.total}</td>
+      <td><div class="form-strip">${formHtml}</div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderForm(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const entryIds = league_entries.map(e=>e.id);
+  const maxGW = getMaxPlayedGW(matches);
+  const gwResults = buildGWResults(matches, maxGW);
+
+  // Build rank history
+  const ranksByGW = {};
+  for(let gw=0;gw<=maxGW;gw++) ranksByGW[gw]=getRanks(entryIds,matches,gw);
+
+  const rankHistory = {};
+  entryIds.forEach(id=>{rankHistory[id]=[];});
+  for(let gw=1;gw<=maxGW;gw++) entryIds.forEach(id=>rankHistory[id].push(ranksByGW[gw][id]));
+
+  const labels = Array.from({length:maxGW},(_,i)=>`GW${i+1}`);
+  const palette = ['#7fffb2','#ff6b6b','#ffd166','#60a5fa','#c084fc','#fb923c','#34d399','#f472b6','#a78bfa','#38bdf8','#facc15','#4ade80','#f87171','#818cf8','#e879f9','#fb7185'];
+
+  if(charts.rank) charts.rank.destroy();
+  charts.rank = new Chart(document.getElementById('rankChart'), {
+    type:'line',
+    data:{
+      labels,
+      datasets: standings.map((s,i)=>{
+        const id = s.league_entry;
+        return {
+          label: entryMap[id]?.name||id,
+          data: rankHistory[id],
+          borderColor: palette[i%palette.length],
+          borderWidth: entryMap[id]?.entryId===196569?2.5:1,
+          pointRadius: 0,
+          tension: 0.3,
+          borderDash: entryMap[id]?.entryId===196569?[]:[],
+          opacity: 0.8
+        };
+      })
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:d=>`${d.dataset.label}: #${d.raw}`}}},
+      scales:{
+        y:{reverse:true,min:1,max:entryIds.length,ticks:{stepSize:1,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'}},
+        x:{ticks:{autoSkip:true,maxTicksLimit:10,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+
+  // Last 5 form table
+  const last5GWs = Array.from({length:5},(_,i)=>maxGW-4+i).filter(g=>g>=1);
+  const head = document.getElementById('form-head');
+  head.innerHTML = `<th>Team</th>${last5GWs.map(g=>`<th style="text-align:center">GW${g}</th>`).join('')}<th style="text-align:right">Pts</th>`;
+
+  const sortedByForm = [...standings].map(s=>{
+    let pts=0;
+    const cells = last5GWs.map(gw=>{
+      const r = gwResults[gw]?.[s.league_entry];
+      if(!r) return {html:`<td>—</td>`,pts:0};
+      if(r==='W') pts+=2;
+      else if(r==='D') pts+=1;
+      const cls=r==='W'?'w':r==='L'?'l':'d';
+      return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`,pts:0};
+    });
+    return {s, pts, cells};
+  }).sort((a,b)=>b.pts-a.pts);
+
+  const fbody = document.getElementById('form-body');
+  fbody.innerHTML='';
+  sortedByForm.forEach(({s,pts,cells})=>{
+    const e=entryMap[s.league_entry];
+    if(!e)return;
+    const tr=document.createElement('tr');
+    if(e.entryId===196569) tr.classList.add('me');
+    tr.innerHTML=`<td style="font-weight:500">${e.name}</td>${cells.map(c=>c.html).join('')}<td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${pts}</td>`;
+    fbody.appendChild(tr);
+  });
+}
+
+function renderVolatility(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const maxGW = getMaxPlayedGW(matches);
+
+  const teamScores = {};
+  league_entries.forEach(e=>{teamScores[e.id]=[];});
+  matches.filter(m=>(m.finished||m.started)&&m.event<=maxGW).forEach(m=>{
+    teamScores[m.league_entry_1].push(m.league_entry_1_points);
+    teamScores[m.league_entry_2].push(m.league_entry_2_points);
+  });
+
+  const stats = standings.map(s=>{
+    const scores = teamScores[s.league_entry]||[];
+    if(!scores.length) return null;
+    return {
+      id:s.league_entry,
+      name:entryMap[s.league_entry]?.name||'—',
+      entryId:entryMap[s.league_entry]?.entryId,
+      avg:mean(scores),
+      sd:stdDev(scores),
+      min:Math.min(...scores),
+      max:Math.max(...scores),
+      range:Math.max(...scores)-Math.min(...scores)
+    };
+  }).filter(Boolean).sort((a,b)=>b.sd-a.sd);
+
+  const mostVol=stats[0], leastVol=stats[stats.length-1];
+  document.getElementById('vol-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Most volatile</div><div class="metric-value sm">${mostVol.name}</div><div class="metric-sub">SD: ${fmt1(mostVol.sd)} pts</div></div>
+    <div class="metric"><div class="metric-label">Most consistent</div><div class="metric-value sm">${leastVol.name}</div><div class="metric-sub">SD: ${fmt1(leastVol.sd)} pts</div></div>
+    <div class="metric"><div class="metric-label">Highest single score</div><div class="metric-value accent">${Math.max(...stats.map(s=>s.max))}</div><div class="metric-sub">${stats.find(s=>s.max===Math.max(...stats.map(x=>x.max)))?.name}</div></div>
+    <div class="metric"><div class="metric-label">Avg weekly score</div><div class="metric-value">${fmt1(mean(stats.map(s=>s.avg)))}</div><div class="metric-sub">league average</div></div>
+  `;
+
+  const barColors = stats.map(t=>t.id===mostVol.id?'#ff6b6b':t.id===leastVol.id?'#7fffb2':t.entryId===196569?'rgba(255,107,107,0.5)':'rgba(255,255,255,0.15)');
+  if(charts.vol) charts.vol.destroy();
+  charts.vol = new Chart(document.getElementById('volChart'),{
+    type:'bar',
+    data:{labels:stats.map(t=>t.name),datasets:[{data:stats.map(t=>fmt1(t.sd)),backgroundColor:barColors,borderWidth:0}]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:d=>`SD: ${d.raw} pts`}}},
+      scales:{
+        x:{ticks:{color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Standard deviation (pts)',color:'#6b7280',font:{size:11,family:'DM Mono'}}},
+        y:{ticks:{color:'#9ca3af',font:{size:10,family:'DM Mono'}},grid:{display:false}}
+      },
+      barPercentage:0.72
+    }
+  });
+
+  const tbody=document.getElementById('vol-body');
+  tbody.innerHTML='';
+  stats.forEach((t,i)=>{
+    const tr=document.createElement('tr');
+    if(t.entryId===196569) tr.classList.add('me');
+    tr.innerHTML=`<td class="rank">${i+1}</td><td style="font-weight:500">${t.name}</td>
+      <td style="text-align:right">${fmt1(t.avg)}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:${i===0?'var(--accent2)':i===stats.length-1?'var(--accent)':'var(--text)'}">${fmt1(t.sd)}</td>
+      <td style="text-align:right">${t.min}</td><td style="text-align:right">${t.max}</td>
+      <td style="text-align:right">${t.range}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderLuck(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const entryIds = league_entries.map(e=>e.id);
+  const maxGW = getMaxPlayedGW(matches);
+  const gwPts = buildGWPts(matches, maxGW);
+
+  const luck = {};
+  entryIds.forEach(id=>{luck[id]={actual:0,expected:0};});
+
+  for(let gw=1;gw<=maxGW;gw++){
+    const scores = gwPts[gw];
+    const ids = Object.keys(scores).map(Number);
+    if(ids.length<2) continue;
+    const gwMs = matches.filter(m=>m.event===gw&&(m.finished||m.started));
+    gwMs.forEach(m=>{
+      const e1=m.league_entry_1,e2=m.league_entry_2;
+      const p1=m.league_entry_1_points,p2=m.league_entry_2_points;
+      if(p1>p2) luck[e1].actual++;
+      else if(p2>p1) luck[e2].actual++;
+    });
+    ids.forEach(id=>{
+      const my=scores[id];
+      const others=ids.filter(o=>o!==id);
+      let exp=0;
+      others.forEach(o=>{ if(my>scores[o]) exp+=1; else if(my===scores[o]) exp+=0.5; });
+      luck[id].expected += exp/others.length;
+    });
+  }
+
+  const luckArr = standings.map(s=>{
+    const id=s.league_entry;
+    const diff=fmt1(luck[id].actual-luck[id].expected);
+    return {id,name:entryMap[id]?.name||'—',entryId:entryMap[id]?.entryId,actual:luck[id].actual,exp:fmt1(luck[id].expected),diff};
+  }).sort((a,b)=>b.diff-a.diff);
+
+  const best=luckArr[0],worst=luckArr[luckArr.length-1];
+  const raelRank=luckArr.findIndex(t=>t.entryId===196569)+1;
+  document.getElementById('luck-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Luckiest team</div><div class="metric-value sm">${best.name}</div><div class="metric-sub">+${fmt1(best.diff)} index</div></div>
+    <div class="metric"><div class="metric-label">Unluckiest team</div><div class="metric-value sm">${worst.name}</div><div class="metric-sub">${fmt1(worst.diff)} index</div></div>
+    <div class="metric"><div class="metric-label">Your luck rank</div><div class="metric-value accent">#${raelRank}</div><div class="metric-sub">of ${luckArr.length} (1=luckiest)</div></div>
+    <div class="metric"><div class="metric-label">Your luck index</div><div class="metric-value ${luckArr.find(t=>t.entryId===196569)?.diff>=0?'':''}">
+      ${fmtSign(luckArr.find(t=>t.entryId===196569)?.diff||0)}</div><div class="metric-sub">actual vs expected wins</div></div>
+  `;
+
+  const barColors=luckArr.map(t=>t.diff>0?'rgba(127,255,178,0.6)':'rgba(255,107,107,0.55)');
+  barColors[luckArr.findIndex(t=>t.entryId===196569)] = t => t.diff>0?'#7fffb2':'#ff6b6b';
+  const raelIdx=luckArr.findIndex(t=>t.entryId===196569);
+  const luckDiffs=luckArr.map(t=>t.diff);
+  const luckBarColors=luckDiffs.map((d,i)=>i===raelIdx?(d>=0?'#7fffb2':'#ff6b6b'):d>=0?'rgba(127,255,178,0.45)':'rgba(255,107,107,0.4)');
+
+  if(charts.luck) charts.luck.destroy();
+  charts.luck = new Chart(document.getElementById('luckChart'),{
+    type:'bar',
+    data:{labels:luckArr.map(t=>t.name),datasets:[{data:luckDiffs,backgroundColor:luckBarColors,borderWidth:0}]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:d=>`Luck index: ${d.raw>0?'+':''}${d.raw}`}}},
+      scales:{
+        x:{ticks:{color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Luck index',color:'#6b7280',font:{size:11}}},
+        y:{ticks:{color:'#9ca3af',font:{size:10,family:'DM Mono'}},grid:{display:false}}
+      },
+      barPercentage:0.72
+    }
+  });
+
+  const tbody=document.getElementById('luck-body');
+  tbody.innerHTML='';
+  luckArr.forEach((t,i)=>{
+    const tr=document.createElement('tr');
+    if(t.entryId===196569) tr.classList.add('me');
+    let vl,vc;
+    if(t.diff>2.5){vl='Very lucky';vc='b-amber';}
+    else if(t.diff>0.5){vl='Lucky';vc='b-green';}
+    else if(t.diff<-2.5){vl='Very unlucky';vc='b-red';}
+    else if(t.diff<-0.5){vl='Unlucky';vc='b-red';}
+    else{vl='Neutral';vc='b-gray';}
+    const diffColor=t.diff>0?'var(--accent)':t.diff<0?'var(--accent2)':'var(--muted)';
+    tr.innerHTML=`<td class="rank">${i+1}</td><td style="font-weight:500">${t.name}</td>
+      <td style="text-align:right">${t.actual}</td>
+      <td style="text-align:right">${fmt1(t.exp)}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:${diffColor}">${t.diff>0?'+':''}${t.diff}</td>
+      <td><span class="badge ${vc}">${vl}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(leagueData && !charts[id+'_done']) {
+    if(id==='form') { renderForm(leagueData); charts.form_done=true; }
+    if(id==='volatility') { renderVolatility(leagueData); charts.vol_done=true; }
+    if(id==='luck') { renderLuck(leagueData); charts.luck_done=true; }
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const data = await fetchData();
+    leagueData = data;
+    setStatus(true);
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('nav').style.display='flex';
+    document.getElementById('footer').style.display='block';
+    renderStandings(data);
+  } catch(e) {
+    showError(e.message);
+    setStatus(false);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
