@@ -268,6 +268,7 @@
   <button onclick="switchTab('form', this)">Form &amp; trends</button>
   <button onclick="switchTab('volatility', this)">Volatility</button>
   <button onclick="switchTab('luck', this)">Luck index</button>
+  <button onclick="switchTab('impact', this)">Win impact</button>
 </nav>
 
 <main>
@@ -348,6 +349,49 @@
             <th>Verdict</th>
           </tr></thead>
           <tbody id="luck-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WIN IMPACT -->
+    <div class="tab-panel" id="tab-impact">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <label style="font-size:12px;color:var(--muted);">Viewing team:</label>
+        <select id="impact-team-select" onchange="updateImpactTeam()" style="background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 10px;border-radius:8px;cursor:pointer;"></select>
+      </div>
+      <div class="metrics" id="impact-metrics"></div>
+      <div class="section-label">Result each week vs how many of the 5 nearest rivals also won</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.7">Bar height = rivals winning that week (of 5 nearest in table). Green = win, red = loss, amber = draw. High bars on green weeks means wins were cancelled out.</p>
+      <div class="chart-wrap" style="height:280px"><canvas id="rivalWinChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">League position after each gameweek</div>
+      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:12px;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#7fffb2;display:inline-block"></span>Win</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#ff6b6b;display:inline-block"></span>Loss</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#ffd166;display:inline-block"></span>Draw</span>
+      </div>
+      <div class="chart-wrap" style="height:240px"><canvas id="impactPosChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">Week-by-week breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>GW</th><th>Result</th><th style="text-align:right">Score</th><th style="text-align:center">Pos before</th><th style="text-align:center">Pos after</th><th style="text-align:center">Change</th><th>Rivals winning (of 5)</th></tr></thead>
+          <tbody id="impact-detail-body"></tbody>
+        </table>
+      </div>
+      <div class="section-label" style="margin-top:2rem">League-wide win cancellation ranking</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.7">How often each team's 5 nearest rivals also win on the same week. Higher = more cancelled out. Lower = wins actually move the needle.</p>
+      <div class="chart-wrap" style="height:560px"><canvas id="cancelChart"></canvas></div>
+      <div class="section-label" style="margin-top:2rem">Full league breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Rank</th><th>Team</th>
+            <th style="text-align:right">Wins</th>
+            <th style="text-align:right">Avg rivals winning</th>
+            <th style="text-align:right">Avg pos / win</th>
+            <th style="text-align:right">Avg pos / loss</th>
+            <th>Verdict</th>
+          </tr></thead>
+          <tbody id="cancel-body"></tbody>
         </table>
       </div>
     </div>
@@ -433,7 +477,7 @@ function getMaxPlayedGW(matches) {
 function buildGWResults(matches, maxGW) {
   const res = {};
   for(let gw=1;gw<=maxGW;gw++) res[gw]={};
-  matches.filter(m=>m.event<=maxGW&&(m.finished||m.started)).forEach(m=>{
+  matches.filter(m=>m.event<=maxGW&&m.finished).forEach(m=>{
     const e1=m.league_entry_1, e2=m.league_entry_2;
     const p1=m.league_entry_1_points, p2=m.league_entry_2_points;
     if(p1>p2){res[m.event][e1]='W';res[m.event][e2]='L';}
@@ -446,7 +490,7 @@ function buildGWResults(matches, maxGW) {
 function buildGWPts(matches, maxGW) {
   const pts = {};
   for(let gw=1;gw<=maxGW;gw++) pts[gw]={};
-  matches.filter(m=>m.event<=maxGW&&(m.finished||m.started)).forEach(m=>{
+  matches.filter(m=>m.event<=maxGW&&m.finished).forEach(m=>{
     pts[m.event][m.league_entry_1]=m.league_entry_1_points;
     pts[m.event][m.league_entry_2]=m.league_entry_2_points;
   });
@@ -456,7 +500,7 @@ function buildGWPts(matches, maxGW) {
 function getRanks(entryIds, matches, upToGW) {
   const cp={}, cf={};
   entryIds.forEach(id=>{cp[id]=0;cf[id]=0;});
-  matches.filter(m=>m.event<=upToGW&&(m.finished||m.started)).forEach(m=>{
+  matches.filter(m=>m.event<=upToGW&&m.finished).forEach(m=>{
     const e1=m.league_entry_1,e2=m.league_entry_2;
     const p1=m.league_entry_1_points,p2=m.league_entry_2_points;
     const pts1=p1>p2?2:p1<p2?0:1, pts2=2-pts1;
@@ -577,7 +621,7 @@ function renderForm(data) {
   const head = document.getElementById('form-head');
   head.innerHTML = `<th>Team</th>${last5GWs.map(g=>`<th style="text-align:center">GW${g}</th>`).join('')}<th style="text-align:right">Pts</th>`;
 
- const sortedByForm = [...standings].map(s=>{
+  const sortedByForm = [...standings].map(s=>{
     let pts=0;
     const cells = last5GWs.map(gw=>{
       const r = gwResults[gw]?.[s.league_entry];
@@ -755,6 +799,228 @@ function renderLuck(data) {
   });
 }
 
+// ── WIN IMPACT ───────────────────────────────────────────────────────────────
+const NEIGHBORS = 5;
+
+function buildWinImpactData(data, selectedId) {
+  const { league_entries, standings, matches } = data;
+  const entryIds = league_entries.map(e=>e.id);
+  const maxGW = getMaxPlayedGW(matches);
+  const gwResults = buildGWResults(matches, maxGW);
+  const gwPtsMap = buildGWPts(matches, maxGW);
+
+  const ranksByGW = {};
+  for(let gw=0;gw<=maxGW;gw++) ranksByGW[gw]=getRanks(entryIds,matches,gw);
+
+  const rows = [];
+  for(let gw=1;gw<=maxGW;gw++){
+    const myResult = gwResults[gw]?.[selectedId];
+    if(!myResult) continue;
+    const myScore = gwPtsMap[gw]?.[selectedId]||0;
+    const rankBefore = ranksByGW[gw-1][selectedId];
+    const rankAfter = ranksByGW[gw][selectedId];
+    const change = rankBefore - rankAfter;
+    const nearbyIds = entryIds.filter(id=>id!==selectedId)
+      .map(id=>({id,dist:Math.abs(ranksByGW[gw-1][id]-rankBefore)}))
+      .sort((a,b)=>a.dist-b.dist).slice(0,NEIGHBORS).map(x=>x.id);
+    const rivalsWinning = nearbyIds.filter(id=>gwResults[gw]?.[id]==='W').length;
+    rows.push({gw,myResult,myScore,rankBefore,rankAfter,change,rivalsWinning});
+  }
+  return {rows, maxGW};
+}
+
+function buildLeagueWideData(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const entryIds = league_entries.map(e=>e.id);
+  const maxGW = getMaxPlayedGW(matches);
+  const gwResults = buildGWResults(matches, maxGW);
+  const ranksByGW = {};
+  for(let gw=0;gw<=maxGW;gw++) ranksByGW[gw]=getRanks(entryIds,matches,gw);
+
+  return standings.map(s=>{
+    const id = s.league_entry;
+    const winRows=[], lossRows=[];
+    for(let gw=1;gw<=maxGW;gw++){
+      const res=gwResults[gw]?.[id];
+      if(!res) continue;
+      const rankBefore=ranksByGW[gw-1][id];
+      const rankAfter=ranksByGW[gw][id];
+      const change=rankBefore-rankAfter;
+      const nearbyIds=entryIds.filter(x=>x!==id)
+        .map(x=>({id:x,dist:Math.abs(ranksByGW[gw-1][x]-rankBefore)}))
+        .sort((a,b)=>a.dist-b.dist).slice(0,NEIGHBORS).map(x=>x.id);
+      const rivalsWinning=nearbyIds.filter(x=>gwResults[gw]?.[x]==='W').length;
+      if(res==='W') winRows.push({change,rivalsWinning});
+      else if(res==='L') lossRows.push({change});
+    }
+    const wins=winRows.length;
+    const avgRivals=wins?fmt1(mean(winRows.map(r=>r.rivalsWinning))):0;
+    const avgPosWin=wins?fmt1(mean(winRows.map(r=>r.change))):0;
+    const avgPosLoss=lossRows.length?fmt1(mean(lossRows.map(r=>r.change))):0;
+    return {id,name:entryMap[id]?.name||'—',entryId:entryMap[id]?.entryId,wins,avgRivals,avgPosWin,avgPosLoss};
+  }).sort((a,b)=>b.avgRivals-a.avgRivals);
+}
+
+function renderImpactPersonal(data, selectedId) {
+  const entryMap = buildEntryMap(data.league_entries);
+  const {rows, maxGW} = buildWinImpactData(data, selectedId);
+  const myWins = rows.filter(r=>r.myResult==='W');
+  const myLosses = rows.filter(r=>r.myResult==='L');
+  const avgRivalsOnWin = myWins.length ? fmt1(mean(myWins.map(r=>r.rivalsWinning))) : 0;
+  const avgPosWin = myWins.length ? fmt1(mean(myWins.map(r=>r.change))) : 0;
+  const avgPosLoss = myLosses.length ? fmt1(mean(myLosses.map(r=>r.change))) : 0;
+
+  document.getElementById('impact-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Record</div><div class="metric-value accent">${myWins.length}W / ${rows.filter(r=>r.myResult==='D').length}D / ${myLosses.length}L</div><div class="metric-sub">finished gameweeks</div></div>
+    <div class="metric"><div class="metric-label">Avg rivals winning on win weeks</div><div class="metric-value">${avgRivalsOnWin} / 5</div><div class="metric-sub">higher = more cancelled out</div></div>
+    <div class="metric"><div class="metric-label">Avg pos change per win</div><div class="metric-value" style="color:${avgPosWin>=0?'var(--accent)':'var(--accent2)'}">${avgPosWin>0?'+':''}${avgPosWin}</div><div class="metric-sub">places moved up</div></div>
+    <div class="metric"><div class="metric-label">Avg pos change per loss</div><div class="metric-value" style="color:${avgPosLoss>=0?'var(--accent)':'var(--accent2)'}">${avgPosLoss>0?'+':''}${avgPosLoss}</div><div class="metric-sub">places moved</div></div>
+  `;
+
+  const gwLabels = rows.map(r=>`GW${r.gw}`);
+  const barColors = rows.map(r=>r.myResult==='W'?'rgba(127,255,178,0.7)':r.myResult==='L'?'rgba(255,107,107,0.6)':'rgba(255,209,102,0.6)');
+  const avgLine = Array(rows.length).fill(avgRivalsOnWin);
+
+  if(charts.rivalWin) charts.rivalWin.destroy();
+  charts.rivalWin = new Chart(document.getElementById('rivalWinChart'),{
+    type:'bar',
+    data:{labels:gwLabels,datasets:[
+      {label:'Rivals winning',data:rows.map(r=>r.rivalsWinning),backgroundColor:barColors,borderWidth:0},
+      {label:'Avg on win weeks',data:avgLine,type:'line',borderColor:'#ffd166',borderWidth:1.5,borderDash:[4,3],pointRadius:0}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(d)=>{
+        if(d.datasetIndex===0){const r=rows[d.dataIndex];return[`Result: ${r.myResult}`,`Score: ${r.myScore}`,`Rivals winning: ${d.raw}/5`];}
+        return `Avg on wins: ${d.raw}`;
+      }}}},
+      scales:{
+        x:{ticks:{autoSkip:true,maxTicksLimit:15,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{display:false}},
+        y:{min:0,max:5,ticks:{stepSize:1,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Rivals winning (of 5)',color:'#6b7280',font:{size:11}}}
+      },barPercentage:0.8
+    }
+  });
+
+  const pointColors = rows.map(r=>r.myResult==='W'?'#7fffb2':r.myResult==='L'?'#ff6b6b':'#ffd166');
+  if(charts.impactPos) charts.impactPos.destroy();
+  charts.impactPos = new Chart(document.getElementById('impactPosChart'),{
+    type:'line',
+    data:{labels:gwLabels,datasets:[{
+      label:'Position',data:rows.map(r=>r.rankAfter),
+      borderColor:'rgba(255,255,255,0.2)',borderWidth:1.5,
+      pointBackgroundColor:pointColors,pointRadius:5,tension:0.25,fill:false
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(d)=>{const r=rows[d.dataIndex];return[`Position: #${d.raw}`,`Result: ${r.myResult}`,`Score: ${r.myScore}`];}}}},
+      scales:{
+        y:{reverse:true,min:1,max:data.league_entries.length,ticks:{stepSize:1,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Position',color:'#6b7280',font:{size:11}}},
+        x:{ticks:{autoSkip:true,maxTicksLimit:12,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{display:false}}
+      }
+    }
+  });
+
+  const tbody = document.getElementById('impact-detail-body');
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    const resCls=r.myResult==='W'?'w':r.myResult==='L'?'l':'d';
+    const chg=r.change;
+    const chgStr=chg>0?`<span style="color:var(--accent)">▲ ${chg}</span>`:chg<0?`<span style="color:var(--accent2)">▼ ${Math.abs(chg)}</span>`:`<span style="color:var(--muted)">— 0</span>`;
+    const pips='●'.repeat(r.rivalsWinning)+'○'.repeat(5-r.rivalsWinning);
+    tr.innerHTML=`<td>${r.gw}</td><td><span class="badge ${resCls}">${r.myResult}</span></td>
+      <td style="text-align:right">${r.myScore}</td>
+      <td style="text-align:center">${r.rankBefore}</td>
+      <td style="text-align:center">${r.rankAfter}</td>
+      <td style="text-align:center">${chgStr}</td>
+      <td style="letter-spacing:2px">${pips} <span style="font-size:11px;color:var(--muted);letter-spacing:0">${r.rivalsWinning}/5</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderImpactLeagueWide(data, selectedId) {
+  const leagueData = buildLeagueWideData(data);
+  const leagueAvg = fmt1(mean(leagueData.map(t=>t.avgRivals)));
+  const worst=leagueData[0], best=leagueData[leagueData.length-1];
+
+  const barColors = leagueData.map(t=>{
+    if(t.id===worst.id) return '#ff6b6b';
+    if(t.id===best.id) return '#7fffb2';
+    if(t.id===selectedId) return 'rgba(255,209,102,0.8)';
+    return 'rgba(255,255,255,0.15)';
+  });
+
+  if(charts.cancel) charts.cancel.destroy();
+  charts.cancel = new Chart(document.getElementById('cancelChart'),{
+    type:'bar',
+    data:{labels:leagueData.map(t=>t.name),datasets:[
+      {label:'Avg rivals winning',data:leagueData.map(t=>t.avgRivals),backgroundColor:barColors,borderWidth:0},
+      {label:'League avg',data:Array(leagueData.length).fill(leagueAvg),type:'line',borderColor:'#ffd166',borderWidth:1.5,borderDash:[4,3],pointRadius:0}
+    ]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:d=>d.datasetIndex===0?`${d.raw}/5 rivals winning`:`League avg: ${d.raw}`}}},
+      scales:{
+        x:{min:0,max:5,ticks:{stepSize:1,color:'#6b7280',font:{size:10,family:'DM Mono'}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Avg rivals winning on win weeks (of 5)',color:'#6b7280',font:{size:11}}},
+        y:{ticks:{color:'#9ca3af',font:{size:10,family:'DM Mono'}},grid:{display:false}}
+      },barPercentage:0.72
+    }
+  });
+
+  const tbody=document.getElementById('cancel-body');
+  tbody.innerHTML='';
+  leagueData.forEach((t,i)=>{
+    const tr=document.createElement('tr');
+    if(t.id===selectedId) tr.classList.add('me');
+    let vl,vc;
+    if(i===0){vl='Most cancelled-out';vc='b-red';}
+    else if(i===leagueData.length-1){vl='Least cancelled-out';vc='b-green';}
+    else if(t.avgRivals>=leagueAvg+0.3){vl='Above avg';vc='b-amber';}
+    else if(t.avgRivals<=leagueAvg-0.3){vl='Below avg';vc='b-green';}
+    else{vl='Average';vc='b-gray';}
+    const posWinColor=t.avgPosWin>0?'var(--accent)':t.avgPosWin<0?'var(--accent2)':'var(--muted)';
+    const posLossColor=t.avgPosLoss>0?'var(--accent)':t.avgPosLoss<0?'var(--accent2)':'var(--muted)';
+    tr.innerHTML=`<td class="rank">${i+1}</td><td style="font-weight:500">${t.name}</td>
+      <td style="text-align:right">${t.wins}</td>
+      <td style="text-align:right;font-weight:500">${t.avgRivals} / 5</td>
+      <td style="text-align:right;color:${posWinColor}">${t.avgPosWin>0?'+':''}${t.avgPosWin}</td>
+      <td style="text-align:right;color:${posLossColor}">${t.avgPosLoss>0?'+':''}${t.avgPosLoss}</td>
+      <td><span class="badge ${vc}">${vl}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateImpactTeam() {
+  if(!leagueData) return;
+  const selectedId = parseInt(document.getElementById('impact-team-select').value);
+  if(charts.rivalWin) charts.rivalWin.destroy();
+  if(charts.impactPos) charts.impactPos.destroy();
+  if(charts.cancel) charts.cancel.destroy();
+  renderImpactPersonal(leagueData, selectedId);
+  renderImpactLeagueWide(leagueData, selectedId);
+}
+
+function renderImpact(data) {
+  const { league_entries, standings } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const sel = document.getElementById('impact-team-select');
+  sel.innerHTML = '';
+  standings.forEach(s=>{
+    const e = entryMap[s.league_entry];
+    if(!e) return;
+    const opt = document.createElement('option');
+    opt.value = s.league_entry;
+    opt.textContent = e.name;
+    sel.appendChild(opt);
+  });
+  const firstId = standings[0]?.league_entry;
+  if(firstId) {
+    renderImpactPersonal(data, firstId);
+    renderImpactLeagueWide(data, firstId);
+  }
+}
+
 // ── TABS ─────────────────────────────────────────────────────────────────────
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -765,6 +1031,7 @@ function switchTab(id, btn) {
     if(id==='form') { renderForm(leagueData); charts.form_done=true; }
     if(id==='volatility') { renderVolatility(leagueData); charts.vol_done=true; }
     if(id==='luck') { renderLuck(leagueData); charts.luck_done=true; }
+    if(id==='impact') { renderImpact(leagueData); charts.impact_done=true; }
   }
 }
 
