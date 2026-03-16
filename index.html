@@ -422,7 +422,7 @@ function buildEntryMap(entries) {
 }
 
 function getPlayedMatches(matches) {
-  return matches.filter(m => m.finished || m.started);
+  return matches.filter(m => m.finished);
 }
 
 function getMaxPlayedGW(matches) {
@@ -581,11 +581,11 @@ function renderForm(data) {
     let pts=0;
     const cells = last5GWs.map(gw=>{
       const r = gwResults[gw]?.[s.league_entry];
-      if(!r) return {html:`<td>—</td>`,pts:0};
+      if(!r) return {html:`<td>—</td>`};
       if(r==='W') pts+=2;
       else if(r==='D') pts+=1;
       const cls=r==='W'?'w':r==='L'?'l':'d';
-      return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`,pts:0};
+      return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`};
     });
     return {s, pts, cells};
   }).sort((a,b)=>b.pts-a.pts);
@@ -609,7 +609,7 @@ function renderVolatility(data) {
 
   const teamScores = {};
   league_entries.forEach(e=>{teamScores[e.id]=[];});
-  matches.filter(m=>(m.finished||m.started)&&m.event<=maxGW).forEach(m=>{
+  matches.filter(m=>m.finished&&m.event<=maxGW).forEach(m=>{
     teamScores[m.league_entry_1].push(m.league_entry_1_points);
     teamScores[m.league_entry_2].push(m.league_entry_2_points);
   });
@@ -681,7 +681,7 @@ function renderLuck(data) {
     const scores = gwPts[gw];
     const ids = Object.keys(scores).map(Number);
     if(ids.length<2) continue;
-    const gwMs = matches.filter(m=>m.event===gw&&(m.finished||m.started));
+    const gwMs = matches.filter(m=>m.event===gw&&m.finished);
     gwMs.forEach(m=>{
       const e1=m.league_entry_1,e2=m.league_entry_2;
       const p1=m.league_entry_1_points,p2=m.league_entry_2_points;
