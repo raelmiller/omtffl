@@ -269,6 +269,7 @@
   <button onclick="switchTab('volatility', this)">Volatility</button>
   <button onclick="switchTab('luck', this)">Luck index</button>
   <button onclick="switchTab('impact', this)">Win impact</button>
+  <button onclick="switchTab('margins', this)">Margins</button>
 </nav>
 
 <main>
@@ -394,6 +395,43 @@
           <tbody id="cancel-body"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- MARGINS -->
+    <div class="tab-panel" id="tab-margins">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.7">
+        Close games = decided by 3 pts or fewer (one player's base appearance score). Blowouts = won or lost by 20+ pts.
+      </p>
+      <div class="metrics" id="margins-metrics"></div>
+
+      <div class="section-label">Average winning margin by team — how dominant wins are</div>
+      <div class="chart-wrap" style="height:520px"><canvas id="avgMarginChart"></canvas></div>
+
+      <div class="section-label" style="margin-top:2rem">Close losses (within 3 pts) — the painful ones</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.7">Teams with lots of close losses are likely underperforming their record — one lucky player either way changes these results.</p>
+      <div class="chart-wrap" style="height:520px"><canvas id="closeLossChart"></canvas></div>
+
+      <div class="section-label" style="margin-top:2rem">Full margins breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Team</th>
+            <th style="text-align:right">Avg win margin</th>
+            <th style="text-align:right">Avg loss margin</th>
+            <th style="text-align:center">Close W (≤3)</th>
+            <th style="text-align:center">Close L (≤3)</th>
+            <th style="text-align:center">Close W−L</th>
+            <th style="text-align:center">Blowout W (20+)</th>
+            <th style="text-align:center">Blowout L (20+)</th>
+            <th>Profile</th>
+          </tr></thead>
+          <tbody id="margins-body"></tbody>
+        </table>
+      </div>
+
+      <div class="section-label" style="margin-top:2rem">Close game record — wins minus losses within 3 pts</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.7">Positive = winning the coinflips. Negative = losing them. This is the purest measure of margin luck.</p>
+      <div class="chart-wrap" style="height:520px"><canvas id="closeBalanceChart"></canvas></div>
     </div>
 
   </div><!-- /app -->
@@ -1021,6 +1059,169 @@ function renderImpact(data) {
   }
 }
 
+
+// ── MARGINS ──────────────────────────────────────────────────────────────────
+const CLOSE_THRESHOLD = 3;
+const BLOWOUT_THRESHOLD = 20;
+
+function renderMargins(data) {
+  const { league_entries, standings, matches } = data;
+  const entryMap = buildEntryMap(league_entries);
+  const maxGW = getMaxPlayedGW(matches);
+
+  const teamStats = {};
+  standings.forEach(s => {
+    teamStats[s.league_entry] = {
+      id: s.league_entry,
+      name: entryMap[s.league_entry]?.name || '—',
+      entryId: entryMap[s.league_entry]?.entryId,
+      winMargins: [], lossMargins: [],
+      closeWins: 0, closeLosses: 0,
+      blowoutWins: 0, blowoutLosses: 0
+    };
+  });
+
+  matches.filter(m => m.finished && m.event <= maxGW).forEach(m => {
+    const e1 = m.league_entry_1, e2 = m.league_entry_2;
+    const p1 = m.league_entry_1_points, p2 = m.league_entry_2_points;
+    if (p1 === p2) return;
+    const margin = Math.abs(p1 - p2);
+    const winner = p1 > p2 ? e1 : e2;
+    const loser = p1 > p2 ? e2 : e1;
+    if (teamStats[winner]) {
+      teamStats[winner].winMargins.push(margin);
+      if (margin <= CLOSE_THRESHOLD) teamStats[winner].closeWins++;
+      if (margin >= BLOWOUT_THRESHOLD) teamStats[winner].blowoutWins++;
+    }
+    if (teamStats[loser]) {
+      teamStats[loser].lossMargins.push(margin);
+      if (margin <= CLOSE_THRESHOLD) teamStats[loser].closeLosses++;
+      if (margin >= BLOWOUT_THRESHOLD) teamStats[loser].blowoutLosses++;
+    }
+  });
+
+  const stats = Object.values(teamStats).map(t => ({
+    ...t,
+    avgWinMargin: t.winMargins.length ? fmt1(mean(t.winMargins)) : 0,
+    avgLossMargin: t.lossMargins.length ? fmt1(mean(t.lossMargins)) : 0,
+    closeBalance: t.closeWins - t.closeLosses
+  }));
+
+  // Metrics
+  const mostCloseL = [...stats].sort((a,b) => b.closeLosses - a.closeLosses)[0];
+  const bestCloseW = [...stats].sort((a,b) => b.closeWins - a.closeWins)[0];
+  const biggestAvgWin = [...stats].sort((a,b) => b.avgWinMargin - a.avgWinMargin)[0];
+  const totalClose = stats.reduce((s,t) => s + t.closeWins + t.closeLosses, 0);
+
+  document.getElementById('margins-metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Most close losses</div><div class="metric-value sm">${mostCloseL.name}</div><div class="metric-sub">${mostCloseL.closeLosses} losses within 3 pts</div></div>
+    <div class="metric"><div class="metric-label">Most close wins</div><div class="metric-value sm">${bestCloseW.name}</div><div class="metric-sub">${bestCloseW.closeWins} wins within 3 pts</div></div>
+    <div class="metric"><div class="metric-label">Biggest avg win margin</div><div class="metric-value sm">${biggestAvgWin.name}</div><div class="metric-sub">${biggestAvgWin.avgWinMargin} pts avg</div></div>
+    <div class="metric"><div class="metric-label">Total close games</div><div class="metric-value accent">${totalClose}</div><div class="metric-sub">decided within 3 pts</div></div>
+  `;
+
+  // Chart 1 — avg win margin
+  const byAvgWin = [...stats].sort((a,b) => b.avgWinMargin - a.avgWinMargin);
+  const winMarginColors = byAvgWin.map(t =>
+    t.avgWinMargin === Math.max(...byAvgWin.map(x => x.avgWinMargin)) ? '#7fffb2' : 'rgba(255,255,255,0.15)'
+  );
+  if (charts.avgMargin) charts.avgMargin.destroy();
+  charts.avgMargin = new Chart(document.getElementById('avgMarginChart'), {
+    type: 'bar',
+    data: {
+      labels: byAvgWin.map(t => t.name),
+      datasets: [
+        { label: 'Avg win margin', data: byAvgWin.map(t => t.avgWinMargin), backgroundColor: winMarginColors, borderWidth: 0 },
+        { label: 'Avg loss margin', data: byAvgWin.map(t => -t.avgLossMargin), backgroundColor: byAvgWin.map(() => 'rgba(255,107,107,0.3)'), borderWidth: 0 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => d.datasetIndex === 0 ? `Avg win margin: +${d.raw} pts` : `Avg loss margin: ${Math.abs(d.raw)} pts` } } },
+      scales: {
+        x: { ticks: { color: '#6b7280', font: { size: 10, family: 'DM Mono' }, callback: v => Math.abs(v) }, grid: { color: 'rgba(255,255,255,0.04)' }, title: { display: true, text: 'Points margin (green = wins, red = losses)', color: '#6b7280', font: { size: 11 } } },
+        y: { ticks: { color: '#9ca3af', font: { size: 10, family: 'DM Mono' } }, grid: { display: false } }
+      }, barPercentage: 0.72
+    }
+  });
+
+  // Chart 2 — close losses
+  const byCloseLoss = [...stats].sort((a,b) => b.closeLosses - a.closeLosses);
+  const closeLossColors = byCloseLoss.map(t =>
+    t.closeLosses === Math.max(...byCloseLoss.map(x => x.closeLosses)) ? '#ff6b6b' : 'rgba(255,107,107,0.35)'
+  );
+  const closeWinColors = byCloseLoss.map(() => 'rgba(127,255,178,0.35)');
+  if (charts.closeLoss) charts.closeLoss.destroy();
+  charts.closeLoss = new Chart(document.getElementById('closeLossChart'), {
+    type: 'bar',
+    data: {
+      labels: byCloseLoss.map(t => t.name),
+      datasets: [
+        { label: 'Close losses (≤3 pts)', data: byCloseLoss.map(t => t.closeLosses), backgroundColor: closeLossColors, borderWidth: 0 },
+        { label: 'Close wins (≤3 pts)', data: byCloseLoss.map(t => t.closeWins), backgroundColor: closeWinColors, borderWidth: 0 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: d => d.datasetIndex === 0 ? `Close losses: ${d.raw}` : `Close wins: ${d.raw}` } }
+      },
+      scales: {
+        x: { ticks: { stepSize: 1, color: '#6b7280', font: { size: 10, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' }, title: { display: true, text: 'Number of games', color: '#6b7280', font: { size: 11 } } },
+        y: { ticks: { color: '#9ca3af', font: { size: 10, family: 'DM Mono' } }, grid: { display: false } }
+      }, barPercentage: 0.72
+    }
+  });
+
+  // Table
+  const tbody = document.getElementById('margins-body');
+  tbody.innerHTML = '';
+  const tableStats = [...stats].sort((a,b) => b.closeLosses - a.closeLosses);
+  tableStats.forEach(t => {
+    const tr = document.createElement('tr');
+    const bal = t.closeBalance;
+    const balStr = bal > 0 ? `<span style="color:var(--accent)">+${bal}</span>` : bal < 0 ? `<span style="color:var(--accent2)">${bal}</span>` : `<span style="color:var(--muted)">0</span>`;
+    let profile, profileCls;
+    if (t.closeLosses >= 4 && t.closeBalance < 0) { profile = 'Coinflip loser'; profileCls = 'b-red'; }
+    else if (t.closeWins >= 4 && t.closeBalance > 0) { profile = 'Coinflip winner'; profileCls = 'b-green'; }
+    else if (t.avgWinMargin >= 18) { profile = 'Dominant'; profileCls = 'b-amber'; }
+    else if (t.blowoutLosses >= 3) { profile = 'Blown out often'; profileCls = 'b-red'; }
+    else { profile = 'Balanced'; profileCls = 'b-gray'; }
+    tr.innerHTML = `
+      <td style="font-weight:500">${t.name}</td>
+      <td style="text-align:right;color:var(--accent)">+${t.avgWinMargin}</td>
+      <td style="text-align:right;color:var(--accent2)">${t.avgLossMargin}</td>
+      <td style="text-align:center;color:var(--accent)">${t.closeWins}</td>
+      <td style="text-align:center;color:var(--accent2)">${t.closeLosses}</td>
+      <td style="text-align:center;font-weight:500">${balStr}</td>
+      <td style="text-align:center">${t.blowoutWins}</td>
+      <td style="text-align:center">${t.blowoutLosses}</td>
+      <td><span class="badge ${profileCls}">${profile}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Chart 3 — close balance
+  const byBalance = [...stats].sort((a,b) => b.closeBalance - a.closeBalance);
+  const balColors = byBalance.map(t => t.closeBalance > 0 ? 'rgba(127,255,178,0.65)' : t.closeBalance < 0 ? 'rgba(255,107,107,0.6)' : 'rgba(255,255,255,0.15)');
+  if (charts.closeBalance) charts.closeBalance.destroy();
+  charts.closeBalance = new Chart(document.getElementById('closeBalanceChart'), {
+    type: 'bar',
+    data: {
+      labels: byBalance.map(t => t.name),
+      datasets: [{ label: 'Close game balance', data: byBalance.map(t => t.closeBalance), backgroundColor: balColors, borderWidth: 0 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => `${d.raw > 0 ? '+' : ''}${d.raw} (${d.raw > 0 ? 'winning' : 'losing'} coinflips)` } } },
+      scales: {
+        x: { ticks: { stepSize: 1, color: '#6b7280', font: { size: 10, family: 'DM Mono' } }, grid: { color: 'rgba(255,255,255,0.04)' }, title: { display: true, text: 'Close wins minus close losses', color: '#6b7280', font: { size: 11 } } },
+        y: { ticks: { color: '#9ca3af', font: { size: 10, family: 'DM Mono' } }, grid: { display: false } }
+      }, barPercentage: 0.72
+    }
+  });
+}
+
 // ── TABS ─────────────────────────────────────────────────────────────────────
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -1032,6 +1233,7 @@ function switchTab(id, btn) {
     if(id==='volatility') { renderVolatility(leagueData); charts.vol_done=true; }
     if(id==='luck') { renderLuck(leagueData); charts.luck_done=true; }
     if(id==='impact') { renderImpact(leagueData); charts.impact_done=true; }
+    if(id==='margins') { renderMargins(leagueData); charts.margins_done=true; }
   }
 }
 
