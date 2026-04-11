@@ -1414,7 +1414,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
       const standing = standings.find(s => s.league_entry === parseInt(id));
       return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99 };
     })
-    .sort((a, b) => b.seasonPts - a.seasonPts);
+    .sort((a, b) => b.projPts - a.projPts || b.score - a.score);
 
   allTeams.forEach((t, i) => {
     const match = gwMatches.find(m => m.league_entry_1 === t.id || m.league_entry_2 === t.id);
