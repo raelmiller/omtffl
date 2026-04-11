@@ -1381,11 +1381,13 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
 
   // Full standings table sorted by live score
   const allTeams = Object.entries(teamScores)
-    .map(([id, v]) => ({ id: parseInt(id), ...v }))
-    .sort((a, b) => b.score - a.score);
+    .map(([id, v]) => {
+      const standing = standings.find(s => s.league_entry === parseInt(id));
+      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0 };
+    })
+    .sort((a, b) => b.seasonPts - a.seasonPts);
 
   allTeams.forEach((t, i) => {
-    const standing = standings.find(s => s.league_entry === t.id);
     const match = gwMatches.find(m => m.league_entry_1 === t.id || m.league_entry_2 === t.id);
     let resultLabel = '—', resultCls = 'b-gray';
     if (match) {
@@ -1401,7 +1403,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     tr.innerHTML = `<td class="rank">${i+1}</td>
       <td style="font-weight:500">${t.name}</td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${t.score}</td>
-      <td style="text-align:right">${standing?.total ?? '—'}</td>
+      <td style="text-align:right">${t.seasonPts}</td>
       <td><span class="badge ${resultCls}">${resultLabel}</span></td>`;
     tableEl.appendChild(tr);
   });
