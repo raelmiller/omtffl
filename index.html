@@ -571,7 +571,7 @@ function getRanks(entryIds, matches, upToGW) {
   matches.filter(m=>m.event<=upToGW&&m.finished).forEach(m=>{
     const e1=m.league_entry_1,e2=m.league_entry_2;
     const p1=m.league_entry_1_points,p2=m.league_entry_2_points;
-    const pts1=p1>p2?2:p1<p2?0:1, pts2=2-pts1;
+    const pts1=p1>p2?3:p1<p2?0:1, pts2=p1>p2?0:p1<p2?3:1;
     cp[e1]+=pts1;cp[e2]+=pts2;cf[e1]+=p1;cf[e2]+=p2;
   });
   const sorted=entryIds.map(id=>({id,pts:cp[id],pf:cf[id]})).sort((a,b)=>b.pts-a.pts||b.pf-a.pf);
@@ -694,7 +694,7 @@ function renderForm(data) {
     const cells = last5GWs.map(gw=>{
       const r = gwResults[gw]?.[s.league_entry];
       if(!r) return {html:`<td>—</td>`};
-      if(r==='W') pts+=2;
+      if(r==='W') pts+=3;
       else if(r==='D') pts+=1;
       const cls=r==='W'?'w':r==='L'?'l':'d';
       return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`};
@@ -1396,7 +1396,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     if (match) {
       const oppId = match.league_entry_1 === intId ? match.league_entry_2 : match.league_entry_1;
       const oppScore = teamScores[String(oppId)]?.score ?? 0;
-      if (v.score > oppScore) proj = current + 2;
+      if (v.score > oppScore) proj = current + 3;
       else if (v.score === oppScore) proj = current + 1;
     }
     projectedPts[intId] = proj;
