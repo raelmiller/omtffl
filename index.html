@@ -453,7 +453,8 @@
             <thead><tr>
               <th>#</th><th>Team</th>
               <th style="text-align:right">Live score</th>
-              <th style="text-align:right">Season pts</th>
+              <th style="text-align:right">Proj pts</th>
+              <th style="text-align:center">Proj pos</th>
               <th>H2H result</th>
             </tr></thead>
             <tbody id="live-table-body"></tbody>
@@ -1384,10 +1385,34 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
   });
 
   // Full standings table sorted by live score
+  // Calculate projected season points (current + win/loss/draw this GW)
+  const projectedPts = {};
+  Object.entries(teamScores).forEach(([id, v]) => {
+    const intId = parseInt(id);
+    const standing = standings.find(s => s.league_entry === intId);
+    const current = standing?.total ?? 0;
+    const match = gwMatches.find(m => m.league_entry_1 === intId || m.league_entry_2 === intId);
+    let proj = current;
+    if (match) {
+      const oppId = match.league_entry_1 === intId ? match.league_entry_2 : match.league_entry_1;
+      const oppScore = teamScores[String(oppId)]?.score ?? 0;
+      if (v.score > oppScore) proj = current + 2;
+      else if (v.score === oppScore) proj = current + 1;
+    }
+    projectedPts[intId] = proj;
+  });
+
+  // Projected rank = rank by projected pts (ties broken by points_for + live score)
+  const projRanked = Object.keys(projectedPts)
+    .map(id => ({ id: parseInt(id), proj: projectedPts[parseInt(id)] }))
+    .sort((a, b) => b.proj - a.proj || (teamScores[String(b.id)]?.score||0) - (teamScores[String(a.id)]?.score||0));
+  const projRankMap = {};
+  projRanked.forEach((t, i) => projRankMap[t.id] = i + 1);
+
   const allTeams = Object.entries(teamScores)
     .map(([id, v]) => {
       const standing = standings.find(s => s.league_entry === parseInt(id));
-      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0 };
+      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99 };
     })
     .sort((a, b) => b.seasonPts - a.seasonPts);
 
@@ -1404,10 +1429,15 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     }
     const tr = document.createElement('tr');
     if (t.entryId === 196569) tr.classList.add('me');
+    const rankDiff = t.rank - t.projRank; // positive = moving up
+    let arrow = '&#9679;', arrowColor = 'var(--muted)';
+    if (rankDiff > 0) { arrow = '&#9650; ' + rankDiff; arrowColor = 'var(--accent)'; }
+    else if (rankDiff < 0) { arrow = '&#9660; ' + Math.abs(rankDiff); arrowColor = 'var(--accent2)'; }
     tr.innerHTML = `<td class="rank">${i+1}</td>
       <td style="font-weight:500">${t.name}<br><span style="font-size:11px;color:var(--muted);font-weight:400">${entryMap[t.id]?.player||''}</span></td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${t.score}</td>
-      <td style="text-align:right">${t.seasonPts}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:500">${t.projPts}</td>
+      <td style="text-align:center;font-family:var(--font-head);font-weight:700;font-size:12px;color:${arrowColor}">${arrow}</td>
       <td><span class="badge ${resultCls}">${resultLabel}</span></td>`;
     tableEl.appendChild(tr);
   });
