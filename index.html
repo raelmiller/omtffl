@@ -270,6 +270,7 @@
   <button onclick="switchTab('luck', this)">Luck index</button>
   <button onclick="switchTab('impact', this)">Win impact</button>
   <button onclick="switchTab('margins', this)">Margins</button>
+  <button onclick="switchTab('live', this)" id="live-tab-btn">Live GW &#9679;</button>
 </nav>
 
 <main>
@@ -432,6 +433,34 @@
       <div class="section-label" style="margin-top:2rem">Close game record — wins minus losses within 3 pts</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.7">Positive = winning the coinflips. Negative = losing them. This is the purest measure of margin luck.</p>
       <div class="chart-wrap" style="height:520px"><canvas id="closeBalanceChart"></canvas></div>
+    </div>
+
+    <!-- LIVE GW TRACKER -->
+    <div class="tab-panel" id="tab-live">
+      <div id="live-loading" style="text-align:center;padding:3rem;color:var(--muted);font-size:13px;">
+        <div class="spinner" style="margin:0 auto 1rem"></div>
+        Fetching live data for all 16 teams...
+      </div>
+      <div id="live-content" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.5rem;">
+          <div style="font-size:12px;color:var(--muted)" id="live-updated"></div>
+          <button onclick="refreshLive()" style="font-family:var(--font-mono);font-size:12px;padding:6px 14px;border-radius:var(--border-radius-md);border:1px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;">&#8635; Refresh</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;" id="live-matchups"></div>
+        <div class="section-label" style="margin-top:2rem">Full live standings</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Team</th>
+              <th style="text-align:right">Live score</th>
+              <th style="text-align:right">Season pts</th>
+              <th>H2H result</th>
+            </tr></thead>
+            <tbody id="live-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="live-error" style="display:none;color:var(--accent2);font-size:13px;padding:1rem"></div>
     </div>
 
   </div><!-- /app -->
@@ -664,7 +693,7 @@ function renderForm(data) {
     const cells = last5GWs.map(gw=>{
       const r = gwResults[gw]?.[s.league_entry];
       if(!r) return {html:`<td>—</td>`};
-      if(r==='W') pts+=3;
+      if(r==='W') pts+=2;
       else if(r==='D') pts+=1;
       const cls=r==='W'?'w':r==='L'?'l':'d';
       return {html:`<td style="text-align:center"><span class="badge ${cls}">${r}</span></td>`};
@@ -1234,6 +1263,7 @@ function switchTab(id, btn) {
     if(id==='luck') { renderLuck(leagueData); charts.luck_done=true; }
     if(id==='impact') { renderImpact(leagueData); charts.impact_done=true; }
     if(id==='margins') { renderMargins(leagueData); charts.margins_done=true; }
+    if(id==='live') { charts.live_done=false; initLive(); charts.live_done=true; }
   }
 }
 
@@ -1253,6 +1283,157 @@ async function init() {
     setStatus(false);
   }
 }
+
+// ── LIVE GW TRACKER ──────────────────────────────────────────────────────────
+const PROXY_BASE = PROXY_URL.replace('/api/league', '');
+
+async function fetchLiveData() {
+  const { league_entries, matches, standings } = leagueData;
+  const entryMap = buildEntryMap(league_entries);
+
+  // Determine current GW — highest started GW
+  const startedMatches = matches.filter(m => m.started || m.finished);
+  if (!startedMatches.length) throw new Error('No gameweeks started yet');
+  const currentGW = Math.max(...startedMatches.map(m => m.event));
+
+  // Get this GW's matchups
+  const gwMatches = matches.filter(m => m.event === currentGW);
+
+  // Fetch live player points
+  const liveRes = await fetch(`${PROXY_URL}?endpoint=live&id=${currentGW}`);
+  if (!liveRes.ok) throw new Error(`Live data failed: ${liveRes.status}`);
+  const liveData = await liveRes.json();
+  const playerPts = liveData.elements || {};
+
+  // Fetch picks for all 16 teams in parallel
+  const entryIds = league_entries.map(e => ({ leagueId: e.id, entryId: e.entry_id, name: e.entry_name }));
+  const picksResults = await Promise.allSettled(
+    entryIds.map(e =>
+      fetch(`${PROXY_URL}?endpoint=picks&id=${e.entryId}&gw=${currentGW}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => ({ ...e, picks: data?.picks || [] }))
+    )
+  );
+
+  // Calculate live score per team
+  const teamScores = {};
+  picksResults.forEach(res => {
+    if (res.status !== 'fulfilled') return;
+    const { leagueId, entryId, name, picks } = res.value;
+    // Starting XI = positions 1-11 with multiplier > 0
+    const starters = picks.filter(p => p.position <= 11 && p.multiplier > 0);
+    const score = starters.reduce((sum, p) => {
+      const pts = playerPts[String(p.element)]?.stats?.total_points || 0;
+      return sum + (pts * p.multiplier);
+    }, 0);
+    teamScores[leagueId] = { score, name, entryId };
+  });
+
+  return { gwMatches, teamScores, currentGW, entryMap, standings };
+}
+
+function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
+  const matchupsEl = document.getElementById('live-matchups');
+  const tableEl = document.getElementById('live-table-body');
+  matchupsEl.innerHTML = '';
+  tableEl.innerHTML = '';
+
+  document.getElementById('live-updated').textContent =
+    `GW${currentGW} · Last updated ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+
+  // Render matchup cards
+  gwMatches.forEach(m => {
+    const e1 = m.league_entry_1, e2 = m.league_entry_2;
+    const s1 = teamScores[e1]?.score ?? '—';
+    const s2 = teamScores[e2]?.score ?? '—';
+    const n1 = entryMap[e1]?.name || 'Unknown';
+    const n2 = entryMap[e2]?.name || 'Unknown';
+    const isFinished = m.finished;
+    const statusLabel = isFinished ? 'Final' : m.started ? 'Live' : 'Upcoming';
+    const statusColor = isFinished ? 'var(--muted)' : m.started ? 'var(--accent)' : 'var(--accent3)';
+
+    let winning1 = '', winning2 = '';
+    if (typeof s1 === 'number' && typeof s2 === 'number') {
+      if (s1 > s2) { winning1 = 'var(--accent)'; }
+      else if (s2 > s1) { winning2 = 'var(--accent)'; }
+    }
+
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+        <span style="font-size:10px;font-family:var(--font-head);font-weight:600;letter-spacing:0.1em;color:${statusColor}">${statusLabel}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n1}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning1||'var(--text)'}">${s1}</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--font-head);flex-shrink:0">vs</div>
+        <div style="flex:1;min-width:0;text-align:right">
+          <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n2}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning2||'var(--text)'}">${s2}</div>
+        </div>
+      </div>
+    `;
+    matchupsEl.appendChild(card);
+  });
+
+  // Full standings table sorted by live score
+  const allTeams = Object.entries(teamScores)
+    .map(([id, v]) => ({ id: parseInt(id), ...v }))
+    .sort((a, b) => b.score - a.score);
+
+  allTeams.forEach((t, i) => {
+    const standing = standings.find(s => s.league_entry === t.id);
+    const match = gwMatches.find(m => m.league_entry_1 === t.id || m.league_entry_2 === t.id);
+    let resultLabel = '—', resultCls = 'b-gray';
+    if (match) {
+      const isE1 = match.league_entry_1 === t.id;
+      const oppId = isE1 ? match.league_entry_2 : match.league_entry_1;
+      const oppScore = teamScores[oppId]?.score ?? 0;
+      if (t.score > oppScore) { resultLabel = 'W'; resultCls = 'w'; }
+      else if (t.score < oppScore) { resultLabel = 'L'; resultCls = 'l'; }
+      else { resultLabel = 'D'; resultCls = 'd'; }
+    }
+    const tr = document.createElement('tr');
+    if (t.entryId === 196569) tr.classList.add('me');
+    tr.innerHTML = `<td class="rank">${i+1}</td>
+      <td style="font-weight:500">${t.name}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${t.score}</td>
+      <td style="text-align:right">${standing?.total ?? '—'}</td>
+      <td><span class="badge ${resultCls}">${resultLabel}</span></td>`;
+    tableEl.appendChild(tr);
+  });
+}
+
+async function refreshLive() {
+  document.getElementById('live-updated').textContent = 'Refreshing...';
+  try {
+    const data = await fetchLiveData();
+    renderLive(data);
+  } catch(e) {
+    document.getElementById('live-error').style.display = 'block';
+    document.getElementById('live-error').textContent = 'Error refreshing: ' + e.message;
+  }
+}
+
+async function initLive() {
+  try {
+    document.getElementById('live-loading').style.display = 'block';
+    document.getElementById('live-content').style.display = 'none';
+    document.getElementById('live-error').style.display = 'none';
+    const data = await fetchLiveData();
+    document.getElementById('live-loading').style.display = 'none';
+    document.getElementById('live-content').style.display = 'block';
+    renderLive(data);
+  } catch(e) {
+    document.getElementById('live-loading').style.display = 'none';
+    document.getElementById('live-error').style.display = 'block';
+    document.getElementById('live-error').textContent = 'Could not load live data: ' + e.message;
+  }
+}
+
 
 init();
 </script>
