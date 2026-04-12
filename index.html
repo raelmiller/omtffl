@@ -1290,15 +1290,10 @@ async function init() {
 const PROXY_BASE = PROXY_URL.replace('/api/league', '');
 
 // ── AUTO-SUB LOGIC ────────────────────────────────────────────────────────────
-function played(elementId, playerPts, startedFixtures) {
+function played(elementId, playerPts) {
   const el = playerPts[String(elementId)];
   if (!el) return false;
-  const minutes = el.stats?.minutes || 0;
-  if (minutes > 0) return true;
-  // 0 minutes — only counts as "didn't play" if their fixture has actually started
-  const fixtureId = el.explain?.[0]?.[1];
-  if (!fixtureId) return false;
-  return startedFixtures.has(fixtureId);
+  return (el.stats?.minutes || 0) > 0;
 }
 
 function getPos(elementId, posMap) {
@@ -1311,14 +1306,14 @@ function isValidFormation(squad) {
   return counts[1] >= 1 && counts[2] >= 3 && counts[3] >= 2 && counts[4] >= 1 && squad.length === 11;
 }
 
-function applyAutoSubs(picks, playerPts, posMap, startedFixtures) {
+function applyAutoSubs(picks, playerPts, posMap) {
   const starters = picks.filter(p => p.position <= 11).map(p => ({...p, pos: getPos(p.element, posMap), active: true}));
   const bench = picks.filter(p => p.position > 11).sort((a,b) => a.position - b.position).map(p => ({...p, pos: getPos(p.element, posMap), used: false}));
 
   // GK sub
   const gkIdx = starters.findIndex(p => p.pos === 1);
   const gkBenchIdx = bench.findIndex(p => p.pos === 1);
-  if (gkIdx >= 0 && gkBenchIdx >= 0 && !played(starters[gkIdx].element, playerPts, startedFixtures) && played(bench[gkBenchIdx].element, playerPts, startedFixtures)) {
+  if (gkIdx >= 0 && gkBenchIdx >= 0 && !played(starters[gkIdx].element, playerPts) && played(bench[gkBenchIdx].element, playerPts)) {
     starters[gkIdx] = {...bench[gkBenchIdx], pos: 1, active: true};
     bench[gkBenchIdx].used = true;
   }
@@ -1326,10 +1321,10 @@ function applyAutoSubs(picks, playerPts, posMap, startedFixtures) {
   // Outfield subs in bench order
   for (const sub of bench) {
     if (sub.used || sub.pos === 1) continue;
-    if (!played(sub.element, playerPts, startedFixtures)) continue;
+    if (!played(sub.element, playerPts)) continue;
     for (let i = 0; i < starters.length; i++) {
       if (starters[i].pos === 1) continue;
-      if (played(starters[i].element, playerPts, startedFixtures)) continue;
+      if (played(starters[i].element, playerPts)) continue;
       const testSquad = starters.map((s, j) => j === i ? {...sub, pos: sub.pos} : s);
       if (isValidFormation(testSquad)) {
         starters[i] = {...sub, pos: sub.pos, active: true};
@@ -1358,9 +1353,6 @@ async function fetchLiveData() {
   if (!liveRes.ok) throw new Error(`Live data failed: ${liveRes.status}`);
   const liveData = await liveRes.json();
   const playerPts = liveData.elements || {};
-  const startedFixtures = new Set(
-    (liveData.fixtures || []).filter(f => f.started || f.finished).map(f => f.id)
-  );
 
   const posMap = {};
   if (bootRes.ok) {
@@ -1391,7 +1383,7 @@ async function fetchLiveData() {
     }, 0);
 
     // Projected max: auto subs applied (bonus already in total_points)
-    const subbedXI = applyAutoSubs(picks, playerPts, posMap, startedFixtures);
+    const subbedXI = applyAutoSubs(picks, playerPts, posMap);
     const projScore = subbedXI.reduce((sum, p) => {
       return sum + (playerPts[String(p.element)]?.stats?.total_points || 0);
     }, 0);
