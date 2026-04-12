@@ -452,7 +452,8 @@
           <table>
             <thead><tr>
               <th>#</th><th>Team</th>
-              <th style="text-align:right">Live score</th>
+              <th style="text-align:right">XI score</th>
+              <th style="text-align:right">Proj max</th>
               <th style="text-align:right">Proj pts</th>
               <th style="text-align:center">Proj pos</th>
               <th>H2H result</th>
@@ -1288,23 +1289,74 @@ async function init() {
 // ── LIVE GW TRACKER ──────────────────────────────────────────────────────────
 const PROXY_BASE = PROXY_URL.replace('/api/league', '');
 
+// ── AUTO-SUB LOGIC ────────────────────────────────────────────────────────────
+function played(elementId, playerPts) {
+  return (playerPts[String(elementId)]?.stats?.minutes || 0) > 0;
+}
+
+function getPos(elementId, posMap) {
+  return posMap[elementId] || 3;
+}
+
+function isValidFormation(squad) {
+  const counts = {1:0,2:0,3:0,4:0};
+  squad.forEach(p => { counts[p.pos] = (counts[p.pos]||0) + 1; });
+  return counts[1] >= 1 && counts[2] >= 3 && counts[3] >= 2 && counts[4] >= 1 && squad.length === 11;
+}
+
+function applyAutoSubs(picks, playerPts, posMap) {
+  const starters = picks.filter(p => p.position <= 11).map(p => ({...p, pos: getPos(p.element, posMap), active: true}));
+  const bench = picks.filter(p => p.position > 11).sort((a,b) => a.position - b.position).map(p => ({...p, pos: getPos(p.element, posMap), used: false}));
+
+  // GK sub
+  const gkIdx = starters.findIndex(p => p.pos === 1);
+  const gkBenchIdx = bench.findIndex(p => p.pos === 1);
+  if (gkIdx >= 0 && gkBenchIdx >= 0 && !played(starters[gkIdx].element, playerPts) && played(bench[gkBenchIdx].element, playerPts)) {
+    starters[gkIdx] = {...bench[gkBenchIdx], pos: 1, active: true};
+    bench[gkBenchIdx].used = true;
+  }
+
+  // Outfield subs in bench order
+  for (const sub of bench) {
+    if (sub.used || sub.pos === 1) continue;
+    if (!played(sub.element, playerPts)) continue;
+    for (let i = 0; i < starters.length; i++) {
+      if (starters[i].pos === 1) continue;
+      if (played(starters[i].element, playerPts)) continue;
+      const testSquad = starters.map((s, j) => j === i ? {...sub, pos: sub.pos} : s);
+      if (isValidFormation(testSquad)) {
+        starters[i] = {...sub, pos: sub.pos, active: true};
+        sub.used = true;
+        break;
+      }
+    }
+  }
+  return starters;
+}
+
 async function fetchLiveData() {
   const { league_entries, matches, standings } = leagueData;
   const entryMap = buildEntryMap(league_entries);
 
-  // Determine current GW — highest started GW
   const startedMatches = matches.filter(m => m.started || m.finished);
   if (!startedMatches.length) throw new Error('No gameweeks started yet');
   const currentGW = Math.max(...startedMatches.map(m => m.event));
-
-  // Get this GW's matchups
   const gwMatches = matches.filter(m => m.event === currentGW);
 
-  // Fetch live player points
-  const liveRes = await fetch(`${PROXY_URL}?endpoint=live&id=${currentGW}`);
+  // Fetch live points + bootstrap in parallel
+  const [liveRes, bootRes] = await Promise.all([
+    fetch(`${PROXY_URL}?endpoint=live&id=${currentGW}`),
+    fetch(`${PROXY_URL}?endpoint=bootstrap`)
+  ]);
   if (!liveRes.ok) throw new Error(`Live data failed: ${liveRes.status}`);
   const liveData = await liveRes.json();
   const playerPts = liveData.elements || {};
+
+  const posMap = {};
+  if (bootRes.ok) {
+    const boot = await bootRes.json();
+    (boot.elements || []).forEach(e => { posMap[e.id] = e.element_type; });
+  }
 
   // Fetch picks for all 16 teams in parallel
   const entryIds = league_entries.map(e => ({ leagueId: e.id, entryId: e.entry_id, name: e.entry_name }));
@@ -1316,18 +1368,25 @@ async function fetchLiveData() {
     )
   );
 
-  // Calculate live score per team
   const teamScores = {};
   picksResults.forEach(res => {
     if (res.status !== 'fulfilled') return;
     const { leagueId, entryId, name, picks } = res.value;
-    // Starting XI = positions 1-11 with multiplier > 0
+    if (!picks.length) return;
+
+    // Current XI score (no subs applied)
     const starters = picks.filter(p => p.position <= 11 && p.multiplier > 0);
     const score = starters.reduce((sum, p) => {
-      const pts = playerPts[String(p.element)]?.stats?.total_points || 0;
-      return sum + (pts * p.multiplier);
+      return sum + (playerPts[String(p.element)]?.stats?.total_points || 0) * p.multiplier;
     }, 0);
-    teamScores[leagueId] = { score, name, entryId };
+
+    // Projected max: auto subs applied (bonus already in total_points)
+    const subbedXI = applyAutoSubs(picks, playerPts, posMap);
+    const projScore = subbedXI.reduce((sum, p) => {
+      return sum + (playerPts[String(p.element)]?.stats?.total_points || 0);
+    }, 0);
+
+    teamScores[leagueId] = { score, projScore, name, entryId };
   });
 
   return { gwMatches, teamScores, currentGW, entryMap, standings };
@@ -1347,6 +1406,10 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     const e1 = m.league_entry_1, e2 = m.league_entry_2;
     const s1 = teamScores[e1]?.score ?? '—';
     const s2 = teamScores[e2]?.score ?? '—';
+    const p1score = teamScores[e1]?.projScore ?? null;
+    const p2score = teamScores[e2]?.projScore ?? null;
+    const proj1 = (p1score !== null && p1score !== s1) ? ` <span style="font-size:14px;color:var(--muted)">(${p1score})</span>` : '';
+    const proj2 = (p2score !== null && p2score !== s2) ? ` <span style="font-size:14px;color:var(--muted)">(${p2score})</span>` : '';
     const n1 = entryMap[e1]?.name || 'Unknown';
     const n2 = entryMap[e2]?.name || 'Unknown';
     const p1 = entryMap[e1]?.player || '';
@@ -1371,13 +1434,13 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n1}</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${p1}</div>
-          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning1||'var(--text)'}">${s1}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning1||'var(--text)'}">${s1}${proj1}</div>
         </div>
         <div style="font-size:11px;color:var(--muted);font-family:var(--font-head);flex-shrink:0">vs</div>
         <div style="flex:1;min-width:0;text-align:right">
           <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n2}</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${p2}</div>
-          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning2||'var(--text)'}">${s2}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning2||'var(--text)'}">${s2}${proj2}</div>
         </div>
       </div>
     `;
@@ -1398,6 +1461,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
       const oppScore = teamScores[String(oppId)]?.score ?? 0;
       if (v.score > oppScore) proj = current + 3;
       else if (v.score === oppScore) proj = current + 1;
+      // projScore tiebreak doesn't change H2H result — actual XI score determines that
     }
     projectedPts[intId] = proj;
   });
@@ -1412,7 +1476,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
   const allTeams = Object.entries(teamScores)
     .map(([id, v]) => {
       const standing = standings.find(s => s.league_entry === parseInt(id));
-      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99 };
+      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99, projScore: v.projScore };
     })
     .sort((a, b) => b.projPts - a.projPts || b.score - a.score);
 
@@ -1436,6 +1500,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     tr.innerHTML = `<td class="rank">${i+1}</td>
       <td style="font-weight:500">${t.name}<br><span style="font-size:11px;color:var(--muted);font-weight:400">${entryMap[t.id]?.player||''}</span></td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${t.score}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:500;color:var(--muted)">${t.projScore ?? t.score}</td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:500">${t.projPts}</td>
       <td style="text-align:center;font-family:var(--font-head);font-weight:700;font-size:12px;color:${arrowColor}">${arrow}</td>
       <td><span class="badge ${resultCls}">${resultLabel}</span></td>`;
