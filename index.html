@@ -452,8 +452,8 @@
           <table>
             <thead><tr>
               <th>#</th><th>Team</th>
-              <th style="text-align:right">XI score</th>
               <th style="text-align:right">Proj max</th>
+              <th style="text-align:right">XI score</th>
               <th style="text-align:right">Proj pts</th>
               <th style="text-align:center">Proj pos</th>
               <th>H2H result</th>
@@ -1386,7 +1386,7 @@ async function fetchLiveData() {
       return sum + (playerPts[String(p.element)]?.stats?.total_points || 0);
     }, 0);
 
-    teamScores[leagueId] = { score, projScore, name, entryId };
+    teamScores[leagueId] = { score: projScore, xiScore: score, name, entryId };
   });
 
   return { gwMatches, teamScores, currentGW, entryMap, standings };
@@ -1406,10 +1406,12 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     const e1 = m.league_entry_1, e2 = m.league_entry_2;
     const s1 = teamScores[e1]?.score ?? '—';
     const s2 = teamScores[e2]?.score ?? '—';
-    const p1score = teamScores[e1]?.projScore ?? null;
-    const p2score = teamScores[e2]?.projScore ?? null;
-    const proj1 = (p1score !== null && p1score !== s1) ? ` <span style="font-size:14px;color:var(--muted)">(${p1score})</span>` : '';
-    const proj2 = (p2score !== null && p2score !== s2) ? ` <span style="font-size:14px;color:var(--muted)">(${p2score})</span>` : '';
+    const xi1 = teamScores[e1]?.xiScore ?? null;
+    const xi2 = teamScores[e2]?.xiScore ?? null;
+    const diff1 = (xi1 !== null && s1 !== '—') ? s1 - xi1 : 0;
+    const diff2 = (xi2 !== null && s2 !== '—') ? s2 - xi2 : 0;
+    const sub1 = (xi1 !== null && diff1 > 0) ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${xi1}pts + ${diff1} subs &amp; bonus</div>` : '';
+    const sub2 = (xi2 !== null && diff2 > 0) ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${xi2}pts + ${diff2} subs &amp; bonus</div>` : '';
     const n1 = entryMap[e1]?.name || 'Unknown';
     const n2 = entryMap[e2]?.name || 'Unknown';
     const p1 = entryMap[e1]?.player || '';
@@ -1434,13 +1436,15 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n1}</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${p1}</div>
-          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning1||'var(--text)'}">${s1}${proj1}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning1||'var(--text)'}">${s1}</div>
+          ${sub1}
         </div>
         <div style="font-size:11px;color:var(--muted);font-family:var(--font-head);flex-shrink:0">vs</div>
         <div style="flex:1;min-width:0;text-align:right">
           <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n2}</div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${p2}</div>
-          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning2||'var(--text)'}">${s2}${proj2}</div>
+          <div style="font-size:28px;font-family:var(--font-head);font-weight:700;color:${winning2||'var(--text)'}">${s2}</div>
+          ${sub2}
         </div>
       </div>
     `;
@@ -1476,7 +1480,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
   const allTeams = Object.entries(teamScores)
     .map(([id, v]) => {
       const standing = standings.find(s => s.league_entry === parseInt(id));
-      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99, projScore: v.projScore };
+      return { id: parseInt(id), ...v, seasonPts: standing?.total ?? 0, rank: standing?.rank ?? 99, projPts: projectedPts[parseInt(id)] ?? 0, projRank: projRankMap[parseInt(id)] ?? 99 };
     })
     .sort((a, b) => b.projPts - a.projPts || b.score - a.score);
 
@@ -1500,7 +1504,7 @@ function renderLive({ gwMatches, teamScores, currentGW, entryMap, standings }) {
     tr.innerHTML = `<td class="rank">${i+1}</td>
       <td style="font-weight:500">${t.name}<br><span style="font-size:11px;color:var(--muted);font-weight:400">${entryMap[t.id]?.player||''}</span></td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:700;color:var(--accent)">${t.score}</td>
-      <td style="text-align:right;font-family:var(--font-head);font-weight:500;color:var(--muted)">${t.projScore ?? t.score}</td>
+      <td style="text-align:right;font-family:var(--font-head);font-weight:500;color:var(--muted)">${t.xiScore ?? t.score}</td>
       <td style="text-align:right;font-family:var(--font-head);font-weight:500">${t.projPts}</td>
       <td style="text-align:center;font-family:var(--font-head);font-weight:700;font-size:12px;color:${arrowColor}">${arrow}</td>
       <td><span class="badge ${resultCls}">${resultLabel}</span></td>`;
