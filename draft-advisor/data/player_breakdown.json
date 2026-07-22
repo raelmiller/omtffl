@@ -213,7 +213,7 @@
    "sales": {
     "2023-24": {
      "price": 14.25,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "NEW",
      "points_that_season": 172
     },
@@ -477,7 +477,7 @@
    "sales": {
     "2023-24": {
      "price": 5.75,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "BOU",
      "points_that_season": 175
     },
@@ -861,7 +861,7 @@
    "sales": {
     "2023-24": {
      "price": 0.75,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "CHE",
      "points_that_season": null
     },
@@ -1002,7 +1002,7 @@
    "sales": {
     "2023-24": {
      "price": 6.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "CRY",
      "points_that_season": 136
     },
@@ -1068,7 +1068,7 @@
    "sales": {
     "2023-24": {
      "price": 9.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "TOT",
      "points_that_season": 117
     },
@@ -1515,7 +1515,7 @@
    "sales": {
     "2023-24": {
      "price": 7.0,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "TOT",
      "points_that_season": 130
     },
@@ -3468,7 +3468,7 @@
    "sales": {
     "2023-24": {
      "price": 1.0,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "LIV",
      "points_that_season": 56
     },
@@ -3501,7 +3501,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "FUL",
      "points_that_season": 104
     },
@@ -4176,7 +4176,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "EVE",
      "points_that_season": 124
     },
@@ -4881,7 +4881,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "AVL",
      "points_that_season": 115
     },
@@ -5085,7 +5085,7 @@
    "sales": {
     "2023-24": {
      "price": 1.5,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "BRE",
      "points_that_season": 13
     },
@@ -5409,7 +5409,7 @@
    "sales": {
     "2023-24": {
      "price": 1.25,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "WHU",
      "points_that_season": null
     }
@@ -5661,7 +5661,7 @@
    "sales": {
     "2023-24": {
      "price": 1.0,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "AVL",
      "points_that_season": null
     }
@@ -7884,7 +7884,7 @@
    "sales": {
     "2023-24": {
      "price": 0.0,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "NFO",
      "points_that_season": null
     }
@@ -7905,7 +7905,7 @@
    "sales": {
     "2023-24": {
      "price": 0.0,
-     "buyer": "Ollie",
+     "buyer": "Oli",
      "club_then": "EVE",
      "points_that_season": 18
     }

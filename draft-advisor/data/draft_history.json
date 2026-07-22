@@ -1202,7 +1202,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "GK",
    "player": "Emiliano Martinez",
    "club": "AVL",
@@ -1210,7 +1210,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "Danilo",
    "club": "NFO",
@@ -1218,7 +1218,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "DEF",
    "player": "Ibrahima Konate",
    "club": "LIV",
@@ -1226,7 +1226,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "DEF",
    "player": "Antonee Robinson",
    "club": "FUL",
@@ -1234,7 +1234,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "DEF",
    "player": "Thiago Silva",
    "club": "CHE",
@@ -1242,7 +1242,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "DEF",
    "player": "Rico Henry",
    "club": "BRE",
@@ -1250,7 +1250,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "DEF",
    "player": "Michael Keane",
    "club": "EVE",
@@ -1258,7 +1258,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "Dejan Kulusevski",
    "club": "TOT",
@@ -1266,7 +1266,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "James Maddison",
    "club": "TOT",
@@ -1274,7 +1274,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "Eberechi Eze",
    "club": "CRY",
@@ -1282,7 +1282,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "Dwight McNeil",
    "club": "EVE",
@@ -1290,7 +1290,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "MID",
    "player": "Said Benrahma",
    "club": "WHU",
@@ -1298,7 +1298,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "FWD",
    "player": "Alexander Isak",
    "club": "NEW",
@@ -1306,7 +1306,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "FWD",
    "player": "Dominic Solanke",
    "club": "BOU",
@@ -1314,7 +1314,7 @@
   },
   {
    "season": "2023-24",
-   "manager": "Ollie",
+   "manager": "Oli",
    "position": "FWD",
    "player": "Moussa Diaby",
    "club": "AVL",
@@ -5267,7 +5267,7 @@
       "MID": 5
      }
     },
-    "Ollie": {
+    "Oli": {
      "players": 15,
      "spent": 50.0,
      "by_pos": {

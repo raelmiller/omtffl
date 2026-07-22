@@ -28,6 +28,9 @@ FILES = {
 
 VALID_POSITIONS = {"GK", "DEF", "MID", "FOR", "FWD"}
 
+# same person, different spelling between seasons (confirmed by Rael)
+MANAGER_ALIASES = {"Ollie": "Oli"}
+
 
 def parse_cost(v):
     if v is None:
@@ -65,6 +68,7 @@ def parse_sheet(ws, season):
                 break
         if manager is None:
             manager = f"UNKNOWN(r{hr}c{hc})"
+        manager = MANAGER_ALIASES.get(manager, manager)
 
         r = hr + 1
         while r <= ws.max_row:
