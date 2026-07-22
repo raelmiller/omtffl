@@ -138,6 +138,7 @@ async function loadData(){
   ].map(p=>p.then(r=>r.json())));
   FPL=f;MODEL=m;DOSSIERS=d;SALES=s;
   FPL.players.forEach(p=>{p.pos=POSN[p.element_type]||"?";p.hist=FPL.history_past[p.id]||[]});
+  buildCostTables();
   toast(`data loaded: ${FPL.players.length} players, baked ${FPL.baked_at.slice(0,10)}`);
   renderGems();renderTeams();
 }
@@ -182,15 +183,48 @@ function modelProjection(p){
   }
   return {pts:s1.total_points,basis:`${s1.total_points} pts in ${s1.season_name}`};
 }
-function bandOf(pts){for(const[l,lo,hi]of BANDS)if(pts>=lo&&pts<=hi)return l;return"0-49"}
-function baseRange(pos,projPts){
+// representative projection at the centre of each band, for smooth interpolation
+const BAND_MID={"0-49":25,"50-79":65,"80-99":90,"100-124":112,"125-149":137,"150-179":165,"180+":205};
+function smoothedBand(pos,proj){
   const bands=MODEL.price_bands[pos]||{};
-  let b=bands[bandOf(projPts)];
-  if(!b){ // fall back to nearest populated band below
-    const idx=BANDS.findIndex(x=>x[0]===bandOf(projPts));
-    for(let i=idx;i>=0;i--){if(bands[BANDS[i][0]]){b=bands[BANDS[i][0]];break}}
+  const pts=BANDS.map(([l])=>[BAND_MID[l],bands[l]]).filter(x=>x[1]);   // populated bands, ascending
+  if(!pts.length)return {p25:0,median:.25,p75:1};
+  if(proj<=pts[0][0])return pts[0][1];
+  if(proj>=pts[pts.length-1][0])return pts[pts.length-1][1];
+  for(let i=0;i<pts.length-1;i++){
+    const [x0,a]=pts[i],[x1,b]=pts[i+1];
+    if(proj>=x0&&proj<=x1){
+      const t=(proj-x0)/(x1-x0), lerp=k=>a[k]+(b[k]-a[k])*t;
+      return {p25:lerp("p25"),median:lerp("median"),p75:lerp("p75")};
+    }
   }
-  return b||{p25:0,median:.25,p75:1,n:0};
+  return pts[pts.length-1][1];
+}
+// Marquee premium (price only): a high points projection alone doesn't earn
+// the top £20m+ tier — that's reserved for players FPL also prices as elite
+// FOR THEIR POSITION (defenders top out ~£6m, so the test must be relative).
+// Tapers so a consistent-but-modest scorer (Bowen) prices as a strong non-
+// marquee, while genuine big hitters (Haaland, Salah, Fernandes) keep the top.
+// Per position, the marquee band runs from the 80th-percentile price up to
+// the position's top-end price. Only players reaching into that top tail
+// (near the most expensive at their position) earn the £20m+ premium.
+let marqueeBand={};
+function buildCostTables(){
+  ["GK","DEF","MID","FWD"].forEach(pos=>{
+    const a=FPL.players
+      .filter(p=>p.pos===pos&&(p.now_cost||0)>40&&(p.hist.length||(p.total_points||0)>0))
+      .map(p=>p.now_cost).sort((x,y)=>x-y);
+    if(a.length<5){marqueeBand[pos]={lo:60,hi:100};return;}
+    marqueeBand[pos]={lo:a[Math.floor(a.length*0.8)], hi:a[Math.floor(a.length*0.97)]};
+  });
+}
+function marqueeTier(p){                  // 0 = not marquee, 1 = top of position
+  const b=marqueeBand[p.pos]; if(!b||b.hi<=b.lo)return 1;
+  return Math.max(0,Math.min(1,((p.now_cost||0)-b.lo)/(b.hi-b.lo)));
+}
+function pricingProjection(p,proj){
+  if(proj<=165)return proj;              // only the premium tier is gated
+  return Math.round(165+(proj-165)*marqueeTier(p));
 }
 function liquidity(){
   if(!state.teams.length)return {mult:1,label:"no live room data"};
@@ -202,9 +236,11 @@ function liquidity(){
   return {mult,money,slots,label:`£${money.toFixed(2)}m over ${slots} slots (×${mult.toFixed(2)})`};
 }
 function fairRange(p){
-  const proj=projection(p), base=baseRange(p.pos,proj.pts), liq=liquidity();
+  const proj=projection(p), liq=liquidity();
+  const pp=pricingProjection(p,proj.pts);
+  const base=smoothedBand(p.pos,pp);
   const r=x=>Math.max(.25,Math.round(x*liq.mult*4)/4);
-  return {proj,base,liq,low:r(base.p25),mid:r(base.median),high:r(base.p75)};
+  return {proj,pp,base,liq,low:r(base.p25),mid:r(base.median),high:r(base.p75)};
 }
 function teamManager(t){ // mapped dossier name for an auction team
   const manual=teamMap[t.id];if(manual)return manual;
@@ -284,7 +320,7 @@ function myVerdict(p,est,liveBid){
     if(scarce)return {cls:"v-priority",head:`PRIORITY — bid to £${ceil.toFixed(2)}m`,
       sub:`fair price (£${est.low}–${est.high}m) and ${p.pos} is thinning — ${scNote}. Don't let this one go.`};
     return {cls:"v-value",head:`FAIR — worth it to £${ceil.toFixed(2)}m`,
-      sub:`market rate for a ${est.proj.pts}-pt ${p.pos} (fair £${est.low}–${est.high}m). Bid if you want him, walk above £${est.high}m.`};
+      sub:`fair range £${est.low}–${est.high}m for his profile (projects ${est.proj.pts} pts). Bid if you want him, walk above £${est.high}m.`};
   }
   // above the fair range
   if(scarce&&maxBid>=price)
@@ -308,6 +344,7 @@ function factsheet(p,currentBid,leadingTeam){
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
   if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
+  if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
