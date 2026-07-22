@@ -46,21 +46,30 @@ to pull up any player, and **demo** to replay the 2025-26 draft as a dry run.
 
 - **Projection**: `0.7 × last season + 0.3 × season before`, but only when
   those two seasons are consecutive and the earlier one had real minutes;
-  otherwise just the last season. Players new to the PL project from their
-  single season (or 0 with a "no history" flag).
+  otherwise just the last season. Each season is **minutes-adjusted** toward
+  a full 3000-minute rate (upward only, capped 1.6×, 900-min floor) so a
+  player who missed time isn't understated. Players new to the PL estimate
+  from FPL's own price (median of same-position peers within £0.5m). Any
+  projection can be **manually overridden** on the factsheet — your call
+  beats the model for transfers, role changes, new managers.
 - **Fair range**: the league's historical price for that position and
   projection band (25th/median/75th percentile of what was actually paid),
+  **interpolated smoothly** between adjacent bands (no cliffs at boundaries),
   scaled by a **room-liquidity multiplier** — `sqrt(money-per-slot-left ÷
   £3.33 starting)`, clamped 0.6–1.6. Early with full budgets it sits at
   ×1.0; it rises when the room is flush and falls when everyone's skint.
+- **Marquee premium**: a high projection alone doesn't earn the £20m+ tier —
+  that premium tapers by how far a player's FPL price reaches into the top
+  tail of his own position. Keeps genuine big hitters elite; prices
+  consistent-but-modest scorers as strong non-marquees. Flagged on the card.
 - **Rivals**: each team scored on open slots at the position, spare budget,
   their manager's historical position-spend share, club affinity, marquee
   appetite, and whether they've bought this player before.
-- **Verdict**: your projection minus a *replacement level* (what will still
-  be gettable at that position later). Big edge → PRIORITY; small edge →
-  only if cheap. This is why elite players read "only if cheap" early —
-  when every striker is still available, none is scarce yet. The verdict
-  sharpens toward PRIORITY as comparable players get drafted.
+- **Verdict**: compares the live bid (or the expected market price when
+  browsing) to the fair range → VALUE / FAIR / OVERPRICED, gated by your
+  budget and open slots. Positional **scarcity** (starter-grade players left
+  vs open slots) upgrades a fair price to PRIORITY, or an over-market price
+  to STRETCH.
 
 ## Rebuilding the data
 
@@ -76,12 +85,17 @@ python3 scripts/build_manager_dossiers.py    # dossiers.html
 python3 scripts/fit_price_model.py           # price_model.json
 ```
 
-## Known calibration points (tune together before draft day)
+## Tunable dials (in advisor.html)
 
-- **Replacement level** currently = the 4th-best-remaining projection at a
-  position. Too generous → elite players look less urgent; too harsh →
-  everything looks like a priority. This is the main dial.
+- **Minutes adjustment**: `FULL_MIN` (3000), `MAX_UP` (1.6), `MIN_M` (900).
+- **Marquee taper**: `marqueeBand` uses each position's 80th→97th price
+  percentile as the premium window.
+- **Scarcity threshold**: `scarce = strong <= open+1` in `myVerdict`.
+- **Liquidity multiplier**: clamp + curve in `liquidity()`.
+
+## Known limits
+
 - **Price bands** are league-wide; a few positions/bands have thin samples
-  (GK 180+, DEF 180+). The model falls back to the nearest populated band.
-- Promoted-club and new-signing players have thin PL history — flagged, not
-  invented.
+  (GK 180+, DEF 180+). Smoothing interpolates across neighbours.
+- Promoted-club and new-signing players have thin PL history — estimated
+  from FPL price and flagged, not invented. Use the override.
