@@ -146,6 +146,13 @@ const $=id=>document.getElementById(id);
 const POSN={1:"GK",2:"DEF",3:"MID",4:"FWD"};
 const SLOTS={GK:2,DEF:5,MID:5,FWD:3};
 const BANDS=[["0-49",0,49],["50-79",50,79],["80-99",80,99],["100-124",100,124],["125-149",125,149],["150-179",150,179],["180+",180,1e4]];
+// Real-world club loyalty the buy-history can't see. +1 = loyal, bids up
+// their own club's players; -1 = a fan but reluctant to buy their own club.
+const CLUB_BIAS={
+  Ciaran:{LIV:1}, Simon:{LIV:1}, Yath:{LIV:1},
+  Richard:{ARS:1}, Tiggy:{ARS:1},
+  Oli:{TOT:-1}, Rael:{TOT:-1},
+};
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 async function loadData(){
@@ -304,7 +311,11 @@ function rivalScores(p,est){
     if(prior){
       const share=prior.pos_share[p.pos]||0;
       score+=share*60; if(share>=.4)why.push(`spends ${(share*100)|0}% on ${p.pos}`);
-      if(prior.club_affinity[p.team_short]){score+=15;why.push(`${p.team_short} fan (${prior.club_affinity[p.team_short]} buys)`)}
+      // explicit club loyalty overrides the noisy buy-count signal
+      const bias=(CLUB_BIAS[mgrName]||{})[p.team_short];
+      if(bias>0){score+=30;why.unshift(`loyal ${p.team_short} fan — bids up`)}
+      else if(bias<0){score-=35;why.push(`${p.team_short} fan but shuns own club`)}
+      else if(prior.club_affinity[p.team_short]){score+=15;why.push(`${p.team_short} fan (${prior.club_affinity[p.team_short]} buys)`)}
       if(est.mid>=10){score+=prior.big_bids_per_season*8;if(prior.big_bids_per_season>=1.5)why.push("chases marquees")}
       const past=SALES.find(s=>s.fpl_id===p.id&&s.manager===mgrName);
       if(past){score+=20;why.push(`bought him in ${past.season}`)}
