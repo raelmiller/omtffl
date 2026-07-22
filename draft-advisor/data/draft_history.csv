@@ -1,0 +1,646 @@
+season,manager,position,player,club,cost
+2023-24,Yath,GK,Jose Sa,WOL,0.5
+2023-24,Yath,FWD,Yoane Wissa,BRE,0.5
+2023-24,Yath,DEF,Pervis Estupinan,BHA,5.25
+2023-24,Yath,DEF,Fabian Schar,NEW,1.5
+2023-24,Yath,DEF,James Tarkowski,EVE,2.0
+2023-24,Yath,DEF,Kenny Tete,FUL,0.75
+2023-24,Yath,DEF,Alex Moreno,AVL,0.25
+2023-24,Yath,MID,Jack Grealish,MCI,7.25
+2023-24,Yath,MID,Kaoru Mitoma,BHA,8.25
+2023-24,Yath,MID,Morgan Gibbs-White,NFO,7.0
+2023-24,Yath,MID,Emiliano Buendia,AVL,0.0
+2023-24,Yath,MID,Hamed Traore,BOU,0.25
+2023-24,Yath,FWD,Cody Gakpo,LIV,8.0
+2023-24,Yath,FWD,Carlton Morris,LUT,2.75
+2023-24,Yath,FWD,Bryan Mbeumo,BRE,5.75
+2023-24,Deepesh,GK,Kepa,CHE,0.0
+2023-24,Deepesh,GK,Robert Sanchez,CHE,0.0
+2023-24,Deepesh,DEF,Luke Shaw,MUN,4.5
+2023-24,Deepesh,DEF,Aaron Wan-Bissaka,MUN,0.0
+2023-24,Deepesh,DEF,Jordan Beyer,BUR,0.25
+2023-24,Deepesh,DEF,Matty Cash,AVL,0.25
+2023-24,Deepesh,DEF,Tom Lockyer,LUT,0.25
+2023-24,Deepesh,MID,Bukayo Saka,ARS,17.5
+2023-24,Deepesh,MID,Mykhailo Mudryk,CHE,6.0
+2023-24,Deepesh,MID,Youri Tielemans,AVL,0.25
+2023-24,Deepesh,MID,Pablo Sarabia,WOL,0.0
+2023-24,Deepesh,MID,Justin Kluivert,NFO,0.25
+2023-24,Deepesh,FWD,Gabriel Jesus,ARS,12.5
+2023-24,Deepesh,FWD,Rasmus Hojlund,MUN,8.0
+2023-24,Deepesh,FWD,Matheus Franca,CRY,0.0
+2023-24,Ciaran,GK,James Shea,LUT,0.0
+2023-24,Ciaran,GK,Neto,BOU,0.0
+2023-24,Ciaran,DEF,Anel Ahmedhodzic,SHU,0.0
+2023-24,Ciaran,DEF,Milos Kerkez,BOU,0.0
+2023-24,Ciaran,DEF,Cristian Romero,TOT,0.0
+2023-24,Ciaran,DEF,Kurt Zouma,WHU,0.0
+2023-24,Ciaran,DEF,Rico Lewis,MCI,0.0
+2023-24,Ciaran,MID,Pascal Gross,BHA,5.5
+2023-24,Ciaran,MID,Jadon Sancho,MUN,0.0
+2023-24,Ciaran,MID,Miguel Almiron,NEW,0.0
+2023-24,Ciaran,MID,David Brooks,BOU,0.0
+2023-24,Ciaran,DEF,Tino Livramento,NEW,0.0
+2023-24,Ciaran,FWD,Harry Kane,TOT,10.0
+2023-24,Ciaran,FWD,Mohamed Salah,LIV,29.0
+2023-24,Ciaran,FWD,Diogo Jota,LIV,5.5
+2023-24,Gav,GK,Lukas Fabianski,WHU,0.25
+2023-24,Gav,GK,Vicario,TOT,0.0
+2023-24,Gav,DEF,Kieran Trippier,NEW,12.0
+2023-24,Gav,DEF,Trent Alexander-Arnold,LIV,15.75
+2023-24,Gav,DEF,Felipe,NFO,0.0
+2023-24,Gav,DEF,Manuel Akanji,MCI,0.0
+2023-24,Gav,DEF,Nathan Collins,BRE,0.0
+2023-24,Gav,MID,Andreas Pereira,FUL,2.0
+2023-24,Gav,MID,Rodri,MCI,1.5
+2023-24,Gav,MID,Philip Billing,BOU,0.25
+2023-24,Gav,MID,Alejandro Garnacho,MUN,0.0
+2023-24,Gav,MID,Abdoulaye Doucoure,EVE,0.0
+2023-24,Gav,FWD,Christopher Nkunku,CHE,10.5
+2023-24,Gav,FWD,Julio Enciso,BHA,1.75
+2023-24,Gav,FWD,Dominic Calvert-Lewin,EVE,6.0
+2023-24,Richard,GK,Nick Pope,NEW,2.0
+2023-24,Richard,GK,Martin Dubravka,NEW,0.0
+2023-24,Richard,DEF,Ben White,ARS,3.0
+2023-24,Richard,DEF,John Stones,MCI,3.5
+2023-24,Richard,DEF,Virgil Van Dijk,LIV,3.5
+2023-24,Richard,DEF,Ben Chilwell,CHE,4.0
+2023-24,Richard,DEF,Diogo Dalot,MUN,1.0
+2023-24,Richard,MID,Martin Odegaard,ARS,10.0
+2023-24,Richard,MID,Leandro Trossard,ARS,6.0
+2023-24,Richard,MID,Bruno Guimaraes,NEW,1.75
+2023-24,Richard,MID,Mateo Kovacic,MCI,1.0
+2023-24,Richard,MID,John McGinn,AVL,1.0
+2023-24,Richard,FWD,Luis Diaz,LIV,7.5
+2023-24,Richard,FWD,Evan Ferguson,BHA,2.75
+2023-24,Richard,FWD,Callum Wilson,NEW,3.0
+2023-24,Rael,GK,Vicente Guaita,CRY,0.0
+2023-24,Rael,GK,Sam Johnstone,CRY,0.0
+2023-24,Rael,DEF,Reece James,CHE,8.25
+2023-24,Rael,DEF,Ruben Dias,MCI,2.75
+2023-24,Rael,DEF,Ethan Pinnock,BRE,1.75
+2023-24,Rael,DEF,Joel Veltman,BHA,0.0
+2023-24,Rael,DEF,Nathan Ake,MCI,0.0
+2023-24,Rael,MID,Kevin De Bruyne,MCI,20.5
+2023-24,Rael,MID,Harry Wilson,FUL,3.75
+2023-24,Rael,MID,James Ward-Prowse,WHU,0.25
+2023-24,Rael,MID,Christian Eriksen,MUN,0.0
+2023-24,Rael,MID,Tomas Soucek,WHU,0.0
+2023-24,Rael,FWD,Nicolas Jackson,CHE,9.0
+2023-24,Rael,FWD,Richarlison,TOT,3.75
+2023-24,Rael,FWD,Oliver McBurnie,SHU,0.0
+2023-24,Friede,GK,Andre Onana,MUN,1.5
+2023-24,Friede,GK,Ederson,MCI,0.75
+2023-24,Friede,DEF,Andrew Robertson,LIV,5.0
+2023-24,Friede,DEF,Josko Gvardiol,MCI,3.25
+2023-24,Friede,DEF,Lisandro Martinez,MUN,1.75
+2023-24,Friede,DEF,Pedro Porro,TOT,2.25
+2023-24,Friede,DEF,Oleksandr Zinchenko,ARS,2.0
+2023-24,Friede,MID,Jarrod Bowen,WHU,5.75
+2023-24,Friede,MID,Dominik Szoboszlai,LIV,4.75
+2023-24,Friede,MID,Phil Foden,MCI,7.0
+2023-24,Friede,MID,Michael Olise,CRY,2.0
+2023-24,Friede,MID,Sandro Tonali,NEW,1.25
+2023-24,Friede,FWD,Kai Havertz,ARS,2.75
+2023-24,Friede,FWD,Joao Pedro,BHA,2.0
+2023-24,Friede,FWD,Taiwo Awoniyi,NFO,1.0
+2023-24,Ali,GK,Jason Steele,BHA,0.0
+2023-24,Ali,GK,Bart Verbruggen,BHA,0.0
+2023-24,Ali,DEF,Vitinho,BUR,0.0
+2023-24,Ali,DEF,Max Lowe,SHU,0.0
+2023-24,Ali,DEF,Amari Bell,LUT,0.0
+2023-24,Ali,DEF,Craig Dawson,WOL,0.0
+2023-24,Ali,DEF,Hugo Bueno,WOL,0.0
+2023-24,Ali,MID,Kalvin Phillips,MCI,0.0
+2023-24,Ali,MID,Jefferson Lerma,CRY,0.0
+2023-24,Ali,MID,Vitaly Janelt,BRF,0.0
+2023-24,Ali,MID,Elliot Anderson,NEW,0.0
+2023-24,Ali,FWD,Odsonne Edouard,CRY,0.0
+2023-24,Ali,FWD,Matheus Cunha,WOL,0.0
+2023-24,Ali,FWD,Elijah Adebayo,LUT,0.0
+2023-24,Ali,FWD,Eddie Nketiah,ARS,0.0
+2023-24,Tiggy,GK,Jordan Pickford,EVE,0.5
+2023-24,Tiggy,GK,Mark Flekken,BRE,0.5
+2023-24,Tiggy,DEF,Ben Mee,BRE,3.25
+2023-24,Tiggy,DEF,Gabriel Magalhaes,ARS,2.0
+2023-24,Tiggy,DEF,Tyrone Mings,AVL,0.5
+2023-24,Tiggy,DEF,William Saliba,ARS,1.75
+2023-24,Tiggy,DEF,Raphael Varane,MUN,2.5
+2023-24,Tiggy,MID,Declan Rice,ARS,2.5
+2023-24,Tiggy,MID,Bernardo Silva,MCI,3.5
+2023-24,Tiggy,MID,Enzo Fernandez,CHE,2.25
+2023-24,Tiggy,MID,Casemiro,MUN,0.75
+2023-24,Tiggy,MID,Josh Brownhill,BUR,0.75
+2023-24,Tiggy,FWD,Darwin Nunez,LIV,12.75
+2023-24,Tiggy,FWD,Marcus Rashford,MUN,16.0
+2023-24,Tiggy,FWD,Mohammad Kudus,BHA,0.5
+2023-24,Lloyd,GK,James Trafford,BUR,0.75
+2023-24,Lloyd,FWD,Julian Alvarez,MCI,4.75
+2023-24,Lloyd,DEF,Sven Botman,NEW,2.0
+2023-24,Lloyd,DEF,Calvin Bassey,FUL,0.0
+2023-24,Lloyd,DEF,Nayef Aguerd,WHU,0.0
+2023-24,Lloyd,DEF,Lewis Dunk,BHA,0.0
+2023-24,Lloyd,GK,Aaron Ramsdale,ARS,0.0
+2023-24,Lloyd,MID,Gabriel Martinelli,ARS,13.0
+2023-24,Lloyd,MID,Alexis Mac Allister,LIV,4.25
+2023-24,Lloyd,MID,Harvey Barnes,NEW,4.25
+2023-24,Lloyd,MID,Lucas Paqueta,WHU,1.25
+2023-24,Lloyd,MID,Douglas Luiz,AVL,0.5
+2023-24,Lloyd,FWD,Ollie Watkins,AVL,16.5
+2023-24,Lloyd,FWD,Raheem Sterling,CHE,1.75
+2023-24,Lloyd,FWD,Alexander Mitrovic,FUL,1.0
+2023-24,Ollie,GK,Emiliano Martinez,AVL,0.5
+2023-24,Ollie,MID,Danilo,NFO,0.0
+2023-24,Ollie,DEF,Ibrahima Konate,LIV,1.0
+2023-24,Ollie,DEF,Antonee Robinson,FUL,0.5
+2023-24,Ollie,DEF,Thiago Silva,CHE,0.75
+2023-24,Ollie,DEF,Rico Henry,BRE,1.5
+2023-24,Ollie,DEF,Michael Keane,EVE,0.0
+2023-24,Ollie,MID,Dejan Kulusevski,TOT,7.0
+2023-24,Ollie,MID,James Maddison,TOT,9.5
+2023-24,Ollie,MID,Eberechi Eze,CRY,6.5
+2023-24,Ollie,MID,Dwight McNeil,EVE,0.5
+2023-24,Ollie,MID,Said Benrahma,WHU,1.25
+2023-24,Ollie,FWD,Alexander Isak,NEW,14.25
+2023-24,Ollie,FWD,Dominic Solanke,BOU,5.75
+2023-24,Ollie,FWD,Moussa Diaby,AVL,1.0
+2023-24,Efe,GK,Alisson,LIV,2.25
+2023-24,Efe,GK,Adrian,LIV,0.0
+2023-24,Efe,DEF,Kyle Walker,MCI,0.25
+2023-24,Efe,DEF,Marc Guehi,CRY,0.25
+2023-24,Efe,DEF,Levi Colwill,CHE,0.0
+2023-24,Efe,DEF,Micky van de Ven,TOT,0.0
+2023-24,Efe,DEF,Auston Trusty,ARS,0.0
+2023-24,Efe,MID,Christain Norgaard,BRE,0.0
+2023-24,Efe,MID,Moisés Caicedo,BHA,0.0
+2023-24,Efe,MID,Anthony Gordon,NEW,0.0
+2023-24,Efe,MID,Amadou Onana,EVE,0.0
+2023-24,Efe,MID,Ryan Christie,BOU,0.0
+2023-24,Efe,FWD,Erling Haaland,MCI,29.75
+2023-24,Efe,FWD,Son Heung-Min,TOT,14.0
+2023-24,Efe,FWD,Antony,MUN,3.5
+2023-24,Georgeson,GK,Bernd Leno,FUL,1.0
+2023-24,Georgeson,MID,Mathias Jensen,BRE,0.75
+2023-24,Georgeson,DEF,Dan Burn,NEW,1.0
+2023-24,Georgeson,DEF,Jurrien TImber,ARS,1.5
+2023-24,Georgeson,DEF,Joachim Andersen,CRY,0.5
+2023-24,Georgeson,DEF,Max Kilman,WOL,0.5
+2023-24,Georgeson,DEF,Pau Torres,AVL,0.75
+2023-24,Georgeson,MID,Bruno Fernandes,MUN,25.0
+2023-24,Georgeson,MID,Alex Iwobi,EVE,4.0
+2023-24,Georgeson,MID,Mason Mount,MUN,7.0
+2023-24,Georgeson,MID,Solly March,BHA,2.5
+2023-24,Georgeson,MID,Joelinton,NEW,0.5
+2023-24,Georgeson,FWD,Brennan Johnson,NFO,2.5
+2023-24,Georgeson,FWD,Dango Outtara,BOU,2.5
+2023-24,Georgeson,FWD,Leon Bailey,AVL,0.0
+2024-25,Yath,GK,Areola,WHU,0.75
+2024-25,Yath,GK,Henderson,CRY,0.25
+2024-25,Yath,DEF,Dunk,BRI,0.25
+2024-25,Yath,DEF,Senesi,BOU,0.75
+2024-25,Yath,DEF,Gusto,CHE,0.0
+2024-25,Yath,DEF,Tsimikas,LIV,0.25
+2024-25,Yath,DEF,Livramento,NEW,1.0
+2024-25,Yath,MID,Foden,MCI,15.25
+2024-25,Yath,MID,Jota,LIV,5.5
+2024-25,Yath,MID,Mbeumo,BRE,4.5
+2024-25,Yath,MID,Almiron,NEW,0.5
+2024-25,Yath,MID,Rogers,AVL,0.25
+2024-25,Yath,FWD,Isak,NEW,19.0
+2024-25,Yath,FWD,Edouard,CRY,0.5
+2024-25,Yath,FWD,Duran,AVL,0.0
+2024-25,Gav,GK,Leno,FUL,1.0
+2024-25,Gav,GK,Alisson,LIV,1.5
+2024-25,Gav,DEF,Mykolenko,EVE,0.75
+2024-25,Gav,DEF,Aké,MCI,0.5
+2024-25,Gav,DEF,Castagne,FUL,0.5
+2024-25,Gav,DEF,Andersen,CRY,2.0
+2024-25,Gav,DEF,Barco,BRI,1.75
+2024-25,Gav,MID,Gordon,NEW,9.25
+2024-25,Gav,MID,Paqueta,WHU,2.75
+2024-25,Gav,MID,Doku,MCI,5.0
+2024-25,Gav,MID,Minteh,BRI,0.5
+2024-25,Gav,MID,Zaha,LEI,0.5
+2024-25,Gav,FWD,Mateta,CRY,11.5
+2024-25,Gav,FWD,Muniz,FUL,7.0
+2024-25,Gav,FWD,Wissa,BRE,5.5
+2024-25,Ciaran,GK,Jose Sá,WOL,1.0
+2024-25,Ciaran,GK,Bazunu,SOU,0.0
+2024-25,Ciaran,DEF,Gabriel,ARS,4.25
+2024-25,Ciaran,DEF,L. Martinez,MUN,0.5
+2024-25,Ciaran,DEF,Estupinan,BRI,0.25
+2024-25,Ciaran,DEF,Riad,CRY,0.0
+2024-25,Ciaran,DEF,Shaw,MUN,0.0
+2024-25,Ciaran,MID,Salah,LIV,19.75
+2024-25,Ciaran,MID,Hwang Hee Chan,WOL,6.0
+2024-25,Ciaran,MID,Bobb,MCI,0.0
+2024-25,Ciaran,MID,Kluivert,BOU,0.0
+2024-25,Ciaran,MID,Enzo,CHE,0.0
+2024-25,Ciaran,FWD,Armstrong,SOU,3.25
+2024-25,Ciaran,FWD,Solanke,TOT,15.0
+2024-25,Ciaran,FWD,Jebbison,BOU,0.0
+2024-25,Tiggy,GK,Ederson,MCI,2.0
+2024-25,Tiggy,GK,Sanchez,CHE,0.0
+2024-25,Tiggy,DEF,Van Dijk,LIV,4.25
+2024-25,Tiggy,DEF,Munoz,CRY,3.25
+2024-25,Tiggy,DEF,Romero,TOT,0.75
+2024-25,Tiggy,DEF,Robinson,FUL,0.75
+2024-25,Tiggy,DEF,Maatsen,AVL,3.5
+2024-25,Tiggy,MID,Eze,CRY,8.0
+2024-25,Tiggy,MID,Smith-Rowe,FUL,4.0
+2024-25,Tiggy,MID,Kudus,WHU,4.75
+2024-25,Tiggy,MID,Harrison,EVE,0.0
+2024-25,Tiggy,MID,Hutchison,IPS,0.0
+2024-25,Tiggy,FWD,Darwin,LIV,8.25
+2024-25,Tiggy,FWD,Hojlund,MUN,5.25
+2024-25,Tiggy,FWD,Osimhen,CHE,2.0
+2024-25,Ali,GK,Verbruggen,BRI,0.0
+2024-25,Ali,GK,Steele,BRI,0.0
+2024-25,Ali,DEF,Zouma,WHU,0.0
+2024-25,Ali,DEF,Neco Williams,NFO,0.0
+2024-25,Ali,DEF,Mings,AVL,0.0
+2024-25,Ali,DEF,Walker-Peters,SOU,0.0
+2024-25,Ali,DEF,Burn,NEW,0.5
+2024-25,Ali,MID,Grealish,MCI,7.5
+2024-25,Ali,MID,Rice,ARS,6.0
+2024-25,Ali,MID,Madueke,CHE,0.25
+2024-25,Ali,MID,Tielemans,AVL,1.0
+2024-25,Ali,MID,Buendia,AVL,0.0
+2024-25,Ali,FWD,Haaland,MCI,25.0
+2024-25,Ali,FWD,Wood,NFO,6.0
+2024-25,Ali,FWD,Antonio,WHU,1.0
+2024-25,Richard,GK,Vicario,TOT,1.75
+2024-25,Richard,GK,Jorgensen,CHE,0.0
+2024-25,Richard,DEF,Cucurella,CHE,2.0
+2024-25,Richard,DEF,Akanji,MCI,2.5
+2024-25,Richard,DEF,Calafiori,ARS,2.5
+2024-25,Richard,DEF,Pau Torres,AVL,2.0
+2024-25,Richard,DEF,Wan-Bissaka,WHU,0.0
+2024-25,Richard,MID,Mitoma,BRI,4.75
+2024-25,Richard,MID,Trossard,ARS,3.75
+2024-25,Richard,MID,Nkunku,CHE,6.0
+2024-25,Richard,MID,Barnes,NEW,2.25
+2024-25,Richard,MID,Sarr,CRY,0.5
+2024-25,Richard,FWD,Toney,BRE,6.0
+2024-25,Richard,FWD,Gakpo,LIV,6.75
+2024-25,Richard,FWD,Larsen,WOL,8.25
+2024-25,Deepesh,GK,Raya,ARS,2.5
+2024-25,Deepesh,GK,Petrovic,CHE,0.0
+2024-25,Deepesh,DEF,Davis,IPS,2.0
+2024-25,Deepesh,DEF,White,ARS,5.0
+2024-25,Deepesh,DEF,Justin,LEI,0.0
+2024-25,Deepesh,DEF,Soudawara,SOU,0.0
+2024-25,Deepesh,DEF,Tosin,CHE,0.0
+2024-25,Deepesh,MID,Maddison,TOT,7.0
+2024-25,Deepesh,MID,Rashford,MUN,7.0
+2024-25,Deepesh,MID,De Bruyne,MCI,11.5
+2024-25,Deepesh,MID,Brereton-Diaz,SOU,2.25
+2024-25,Deepesh,MID,Semenyo,BOU,2.25
+2024-25,Deepesh,FWD,Havertz,ARS,10.5
+2024-25,Deepesh,FWD,Daka,LEI,0.0
+2024-25,Deepesh,FWD,Jota Silva,NFO,0.0
+2024-25,Simon,GK,Hermansson,LEI,0.0
+2024-25,Simon,GK,Ward,LEI,0.0
+2024-25,Simon,DEF,Saliba,ARS,5.25
+2024-25,Simon,DEF,Walker,MCI,2.5
+2024-25,Simon,DEF,Badiashile,CHE,0.0
+2024-25,Simon,DEF,Bradley,LIV,0.0
+2024-25,Simon,DEF,Konate,LIV,0.5
+2024-25,Simon,MID,Saka,ARS,19.0
+2024-25,Simon,MID,Odegaard,ARS,14.75
+2024-25,Simon,MID,Carvalho,BRE,2.5
+2024-25,Simon,MID,Neto,CHE,0.25
+2024-25,Simon,MID,Savio,MCI,0.0
+2024-25,Simon,FWD,Vardy,LEI,2.75
+2024-25,Simon,FWD,Lukaku,AVL,0.5
+2024-25,Simon,FWD,Awoniyi,NFO,2.0
+2024-25,Friede,GK,Flekken,BRE,0.5
+2024-25,Friede,GK,Valdimarsson,BRE,0.0
+2024-25,Friede,DEF,Robertson,LIV,3.25
+2024-25,Friede,DEF,Trippier,NEW,2.75
+2024-25,Friede,DEF,Henry,BRE,0.0
+2024-25,Friede,DEF,Timber,ARS,0.0
+2024-25,Friede,DEF,Ait-Nouri,WOL,3.5
+2024-25,Friede,MID,Gibbs-White,NFO,5.5
+2024-25,Friede,MID,Kulusevski,TOT,1.75
+2024-25,Friede,MID,Bernardo Silva,MCI,6.0
+2024-25,Friede,MID,Rodri,MCI,5.25
+2024-25,Friede,MID,Martinelli,ARS,6.75
+2024-25,Friede,FWD,Joao Pedro,BRI,5.75
+2024-25,Friede,FWD,Ferguson,BRI,4.0
+2024-25,Friede,FWD,Delap,IPS,5.0
+2024-25,Maccers,GK,Pickford,EVE,2.5
+2024-25,Maccers,GK,Virginia,EVE,0.0
+2024-25,Maccers,DEF,Stones,MCI,1.0
+2024-25,Maccers,DEF,Van de Ven,TOT,1.5
+2024-25,Maccers,DEF,Guehi,CRY,1.5
+2024-25,Maccers,DEF,Colwill,CHE,0.5
+2024-25,Maccers,DEF,Cash,AVL,0.25
+2024-25,Maccers,MID,Mainoo,MUN,3.5
+2024-25,Maccers,MID,Palmer,CHE,19.5
+2024-25,Maccers,MID,Garnacho,MUN,6.25
+2024-25,Maccers,MID,Joelinton,NEW,0.5
+2024-25,Maccers,MID,Mudryk,CHE,0.0
+2024-25,Maccers,FWD,Gabriel Jesus,ARS,10.0
+2024-25,Maccers,FWD,Welbeck,BRI,2.5
+2024-25,Maccers,FWD,Hlozek,-,0.0
+2024-25,Oli,GK,Neto,BOU,1.25
+2024-25,Oli,GK,Travers,BOU,0.0
+2024-25,Oli,DEF,Alexander-Arnold,LIV,9.0
+2024-25,Oli,DEF,Ricardo Pereira,LEI,0.0
+2024-25,Oli,DEF,Udogie,TOT,4.25
+2024-25,Oli,DEF,Aina,NFO,0.0
+2024-25,Oli,DEF,Hall,NEW,0.0
+2024-25,Oli,MID,Fernandes,MUN,16.75
+2024-25,Oli,MID,Dewsbury-Hall,CHE,0.5
+2024-25,Oli,MID,B. Johnson,TOT,1.0
+2024-25,Oli,MID,Summerville,WHU,2.5
+2024-25,Oli,MID,Doucoure,EVE,0.0
+2024-25,Oli,FWD,N. Jackson,CHE,7.25
+2024-25,Oli,FWD,Hurst,IPS,0.75
+2024-25,Oli,FWD,Wilson,NEW,2.0
+2024-25,Rael,GK,E. Martinez,AVL,1.75
+2024-25,Rael,GK,Gauchi,AVL,0.0
+2024-25,Rael,DEF,Konsa,AVL,1.5
+2024-25,Rael,DEF,Branthwaite,EVE,2.0
+2024-25,Rael,DEF,Mitchell,CRY,3.0
+2024-25,Rael,DEF,Kilman,WHU,0.75
+2024-25,Rael,DEF,Quansah,LIV,0.5
+2024-25,Rael,MID,Son,TOT,15.75
+2024-25,Rael,MID,Luis Diaz,LIV,7.5
+2024-25,Rael,MID,Hudson-Odoi,NFO,3.0
+2024-25,Rael,MID,Andreas Pereira,FUL,4.25
+2024-25,Rael,MID,Soucek,WHU,0.0
+2024-25,Rael,FWD,Fullkrug,WHU,4.25
+2024-25,Rael,FWD,Calvert-Lewin,EVE,5.75
+2024-25,Rael,FWD,Raul Jimenez,FUL,0.0
+2024-25,Lloyd,GK,Pope,NEW,1.25
+2024-25,Lloyd,GK,Dubravka,NEW,0.0
+2024-25,Lloyd,DEF,James,CHE,0.0
+2024-25,Lloyd,DEF,De Ligt,MUN,2.5
+2024-25,Lloyd,DEF,Schar,NEW,3.0
+2024-25,Lloyd,DEF,Tarkowski,EVE,2.25
+2024-25,Lloyd,DEF,Mazraoui,MUN,0.0
+2024-25,Lloyd,MID,Bowen,WHU,9.0
+2024-25,Lloyd,MID,Guimaraes,NEW,5.0
+2024-25,Lloyd,MID,Szoboszlai,LIV,1.0
+2024-25,Lloyd,MID,McNeil,EVE,2.25
+2024-25,Lloyd,MID,McGinn,AVL,1.5
+2024-25,Lloyd,FWD,Watkins,AVL,18.5
+2024-25,Lloyd,FWD,Zrikzee,MUN,3.5
+2024-25,Lloyd,FWD,Maupay,EVE,0.0
+2024-25,Lucien,GK,Onana,MUN,2.0
+2024-25,Lucien,GK,Muric,IPS,0.0
+2024-25,Lucien,DEF,Gvardiol,MCI,5.5
+2024-25,Lucien,DEF,Pedro Porro,TOT,5.0
+2024-25,Lucien,DEF,Dalot,MUN,1.0
+2024-25,Lucien,DEF,Ruben Dias,MCI,2.5
+2024-25,Lucien,DEF,Zabaryni,BOU,0.0
+2024-25,Lucien,MID,Mac Allister,LIV,5.0
+2024-25,Lucien,MID,Ward-Prowse,WHU,5.0
+2024-25,Lucien,MID,Bailey,AVL,7.0
+2024-25,Lucien,MID,Elanga,NFO,3.0
+2024-25,Lucien,MID,Mavididi,LEI,1.0
+2024-25,Lucien,FWD,Cunha,WOL,7.0
+2024-25,Lucien,FWD,Richarlison,TOT,3.5
+2024-25,Lucien,FWD,Archer,AVL,2.0
+2025-26,Yath,GK,Alisson,LIV,2.5
+2025-26,Yath,GK,Hermansson,WHU,0.0
+2025-26,Yath,DEF,Tarkowski,EVE,3.0
+2025-26,Yath,DEF,Smith,BOU,0.25
+2025-26,Yath,DEF,Milenkovic,NFO,2.75
+2025-26,Yath,DEF,Kayode,BRE,0.5
+2025-26,Yath,DEF,Nunes,MCI,1.0
+2025-26,Yath,MID,Sarr,CRY,5.0
+2025-26,Yath,MID,Schade,BRE,6.0
+2025-26,Yath,MID,Semenyo,BOU,5.5
+2025-26,Yath,MID,Baleba,BRI,0.0
+2025-26,Yath,MID,Paqueta,WHU,1.5
+2025-26,Yath,FWD,Jackson,NEW,5.25
+2025-26,Yath,FWD,Broja,BUR,4.0
+2025-26,Yath,FWD,Strand Larsen,WOL,12.75
+2025-26,Gav,GK,Henderson,CRY,2.0
+2025-26,Gav,GK,Petrovic,BOU,0.25
+2025-26,Gav,DEF,Diouf,WHU,1.5
+2025-26,Gav,DEF,Lacroix,CRY,1.0
+2025-26,Gav,DEF,Cash,AVL,0.5
+2025-26,Gav,DEF,De Cuyper,BRI,0.5
+2025-26,Gav,DEF,Hoever,WOL,0.0
+2025-26,Gav,MID,Fernandes,MUN,16.0
+2025-26,Gav,MID,Tielemans,AVL,2.75
+2025-26,Gav,MID,Ndiaye,EVE,3.75
+2025-26,Gav,MID,Tonali,NEW,0.5
+2025-26,Gav,MID,Outtara,BRE,1.25
+2025-26,Gav,FWD,Wissa,BRE,14.5
+2025-26,Gav,FWD,Beto,EVE,5.0
+2025-26,Gav,FWD,Nketiah,CRY,0.5
+2025-26,Ciaran,GK,Kelleher,BRE,1.75
+2025-26,Ciaran,GK,Perri,LEE,0.0
+2025-26,Ciaran,DEF,Walker-Peters,WHU,0.0
+2025-26,Ciaran,DEF,Van Hecke,BRI,0.25
+2025-26,Ciaran,DEF,Bradley,LIV,0.0
+2025-26,Ciaran,DEF,Williams,NFO,0.0
+2025-26,Ciaran,DEF,O'Brien,EVE,0.0
+2025-26,Ciaran,MID,Saka,ARS,20.0
+2025-26,Ciaran,MID,Gordon,NEW,8.25
+2025-26,Ciaran,MID,Barcola,LIV,0.0
+2025-26,Ciaran,MID,Hannibal,,0.0
+2025-26,Ciaran,MID,Arias,WOL,0.0
+2025-26,Ciaran,FWD,Isak,FOR,19.75
+2025-26,Ciaran,FWD,Barnes,BUR,0.0
+2025-26,Ciaran,FWD,Vlahovic,,0.0
+2025-26,Tiggy,GK,Sels,NFO,2.0
+2025-26,Tiggy,GK,Vice,BUR,0.0
+2025-26,Tiggy,DEF,Wan-Bissaka,WHU,2.25
+2025-26,Tiggy,DEF,Munoz,CRY,2.75
+2025-26,Tiggy,DEF,Hall,NEW,2.25
+2025-26,Tiggy,DEF,Konsa,AVL,1.75
+2025-26,Tiggy,DEF,James,CHE,1.25
+2025-26,Tiggy,MID,Cunha,MUN,8.25
+2025-26,Tiggy,MID,Elanga,NEW,5.25
+2025-26,Tiggy,MID,Caicedo,CHE,1.5
+2025-26,Tiggy,MID,Cherki,MCI,1.5
+2025-26,Tiggy,MID,Garnacho,CHE,0.0
+2025-26,Tiggy,FWD,Gyokeres,ARS,15.5
+2025-26,Tiggy,FWD,Fullkrug,WHU,5.25
+2025-26,Tiggy,FWD,Calvert-Lewin,EVE,0.0
+2025-26,Ali,GK,Mamardashvili,LIV,1.0
+2025-26,Ali,GK,Areola,WHU,0.5
+2025-26,Ali,DEF,Robinson,FUL,3.0
+2025-26,Ali,DEF,Fofana,CHE,0.0
+2025-26,Ali,DEF,Spence,TOT,0.0
+2025-26,Ali,DEF,Schar,NEW,0.25
+2025-26,Ali,DEF,Bogle,,0.0
+2025-26,Ali,MID,Eze,CRY,10.0
+2025-26,Ali,MID,Rogers,AVL,12.25
+2025-26,Ali,MID,Dewsbury-Hall,EVE,0.5
+2025-26,Ali,MID,McGinn,AVL,0.0
+2025-26,Ali,MID,Carvalho,BRE,0.0
+2025-26,Ali,FWD,Watkins,AVL,20.0
+2025-26,Ali,FWD,Guiu,SUN,1.75
+2025-26,Ali,FWD,Wilson,WHU,0.75
+2025-26,Richard,GK,Raya,ARS,4.0
+2025-26,Richard,GK,Kepa,ARS,0.0
+2025-26,Richard,DEF,Gabriel,ARS,5.0
+2025-26,Richard,DEF,Pedro Porro,TOT,4.0
+2025-26,Richard,DEF,Gvardiol,MCI,4.75
+2025-26,Richard,DEF,Livramento,NEW,3.5
+2025-26,Richard,DEF,Timber,ARS,1.5
+2025-26,Richard,MID,Gakpo,LIV,6.5
+2025-26,Richard,MID,Madueke,ARS,3.0
+2025-26,Richard,MID,Savinho,MCI,1.0
+2025-26,Richard,MID,Ndoye,NFO,0.0
+2025-26,Richard,MID,Reijnders,MCI,1.25
+2025-26,Richard,FWD,Muniz,FUL,6.5
+2025-26,Richard,FWD,Barry,EVE,9.0
+2025-26,Richard,FWD,Guesson,AVL,0.0
+2025-26,Deepesh,GK,Sanchez,CHE,2.0
+2025-26,Deepesh,GK,Meslier,LEE,0.0
+2025-26,Deepesh,DEF,Virgil,LIV,7.75
+2025-26,Deepesh,DEF,Yoro,MUN,0.5
+2025-26,Deepesh,DEF,Cadioglu,,0.5
+2025-26,Deepesh,DEF,Akanji,MCI,0.5
+2025-26,Deepesh,DEF,Diego Leon,MUN,0.0
+2025-26,Deepesh,MID,Rice,ARS,9.75
+2025-26,Deepesh,MID,Gibbs-White,NFO,7.75
+2025-26,Deepesh,MID,Pedro Neto,CHE,6.0
+2025-26,Deepesh,MID,O'Riley,BRI,0.25
+2025-26,Deepesh,MID,Xhaka,SUN,0.0
+2025-26,Deepesh,FWD,Solanke,TOT,15.0
+2025-26,Deepesh,FWD,Fabio Silva,WOL,0.0
+2025-26,Deepesh,FWD,Boniface,,0.0
+2025-26,Rob,GK,Ederson,MCI,1.25
+2025-26,Rob,GK,Trafford,MCI,0.75
+2025-26,Rob,DEF,Doherty,WOL,0.25
+2025-26,Rob,DEF,Zabarnyi,BOU,0.5
+2025-26,Rob,DEF,Emerson,WHU,0.0
+2025-26,Rob,DEF,Digne,AVL,0.0
+2025-26,Rob,DEF,Struijk,LEE,0.0
+2025-26,Rob,MID,Trossard,ARS,2.0
+2025-26,Rob,MID,Rodri,MCI,3.75
+2025-26,Rob,MID,Adingra,BRI,0.5
+2025-26,Rob,MID,Adama,FUL,0.0
+2025-26,Rob,MID,Smith-Rowe,FUL,0.5
+2025-26,Rob,FWD,Haaland,MCI,23.5
+2025-26,Rob,FWD,Mateta,CRY,17.0
+2025-26,Rob,FWD,Unal,BOU,0.0
+2025-26,Simon,GK,Martinez,AVL,1.25
+2025-26,Simon,GK,Bizot,AVL,0.0
+2025-26,Simon,DEF,Van De Ven,TOT,1.5
+2025-26,Simon,DEF,Konate,LIV,3.0
+2025-26,Simon,DEF,Gusto,CHE,0.0
+2025-26,Simon,DEF,Dunk,BRI,0.0
+2025-26,Simon,DEF,Senesi,BOU,0.0
+2025-26,Simon,MID,Wirtz,LIV,17.5
+2025-26,Simon,MID,Tanaka,LEE,0.25
+2025-26,Simon,MID,Doku,MCI,2.5
+2025-26,Simon,MID,Barnes,NEW,1.25
+2025-26,Simon,MID,Joelinton,NEW,0.0
+2025-26,Simon,FWD,Havertz,ARS,9.0
+2025-26,Simon,FWD,Ekitike,LIV,13.75
+2025-26,Simon,FWD,Samu,NEW,0.0
+2025-26,Friede,GK,Vicario,TOT,1.25
+2025-26,Friede,GK,Pope,NEW,1.25
+2025-26,Friede,DEF,Collins,BRE,1.75
+2025-26,Friede,DEF,Ruben Dias,MCI,1.75
+2025-26,Friede,DEF,Burn,NEW,1.25
+2025-26,Friede,DEF,Udogie,TOT,0.0
+2025-26,Friede,DEF,Calafiori,ARS,0.0
+2025-26,Friede,MID,Odegaard,ARS,11.0
+2025-26,Friede,MID,Kudus,TOT,6.5
+2025-26,Friede,MID,Bruno G.,NEW,4.25
+2025-26,Friede,MID,Enzo,CHE,3.75
+2025-26,Friede,MID,Kulusevski,TOT,0.5
+2025-26,Friede,FWD,Delap,CHE,13.25
+2025-26,Friede,FWD,Awoniyi,NFO,0.5
+2025-26,Friede,FWD,Mayenda,SUN,2.25
+2025-26,Maccers,GK,Roefs,SUN,0.25
+2025-26,Maccers,GK,Jorgenson,CHE,0.25
+2025-26,Maccers,DEF,Guehi,CRY,2.25
+2025-26,Maccers,DEF,Stones,MCI,0.25
+2025-26,Maccers,DEF,Trippier,NEW,0.0
+2025-26,Maccers,DEF,White,ARS,0.75
+2025-26,Maccers,DEF,Sosa,CRY,0.0
+2025-26,Maccers,MID,Mbeumo,MUN,10.5
+2025-26,Maccers,MID,Grealish,EVE,6.5
+2025-26,Maccers,MID,Nwaneri,ARS,0.5
+2025-26,Maccers,MID,Hwang,WOL,0.0
+2025-26,Maccers,MID,Estevao,CHE,0.0
+2025-26,Maccers,FWD,Joao Pedro,CHE,17.5
+2025-26,Maccers,FWD,Welbeck,BRI,7.75
+2025-26,Maccers,FWD,Isidor,SUN,0.0
+2025-26,Oli,GK,Onana,MUN,0.25
+2025-26,Oli,GK,Ramsdale,NEW,0.0
+2025-26,Oli,DEF,Maatsen,AVL,0.5
+2025-26,Oli,DEF,Romero,TOT,1.25
+2025-26,Oli,DEF,Totti,WOL,0.25
+2025-26,Oli,DEF,Walker,BUR,0.0
+2025-26,Oli,DEF,Hato,CHE,0.0
+2025-26,Oli,MID,Palmer,CHE,20.0
+2025-26,Oli,MID,Salah,LIV,22.75
+2025-26,Oli,MID,Minteh,BRI,1.25
+2025-26,Oli,MID,Ramsey,AVL,1.0
+2025-26,Oli,MID,Dibling,EVE,0.0
+2025-26,Oli,FWD,Hojlund,MUN,0.5
+2025-26,Oli,FWD,Kostoulas,BRI,1.25
+2025-26,Oli,FWD,Fleming,BUR,1.0
+2025-26,Rael,GK,Verbruggen,BRI,1.25
+2025-26,Rael,GK,Steele,BRI,0.0
+2025-26,Rael,DEF,Kerkez,LIV,5.25
+2025-26,Rael,DEF,Branthwaite,EVE,3.0
+2025-26,Rael,DEF,Kilman,WHU,0.5
+2025-26,Rael,DEF,Mitchell,CRY,2.0
+2025-26,Rael,DEF,Colwill,CHE,0.5
+2025-26,Rael,MID,Mitoma,BRI,8.25
+2025-26,Rael,MID,Marmoush,MCI,12.0
+2025-26,Rael,MID,Soucek,WHU,0.0
+2025-26,Rael,MID,Bernardo Silva,MCI,0.5
+2025-26,Rael,MID,Tels,TOT,0.0
+2025-26,Rael,FWD,Piroe,LEE,6.0
+2025-26,Rael,FWD,Thiago,BRE,10.75
+2025-26,Rael,FWD,Tzimas,BRI,0.0
+2025-26,Lloyd,GK,Pickford,EVE,3.5
+2025-26,Lloyd,GK,Travers,EVE,0.0
+2025-26,Lloyd,DEF,De Ligt,MUN,0.25
+2025-26,Lloyd,DEF,Aina,NFO,2.0
+2025-26,Lloyd,DEF,Murillo,NFO,2.75
+2025-26,Lloyd,DEF,Chalobah,CHE,1.0
+2025-26,Lloyd,DEF,Truffert,BOU,0.5
+2025-26,Lloyd,MID,Mac Allister,LIV,3.0
+2025-26,Lloyd,MID,Iwobi,FUL,3.25
+2025-26,Lloyd,MID,Martinelli,ARS,0.5
+2025-26,Lloyd,MID,McNeil,EVE,0.25
+2025-26,Lloyd,MID,Aaronsen,LEE,0.0
+2025-26,Lloyd,FWD,Evanilson,BOU,13.0
+2025-26,Lloyd,FWD,Wood,NFO,14.25
+2025-26,Lloyd,FWD,Jimenez,FUL,5.5
+2025-26,Lucien,GK,Leno,FUL,1.0
+2025-26,Lucien,GK,Jose Sa,WOL,0.25
+2025-26,Lucien,DEF,Cucurella,CHE,4.0
+2025-26,Lucien,DEF,Ait-Nouri,MCI,4.75
+2025-26,Lucien,DEF,Mykolenko,EVE,1.0
+2025-26,Lucien,DEF,Lewis-Potter,BRE,0.5
+2025-26,Lucien,DEF,Dorgu,MUN,1.5
+2025-26,Lucien,MID,Szoboszlai,LIV,4.5
+2025-26,Lucien,MID,Johnson,TOT,3.0
+2025-26,Lucien,MID,Amad,MUN,5.5
+2025-26,Lucien,MID,Damsgaard,BRE,2.5
+2025-26,Lucien,MID,Anderson,NFO,1.5
+2025-26,Lucien,FWD,Bowen,WHU,17.0
+2025-26,Lucien,FWD,Igor Jesus,NFO,2.0
+2025-26,Lucien,FWD,Zirkzee,MUN,1.0
+2025-26,Efe,GK,Dubravka,BUR,0.5
+2025-26,Efe,GK,Bayindir,MUN,0.0
+2025-26,Efe,DEF,Saliba,ARS,5.5
+2025-26,Efe,DEF,Lewis-Skelly,ARS,4.25
+2025-26,Efe,DEF,Frimpong,LIV,5.5
+2025-26,Efe,DEF,Bassey,FUL,0.0
+2025-26,Efe,DEF,Maguire,MUN,0.0
+2025-26,Efe,MID,Foden,MCI,10.75
+2025-26,Efe,MID,Kluivert,BOU,3.75
+2025-26,Efe,MID,Rutter,BRI,1.75
+2025-26,Efe,MID,Hudson-Odoi,NFO,0.5
+2025-26,Efe,MID,Gravenberch,LIV,0.5
+2025-26,Efe,FWD,Sesko,MUN,14.25
+2025-26,Efe,FWD,Richarlison,TOT,2.5
+2025-26,Efe,FWD,Obi,MUN,0.0

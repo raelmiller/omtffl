@@ -1,0 +1,5617 @@
+{
+ "sales": [
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "GK",
+   "player": "Jose Sa",
+   "club": "WOL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Yoane Wissa",
+   "club": "BRE",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Pervis Estupinan",
+   "club": "BHA",
+   "cost": 5.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Fabian Schar",
+   "club": "NEW",
+   "cost": 1.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "James Tarkowski",
+   "club": "EVE",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Kenny Tete",
+   "club": "FUL",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Alex Moreno",
+   "club": "AVL",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Jack Grealish",
+   "club": "MCI",
+   "cost": 7.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Kaoru Mitoma",
+   "club": "BHA",
+   "cost": 8.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Morgan Gibbs-White",
+   "club": "NFO",
+   "cost": 7.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Emiliano Buendia",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Hamed Traore",
+   "club": "BOU",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Cody Gakpo",
+   "club": "LIV",
+   "cost": 8.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Carlton Morris",
+   "club": "LUT",
+   "cost": 2.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Bryan Mbeumo",
+   "club": "BRE",
+   "cost": 5.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Kepa",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Robert Sanchez",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Luke Shaw",
+   "club": "MUN",
+   "cost": 4.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Aaron Wan-Bissaka",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Jordan Beyer",
+   "club": "BUR",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Matty Cash",
+   "club": "AVL",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Tom Lockyer",
+   "club": "LUT",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Bukayo Saka",
+   "club": "ARS",
+   "cost": 17.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Mykhailo Mudryk",
+   "club": "CHE",
+   "cost": 6.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Youri Tielemans",
+   "club": "AVL",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Pablo Sarabia",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Justin Kluivert",
+   "club": "NFO",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Gabriel Jesus",
+   "club": "ARS",
+   "cost": 12.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Rasmus Hojlund",
+   "club": "MUN",
+   "cost": 8.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Matheus Franca",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "James Shea",
+   "club": "LUT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "Neto",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Anel Ahmedhodzic",
+   "club": "SHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Milos Kerkez",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Cristian Romero",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Kurt Zouma",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Rico Lewis",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Pascal Gross",
+   "club": "BHA",
+   "cost": 5.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Jadon Sancho",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Miguel Almiron",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "David Brooks",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Tino Livramento",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Harry Kane",
+   "club": "TOT",
+   "cost": 10.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Mohamed Salah",
+   "club": "LIV",
+   "cost": 29.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Diogo Jota",
+   "club": "LIV",
+   "cost": 5.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Lukas Fabianski",
+   "club": "WHU",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Vicario",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Kieran Trippier",
+   "club": "NEW",
+   "cost": 12.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Trent Alexander-Arnold",
+   "club": "LIV",
+   "cost": 15.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Felipe",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Manuel Akanji",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Nathan Collins",
+   "club": "BRE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Andreas Pereira",
+   "club": "FUL",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Rodri",
+   "club": "MCI",
+   "cost": 1.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Philip Billing",
+   "club": "BOU",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Alejandro Garnacho",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Abdoulaye Doucoure",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Christopher Nkunku",
+   "club": "CHE",
+   "cost": 10.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Julio Enciso",
+   "club": "BHA",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Dominic Calvert-Lewin",
+   "club": "EVE",
+   "cost": 6.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Nick Pope",
+   "club": "NEW",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Martin Dubravka",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Ben White",
+   "club": "ARS",
+   "cost": 3.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "John Stones",
+   "club": "MCI",
+   "cost": 3.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Virgil Van Dijk",
+   "club": "LIV",
+   "cost": 3.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Ben Chilwell",
+   "club": "CHE",
+   "cost": 4.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Diogo Dalot",
+   "club": "MUN",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Martin Odegaard",
+   "club": "ARS",
+   "cost": 10.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Leandro Trossard",
+   "club": "ARS",
+   "cost": 6.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Bruno Guimaraes",
+   "club": "NEW",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Mateo Kovacic",
+   "club": "MCI",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "John McGinn",
+   "club": "AVL",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Luis Diaz",
+   "club": "LIV",
+   "cost": 7.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Evan Ferguson",
+   "club": "BHA",
+   "cost": 2.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Callum Wilson",
+   "club": "NEW",
+   "cost": 3.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "Vicente Guaita",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "Sam Johnstone",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Reece James",
+   "club": "CHE",
+   "cost": 8.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Ruben Dias",
+   "club": "MCI",
+   "cost": 2.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Ethan Pinnock",
+   "club": "BRE",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Joel Veltman",
+   "club": "BHA",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Nathan Ake",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Kevin De Bruyne",
+   "club": "MCI",
+   "cost": 20.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Harry Wilson",
+   "club": "FUL",
+   "cost": 3.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "James Ward-Prowse",
+   "club": "WHU",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Christian Eriksen",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Tomas Soucek",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Nicolas Jackson",
+   "club": "CHE",
+   "cost": 9.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Richarlison",
+   "club": "TOT",
+   "cost": 3.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Oliver McBurnie",
+   "club": "SHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Andre Onana",
+   "club": "MUN",
+   "cost": 1.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Ederson",
+   "club": "MCI",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Andrew Robertson",
+   "club": "LIV",
+   "cost": 5.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Josko Gvardiol",
+   "club": "MCI",
+   "cost": 3.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Lisandro Martinez",
+   "club": "MUN",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Pedro Porro",
+   "club": "TOT",
+   "cost": 2.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Oleksandr Zinchenko",
+   "club": "ARS",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Jarrod Bowen",
+   "club": "WHU",
+   "cost": 5.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Dominik Szoboszlai",
+   "club": "LIV",
+   "cost": 4.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Phil Foden",
+   "club": "MCI",
+   "cost": 7.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Michael Olise",
+   "club": "CRY",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Sandro Tonali",
+   "club": "NEW",
+   "cost": 1.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Kai Havertz",
+   "club": "ARS",
+   "cost": 2.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Joao Pedro",
+   "club": "BHA",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Taiwo Awoniyi",
+   "club": "NFO",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Jason Steele",
+   "club": "BHA",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Bart Verbruggen",
+   "club": "BHA",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Vitinho",
+   "club": "BUR",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Max Lowe",
+   "club": "SHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Amari Bell",
+   "club": "LUT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Craig Dawson",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Hugo Bueno",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Kalvin Phillips",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Jefferson Lerma",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Vitaly Janelt",
+   "club": "BRF",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Elliot Anderson",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Odsonne Edouard",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Matheus Cunha",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Elijah Adebayo",
+   "club": "LUT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Eddie Nketiah",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Jordan Pickford",
+   "club": "EVE",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Mark Flekken",
+   "club": "BRE",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Ben Mee",
+   "club": "BRE",
+   "cost": 3.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Gabriel Magalhaes",
+   "club": "ARS",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Tyrone Mings",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "William Saliba",
+   "club": "ARS",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Raphael Varane",
+   "club": "MUN",
+   "cost": 2.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Declan Rice",
+   "club": "ARS",
+   "cost": 2.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Bernardo Silva",
+   "club": "MCI",
+   "cost": 3.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Enzo Fernandez",
+   "club": "CHE",
+   "cost": 2.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Casemiro",
+   "club": "MUN",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Josh Brownhill",
+   "club": "BUR",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Darwin Nunez",
+   "club": "LIV",
+   "cost": 12.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Marcus Rashford",
+   "club": "MUN",
+   "cost": 16.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Mohammad Kudus",
+   "club": "BHA",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "James Trafford",
+   "club": "BUR",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Julian Alvarez",
+   "club": "MCI",
+   "cost": 4.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Sven Botman",
+   "club": "NEW",
+   "cost": 2.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Calvin Bassey",
+   "club": "FUL",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Nayef Aguerd",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Lewis Dunk",
+   "club": "BHA",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "Aaron Ramsdale",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Gabriel Martinelli",
+   "club": "ARS",
+   "cost": 13.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Alexis Mac Allister",
+   "club": "LIV",
+   "cost": 4.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Harvey Barnes",
+   "club": "NEW",
+   "cost": 4.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Lucas Paqueta",
+   "club": "WHU",
+   "cost": 1.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Douglas Luiz",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Ollie Watkins",
+   "club": "AVL",
+   "cost": 16.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Raheem Sterling",
+   "club": "CHE",
+   "cost": 1.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Alexander Mitrovic",
+   "club": "FUL",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "GK",
+   "player": "Emiliano Martinez",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "Danilo",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "DEF",
+   "player": "Ibrahima Konate",
+   "club": "LIV",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "DEF",
+   "player": "Antonee Robinson",
+   "club": "FUL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "DEF",
+   "player": "Thiago Silva",
+   "club": "CHE",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "DEF",
+   "player": "Rico Henry",
+   "club": "BRE",
+   "cost": 1.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "DEF",
+   "player": "Michael Keane",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "Dejan Kulusevski",
+   "club": "TOT",
+   "cost": 7.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "James Maddison",
+   "club": "TOT",
+   "cost": 9.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "Eberechi Eze",
+   "club": "CRY",
+   "cost": 6.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "Dwight McNeil",
+   "club": "EVE",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "MID",
+   "player": "Said Benrahma",
+   "club": "WHU",
+   "cost": 1.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "FWD",
+   "player": "Alexander Isak",
+   "club": "NEW",
+   "cost": 14.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "FWD",
+   "player": "Dominic Solanke",
+   "club": "BOU",
+   "cost": 5.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Ollie",
+   "position": "FWD",
+   "player": "Moussa Diaby",
+   "club": "AVL",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "GK",
+   "player": "Alisson",
+   "club": "LIV",
+   "cost": 2.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "GK",
+   "player": "Adrian",
+   "club": "LIV",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Kyle Walker",
+   "club": "MCI",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Marc Guehi",
+   "club": "CRY",
+   "cost": 0.25
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Levi Colwill",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Micky van de Ven",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Auston Trusty",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Christain Norgaard",
+   "club": "BRE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Mois\u00e9s Caicedo",
+   "club": "BHA",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Anthony Gordon",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Amadou Onana",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Ryan Christie",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Erling Haaland",
+   "club": "MCI",
+   "cost": 29.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Son Heung-Min",
+   "club": "TOT",
+   "cost": 14.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Antony",
+   "club": "MUN",
+   "cost": 3.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "GK",
+   "player": "Bernd Leno",
+   "club": "FUL",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Mathias Jensen",
+   "club": "BRE",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "DEF",
+   "player": "Dan Burn",
+   "club": "NEW",
+   "cost": 1.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "DEF",
+   "player": "Jurrien TImber",
+   "club": "ARS",
+   "cost": 1.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "DEF",
+   "player": "Joachim Andersen",
+   "club": "CRY",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "DEF",
+   "player": "Max Kilman",
+   "club": "WOL",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "DEF",
+   "player": "Pau Torres",
+   "club": "AVL",
+   "cost": 0.75
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Bruno Fernandes",
+   "club": "MUN",
+   "cost": 25.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Alex Iwobi",
+   "club": "EVE",
+   "cost": 4.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Mason Mount",
+   "club": "MUN",
+   "cost": 7.0
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Solly March",
+   "club": "BHA",
+   "cost": 2.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "MID",
+   "player": "Joelinton",
+   "club": "NEW",
+   "cost": 0.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "FWD",
+   "player": "Brennan Johnson",
+   "club": "NFO",
+   "cost": 2.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "FWD",
+   "player": "Dango Outtara",
+   "club": "BOU",
+   "cost": 2.5
+  },
+  {
+   "season": "2023-24",
+   "manager": "Georgeson",
+   "position": "FWD",
+   "player": "Leon Bailey",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "GK",
+   "player": "Areola",
+   "club": "WHU",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "GK",
+   "player": "Henderson",
+   "club": "CRY",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Dunk",
+   "club": "BRI",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Senesi",
+   "club": "BOU",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Gusto",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Tsimikas",
+   "club": "LIV",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Livramento",
+   "club": "NEW",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Foden",
+   "club": "MCI",
+   "cost": 15.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Jota",
+   "club": "LIV",
+   "cost": 5.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Mbeumo",
+   "club": "BRE",
+   "cost": 4.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Almiron",
+   "club": "NEW",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Rogers",
+   "club": "AVL",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Isak",
+   "club": "NEW",
+   "cost": 19.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Edouard",
+   "club": "CRY",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Duran",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Leno",
+   "club": "FUL",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Alisson",
+   "club": "LIV",
+   "cost": 1.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Mykolenko",
+   "club": "EVE",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Ak\u00e9",
+   "club": "MCI",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Castagne",
+   "club": "FUL",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Andersen",
+   "club": "CRY",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Barco",
+   "club": "BRI",
+   "cost": 1.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Gordon",
+   "club": "NEW",
+   "cost": 9.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Paqueta",
+   "club": "WHU",
+   "cost": 2.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Doku",
+   "club": "MCI",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Minteh",
+   "club": "BRI",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Zaha",
+   "club": "LEI",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Mateta",
+   "club": "CRY",
+   "cost": 11.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Muniz",
+   "club": "FUL",
+   "cost": 7.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Wissa",
+   "club": "BRE",
+   "cost": 5.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "Jose S\u00e1",
+   "club": "WOL",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "Bazunu",
+   "club": "SOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Gabriel",
+   "club": "ARS",
+   "cost": 4.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "L. Martinez",
+   "club": "MUN",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Estupinan",
+   "club": "BRI",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Riad",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Shaw",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Salah",
+   "club": "LIV",
+   "cost": 19.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Hwang Hee Chan",
+   "club": "WOL",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Bobb",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Kluivert",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Enzo",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Armstrong",
+   "club": "SOU",
+   "cost": 3.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Solanke",
+   "club": "TOT",
+   "cost": 15.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Jebbison",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Ederson",
+   "club": "MCI",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Sanchez",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Van Dijk",
+   "club": "LIV",
+   "cost": 4.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Munoz",
+   "club": "CRY",
+   "cost": 3.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Romero",
+   "club": "TOT",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Robinson",
+   "club": "FUL",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Maatsen",
+   "club": "AVL",
+   "cost": 3.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Eze",
+   "club": "CRY",
+   "cost": 8.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Smith-Rowe",
+   "club": "FUL",
+   "cost": 4.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Kudus",
+   "club": "WHU",
+   "cost": 4.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Harrison",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Hutchison",
+   "club": "IPS",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Darwin",
+   "club": "LIV",
+   "cost": 8.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Hojlund",
+   "club": "MUN",
+   "cost": 5.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Osimhen",
+   "club": "CHE",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Verbruggen",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Steele",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Zouma",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Neco Williams",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Mings",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Walker-Peters",
+   "club": "SOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Burn",
+   "club": "NEW",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Grealish",
+   "club": "MCI",
+   "cost": 7.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Rice",
+   "club": "ARS",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Madueke",
+   "club": "CHE",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Tielemans",
+   "club": "AVL",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Buendia",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Haaland",
+   "club": "MCI",
+   "cost": 25.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Wood",
+   "club": "NFO",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Antonio",
+   "club": "WHU",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Vicario",
+   "club": "TOT",
+   "cost": 1.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Jorgensen",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Cucurella",
+   "club": "CHE",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Akanji",
+   "club": "MCI",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Calafiori",
+   "club": "ARS",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Pau Torres",
+   "club": "AVL",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Wan-Bissaka",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Mitoma",
+   "club": "BRI",
+   "cost": 4.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Trossard",
+   "club": "ARS",
+   "cost": 3.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Nkunku",
+   "club": "CHE",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Barnes",
+   "club": "NEW",
+   "cost": 2.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Sarr",
+   "club": "CRY",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Toney",
+   "club": "BRE",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Gakpo",
+   "club": "LIV",
+   "cost": 6.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Larsen",
+   "club": "WOL",
+   "cost": 8.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Raya",
+   "club": "ARS",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Petrovic",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Davis",
+   "club": "IPS",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "White",
+   "club": "ARS",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Justin",
+   "club": "LEI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Soudawara",
+   "club": "SOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Tosin",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Maddison",
+   "club": "TOT",
+   "cost": 7.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Rashford",
+   "club": "MUN",
+   "cost": 7.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "De Bruyne",
+   "club": "MCI",
+   "cost": 11.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Brereton-Diaz",
+   "club": "SOU",
+   "cost": 2.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Semenyo",
+   "club": "BOU",
+   "cost": 2.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Havertz",
+   "club": "ARS",
+   "cost": 10.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Daka",
+   "club": "LEI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Jota Silva",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "GK",
+   "player": "Hermansson",
+   "club": "LEI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "GK",
+   "player": "Ward",
+   "club": "LEI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Saliba",
+   "club": "ARS",
+   "cost": 5.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Walker",
+   "club": "MCI",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Badiashile",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Bradley",
+   "club": "LIV",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Konate",
+   "club": "LIV",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Saka",
+   "club": "ARS",
+   "cost": 19.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Odegaard",
+   "club": "ARS",
+   "cost": 14.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Carvalho",
+   "club": "BRE",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Neto",
+   "club": "CHE",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Savio",
+   "club": "MCI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Vardy",
+   "club": "LEI",
+   "cost": 2.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Lukaku",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Awoniyi",
+   "club": "NFO",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Flekken",
+   "club": "BRE",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Valdimarsson",
+   "club": "BRE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Robertson",
+   "club": "LIV",
+   "cost": 3.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Trippier",
+   "club": "NEW",
+   "cost": 2.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Henry",
+   "club": "BRE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Timber",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Ait-Nouri",
+   "club": "WOL",
+   "cost": 3.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Gibbs-White",
+   "club": "NFO",
+   "cost": 5.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Kulusevski",
+   "club": "TOT",
+   "cost": 1.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Bernardo Silva",
+   "club": "MCI",
+   "cost": 6.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Rodri",
+   "club": "MCI",
+   "cost": 5.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Martinelli",
+   "club": "ARS",
+   "cost": 6.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Joao Pedro",
+   "club": "BRI",
+   "cost": 5.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Ferguson",
+   "club": "BRI",
+   "cost": 4.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Delap",
+   "club": "IPS",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "GK",
+   "player": "Pickford",
+   "club": "EVE",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "GK",
+   "player": "Virginia",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Stones",
+   "club": "MCI",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Van de Ven",
+   "club": "TOT",
+   "cost": 1.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Guehi",
+   "club": "CRY",
+   "cost": 1.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Colwill",
+   "club": "CHE",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Cash",
+   "club": "AVL",
+   "cost": 0.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Mainoo",
+   "club": "MUN",
+   "cost": 3.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Palmer",
+   "club": "CHE",
+   "cost": 19.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Garnacho",
+   "club": "MUN",
+   "cost": 6.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Joelinton",
+   "club": "NEW",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Mudryk",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Gabriel Jesus",
+   "club": "ARS",
+   "cost": 10.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Welbeck",
+   "club": "BRI",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Hlozek",
+   "club": "-",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "GK",
+   "player": "Neto",
+   "club": "BOU",
+   "cost": 1.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "GK",
+   "player": "Travers",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Alexander-Arnold",
+   "club": "LIV",
+   "cost": 9.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Ricardo Pereira",
+   "club": "LEI",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Udogie",
+   "club": "TOT",
+   "cost": 4.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Aina",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Hall",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Fernandes",
+   "club": "MUN",
+   "cost": 16.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Dewsbury-Hall",
+   "club": "CHE",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "B. Johnson",
+   "club": "TOT",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Summerville",
+   "club": "WHU",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Doucoure",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "N. Jackson",
+   "club": "CHE",
+   "cost": 7.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "Hurst",
+   "club": "IPS",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "Wilson",
+   "club": "NEW",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "E. Martinez",
+   "club": "AVL",
+   "cost": 1.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "Gauchi",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Konsa",
+   "club": "AVL",
+   "cost": 1.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Branthwaite",
+   "club": "EVE",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Mitchell",
+   "club": "CRY",
+   "cost": 3.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Kilman",
+   "club": "WHU",
+   "cost": 0.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Quansah",
+   "club": "LIV",
+   "cost": 0.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Son",
+   "club": "TOT",
+   "cost": 15.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Luis Diaz",
+   "club": "LIV",
+   "cost": 7.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Hudson-Odoi",
+   "club": "NFO",
+   "cost": 3.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Andreas Pereira",
+   "club": "FUL",
+   "cost": 4.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Soucek",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Fullkrug",
+   "club": "WHU",
+   "cost": 4.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Calvert-Lewin",
+   "club": "EVE",
+   "cost": 5.75
+  },
+  {
+   "season": "2024-25",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Raul Jimenez",
+   "club": "FUL",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "Pope",
+   "club": "NEW",
+   "cost": 1.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "Dubravka",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "James",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "De Ligt",
+   "club": "MUN",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Schar",
+   "club": "NEW",
+   "cost": 3.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Tarkowski",
+   "club": "EVE",
+   "cost": 2.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Mazraoui",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Bowen",
+   "club": "WHU",
+   "cost": 9.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Guimaraes",
+   "club": "NEW",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Szoboszlai",
+   "club": "LIV",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "McNeil",
+   "club": "EVE",
+   "cost": 2.25
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "McGinn",
+   "club": "AVL",
+   "cost": 1.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Watkins",
+   "club": "AVL",
+   "cost": 18.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Zrikzee",
+   "club": "MUN",
+   "cost": 3.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Maupay",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "GK",
+   "player": "Onana",
+   "club": "MUN",
+   "cost": 2.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "GK",
+   "player": "Muric",
+   "club": "IPS",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Gvardiol",
+   "club": "MCI",
+   "cost": 5.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Pedro Porro",
+   "club": "TOT",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Dalot",
+   "club": "MUN",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Ruben Dias",
+   "club": "MCI",
+   "cost": 2.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Zabaryni",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Mac Allister",
+   "club": "LIV",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Ward-Prowse",
+   "club": "WHU",
+   "cost": 5.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Bailey",
+   "club": "AVL",
+   "cost": 7.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Elanga",
+   "club": "NFO",
+   "cost": 3.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Mavididi",
+   "club": "LEI",
+   "cost": 1.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Cunha",
+   "club": "WOL",
+   "cost": 7.0
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Richarlison",
+   "club": "TOT",
+   "cost": 3.5
+  },
+  {
+   "season": "2024-25",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Archer",
+   "club": "AVL",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "GK",
+   "player": "Alisson",
+   "club": "LIV",
+   "cost": 2.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "GK",
+   "player": "Hermansson",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Tarkowski",
+   "club": "EVE",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Smith",
+   "club": "BOU",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Milenkovic",
+   "club": "NFO",
+   "cost": 2.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Kayode",
+   "club": "BRE",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "DEF",
+   "player": "Nunes",
+   "club": "MCI",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Sarr",
+   "club": "CRY",
+   "cost": 5.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Schade",
+   "club": "BRE",
+   "cost": 6.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Semenyo",
+   "club": "BOU",
+   "cost": 5.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Baleba",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "MID",
+   "player": "Paqueta",
+   "club": "WHU",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Jackson",
+   "club": "NEW",
+   "cost": 5.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Broja",
+   "club": "BUR",
+   "cost": 4.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Yath",
+   "position": "FWD",
+   "player": "Strand Larsen",
+   "club": "WOL",
+   "cost": 12.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Henderson",
+   "club": "CRY",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "GK",
+   "player": "Petrovic",
+   "club": "BOU",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Diouf",
+   "club": "WHU",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Lacroix",
+   "club": "CRY",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Cash",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "De Cuyper",
+   "club": "BRI",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "DEF",
+   "player": "Hoever",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Fernandes",
+   "club": "MUN",
+   "cost": 16.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Tielemans",
+   "club": "AVL",
+   "cost": 2.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Ndiaye",
+   "club": "EVE",
+   "cost": 3.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Tonali",
+   "club": "NEW",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "MID",
+   "player": "Outtara",
+   "club": "BRE",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Wissa",
+   "club": "BRE",
+   "cost": 14.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Beto",
+   "club": "EVE",
+   "cost": 5.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Gav",
+   "position": "FWD",
+   "player": "Nketiah",
+   "club": "CRY",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "Kelleher",
+   "club": "BRE",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "GK",
+   "player": "Perri",
+   "club": "LEE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Walker-Peters",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Van Hecke",
+   "club": "BRI",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Bradley",
+   "club": "LIV",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "Williams",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "DEF",
+   "player": "O'Brien",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Saka",
+   "club": "ARS",
+   "cost": 20.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Gordon",
+   "club": "NEW",
+   "cost": 8.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Barcola",
+   "club": "LIV",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Hannibal",
+   "club": "",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "MID",
+   "player": "Arias",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Isak",
+   "club": "FOR",
+   "cost": 19.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Barnes",
+   "club": "BUR",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ciaran",
+   "position": "FWD",
+   "player": "Vlahovic",
+   "club": "",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Sels",
+   "club": "NFO",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "GK",
+   "player": "Vice",
+   "club": "BUR",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Wan-Bissaka",
+   "club": "WHU",
+   "cost": 2.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Munoz",
+   "club": "CRY",
+   "cost": 2.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Hall",
+   "club": "NEW",
+   "cost": 2.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "Konsa",
+   "club": "AVL",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "DEF",
+   "player": "James",
+   "club": "CHE",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Cunha",
+   "club": "MUN",
+   "cost": 8.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Elanga",
+   "club": "NEW",
+   "cost": 5.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Caicedo",
+   "club": "CHE",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Cherki",
+   "club": "MCI",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "MID",
+   "player": "Garnacho",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Gyokeres",
+   "club": "ARS",
+   "cost": 15.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Fullkrug",
+   "club": "WHU",
+   "cost": 5.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Tiggy",
+   "position": "FWD",
+   "player": "Calvert-Lewin",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Mamardashvili",
+   "club": "LIV",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "GK",
+   "player": "Areola",
+   "club": "WHU",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Robinson",
+   "club": "FUL",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Fofana",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Spence",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Schar",
+   "club": "NEW",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "DEF",
+   "player": "Bogle",
+   "club": "",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Eze",
+   "club": "CRY",
+   "cost": 10.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Rogers",
+   "club": "AVL",
+   "cost": 12.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Dewsbury-Hall",
+   "club": "EVE",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "McGinn",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "MID",
+   "player": "Carvalho",
+   "club": "BRE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Watkins",
+   "club": "AVL",
+   "cost": 20.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Guiu",
+   "club": "SUN",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Ali",
+   "position": "FWD",
+   "player": "Wilson",
+   "club": "WHU",
+   "cost": 0.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Raya",
+   "club": "ARS",
+   "cost": 4.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "GK",
+   "player": "Kepa",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Gabriel",
+   "club": "ARS",
+   "cost": 5.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Pedro Porro",
+   "club": "TOT",
+   "cost": 4.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Gvardiol",
+   "club": "MCI",
+   "cost": 4.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Livramento",
+   "club": "NEW",
+   "cost": 3.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "DEF",
+   "player": "Timber",
+   "club": "ARS",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Gakpo",
+   "club": "LIV",
+   "cost": 6.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Madueke",
+   "club": "ARS",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Savinho",
+   "club": "MCI",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Ndoye",
+   "club": "NFO",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "MID",
+   "player": "Reijnders",
+   "club": "MCI",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Muniz",
+   "club": "FUL",
+   "cost": 6.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Barry",
+   "club": "EVE",
+   "cost": 9.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Richard",
+   "position": "FWD",
+   "player": "Guesson",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Sanchez",
+   "club": "CHE",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "GK",
+   "player": "Meslier",
+   "club": "LEE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Virgil",
+   "club": "LIV",
+   "cost": 7.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Yoro",
+   "club": "MUN",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Cadioglu",
+   "club": "",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Akanji",
+   "club": "MCI",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "DEF",
+   "player": "Diego Leon",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Rice",
+   "club": "ARS",
+   "cost": 9.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Gibbs-White",
+   "club": "NFO",
+   "cost": 7.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Pedro Neto",
+   "club": "CHE",
+   "cost": 6.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "O'Riley",
+   "club": "BRI",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "MID",
+   "player": "Xhaka",
+   "club": "SUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Solanke",
+   "club": "TOT",
+   "cost": 15.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Fabio Silva",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Deepesh",
+   "position": "FWD",
+   "player": "Boniface",
+   "club": "",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "GK",
+   "player": "Ederson",
+   "club": "MCI",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "GK",
+   "player": "Trafford",
+   "club": "MCI",
+   "cost": 0.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "DEF",
+   "player": "Doherty",
+   "club": "WOL",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "DEF",
+   "player": "Zabarnyi",
+   "club": "BOU",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "DEF",
+   "player": "Emerson",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "DEF",
+   "player": "Digne",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "DEF",
+   "player": "Struijk",
+   "club": "LEE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "MID",
+   "player": "Trossard",
+   "club": "ARS",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "MID",
+   "player": "Rodri",
+   "club": "MCI",
+   "cost": 3.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "MID",
+   "player": "Adingra",
+   "club": "BRI",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "MID",
+   "player": "Adama",
+   "club": "FUL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "MID",
+   "player": "Smith-Rowe",
+   "club": "FUL",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "FWD",
+   "player": "Haaland",
+   "club": "MCI",
+   "cost": 23.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "FWD",
+   "player": "Mateta",
+   "club": "CRY",
+   "cost": 17.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rob",
+   "position": "FWD",
+   "player": "Unal",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "GK",
+   "player": "Martinez",
+   "club": "AVL",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "GK",
+   "player": "Bizot",
+   "club": "AVL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Van De Ven",
+   "club": "TOT",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Konate",
+   "club": "LIV",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Gusto",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Dunk",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "DEF",
+   "player": "Senesi",
+   "club": "BOU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Wirtz",
+   "club": "LIV",
+   "cost": 17.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Tanaka",
+   "club": "LEE",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Doku",
+   "club": "MCI",
+   "cost": 2.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Barnes",
+   "club": "NEW",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "MID",
+   "player": "Joelinton",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Havertz",
+   "club": "ARS",
+   "cost": 9.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Ekitike",
+   "club": "LIV",
+   "cost": 13.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Simon",
+   "position": "FWD",
+   "player": "Samu",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Vicario",
+   "club": "TOT",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "GK",
+   "player": "Pope",
+   "club": "NEW",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Collins",
+   "club": "BRE",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Ruben Dias",
+   "club": "MCI",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Burn",
+   "club": "NEW",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Udogie",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "DEF",
+   "player": "Calafiori",
+   "club": "ARS",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Odegaard",
+   "club": "ARS",
+   "cost": 11.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Kudus",
+   "club": "TOT",
+   "cost": 6.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Bruno G.",
+   "club": "NEW",
+   "cost": 4.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Enzo",
+   "club": "CHE",
+   "cost": 3.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "MID",
+   "player": "Kulusevski",
+   "club": "TOT",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Delap",
+   "club": "CHE",
+   "cost": 13.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Awoniyi",
+   "club": "NFO",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Friede",
+   "position": "FWD",
+   "player": "Mayenda",
+   "club": "SUN",
+   "cost": 2.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "GK",
+   "player": "Roefs",
+   "club": "SUN",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "GK",
+   "player": "Jorgenson",
+   "club": "CHE",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Guehi",
+   "club": "CRY",
+   "cost": 2.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Stones",
+   "club": "MCI",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Trippier",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "White",
+   "club": "ARS",
+   "cost": 0.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "DEF",
+   "player": "Sosa",
+   "club": "CRY",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Mbeumo",
+   "club": "MUN",
+   "cost": 10.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Grealish",
+   "club": "EVE",
+   "cost": 6.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Nwaneri",
+   "club": "ARS",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Hwang",
+   "club": "WOL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "MID",
+   "player": "Estevao",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Joao Pedro",
+   "club": "CHE",
+   "cost": 17.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Welbeck",
+   "club": "BRI",
+   "cost": 7.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Maccers",
+   "position": "FWD",
+   "player": "Isidor",
+   "club": "SUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "GK",
+   "player": "Onana",
+   "club": "MUN",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "GK",
+   "player": "Ramsdale",
+   "club": "NEW",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Maatsen",
+   "club": "AVL",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Romero",
+   "club": "TOT",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Totti",
+   "club": "WOL",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Walker",
+   "club": "BUR",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "DEF",
+   "player": "Hato",
+   "club": "CHE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Palmer",
+   "club": "CHE",
+   "cost": 20.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Salah",
+   "club": "LIV",
+   "cost": 22.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Minteh",
+   "club": "BRI",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Ramsey",
+   "club": "AVL",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "MID",
+   "player": "Dibling",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "Hojlund",
+   "club": "MUN",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "Kostoulas",
+   "club": "BRI",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Oli",
+   "position": "FWD",
+   "player": "Fleming",
+   "club": "BUR",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "Verbruggen",
+   "club": "BRI",
+   "cost": 1.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "GK",
+   "player": "Steele",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Kerkez",
+   "club": "LIV",
+   "cost": 5.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Branthwaite",
+   "club": "EVE",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Kilman",
+   "club": "WHU",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Mitchell",
+   "club": "CRY",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "DEF",
+   "player": "Colwill",
+   "club": "CHE",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Mitoma",
+   "club": "BRI",
+   "cost": 8.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Marmoush",
+   "club": "MCI",
+   "cost": 12.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Soucek",
+   "club": "WHU",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Bernardo Silva",
+   "club": "MCI",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "MID",
+   "player": "Tels",
+   "club": "TOT",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Piroe",
+   "club": "LEE",
+   "cost": 6.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Thiago",
+   "club": "BRE",
+   "cost": 10.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Rael",
+   "position": "FWD",
+   "player": "Tzimas",
+   "club": "BRI",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "Pickford",
+   "club": "EVE",
+   "cost": 3.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "GK",
+   "player": "Travers",
+   "club": "EVE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "De Ligt",
+   "club": "MUN",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Aina",
+   "club": "NFO",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Murillo",
+   "club": "NFO",
+   "cost": 2.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Chalobah",
+   "club": "CHE",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "DEF",
+   "player": "Truffert",
+   "club": "BOU",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Mac Allister",
+   "club": "LIV",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Iwobi",
+   "club": "FUL",
+   "cost": 3.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Martinelli",
+   "club": "ARS",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "McNeil",
+   "club": "EVE",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "MID",
+   "player": "Aaronsen",
+   "club": "LEE",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Evanilson",
+   "club": "BOU",
+   "cost": 13.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Wood",
+   "club": "NFO",
+   "cost": 14.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lloyd",
+   "position": "FWD",
+   "player": "Jimenez",
+   "club": "FUL",
+   "cost": 5.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "GK",
+   "player": "Leno",
+   "club": "FUL",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "GK",
+   "player": "Jose Sa",
+   "club": "WOL",
+   "cost": 0.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Cucurella",
+   "club": "CHE",
+   "cost": 4.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Ait-Nouri",
+   "club": "MCI",
+   "cost": 4.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Mykolenko",
+   "club": "EVE",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Lewis-Potter",
+   "club": "BRE",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "DEF",
+   "player": "Dorgu",
+   "club": "MUN",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Szoboszlai",
+   "club": "LIV",
+   "cost": 4.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Johnson",
+   "club": "TOT",
+   "cost": 3.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Amad",
+   "club": "MUN",
+   "cost": 5.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Damsgaard",
+   "club": "BRE",
+   "cost": 2.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "MID",
+   "player": "Anderson",
+   "club": "NFO",
+   "cost": 1.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Bowen",
+   "club": "WHU",
+   "cost": 17.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Igor Jesus",
+   "club": "NFO",
+   "cost": 2.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Lucien",
+   "position": "FWD",
+   "player": "Zirkzee",
+   "club": "MUN",
+   "cost": 1.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "GK",
+   "player": "Dubravka",
+   "club": "BUR",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "GK",
+   "player": "Bayindir",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Saliba",
+   "club": "ARS",
+   "cost": 5.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Lewis-Skelly",
+   "club": "ARS",
+   "cost": 4.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Frimpong",
+   "club": "LIV",
+   "cost": 5.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Bassey",
+   "club": "FUL",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "DEF",
+   "player": "Maguire",
+   "club": "MUN",
+   "cost": 0.0
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Foden",
+   "club": "MCI",
+   "cost": 10.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Kluivert",
+   "club": "BOU",
+   "cost": 3.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Rutter",
+   "club": "BRI",
+   "cost": 1.75
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Hudson-Odoi",
+   "club": "NFO",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "MID",
+   "player": "Gravenberch",
+   "club": "LIV",
+   "cost": 0.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Sesko",
+   "club": "MUN",
+   "cost": 14.25
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Richarlison",
+   "club": "TOT",
+   "cost": 2.5
+  },
+  {
+   "season": "2025-26",
+   "manager": "Efe",
+   "position": "FWD",
+   "player": "Obi",
+   "club": "MUN",
+   "cost": 0.0
+  }
+ ],
+ "summaries": {
+  "2023-24": {
+   "teams": 13,
+   "sales": 195,
+   "total_spent": 592.75,
+   "managers": {
+    "Yath": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 1,
+      "FWD": 4,
+      "DEF": 5,
+      "MID": 5
+     }
+    },
+    "Deepesh": {
+     "players": 15,
+     "spent": 49.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ciaran": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 6,
+      "MID": 4,
+      "FWD": 3
+     }
+    },
+    "Gav": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Richard": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Rael": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Friede": {
+     "players": 15,
+     "spent": 43.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ali": {
+     "players": 15,
+     "spent": 0.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 4,
+      "FWD": 4
+     }
+    },
+    "Tiggy": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Lloyd": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "FWD": 4,
+      "DEF": 4,
+      "MID": 5
+     }
+    },
+    "Ollie": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 1,
+      "MID": 6,
+      "DEF": 5,
+      "FWD": 3
+     }
+    },
+    "Efe": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Georgeson": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 1,
+      "MID": 6,
+      "DEF": 5,
+      "FWD": 3
+     }
+    }
+   }
+  },
+  "2024-25": {
+   "teams": 14,
+   "sales": 210,
+   "total_spent": 685.75,
+   "managers": {
+    "Yath": {
+     "players": 15,
+     "spent": 48.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Gav": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ciaran": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Tiggy": {
+     "players": 15,
+     "spent": 46.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ali": {
+     "players": 15,
+     "spent": 47.25,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Richard": {
+     "players": 15,
+     "spent": 49.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Deepesh": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Simon": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Friede": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Maccers": {
+     "players": 15,
+     "spent": 49.5,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Oli": {
+     "players": 15,
+     "spent": 45.25,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Rael": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Lloyd": {
+     "players": 15,
+     "spent": 49.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Lucien": {
+     "players": 15,
+     "spent": 49.5,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    }
+   }
+  },
+  "2025-26": {
+   "teams": 16,
+   "sales": 240,
+   "total_spent": 794.75,
+   "managers": {
+    "Yath": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Gav": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ciaran": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Tiggy": {
+     "players": 15,
+     "spent": 49.5,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Ali": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Richard": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Deepesh": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Rob": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Simon": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Friede": {
+     "players": 15,
+     "spent": 49.25,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Maccers": {
+     "players": 15,
+     "spent": 46.5,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Oli": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Rael": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Lloyd": {
+     "players": 15,
+     "spent": 49.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Lucien": {
+     "players": 15,
+     "spent": 50.0,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    },
+    "Efe": {
+     "players": 15,
+     "spent": 49.75,
+     "by_pos": {
+      "GK": 2,
+      "DEF": 5,
+      "MID": 5,
+      "FWD": 3
+     }
+    }
+   }
+  }
+ }
+}
