@@ -216,36 +216,61 @@ function rivalScores(p,est){
   });
   return out.sort((a,b)=>b.score-a.score).slice(0,4);
 }
-function replacementValue(pos){ // projection of best players likely still cheap
-  const undrafted=poolRemaining().filter(p=>p.pos===pos);
-  const projs=undrafted.map(p=>projection(p).pts).sort((a,b)=>b-a);
-  return projs[Math.min(3,projs.length-1)]||0; // 4th best remaining ≈ what you can still get
-}
 function soldIds(){return new Set(state.soldPlayers.map(s=>s.player.id))}
 function poolRemaining(){
   const gone=soldIds();
   return FPL.players.filter(p=>!gone.has(p.id)&&p.status!=="u"&&projection(p).pts>0);
 }
-function myVerdict(p,est){
+// How many genuinely strong options remain at a position, vs how many the
+// room still needs. Drives urgency: a fair price on a thinning position is
+// a priority; the same price when 20 comparable players remain is not.
+function scarcity(pos){
+  const pool=poolRemaining().filter(p=>p.pos===pos).map(p=>projection(p).pts).sort((a,b)=>b-a);
+  const floor=pos==="GK"?80:100;                 // "starter-grade" projection
+  const bar=Math.max(floor,pool[Math.floor(pool.length*0.15)]||0);
+  const strong=pool.filter(x=>x>=bar).length;
+  let demand=0;
+  state.teams.forEach(t=>demand+=Math.max(0,SLOTS[pos]-t.squad.filter(s=>s.position===pos).length));
+  return {strong,demand,bar};
+}
+function myVerdict(p,est,liveBid){
   const mine=state.teams.find(t=>t.id===+$("myTeam").value);
   if(!mine)return {cls:"v-fair",head:"SET 'I AM TEAM…' FOR A VERDICT",sub:"pick your team in the header so I know your budget and gaps"};
   const have=mine.squad.filter(x=>x.position===p.pos).length;
   const open=SLOTS[p.pos]-have;
   const slotsLeft=15-mine.squad.length;
-  const maxBid=mine.budget-(slotsLeft-1)*.25;
-  const proj=est.proj.pts, repl=replacementValue(p.pos);
-  const edge=proj-repl;
+  const maxBid=mine.budget-(slotsLeft-1)*.25;   // keep £0.25 for every other empty slot
   if(open<=0)return {cls:"v-pass",head:"PASS — POSITION FULL",sub:`you already hold ${have}/${SLOTS[p.pos]} ${p.pos}`};
-  if(maxBid<est.low)return {cls:"v-pass",head:"PASS — CAN'T AFFORD",sub:`your max bid is £${maxBid.toFixed(2)}m (must keep £0.25 × ${slotsLeft-1} remaining slots)`};
-  const ceiling=Math.min(maxBid,est.high+(edge>40?1:0));
-  if(edge>40)return {cls:"v-priority",head:`PRIORITY — WORTH UP TO £${ceiling.toFixed(2)}m`,sub:`projects ${proj} pts, ${edge} above what will still be around at ${p.pos} (~${repl}). Fair £${est.low}–£${est.high}m.`};
-  if(edge>15)return {cls:"v-value",head:`BID TO £${Math.min(maxBid,est.high).toFixed(2)}m`,sub:`projects ${proj} pts vs ~${repl} still gettable later. Walk away above £${est.high}m.`};
-  return {cls:"v-fair",head:`ONLY IF CHEAP — UNDER £${est.low.toFixed(2)}m`,sub:`similar value (~${repl} pts) will still be in the pool at ${p.pos}; don't chase this`};
+  // assess at the live bid if there's a real one on the block, else expected market price
+  const price=(liveBid&&liveBid>0.25)?liveBid:est.mid;
+  const live=liveBid&&liveBid>0.25;
+  if(maxBid<Math.min(price,est.low))
+    return {cls:"v-pass",head:"PASS — CAN'T AFFORD",sub:`your max bid is £${maxBid.toFixed(2)}m (must keep £0.25 × ${slotsLeft-1} other slots)`};
+  const sc=scarcity(p.pos);
+  const scarce=sc.strong<=open+1;               // barely enough strong options left for your needs
+  const ceil=Math.min(maxBid,est.high);
+  const scNote=`${sc.strong} starter-grade ${p.pos} left for the room's ${sc.demand} open slot${sc.demand===1?"":"s"}`;
+  if(price<=est.low){
+    return {cls:"v-priority",head:`VALUE — ${live?"below market, bid":"target"} up to £${ceil.toFixed(2)}m`,
+      sub:`${live?`£${liveBid}m is under`:"expected price sits below"} the £${est.low}–${est.high}m fair range for a ${est.proj.pts}-pt ${p.pos}. Good points-per-pound.`};
+  }
+  if(price<=est.high){
+    if(scarce)return {cls:"v-priority",head:`PRIORITY — bid to £${ceil.toFixed(2)}m`,
+      sub:`fair price (£${est.low}–${est.high}m) and ${p.pos} is thinning — ${scNote}. Don't let this one go.`};
+    return {cls:"v-value",head:`FAIR — worth it to £${ceil.toFixed(2)}m`,
+      sub:`market rate for a ${est.proj.pts}-pt ${p.pos} (fair £${est.low}–${est.high}m). Bid if you want him, walk above £${est.high}m.`};
+  }
+  // above the fair range
+  if(scarce&&maxBid>=price)
+    return {cls:"v-fair",head:`STRETCH — over market, only if you must fill`,
+      sub:`£${live?liveBid:"expected "+est.mid}m is above the £${est.high}m top of range, but ${scNote}. Overpay only to avoid being stuck.`};
+  return {cls:"v-pass",head:`OVERPRICED — walk above £${est.high.toFixed(2)}m`,
+    sub:`${live?`£${liveBid}m is over`:"expected to clear above"} fair value; ${sc.strong} comparable ${p.pos} still available. Let someone else overpay.`};
 }
 // ── render ─────────────────────────────────────────────────────────────
 function factsheet(p,currentBid,leadingTeam){
   const est=fairRange(p);
-  const v=myVerdict(p,est);
+  const v=myVerdict(p,est,currentBid);
   const s1=latestSeasons(p)[0]||{};
   const dh=draftHistoryOf(p);
   const rivals=state.teams.length?rivalScores(p,est):[];
