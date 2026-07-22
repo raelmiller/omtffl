@@ -77,6 +77,18 @@ th:first-child,td:first-child{text-align:left}
 .mini{font-size:11px}
 #toast{position:fixed;bottom:1rem;right:1rem;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:.6rem 1rem;display:none;z-index:20}
 .gap-ok{color:var(--accent)} .gap-full{color:var(--muted);text-decoration:line-through}
+.prow{margin:.55rem 0}
+.prow .top{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:3px}
+.prow .top b{font-family:var(--sans)}
+.prow .top .r{color:var(--muted);font-variant-numeric:tabular-nums}
+.ptrack{position:relative;height:16px;background:var(--surface2);border-radius:5px;overflow:hidden}
+.ptrack .fill{position:absolute;top:0;bottom:0;left:0;border-radius:5px}
+.ptrack .tgt{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--text);opacity:.8}
+.pf-fwd{background:var(--accent2)} .pf-mid{background:var(--accent)} .pf-def{background:var(--blue)} .pf-gk{background:var(--accent3)}
+.plan-tot{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.7rem 0}
+.nudge{border-left:3px solid var(--accent3);background:var(--surface2);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:.4rem 0;font-size:12px;color:var(--text)}
+.nudge.warn{border-color:var(--accent2)} .nudge.good{border-color:var(--accent)}
+.nudge b{font-family:var(--sans)}
 </style>
 </head>
 <body>
@@ -97,6 +109,7 @@ th:first-child,td:first-child{text-align:left}
   <section class="panel">
     <div class="tabs">
       <button class="active" data-tab="gems">Gems</button>
+      <button data-tab="plan">Plan</button>
       <button data-tab="search">Search</button>
       <button data-tab="teams">Teams</button>
       <button data-tab="log">Log</button>
@@ -104,6 +117,10 @@ th:first-child,td:first-child{text-align:left}
     <div id="tab-gems" class="tabpane">
       <div class="small" style="margin-bottom:.5rem">Best remaining value: projection ÷ expected price. Your board for the late draft.</div>
       <div class="scroll" id="gemsList"></div>
+    </div>
+    <div id="tab-plan" class="tabpane" style="display:none">
+      <div class="small" style="margin-bottom:.6rem">Your budget shape vs the league's <b>best value drafters</b> (MID 38 · FWD 37 · DEF 21 · GK 4). Skew matters more than totals.</div>
+      <div id="planBody"></div>
     </div>
     <div id="tab-search" class="tabpane" style="display:none">
       <input id="q" size="30" placeholder="type a player name…" style="width:100%;margin-bottom:.5rem">
@@ -168,13 +185,16 @@ function estimateFromPrice(p){
   return Math.round(peers[Math.floor(peers.length/2)]);
 }
 // Minutes-adjust a season toward a full-season rate, so a player who missed
-// time (injury, rotation, mid-season move) isn't understated by raw totals.
-// Only scales UP, capped, with a minutes floor so a short cameo can't
-// extrapolate to a fantasy total.
-const FULL_MIN=3000, MAX_UP=1.6, MIN_M=900;
-function adjPts(h){
+// time is not understated by raw totals — BUT only scale up when the player
+// has proven, in another season, that he can play a full campaign. That
+// separates injury-missed minutes (a proven starter, scale up) from
+// not-selected minutes (an unproven squad player, take at face value):
+// Isak's 694-min injury year has a 2758-min prior; Gyokeres's 2217 is his
+// only PL season, so it stands as-is.
+const FULL_MIN=3000, MAX_UP=1.6, MIN_M=900, PROVEN_MIN=2000;
+function adjPts(h,proven){
   const m=h.minutes||0, pts=h.total_points||0;
-  if(m>=FULL_MIN||!pts)return pts;
+  if(m>=FULL_MIN||!pts||!proven)return pts;
   return Math.round(pts*Math.min(MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
 }
 function modelProjection(p){
@@ -184,16 +204,19 @@ function modelProjection(p){
     return {pts:e,basis:`new to PL — est. from £${((p.now_cost||0)/10).toFixed(1)}m FPL price`,isNew:true};
   }
   const s1=hs[0], s2=hs[1];
-  const a1=adjPts(s1), a2=s2?adjPts(s2):null;
-  const adj1=a1!==s1.total_points?`${a1}* (${s1.season_name}, ${s1.total_points} in ${s1.minutes}m)`:`${a1} (${s1.season_name})`;
-  const minAdj=a1!==s1.total_points;   // flag when the latest season was scaled
+  // "proven starter" = some OTHER season with genuine starter minutes
+  const proven=hs.slice(1).some(h=>(h.minutes||0)>=PROVEN_MIN);
+  const a1=adjPts(s1,proven), a2=s2?adjPts(s2,proven):null;
+  const minAdj=a1!==s1.total_points;   // latest season was scaled up (injury/rotation, proven)
+  const unproven=!proven&&(s1.minutes||0)<PROVEN_MIN&&(s1.minutes||0)<FULL_MIN;  // reduced minutes, no track record
+  const adj1=minAdj?`${a1}* (${s1.season_name}, ${s1.total_points} in ${s1.minutes}m)`:`${a1} (${s1.season_name})`;
   // only blend the prior season if it directly precedes the latest and the
   // player actually played it — stops a stale/cameo year dragging form down
   const consecutive=s2&&s2.total_points!=null&&startYear(s1.season_name)-startYear(s2.season_name)===1&&(s2.minutes||0)>=500;
   if(consecutive){
-    return {pts:Math.round(.7*a1+.3*a2),basis:`0.7×${adj1} + 0.3×${a2} (${s2.season_name})`,minAdj};
+    return {pts:Math.round(.7*a1+.3*a2),basis:`0.7×${adj1} + 0.3×${a2} (${s2.season_name})`,minAdj,unproven};
   }
-  return {pts:a1,basis:`${adj1}`,minAdj};
+  return {pts:a1,basis:`${adj1}`,minAdj,unproven};
 }
 // representative projection at the centre of each band, for smooth interpolation
 const BAND_MID={"0-49":25,"50-79":65,"80-99":90,"100-124":112,"125-149":137,"150-179":165,"180+":205};
@@ -356,7 +379,8 @@ function factsheet(p,currentBid,leadingTeam){
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
   if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
-  if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — played reduced minutes last season`);
+  if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
+  if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
@@ -445,7 +469,47 @@ function renderRoom(){
   const liq=liquidity();
   $("roomState").textContent=state.teams.length?`room: ${liq.label}`:"room: —";
 }
-function renderAll(){renderAuction();renderGems();renderTeams();renderLog();renderRoom()}
+// budget shape vs the league's best-value drafters (their spend share)
+const TARGET={FWD:.37,MID:.38,DEF:.21,GK:.04};
+const POS_ORDER=["FWD","MID","DEF","GK"];
+function projOf(playerId){const p=FPL.players.find(x=>x.id===playerId);return p?projection(p).pts:0}
+function renderPlan(){
+  const mine=state.teams.find(t=>t.id===+$("myTeam").value);
+  if(!mine){$("planBody").innerHTML="<div class='small'>Set “I am team…” in the header to track your build.</div>";return}
+  const spent=50-mine.budget;
+  const bud={FWD:0,MID:0,DEF:0,GK:0}, pts={FWD:0,MID:0,DEF:0,GK:0}, cnt={FWD:0,MID:0,DEF:0,GK:0};
+  mine.squad.forEach(s=>{bud[s.position]+=s.price;pts[s.position]+=projOf(s.playerId);cnt[s.position]++;});
+  const totPts=POS_ORDER.reduce((a,p)=>a+pts[p],0);
+  let rows="";
+  for(const pos of POS_ORDER){
+    const tgt=50*TARGET[pos], filled=cnt[pos], need=SLOTS[pos];
+    const scale=Math.max(50*TARGET.MID, bud[pos], tgt)*1.15;
+    const fillW=Math.min(100,bud[pos]/scale*100), tgtW=Math.min(100,tgt/scale*100);
+    rows+=`<div class="prow"><div class="top"><b style="color:var(--${pos==='FWD'?'accent2':pos==='MID'?'accent':pos==='DEF'?'blue':'accent3'})">${pos}</b>
+      <span class="r">£${bud[pos].toFixed(2)}m spent · ${filled}/${need} · ${pts[pos]} pts <span class="small">(guide £${tgt.toFixed(1)}m)</span></span></div>
+      <div class="ptrack"><div class="fill pf-${pos.toLowerCase()}" style="width:${fillW}%"></div><div class="tgt" style="left:${tgtW}%"></div></div></div>`;
+  }
+  const slotsLeft=15-mine.squad.length, maxBid=mine.budget-(slotsLeft-1)*.25;
+  const ppm=spent>0?(totPts/spent).toFixed(1):"—";
+  // nudges from this drafter's known habits + the scarcity analysis
+  const nudges=[];
+  const midShare=spent>0?bud.MID/spent:0, defShare=spent>0?bud.DEF/spent:0;
+  if(spent>=10&&midShare>0.46)nudges.push(["warn",`Midfield is ${Math.round(midShare*100)}% of your spend — your recurring leak. The winners sit ~38%. Ease off premium mids.`]);
+  if(spent>=15&&defShare<0.14&&cnt.DEF<4)nudges.push(["",`Defence is only ${Math.round(defShare*100)}% — underweight. The value is in cheap 150+ projecting defenders; grab a couple before you're left with £0 fillers.`]);
+  const fwdOpen=SLOTS.FWD-cnt.FWD;
+  if(fwdOpen>0&&maxBid<8&&slotsLeft>fwdOpen)nudges.push(["warn",`${fwdOpen} FWD slot${fwdOpen>1?"s":""} open and only £${maxBid.toFixed(2)}m to bid — attack is a cliff. Don't get priced out of a starting striker.`]);
+  if(bud.DEF>12)nudges.push(["warn",`£${bud.DEF.toFixed(2)}m on defence — that market is flat (points cap ~104). Redeploy toward attack.`]);
+  if(!nudges.length&&spent>0)nudges.push(["good",`On shape. ${ppm} pts per £m so far — league value benchmark is ~26.`]);
+  $("planBody").innerHTML=`${rows}
+    <div class="plan-tot">
+      <div class="stat"><b class="g">£${mine.budget.toFixed(2)}m</b><span>budget left</span></div>
+      <div class="stat"><b>£${maxBid.toFixed(2)}m</b><span>your max bid</span></div>
+      <div class="stat"><b class="${ppm>=26?'g':'y'}">${ppm}</b><span>pts per £m</span></div>
+    </div>
+    ${nudges.map(n=>`<div class="nudge ${n[0]}">${n[1]}</div>`).join("")}
+    <div class="small" style="margin-top:.5rem">White tick on each bar = the best-value drafters' guide spend for that position.</div>`;
+}
+function renderAll(){renderAuction();renderGems();renderTeams();renderLog();renderRoom();renderPlan()}
 function toast(msg){const t=$("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",3500)}
 // ── socket ─────────────────────────────────────────────────────────────
 function connect(){
@@ -496,11 +560,12 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
   document.querySelectorAll(".tabpane").forEach(p=>p.style.display="none");
   $("tab-"+b.dataset.tab).style.display="";
   if(b.dataset.tab==="gems")renderGems();
+  if(b.dataset.tab==="plan")renderPlan();
 }));
 $("connectBtn").addEventListener("click",connect);
 $("demoBtn").addEventListener("click",startDemo);
 $("q").addEventListener("input",renderSearch);
-$("myTeam").addEventListener("change",renderAuction);
+$("myTeam").addEventListener("change",()=>{renderAuction();renderPlan()});
 document.body.addEventListener("click",e=>{
   const tr=e.target.closest("tr.row-click");
   if(tr){const p=FPL.players.find(x=>x.id===+tr.dataset.id);
