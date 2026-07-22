@@ -3,18 +3,26 @@
 Everything you do on the night, in order. Setup takes ~10 minutes. Do a
 dry run of these steps the day before.
 
-Topology: **your laptop runs both apps.** The auction app (port 3001) is
-what the room connects to. The advisor (port 8099) is private to you.
+Topology: **your laptop runs everything.** A free Cloudflare tunnel gives
+one public link that both the remote drafters and the people in the room
+use. The app and its saved state stay on your laptop's permanent disk, so
+the crash-recovery works (a hosted server's disk is wiped on restart).
 
 ```
-            your laptop
-   ┌───────────────────────────────┐
-   │  auction server  :3001  ───────┼──►  room (phones)   http://<your-ip>:3001/
-   │      │  (live FPL data)        │     you, auctioneer http://<your-ip>:3001/admin
-   │      ▼ socket                  │
-   │  advisor  :8099  (private)     │     you only        http://localhost:8099/advisor.html
-   └───────────────────────────────┘
+                 your laptop
+   ┌──────────────────────────────────────┐        one public link
+   │  auction server  :3001               │        for EVERYONE:
+   │      │  (live FPL data + saved state) │   ┌─►  remote drafters
+   │      ▼ socket                         │   │    room, on their phones
+   │  cloudflared tunnel  ────────────────┼───┘    https://xxxx.trycloudflare.com/
+   │      ▲                                │
+   │  advisor  :8099  (private, you only)  │        you: http://localhost:8099/advisor.html
+   └──────────────────────────────────────┘        auctioneer: <link>/admin
 ```
+
+Everyone — remote and in-room — opens the **same public tunnel link**. Your
+private advisor still points at `http://localhost:3001` (same laptop, no
+tunnel needed for you).
 
 ## The day before
 1. **Refresh the data.** The FPL dataset re-bakes daily via GitHub Actions.
@@ -37,19 +45,35 @@ npm start            # serves everything on http://0.0.0.0:3001
 Wait for `Loaded NNN players.` — that confirms it pulled live FPL data
 (your laptop needs internet; this is the one part that does).
 
-### 2. Find your laptop's IP
-- **Mac**: `ipconfig getifaddr en0`
-- **Windows**: `ipconfig` → IPv4 Address
-- **Linux**: `hostname -I`
+### 2. Open the public tunnel (for the remote drafters + everyone else)
+Install `cloudflared` once, then start a quick tunnel to the auction app:
+```
+# install (one time):
+#   Mac:      brew install cloudflared
+#   Windows:  winget install --id Cloudflare.cloudflared
+#   Linux:    see https://pkg.cloudflare.com/ (or download the binary)
 
-Call it `<your-ip>` (e.g. 192.168.1.42).
+cloudflared tunnel --url http://localhost:3001
+```
+It prints a line like `https://random-words-1234.trycloudflare.com` — that
+is your **public link**. No account, no time limit, WebSockets work, and it
+stays up as long as the command runs. Keep this terminal open.
 
-### 3. Share with the room
-- Everyone (view only): **`http://<your-ip>:3001/`**
-- You, the auctioneer: **`http://<your-ip>:3001/admin`** (PIN `fpl2025`)
+> Test it before the draft: open the printed URL on your **phone over mobile
+> data** (not WiFi). If the auction app loads, remote drafters are good.
 
-Everyone must be on the **same WiFi**. If phones can't connect, allow port
-3001 through your laptop's firewall.
+### 3. Share the one link with everyone
+- Everyone (view only): **`https://<tunnel>.trycloudflare.com/`**
+- You, the auctioneer only: **`https://<tunnel>.trycloudflare.com/admin`**
+
+Remote and in-room drafters all use the same link — the room doesn't need to
+be on your WiFi. **Before you go public, change the admin PIN** from the
+default `2025` (see hardening below) and don't paste the `/admin` link
+into the group chat — only you need it.
+
+*(All in the same room and no remote callers? You can skip the tunnel and
+just share `http://<your-laptop-ip>:3001/` over WiFi instead — find the IP
+with `ipconfig getifaddr en0` / `ipconfig` / `hostname -I`.)*
 
 ### 4. Start your advisor (private)
 In a second terminal:
@@ -80,21 +104,33 @@ screen only you can see.
   — everything recomputes.
 
 ## If something breaks
-- **Advisor dot goes red / "lost":** the auction server dropped. Restart
-  `npm start`, then the advisor reconnects on its own. **But the auction
-  server keeps its state in memory — a restart loses the whole draft.** So:
-  don't let the laptop sleep, keep it plugged in, and don't Ctrl-C the
-  server. (Worth hardening — see below.)
+- **Auction server crashes / laptop slept:** just run `npm start` again. The
+  draft is **saved to disk after every change and reloads on boot**, so it
+  resumes exactly where it left off (teams, budgets, sold players). Drafters
+  refresh their page and reconnect. Still: keep the laptop plugged in and
+  awake so it doesn't come to that.
+- **Tunnel link stops working:** the `cloudflared` terminal was closed or the
+  laptop's internet dropped. Re-run `cloudflared tunnel --url http://localhost:3001`
+  — note it prints a **new** URL, so reshare it. (Your local advisor is
+  unaffected; it uses localhost.)
+- **Advisor dot goes red / "lost":** the auction server dropped — restart it
+  as above and the advisor reconnects on its own.
 - **Advisor won't connect:** confirm the URL is `http://localhost:3001`
-  (not 8099), and that the auction server terminal shows it's running.
+  (not the tunnel, not 8099), and that the auction server terminal is running.
 - **A player shows no history / "new to PL":** expected for new signings —
   use the manual override to set your own projection.
 - **Whole advisor looks blank:** you opened `advisor.html` as a file
   instead of via `http://localhost:8099` — it needs the local server to
   load its data.
 
-## Recommended hardening (optional, before the night)
-The auction server holds the entire draft in memory, so any crash or laptop
-sleep wipes it. A ~20-line change to snapshot state to disk on every sale
-(and reload on boot) removes that risk. Ask and I'll add it to the auction
-app — it's the one thing I'd fix before trusting a live draft to it.
+## Before you go public (do these once)
+- **Crash-recovery is built in.** The auction server now snapshots the draft
+  to `server/draft-state.json` on every change and restores it on restart, so
+  a crash or a slept laptop no longer wipes the draft. (Delete that file to
+  start a fresh draft, or use the app's Reset.)
+- **Change the admin PIN.** The default is `2025`
+  (`const ADMIN_PIN = '2025'` in
+  `exec-search/fpl-draft/client/src/pages/AdminPage.jsx`) — public in the repo,
+  and your `/admin` link will be reachable over the tunnel. Change it, then
+  rebuild the client (`cd client && npm run build`). Share `/admin` with no
+  one but yourself.
