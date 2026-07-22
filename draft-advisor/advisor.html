@@ -167,6 +167,16 @@ function estimateFromPrice(p){
   if(!peers.length)return 0;
   return Math.round(peers[Math.floor(peers.length/2)]);
 }
+// Minutes-adjust a season toward a full-season rate, so a player who missed
+// time (injury, rotation, mid-season move) isn't understated by raw totals.
+// Only scales UP, capped, with a minutes floor so a short cameo can't
+// extrapolate to a fantasy total.
+const FULL_MIN=3000, MAX_UP=1.6, MIN_M=900;
+function adjPts(h){
+  const m=h.minutes||0, pts=h.total_points||0;
+  if(m>=FULL_MIN||!pts)return pts;
+  return Math.round(pts*Math.min(MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
+}
 function modelProjection(p){
   const hs=latestSeasons(p);
   if(!hs.length){
@@ -174,14 +184,16 @@ function modelProjection(p){
     return {pts:e,basis:`new to PL — est. from £${((p.now_cost||0)/10).toFixed(1)}m FPL price`,isNew:true};
   }
   const s1=hs[0], s2=hs[1];
+  const a1=adjPts(s1), a2=s2?adjPts(s2):null;
+  const adj1=a1!==s1.total_points?`${a1}* (${s1.season_name}, ${s1.total_points} in ${s1.minutes}m)`:`${a1} (${s1.season_name})`;
+  const minAdj=a1!==s1.total_points;   // flag when the latest season was scaled
   // only blend the prior season if it directly precedes the latest and the
   // player actually played it — stops a stale/cameo year dragging form down
   const consecutive=s2&&s2.total_points!=null&&startYear(s1.season_name)-startYear(s2.season_name)===1&&(s2.minutes||0)>=500;
   if(consecutive){
-    return {pts:Math.round(.7*s1.total_points+.3*s2.total_points),
-            basis:`0.7×${s1.total_points} (${s1.season_name}) + 0.3×${s2.total_points} (${s2.season_name})`};
+    return {pts:Math.round(.7*a1+.3*a2),basis:`0.7×${adj1} + 0.3×${a2} (${s2.season_name})`,minAdj};
   }
-  return {pts:s1.total_points,basis:`${s1.total_points} pts in ${s1.season_name}`};
+  return {pts:a1,basis:`${adj1}`,minAdj};
 }
 // representative projection at the centre of each band, for smooth interpolation
 const BAND_MID={"0-49":25,"50-79":65,"80-99":90,"100-124":112,"125-149":137,"150-179":165,"180+":205};
@@ -344,6 +356,7 @@ function factsheet(p,currentBid,leadingTeam){
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
   if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
+  if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — played reduced minutes last season`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
