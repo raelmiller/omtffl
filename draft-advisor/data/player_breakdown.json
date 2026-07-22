@@ -1,0 +1,9394 @@
+{
+ "generated_from": {
+  "fpl_baked_at": "2026-07-22T07:40:36Z",
+  "sales": 645,
+  "unique_players": 372,
+  "matched_to_fpl": 317
+ },
+ "players": [
+  {
+   "key": "fpl_430",
+   "fpl_id": 430,
+   "display": "Haaland",
+   "position": "FWD",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 239,
+   "xgi": "28.17",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 29.75,
+     "buyer": "Efe",
+     "club_then": "MCI",
+     "points_that_season": 217
+    },
+    "2024-25": {
+     "price": 25.0,
+     "buyer": "Ali",
+     "club_then": "MCI",
+     "points_that_season": 181
+    },
+    "2025-26": {
+     "price": 23.5,
+     "buyer": "Rob",
+     "club_then": "MCI",
+     "points_that_season": 239
+    }
+   }
+  },
+  {
+   "key": "fpl_381",
+   "fpl_id": 381,
+   "display": "M.Salah",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 123,
+   "xgi": "13.67",
+   "penalties": true,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 29.0,
+     "buyer": "Ciaran",
+     "club_then": "LIV",
+     "points_that_season": 211
+    },
+    "2024-25": {
+     "price": 19.75,
+     "buyer": "Ciaran",
+     "club_then": "LIV",
+     "points_that_season": 344
+    },
+    "2025-26": {
+     "price": 22.75,
+     "buyer": "Oli",
+     "club_then": "LIV",
+     "points_that_season": 123
+    }
+   }
+  },
+  {
+   "key": "fpl_449",
+   "fpl_id": 449,
+   "display": "B.Fernandes",
+   "position": "MID",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 235,
+   "xgi": "23.07",
+   "penalties": true,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 25.0,
+     "buyer": "Georgeson",
+     "club_then": "MUN",
+     "points_that_season": 166
+    },
+    "2024-25": {
+     "price": 16.75,
+     "buyer": "Oli",
+     "club_then": "MUN",
+     "points_that_season": 174
+    },
+    "2025-26": {
+     "price": 16.0,
+     "buyer": "Gav",
+     "club_then": "MUN",
+     "points_that_season": 235
+    }
+   }
+  },
+  {
+   "key": "fpl_16",
+   "fpl_id": 16,
+   "display": "Saka",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 157,
+   "xgi": "14.73",
+   "penalties": true,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 17.5,
+     "buyer": "Deepesh",
+     "club_then": "ARS",
+     "points_that_season": 226
+    },
+    "2024-25": {
+     "price": 19.0,
+     "buyer": "Simon",
+     "club_then": "ARS",
+     "points_that_season": 127
+    },
+    "2025-26": {
+     "price": 20.0,
+     "buyer": "Ciaran",
+     "club_then": "ARS",
+     "points_that_season": 157
+    }
+   }
+  },
+  {
+   "key": "fpl_64",
+   "fpl_id": 64,
+   "display": "Watkins",
+   "position": "FWD",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 167,
+   "xgi": "16.58",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 16.5,
+     "buyer": "Lloyd",
+     "club_then": "AVL",
+     "points_that_season": 228
+    },
+    "2024-25": {
+     "price": 18.5,
+     "buyer": "Lloyd",
+     "club_then": "AVL",
+     "points_that_season": 186
+    },
+    "2025-26": {
+     "price": 20.0,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 167
+    }
+   }
+  },
+  {
+   "key": "fpl_235",
+   "fpl_id": 235,
+   "display": "Palmer",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 114,
+   "xgi": "13.04",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 19.5,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 214
+    },
+    "2025-26": {
+     "price": 20.0,
+     "buyer": "Oli",
+     "club_then": "CHE",
+     "points_that_season": 114
+    }
+   }
+  },
+  {
+   "key": "fpl_499",
+   "fpl_id": 499,
+   "display": "Isak",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 41,
+   "xgi": "2.67",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 14.25,
+     "buyer": "Ollie",
+     "club_then": "NEW",
+     "points_that_season": 172
+    },
+    "2024-25": {
+     "price": 19.0,
+     "buyer": "Yath",
+     "club_then": "NEW",
+     "points_that_season": 211
+    },
+    "2025-26": {
+     "price": 19.75,
+     "buyer": "Ciaran",
+     "club_then": "FOR",
+     "points_that_season": 41
+    }
+   }
+  },
+  {
+   "key": "fpl_382",
+   "fpl_id": 382,
+   "display": "Wirtz",
+   "position": "MID",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 125,
+   "xgi": "11.96",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 17.5,
+     "buyer": "Simon",
+     "club_then": "LIV",
+     "points_that_season": 125
+    }
+   }
+  },
+  {
+   "key": "fpl_249",
+   "fpl_id": 249,
+   "display": "Jo\u00e3o Pedro",
+   "position": "FWD",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 177,
+   "xgi": "16.87",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 17.5,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 177
+    }
+   }
+  },
+  {
+   "key": "fpl_624",
+   "fpl_id": 624,
+   "display": "Bowen",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 187,
+   "xgi": "12.43",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.75,
+     "buyer": "Friede",
+     "club_then": "WHU",
+     "points_that_season": 182
+    },
+    "2024-25": {
+     "price": 9.0,
+     "buyer": "Lloyd",
+     "club_then": "WHU",
+     "points_that_season": 193
+    },
+    "2025-26": {
+     "price": 17.0,
+     "buyer": "Lucien",
+     "club_then": "WHU",
+     "points_that_season": 187
+    }
+   }
+  },
+  {
+   "key": "fpl_283",
+   "fpl_id": 283,
+   "display": "Mateta",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 114,
+   "xgi": "15.74",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 11.5,
+     "buyer": "Gav",
+     "club_then": "CRY",
+     "points_that_season": 150
+    },
+    "2025-26": {
+     "price": 17.0,
+     "buyer": "Rob",
+     "club_then": "CRY",
+     "points_that_season": 114
+    }
+   }
+  },
+  {
+   "key": "fpl_451",
+   "fpl_id": 451,
+   "display": "Rashford",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 16.0,
+     "buyer": "Tiggy",
+     "club_then": "MUN",
+     "points_that_season": 108
+    },
+    "2024-25": {
+     "price": 7.0,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 95
+    }
+   }
+  },
+  {
+   "key": "name_trent alexander arnold",
+   "fpl_id": null,
+   "display": "Trent Alexander-Arnold",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 15.75,
+     "buyer": "Gav",
+     "club_then": "LIV",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_579",
+   "fpl_id": 579,
+   "display": "Son",
+   "position": "FWD",
+   "current_club": "TOT",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 14.0,
+     "buyer": "Efe",
+     "club_then": "TOT",
+     "points_that_season": 213
+    },
+    "2024-25": {
+     "price": 15.75,
+     "buyer": "Rael",
+     "club_then": "TOT",
+     "points_that_season": 129
+    }
+   }
+  },
+  {
+   "key": "fpl_666",
+   "fpl_id": 666,
+   "display": "Gy\u00f6keres",
+   "position": "FWD",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 128,
+   "xgi": "14.19",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 15.5,
+     "buyer": "Tiggy",
+     "club_then": "ARS",
+     "points_that_season": 128
+    }
+   }
+  },
+  {
+   "key": "fpl_414",
+   "fpl_id": 414,
+   "display": "Foden",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 131,
+   "xgi": "10.79",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 7.0,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 230
+    },
+    "2024-25": {
+     "price": 15.25,
+     "buyer": "Yath",
+     "club_then": "MCI",
+     "points_that_season": 105
+    },
+    "2025-26": {
+     "price": 10.75,
+     "buyer": "Efe",
+     "club_then": "MCI",
+     "points_that_season": 131
+    }
+   }
+  },
+  {
+   "key": "fpl_596",
+   "fpl_id": 596,
+   "display": "Solanke",
+   "position": "FWD",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 40,
+   "xgi": "3.30",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.75,
+     "buyer": "Ollie",
+     "club_then": "BOU",
+     "points_that_season": 175
+    },
+    "2024-25": {
+     "price": 15.0,
+     "buyer": "Ciaran",
+     "club_then": "TOT",
+     "points_that_season": 108
+    },
+    "2025-26": {
+     "price": 15.0,
+     "buyer": "Deepesh",
+     "club_then": "TOT",
+     "points_that_season": 40
+    }
+   }
+  },
+  {
+   "key": "fpl_17",
+   "fpl_id": 17,
+   "display": "\u00d8degaard",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 74,
+   "xgi": "4.90",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 10.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 186
+    },
+    "2024-25": {
+     "price": 14.75,
+     "buyer": "Simon",
+     "club_then": "ARS",
+     "points_that_season": 116
+    },
+    "2025-26": {
+     "price": 11.0,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 74
+    }
+   }
+  },
+  {
+   "key": "fpl_135",
+   "fpl_id": 135,
+   "display": "Wissa",
+   "position": "FWD",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 27,
+   "xgi": "3.67",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Yath",
+     "club_then": "BRE",
+     "points_that_season": 131
+    },
+    "2024-25": {
+     "price": 5.5,
+     "buyer": "Gav",
+     "club_then": "BRE",
+     "points_that_season": 185
+    },
+    "2025-26": {
+     "price": 14.5,
+     "buyer": "Gav",
+     "club_then": "BRE",
+     "points_that_season": 27
+    }
+   }
+  },
+  {
+   "key": "fpl_525",
+   "fpl_id": 525,
+   "display": "Wood",
+   "position": "FWD",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 41,
+   "xgi": "4.61",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Ali",
+     "club_then": "NFO",
+     "points_that_season": 200
+    },
+    "2025-26": {
+     "price": 14.25,
+     "buyer": "Lloyd",
+     "club_then": "NFO",
+     "points_that_season": 41
+    }
+   }
+  },
+  {
+   "key": "fpl_681",
+   "fpl_id": 681,
+   "display": "\u0160e\u0161ko",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 111,
+   "xgi": "9.48",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 14.25,
+     "buyer": "Efe",
+     "club_then": "MUN",
+     "points_that_season": 111
+    }
+   }
+  },
+  {
+   "key": "fpl_661",
+   "fpl_id": 661,
+   "display": "Ekitik\u00e9",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "i",
+   "last_season_points": 125,
+   "xgi": "12.55",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 13.75,
+     "buyer": "Simon",
+     "club_then": "LIV",
+     "points_that_season": 125
+    }
+   }
+  },
+  {
+   "key": "fpl_250",
+   "fpl_id": 250,
+   "display": "Delap",
+   "position": "FWD",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 45,
+   "xgi": "4.76",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Friede",
+     "club_then": "IPS",
+     "points_that_season": 132
+    },
+    "2025-26": {
+     "price": 13.25,
+     "buyer": "Friede",
+     "club_then": "CHE",
+     "points_that_season": 45
+    }
+   }
+  },
+  {
+   "key": "fpl_5",
+   "fpl_id": 5,
+   "display": "Gabriel",
+   "position": "FWD",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 209,
+   "xgi": "4.69",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 13.0,
+     "buyer": "Lloyd",
+     "club_then": "ARS",
+     "points_that_season": 149
+    },
+    "2024-25": {
+     "price": 10.0,
+     "buyer": "Maccers",
+     "club_then": "ARS",
+     "points_that_season": 117
+    },
+    "2025-26": {
+     "price": 5.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 209
+    }
+   }
+  },
+  {
+   "key": "fpl_97",
+   "fpl_id": 97,
+   "display": "Evanilson",
+   "position": "FWD",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 115,
+   "xgi": "12.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 13.0,
+     "buyer": "Lloyd",
+     "club_then": "BOU",
+     "points_that_season": 115
+    }
+   }
+  },
+  {
+   "key": "fpl_397",
+   "fpl_id": 397,
+   "display": "Darwin",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 12.75,
+     "buyer": "Tiggy",
+     "club_then": "LIV",
+     "points_that_season": 132
+    },
+    "2024-25": {
+     "price": 8.25,
+     "buyer": "Tiggy",
+     "club_then": "LIV",
+     "points_that_season": 66
+    }
+   }
+  },
+  {
+   "key": "fpl_654",
+   "fpl_id": 654,
+   "display": "Strand Larsen",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 75,
+   "xgi": "6.42",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 8.25,
+     "buyer": "Richard",
+     "club_then": "WOL",
+     "points_that_season": 145
+    },
+    "2025-26": {
+     "price": 12.75,
+     "buyer": "Yath",
+     "club_then": "WOL",
+     "points_that_season": 75
+    }
+   }
+  },
+  {
+   "key": "fpl_47",
+   "fpl_id": 47,
+   "display": "Rogers",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 169,
+   "xgi": "11.16",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "AVL",
+     "points_that_season": 161
+    },
+    "2025-26": {
+     "price": 12.25,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 169
+    }
+   }
+  },
+  {
+   "key": "fpl_478",
+   "fpl_id": 478,
+   "display": "Trippier",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 54,
+   "xgi": "2.14",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 12.0,
+     "buyer": "Gav",
+     "club_then": "NEW",
+     "points_that_season": 111
+    },
+    "2024-25": {
+     "price": 2.75,
+     "buyer": "Friede",
+     "club_then": "NEW",
+     "points_that_season": 72
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "NEW",
+     "points_that_season": 54
+    }
+   }
+  },
+  {
+   "key": "fpl_413",
+   "fpl_id": 413,
+   "display": "Marmoush",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 56,
+   "xgi": "3.55",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 12.0,
+     "buyer": "Rael",
+     "club_then": "MCI",
+     "points_that_season": 56
+    }
+   }
+  },
+  {
+   "key": "fpl_136",
+   "fpl_id": 136,
+   "display": "Thiago",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 181,
+   "xgi": "22.43",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Ollie",
+     "club_then": "CHE",
+     "points_that_season": null
+    },
+    "2025-26": {
+     "price": 10.75,
+     "buyer": "Rael",
+     "club_then": "BRE",
+     "points_that_season": 181
+    }
+   }
+  },
+  {
+   "key": "fpl_119",
+   "fpl_id": 119,
+   "display": "Mbeumo",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 148,
+   "xgi": "16.97",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 5.75,
+     "buyer": "Yath",
+     "club_then": "BRE",
+     "points_that_season": 127
+    },
+    "2024-25": {
+     "price": 4.5,
+     "buyer": "Yath",
+     "club_then": "BRE",
+     "points_that_season": 236
+    },
+    "2025-26": {
+     "price": 10.5,
+     "buyer": "Maccers",
+     "club_then": "MUN",
+     "points_that_season": 148
+    }
+   }
+  },
+  {
+   "key": "fpl_240",
+   "fpl_id": 240,
+   "display": "Nkunku",
+   "position": "FWD",
+   "current_club": "CHE",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 10.5,
+     "buyer": "Gav",
+     "club_then": "CHE",
+     "points_that_season": 29
+    },
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Richard",
+     "club_then": "CHE",
+     "points_that_season": 60
+    }
+   }
+  },
+  {
+   "key": "fpl_30",
+   "fpl_id": 30,
+   "display": "Havertz",
+   "position": "FWD",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 36,
+   "xgi": "3.95",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.75,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 180
+    },
+    "2024-25": {
+     "price": 10.5,
+     "buyer": "Deepesh",
+     "club_then": "ARS",
+     "points_that_season": 97
+    },
+    "2025-26": {
+     "price": 9.0,
+     "buyer": "Simon",
+     "club_then": "ARS",
+     "points_that_season": 36
+    }
+   }
+  },
+  {
+   "key": "name_harry kane",
+   "fpl_id": null,
+   "display": "Harry Kane",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 10.0,
+     "buyer": "Ciaran",
+     "club_then": "TOT",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_266",
+   "fpl_id": 266,
+   "display": "Eze",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "7.84",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 6.5,
+     "buyer": "Ollie",
+     "club_then": "CRY",
+     "points_that_season": 136
+    },
+    "2024-25": {
+     "price": 8.0,
+     "buyer": "Tiggy",
+     "club_then": "CRY",
+     "points_that_season": 148
+    },
+    "2025-26": {
+     "price": 10.0,
+     "buyer": "Ali",
+     "club_then": "CRY",
+     "points_that_season": 113
+    }
+   }
+  },
+  {
+   "key": "fpl_21",
+   "fpl_id": 21,
+   "display": "Rice",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 184,
+   "xgi": "10.47",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 2.5,
+     "buyer": "Tiggy",
+     "club_then": "ARS",
+     "points_that_season": 165
+    },
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Ali",
+     "club_then": "ARS",
+     "points_that_season": 127
+    },
+    "2025-26": {
+     "price": 9.75,
+     "buyer": "Deepesh",
+     "club_then": "ARS",
+     "points_that_season": 184
+    }
+   }
+  },
+  {
+   "key": "fpl_581",
+   "fpl_id": 581,
+   "display": "Maddison",
+   "position": "MID",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 3,
+   "xgi": "0.27",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 9.5,
+     "buyer": "Ollie",
+     "club_then": "TOT",
+     "points_that_season": 117
+    },
+    "2024-25": {
+     "price": 7.0,
+     "buyer": "Deepesh",
+     "club_then": "TOT",
+     "points_that_season": 133
+    }
+   }
+  },
+  {
+   "key": "fpl_485",
+   "fpl_id": 485,
+   "display": "Gordon",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 101,
+   "xgi": "12.15",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "NEW",
+     "points_that_season": 183
+    },
+    "2024-25": {
+     "price": 9.25,
+     "buyer": "Gav",
+     "club_then": "NEW",
+     "points_that_season": 124
+    },
+    "2025-26": {
+     "price": 8.25,
+     "buyer": "Ciaran",
+     "club_then": "NEW",
+     "points_that_season": 101
+    }
+   }
+  },
+  {
+   "key": "fpl_251",
+   "fpl_id": 251,
+   "display": "N.Jackson",
+   "position": "FWD",
+   "current_club": "CHE",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 9.0,
+     "buyer": "Rael",
+     "club_then": "CHE",
+     "points_that_season": 142
+    },
+    "2024-25": {
+     "price": 7.25,
+     "buyer": "Oli",
+     "club_then": "CHE",
+     "points_that_season": 121
+    },
+    "2025-26": {
+     "price": 5.25,
+     "buyer": "Yath",
+     "club_then": "NEW",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_alexander arnold",
+   "fpl_id": null,
+   "display": "Alexander-Arnold",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 9.0,
+     "buyer": "Oli",
+     "club_then": "LIV",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_310",
+   "fpl_id": 310,
+   "display": "Barry",
+   "position": "FWD",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 95,
+   "xgi": "8.61",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 9.0,
+     "buyer": "Richard",
+     "club_then": "EVE",
+     "points_that_season": 95
+    }
+   }
+  },
+  {
+   "key": "fpl_157",
+   "fpl_id": 157,
+   "display": "Mitoma",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "d",
+   "last_season_points": 62,
+   "xgi": "6.78",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 8.25,
+     "buyer": "Yath",
+     "club_then": "BHA",
+     "points_that_season": 74
+    },
+    "2024-25": {
+     "price": 4.75,
+     "buyer": "Richard",
+     "club_then": "BRI",
+     "points_that_season": 145
+    },
+    "2025-26": {
+     "price": 8.25,
+     "buyer": "Rael",
+     "club_then": "BRI",
+     "points_that_season": 62
+    }
+   }
+  },
+  {
+   "key": "fpl_225",
+   "fpl_id": 225,
+   "display": "James",
+   "position": "GK",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 115,
+   "xgi": "4.24",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 8.25,
+     "buyer": "Rael",
+     "club_then": "CHE",
+     "points_that_season": 11
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "CHE",
+     "points_that_season": 54
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": 115
+    }
+   }
+  },
+  {
+   "key": "fpl_450",
+   "fpl_id": 450,
+   "display": "Cunha",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 143,
+   "xgi": "10.26",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 7.0,
+     "buyer": "Lucien",
+     "club_then": "WOL",
+     "points_that_season": 178
+    },
+    "2025-26": {
+     "price": 8.25,
+     "buyer": "Tiggy",
+     "club_then": "MUN",
+     "points_that_season": 143
+    }
+   }
+  },
+  {
+   "key": "fpl_384",
+   "fpl_id": 384,
+   "display": "Gakpo",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 131,
+   "xgi": "13.02",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 8.0,
+     "buyer": "Yath",
+     "club_then": "LIV",
+     "points_that_season": 106
+    },
+    "2024-25": {
+     "price": 6.75,
+     "buyer": "Richard",
+     "club_then": "LIV",
+     "points_that_season": 127
+    },
+    "2025-26": {
+     "price": 6.5,
+     "buyer": "Richard",
+     "club_then": "LIV",
+     "points_that_season": 131
+    }
+   }
+  },
+  {
+   "key": "fpl_465",
+   "fpl_id": 465,
+   "display": "H\u00f8jlund",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 8.0,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 112
+    },
+    "2024-25": {
+     "price": 5.25,
+     "buyer": "Tiggy",
+     "club_then": "MUN",
+     "points_that_season": 78
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Oli",
+     "club_then": "MUN",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_515",
+   "fpl_id": 515,
+   "display": "Gibbs-White",
+   "position": "MID",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 188,
+   "xgi": "13.72",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 7.0,
+     "buyer": "Yath",
+     "club_then": "NFO",
+     "points_that_season": 142
+    },
+    "2024-25": {
+     "price": 5.5,
+     "buyer": "Friede",
+     "club_then": "NFO",
+     "points_that_season": 154
+    },
+    "2025-26": {
+     "price": 7.75,
+     "buyer": "Deepesh",
+     "club_then": "NFO",
+     "points_that_season": 188
+    }
+   }
+  },
+  {
+   "key": "fpl_373",
+   "fpl_id": 373,
+   "display": "Virgil",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 175,
+   "xgi": "5.21",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.5,
+     "buyer": "Richard",
+     "club_then": "LIV",
+     "points_that_season": 117
+    },
+    "2024-25": {
+     "price": 4.25,
+     "buyer": "Tiggy",
+     "club_then": "LIV",
+     "points_that_season": 143
+    },
+    "2025-26": {
+     "price": 7.75,
+     "buyer": "Deepesh",
+     "club_then": "LIV",
+     "points_that_season": 175
+    }
+   }
+  },
+  {
+   "key": "fpl_178",
+   "fpl_id": 178,
+   "display": "Welbeck",
+   "position": "FWD",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 126,
+   "xgi": "13.76",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Maccers",
+     "club_then": "BRI",
+     "points_that_season": 125
+    },
+    "2025-26": {
+     "price": 7.75,
+     "buyer": "Maccers",
+     "club_then": "BRI",
+     "points_that_season": 126
+    }
+   }
+  },
+  {
+   "key": "fpl_419",
+   "fpl_id": 419,
+   "display": "Grealish",
+   "position": "MID",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 79,
+   "xgi": "5.41",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 7.25,
+     "buyer": "Yath",
+     "club_then": "MCI",
+     "points_that_season": 50
+    },
+    "2024-25": {
+     "price": 7.5,
+     "buyer": "Ali",
+     "club_then": "MCI",
+     "points_that_season": 38
+    },
+    "2025-26": {
+     "price": 6.5,
+     "buyer": "Maccers",
+     "club_then": "EVE",
+     "points_that_season": 79
+    }
+   }
+  },
+  {
+   "key": "fpl_383",
+   "fpl_id": 383,
+   "display": "Luis D\u00edaz",
+   "position": "FWD",
+   "current_club": "LIV",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 7.5,
+     "buyer": "Richard",
+     "club_then": "LIV",
+     "points_that_season": 142
+    },
+    "2024-25": {
+     "price": 7.5,
+     "buyer": "Rael",
+     "club_then": "LIV",
+     "points_that_season": 183
+    }
+   }
+  },
+  {
+   "key": "fpl_583",
+   "fpl_id": 583,
+   "display": "Kulusevski",
+   "position": "MID",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 7.0,
+     "buyer": "Ollie",
+     "club_then": "TOT",
+     "points_that_season": 130
+    },
+    "2024-25": {
+     "price": 1.75,
+     "buyer": "Friede",
+     "club_then": "TOT",
+     "points_that_season": 117
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Friede",
+     "club_then": "TOT",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_455",
+   "fpl_id": 455,
+   "display": "Mount",
+   "position": "MID",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 58,
+   "xgi": "3.18",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 7.0,
+     "buyer": "Georgeson",
+     "club_then": "MUN",
+     "points_that_season": 23
+    }
+   }
+  },
+  {
+   "key": "fpl_49",
+   "fpl_id": 49,
+   "display": "Bailey",
+   "position": "FWD",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 21,
+   "xgi": "1.96",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Georgeson",
+     "club_then": "AVL",
+     "points_that_season": 148
+    },
+    "2024-25": {
+     "price": 7.0,
+     "buyer": "Lucien",
+     "club_then": "AVL",
+     "points_that_season": 47
+    }
+   }
+  },
+  {
+   "key": "fpl_338",
+   "fpl_id": 338,
+   "display": "Muniz",
+   "position": "FWD",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 36,
+   "xgi": "3.45",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 7.0,
+     "buyer": "Gav",
+     "club_then": "FUL",
+     "points_that_season": 86
+    },
+    "2025-26": {
+     "price": 6.5,
+     "buyer": "Richard",
+     "club_then": "FUL",
+     "points_that_season": 36
+    }
+   }
+  },
+  {
+   "key": "fpl_19",
+   "fpl_id": 19,
+   "display": "Martinelli",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 57,
+   "xgi": "5.39",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 6.75,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 125
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Lloyd",
+     "club_then": "ARS",
+     "points_that_season": 57
+    }
+   }
+  },
+  {
+   "key": "fpl_582",
+   "fpl_id": 582,
+   "display": "Kudus",
+   "position": "FWD",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 75,
+   "xgi": "4.33",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Tiggy",
+     "club_then": "BHA",
+     "points_that_season": 137
+    },
+    "2024-25": {
+     "price": 4.75,
+     "buyer": "Tiggy",
+     "club_then": "WHU",
+     "points_that_season": 106
+    },
+    "2025-26": {
+     "price": 6.5,
+     "buyer": "Friede",
+     "club_then": "TOT",
+     "points_that_season": 75
+    }
+   }
+  },
+  {
+   "key": "fpl_453",
+   "fpl_id": 453,
+   "display": "Garnacho",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 56,
+   "xgi": "7.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "MUN",
+     "points_that_season": 131
+    },
+    "2024-25": {
+     "price": 6.25,
+     "buyer": "Maccers",
+     "club_then": "MUN",
+     "points_that_season": 106
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": 56
+    }
+   }
+  },
+  {
+   "key": "fpl_245",
+   "fpl_id": 245,
+   "display": "Mudryk",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "s",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 6.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 94
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 7
+    }
+   }
+  },
+  {
+   "key": "fpl_691",
+   "fpl_id": 691,
+   "display": "Calvert-Lewin",
+   "position": "FWD",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 142,
+   "xgi": "16.62",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 6.0,
+     "buyer": "Gav",
+     "club_then": "EVE",
+     "points_that_season": 101
+    },
+    "2024-25": {
+     "price": 5.75,
+     "buyer": "Rael",
+     "club_then": "EVE",
+     "points_that_season": 63
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "EVE",
+     "points_that_season": 142
+    }
+   }
+  },
+  {
+   "key": "fpl_20",
+   "fpl_id": 20,
+   "display": "Trossard",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 119,
+   "xgi": "9.18",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 6.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 138
+    },
+    "2024-25": {
+     "price": 3.75,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 152
+    },
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Rob",
+     "club_then": "ARS",
+     "points_that_season": 119
+    }
+   }
+  },
+  {
+   "key": "fpl_416",
+   "fpl_id": 416,
+   "display": "Bernardo",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 102,
+   "xgi": "6.81",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.5,
+     "buyer": "Tiggy",
+     "club_then": "MCI",
+     "points_that_season": 141
+    },
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 110
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rael",
+     "club_then": "MCI",
+     "points_that_season": 102
+    }
+   }
+  },
+  {
+   "key": "fpl_642",
+   "fpl_id": 642,
+   "display": "Hee Chan",
+   "position": "MID",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 54,
+   "xgi": "3.94",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Ciaran",
+     "club_then": "WOL",
+     "points_that_season": 37
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "WOL",
+     "points_that_season": 54
+    }
+   }
+  },
+  {
+   "key": "name_toney",
+   "fpl_id": null,
+   "display": "Toney",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 6.0,
+     "buyer": "Richard",
+     "club_then": "BRE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_236",
+   "fpl_id": 236,
+   "display": "Neto",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 125,
+   "xgi": "11.43",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Simon",
+     "club_then": "CHE",
+     "points_that_season": 104
+    },
+    "2025-26": {
+     "price": 6.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 125
+    }
+   }
+  },
+  {
+   "key": "fpl_120",
+   "fpl_id": 120,
+   "display": "Schade",
+   "position": "MID",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 125,
+   "xgi": "14.13",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 6.0,
+     "buyer": "Yath",
+     "club_then": "BRE",
+     "points_that_season": 125
+    }
+   }
+  },
+  {
+   "key": "fpl_362",
+   "fpl_id": 362,
+   "display": "Piroe",
+   "position": "FWD",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 17,
+   "xgi": "1.03",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 6.0,
+     "buyer": "Rael",
+     "club_then": "LEE",
+     "points_that_season": 17
+    }
+   }
+  },
+  {
+   "key": "fpl_783",
+   "fpl_id": 783,
+   "display": "Gro\u00df",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 78,
+   "xgi": "5.34",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.5,
+     "buyer": "Ciaran",
+     "club_then": "BHA",
+     "points_that_season": 153
+    }
+   }
+  },
+  {
+   "key": "fpl_518",
+   "fpl_id": 518,
+   "display": "Jota",
+   "position": "FWD",
+   "current_club": "NFO",
+   "status": "u",
+   "last_season_points": 1,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.5,
+     "buyer": "Ciaran",
+     "club_then": "LIV",
+     "points_that_season": null
+    },
+    "2024-25": {
+     "price": 5.5,
+     "buyer": "Yath",
+     "club_then": "LIV",
+     "points_that_season": 52
+    }
+   }
+  },
+  {
+   "key": "fpl_403",
+   "fpl_id": 403,
+   "display": "Gvardiol",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 79,
+   "xgi": "2.95",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.25,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 123
+    },
+    "2024-25": {
+     "price": 5.5,
+     "buyer": "Lucien",
+     "club_then": "MCI",
+     "points_that_season": 153
+    },
+    "2025-26": {
+     "price": 4.75,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 79
+    }
+   }
+  },
+  {
+   "key": "fpl_6",
+   "fpl_id": 6,
+   "display": "Saliba",
+   "position": "DEF",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 137,
+   "xgi": "2.09",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Tiggy",
+     "club_then": "ARS",
+     "points_that_season": 164
+    },
+    "2024-25": {
+     "price": 5.25,
+     "buyer": "Simon",
+     "club_then": "ARS",
+     "points_that_season": 130
+    },
+    "2025-26": {
+     "price": 5.5,
+     "buyer": "Efe",
+     "club_then": "ARS",
+     "points_that_season": 137
+    }
+   }
+  },
+  {
+   "key": "fpl_82",
+   "fpl_id": 82,
+   "display": "Semenyo",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 202,
+   "xgi": "14.21",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.25,
+     "buyer": "Deepesh",
+     "club_then": "BOU",
+     "points_that_season": 165
+    },
+    "2025-26": {
+     "price": 5.5,
+     "buyer": "Yath",
+     "club_then": "BOU",
+     "points_that_season": 202
+    }
+   }
+  },
+  {
+   "key": "fpl_337",
+   "fpl_id": 337,
+   "display": "Ra\u00fal",
+   "position": "FWD",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 112,
+   "xgi": "12.48",
+   "penalties": true,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "FUL",
+     "points_that_season": 147
+    },
+    "2025-26": {
+     "price": 5.5,
+     "buyer": "Lloyd",
+     "club_then": "FUL",
+     "points_that_season": 112
+    }
+   }
+  },
+  {
+   "key": "fpl_452",
+   "fpl_id": 452,
+   "display": "Amad",
+   "position": "MID",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 91,
+   "xgi": "10.20",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 5.5,
+     "buyer": "Lucien",
+     "club_then": "MUN",
+     "points_that_season": 91
+    }
+   }
+  },
+  {
+   "key": "fpl_370",
+   "fpl_id": 370,
+   "display": "Frimpong",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 63,
+   "xgi": "2.05",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 5.5,
+     "buyer": "Efe",
+     "club_then": "LIV",
+     "points_that_season": 63
+    }
+   }
+  },
+  {
+   "key": "fpl_147",
+   "fpl_id": 147,
+   "display": "Estupi\u00f1an",
+   "position": "DEF",
+   "current_club": "BHA",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.25,
+     "buyer": "Yath",
+     "club_then": "BHA",
+     "points_that_season": 57
+    },
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Ciaran",
+     "club_then": "BRI",
+     "points_that_season": 63
+    }
+   }
+  },
+  {
+   "key": "fpl_371",
+   "fpl_id": 371,
+   "display": "Kerkez",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 85,
+   "xgi": "2.19",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BOU",
+     "points_that_season": 59
+    },
+    "2025-26": {
+     "price": 5.25,
+     "buyer": "Rael",
+     "club_then": "LIV",
+     "points_that_season": 85
+    }
+   }
+  },
+  {
+   "key": "fpl_421",
+   "fpl_id": 421,
+   "display": "Rodrigo",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 69,
+   "xgi": "3.60",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.5,
+     "buyer": "Gav",
+     "club_then": "MCI",
+     "points_that_season": 159
+    },
+    "2024-25": {
+     "price": 5.25,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 3
+    },
+    "2025-26": {
+     "price": 3.75,
+     "buyer": "Rob",
+     "club_then": "MCI",
+     "points_that_season": 69
+    }
+   }
+  },
+  {
+   "key": "fpl_625",
+   "fpl_id": 625,
+   "display": "F\u00fcllkrug",
+   "position": "FWD",
+   "current_club": "WHU",
+   "status": "u",
+   "last_season_points": 12,
+   "xgi": "1.14",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 4.25,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 42
+    },
+    "2025-26": {
+     "price": 5.25,
+     "buyer": "Tiggy",
+     "club_then": "WHU",
+     "points_that_season": 12
+    }
+   }
+  },
+  {
+   "key": "fpl_486",
+   "fpl_id": 486,
+   "display": "Elanga",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 48,
+   "xgi": "3.39",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.0,
+     "buyer": "Lucien",
+     "club_then": "NFO",
+     "points_that_season": 153
+    },
+    "2025-26": {
+     "price": 5.25,
+     "buyer": "Tiggy",
+     "club_then": "NEW",
+     "points_that_season": 48
+    }
+   }
+  },
+  {
+   "key": "fpl_11",
+   "fpl_id": 11,
+   "display": "White",
+   "position": "DEF",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 45,
+   "xgi": "1.14",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 182
+    },
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Deepesh",
+     "club_then": "ARS",
+     "points_that_season": 50
+    },
+    "2025-26": {
+     "price": 0.75,
+     "buyer": "Maccers",
+     "club_then": "ARS",
+     "points_that_season": 45
+    }
+   }
+  },
+  {
+   "key": "fpl_488",
+   "fpl_id": 488,
+   "display": "Bruno G.",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 154,
+   "xgi": "10.55",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 153
+    },
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 135
+    },
+    "2025-26": {
+     "price": 4.25,
+     "buyer": "Friede",
+     "club_then": "NEW",
+     "points_that_season": 154
+    }
+   }
+  },
+  {
+   "key": "fpl_614",
+   "fpl_id": 614,
+   "display": "Ward-Prowse",
+   "position": "MID",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 40,
+   "xgi": "2.11",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 146
+    },
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Lucien",
+     "club_then": "WHU",
+     "points_that_season": 51
+    }
+   }
+  },
+  {
+   "key": "fpl_372",
+   "fpl_id": 372,
+   "display": "Robertson",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 55,
+   "xgi": "2.49",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 5.0,
+     "buyer": "Friede",
+     "club_then": "LIV",
+     "points_that_season": 76
+    },
+    "2024-25": {
+     "price": 3.25,
+     "buyer": "Friede",
+     "club_then": "LIV",
+     "points_that_season": 91
+    }
+   }
+  },
+  {
+   "key": "fpl_568",
+   "fpl_id": 568,
+   "display": "Pedro Porro",
+   "position": "DEF",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 117,
+   "xgi": "5.42",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Friede",
+     "club_then": "BHA",
+     "points_that_season": 136
+    },
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Lucien",
+     "club_then": "TOT",
+     "points_that_season": 98
+    },
+    "2025-26": {
+     "price": 4.0,
+     "buyer": "Richard",
+     "club_then": "TOT",
+     "points_that_season": 117
+    }
+   }
+  },
+  {
+   "key": "fpl_386",
+   "fpl_id": 386,
+   "display": "Mac Allister",
+   "position": "MID",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 108,
+   "xgi": "5.58",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.25,
+     "buyer": "Lloyd",
+     "club_then": "LIV",
+     "points_that_season": 109
+    },
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Lucien",
+     "club_then": "LIV",
+     "points_that_season": 122
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Lloyd",
+     "club_then": "LIV",
+     "points_that_season": 108
+    }
+   }
+  },
+  {
+   "key": "fpl_418",
+   "fpl_id": 418,
+   "display": "Doku",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 120,
+   "xgi": "8.73",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 5.0,
+     "buyer": "Gav",
+     "club_then": "MCI",
+     "points_that_season": 88
+    },
+    "2025-26": {
+     "price": 2.5,
+     "buyer": "Simon",
+     "club_then": "MCI",
+     "points_that_season": 120
+    }
+   }
+  },
+  {
+   "key": "fpl_267",
+   "fpl_id": 267,
+   "display": "Sarr",
+   "position": "MID",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 117,
+   "xgi": "12.09",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Richard",
+     "club_then": "CRY",
+     "points_that_season": 149
+    },
+    "2025-26": {
+     "price": 5.0,
+     "buyer": "Yath",
+     "club_then": "CRY",
+     "points_that_season": 117
+    }
+   }
+  },
+  {
+   "key": "fpl_311",
+   "fpl_id": 311,
+   "display": "Beto",
+   "position": "FWD",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 104,
+   "xgi": "9.13",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 5.0,
+     "buyer": "Gav",
+     "club_then": "EVE",
+     "points_that_season": 104
+    }
+   }
+  },
+  {
+   "key": "fpl_387",
+   "fpl_id": 387,
+   "display": "Szoboszlai",
+   "position": "MID",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 160,
+   "xgi": "11.59",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 4.75,
+     "buyer": "Friede",
+     "club_then": "LIV",
+     "points_that_season": 99
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Lloyd",
+     "club_then": "LIV",
+     "points_that_season": 143
+    },
+    "2025-26": {
+     "price": 4.5,
+     "buyer": "Lucien",
+     "club_then": "LIV",
+     "points_that_season": 160
+    }
+   }
+  },
+  {
+   "key": "fpl_616",
+   "fpl_id": 616,
+   "display": "\u00c1lvarez",
+   "position": "FWD",
+   "current_club": "WHU",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.75,
+     "buyer": "Lloyd",
+     "club_then": "MCI",
+     "points_that_season": 62
+    }
+   }
+  },
+  {
+   "key": "fpl_402",
+   "fpl_id": 402,
+   "display": "A\u00eft-Nouri",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 60,
+   "xgi": "2.54",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.5,
+     "buyer": "Friede",
+     "club_then": "WOL",
+     "points_that_season": 125
+    },
+    "2025-26": {
+     "price": 4.75,
+     "buyer": "Lucien",
+     "club_then": "MCI",
+     "points_that_season": 60
+    }
+   }
+  },
+  {
+   "key": "fpl_443",
+   "fpl_id": 443,
+   "display": "Shaw",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "2.69",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.5,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 31
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "MUN",
+     "points_that_season": 5
+    }
+   }
+  },
+  {
+   "key": "fpl_327",
+   "fpl_id": 327,
+   "display": "Andreas",
+   "position": "MID",
+   "current_club": "FUL",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Gav",
+     "club_then": "FUL",
+     "points_that_season": 127
+    },
+    "2024-25": {
+     "price": 4.25,
+     "buyer": "Rael",
+     "club_then": "FUL",
+     "points_that_season": 81
+    }
+   }
+  },
+  {
+   "key": "fpl_487",
+   "fpl_id": 487,
+   "display": "Barnes",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 106,
+   "xgi": "9.56",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.25,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 64
+    },
+    "2024-25": {
+     "price": 2.25,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 130
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Simon",
+     "club_then": "NEW",
+     "points_that_season": 106
+    }
+   }
+  },
+  {
+   "key": "fpl_574",
+   "fpl_id": 574,
+   "display": "Udogie",
+   "position": "DEF",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 29,
+   "xgi": "0.90",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 4.25,
+     "buyer": "Oli",
+     "club_then": "TOT",
+     "points_that_season": 43
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Friede",
+     "club_then": "TOT",
+     "points_that_season": 29
+    }
+   }
+  },
+  {
+   "key": "fpl_10",
+   "fpl_id": 10,
+   "display": "Lewis-Skelly",
+   "position": "DEF",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 29,
+   "xgi": "0.30",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 4.25,
+     "buyer": "Efe",
+     "club_then": "ARS",
+     "points_that_season": 29
+    }
+   }
+  },
+  {
+   "key": "name_ben chilwell",
+   "fpl_id": null,
+   "display": "Ben Chilwell",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.0,
+     "buyer": "Richard",
+     "club_then": "CHE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_179",
+   "fpl_id": 179,
+   "display": "Ferguson",
+   "position": "FWD",
+   "current_club": "BHA",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.75,
+     "buyer": "Richard",
+     "club_then": "BHA",
+     "points_that_season": 69
+    },
+    "2024-25": {
+     "price": 4.0,
+     "buyer": "Friede",
+     "club_then": "BRI",
+     "points_that_season": 28
+    }
+   }
+  },
+  {
+   "key": "fpl_324",
+   "fpl_id": 324,
+   "display": "Iwobi",
+   "position": "MID",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 103,
+   "xgi": "6.61",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 4.0,
+     "buyer": "Georgeson",
+     "club_then": "EVE",
+     "points_that_season": 102
+    },
+    "2025-26": {
+     "price": 3.25,
+     "buyer": "Lloyd",
+     "club_then": "FUL",
+     "points_that_season": 103
+    }
+   }
+  },
+  {
+   "key": "fpl_325",
+   "fpl_id": 325,
+   "display": "Smith Rowe",
+   "position": "MID",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 80,
+   "xgi": "5.83",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 4.0,
+     "buyer": "Tiggy",
+     "club_then": "FUL",
+     "points_that_season": 114
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rob",
+     "club_then": "FUL",
+     "points_that_season": 80
+    }
+   }
+  },
+  {
+   "key": "fpl_224",
+   "fpl_id": 224,
+   "display": "Cucurella",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 104,
+   "xgi": "5.57",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Richard",
+     "club_then": "CHE",
+     "points_that_season": 133
+    },
+    "2025-26": {
+     "price": 4.0,
+     "buyer": "Lucien",
+     "club_then": "CHE",
+     "points_that_season": 104
+    }
+   }
+  },
+  {
+   "key": "fpl_1",
+   "fpl_id": 1,
+   "display": "Raya",
+   "position": "GK",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 162,
+   "xgi": "0.07",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Deepesh",
+     "club_then": "ARS",
+     "points_that_season": 142
+    },
+    "2025-26": {
+     "price": 4.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 162
+    }
+   }
+  },
+  {
+   "key": "fpl_680",
+   "fpl_id": 680,
+   "display": "Broja",
+   "position": "FWD",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 43,
+   "xgi": "2.36",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 4.0,
+     "buyer": "Yath",
+     "club_then": "BUR",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "fpl_81",
+   "fpl_id": 81,
+   "display": "Kluivert",
+   "position": "MID",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 41,
+   "xgi": "3.86",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "NFO",
+     "points_that_season": 100
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BOU",
+     "points_that_season": 158
+    },
+    "2025-26": {
+     "price": 3.75,
+     "buyer": "Efe",
+     "club_then": "BOU",
+     "points_that_season": 41
+    }
+   }
+  },
+  {
+   "key": "fpl_329",
+   "fpl_id": 329,
+   "display": "Wilson",
+   "position": "MID",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 168,
+   "xgi": "10.65",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 3.75,
+     "buyer": "Rael",
+     "club_then": "FUL",
+     "points_that_season": 94
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Oli",
+     "club_then": "NEW",
+     "points_that_season": 78
+    }
+   }
+  },
+  {
+   "key": "fpl_597",
+   "fpl_id": 597,
+   "display": "Richarlison",
+   "position": "FWD",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 119,
+   "xgi": "10.10",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.75,
+     "buyer": "Rael",
+     "club_then": "TOT",
+     "points_that_season": 122
+    },
+    "2024-25": {
+     "price": 3.5,
+     "buyer": "Lucien",
+     "club_then": "TOT",
+     "points_that_season": 35
+    },
+    "2025-26": {
+     "price": 2.5,
+     "buyer": "Efe",
+     "club_then": "TOT",
+     "points_that_season": 119
+    }
+   }
+  },
+  {
+   "key": "fpl_237",
+   "fpl_id": 237,
+   "display": "Enzo",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 157,
+   "xgi": "18.52",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 2.25,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": 77
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "CHE",
+     "points_that_season": 135
+    },
+    "2025-26": {
+     "price": 3.75,
+     "buyer": "Friede",
+     "club_then": "CHE",
+     "points_that_season": 157
+    }
+   }
+  },
+  {
+   "key": "fpl_299",
+   "fpl_id": 299,
+   "display": "Ndiaye",
+   "position": "MID",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 128,
+   "xgi": "11.09",
+   "penalties": true,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 3.75,
+     "buyer": "Gav",
+     "club_then": "EVE",
+     "points_that_season": 128
+    }
+   }
+  },
+  {
+   "key": "fpl_477",
+   "fpl_id": 477,
+   "display": "Livramento",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 59,
+   "xgi": "1.02",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "NEW",
+     "points_that_season": 45
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Yath",
+     "club_then": "NEW",
+     "points_that_season": 105
+    },
+    "2025-26": {
+     "price": 3.5,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 59
+    }
+   }
+  },
+  {
+   "key": "fpl_409",
+   "fpl_id": 409,
+   "display": "Stones",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 16,
+   "xgi": "0.09",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.5,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 53
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Maccers",
+     "club_then": "MCI",
+     "points_that_season": 29
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Maccers",
+     "club_then": "MCI",
+     "points_that_season": 16
+    }
+   }
+  },
+  {
+   "key": "fpl_287",
+   "fpl_id": 287,
+   "display": "Pickford",
+   "position": "GK",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 135,
+   "xgi": "0.20",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Tiggy",
+     "club_then": "EVE",
+     "points_that_season": 153
+    },
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Maccers",
+     "club_then": "EVE",
+     "points_that_season": 158
+    },
+    "2025-26": {
+     "price": 3.5,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": 135
+    }
+   }
+  },
+  {
+   "key": "fpl_454",
+   "fpl_id": 454,
+   "display": "Antony",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.5,
+     "buyer": "Efe",
+     "club_then": "MUN",
+     "points_that_season": 47
+    }
+   }
+  },
+  {
+   "key": "fpl_39",
+   "fpl_id": 39,
+   "display": "Maatsen",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 54,
+   "xgi": "3.65",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.5,
+     "buyer": "Tiggy",
+     "club_then": "AVL",
+     "points_that_season": 57
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Oli",
+     "club_then": "AVL",
+     "points_that_season": 54
+    }
+   }
+  },
+  {
+   "key": "fpl_458",
+   "fpl_id": 458,
+   "display": "Mainoo",
+   "position": "MID",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 73,
+   "xgi": "1.75",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.5,
+     "buyer": "Maccers",
+     "club_then": "MUN",
+     "points_that_season": 42
+    }
+   }
+  },
+  {
+   "key": "fpl_466",
+   "fpl_id": 466,
+   "display": "Zirkzee",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 42,
+   "xgi": "3.08",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.5,
+     "buyer": "Lloyd",
+     "club_then": "MUN",
+     "points_that_season": 64
+    },
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Lucien",
+     "club_then": "MUN",
+     "points_that_season": 42
+    }
+   }
+  },
+  {
+   "key": "fpl_435",
+   "fpl_id": 435,
+   "display": "Mee",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.25,
+     "buyer": "Tiggy",
+     "club_then": "BRE",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_817",
+   "fpl_id": 817,
+   "display": "Armstrong",
+   "position": "FWD",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 39,
+   "xgi": "3.62",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.25,
+     "buyer": "Ciaran",
+     "club_then": "SOU",
+     "points_that_season": 45
+    }
+   }
+  },
+  {
+   "key": "fpl_256",
+   "fpl_id": 256,
+   "display": "Mu\u00f1oz",
+   "position": "DEF",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 136,
+   "xgi": "6.39",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.25,
+     "buyer": "Tiggy",
+     "club_then": "CRY",
+     "points_that_season": 142
+    },
+    "2025-26": {
+     "price": 2.75,
+     "buyer": "Tiggy",
+     "club_then": "CRY",
+     "points_that_season": 136
+    }
+   }
+  },
+  {
+   "key": "fpl_474",
+   "fpl_id": 474,
+   "display": "Sch\u00e4r",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 51,
+   "xgi": "1.57",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.5,
+     "buyer": "Yath",
+     "club_then": "NEW",
+     "points_that_season": 123
+    },
+    "2024-25": {
+     "price": 3.0,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 118
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Ali",
+     "club_then": "NEW",
+     "points_that_season": 51
+    }
+   }
+  },
+  {
+   "key": "fpl_291",
+   "fpl_id": 291,
+   "display": "Tarkowski",
+   "position": "DEF",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 170,
+   "xgi": "4.63",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Yath",
+     "club_then": "EVE",
+     "points_that_season": 117
+    },
+    "2024-25": {
+     "price": 2.25,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": 105
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Yath",
+     "club_then": "EVE",
+     "points_that_season": 170
+    }
+   }
+  },
+  {
+   "key": "fpl_671",
+   "fpl_id": 671,
+   "display": "Wilson",
+   "position": "FWD",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 80,
+   "xgi": "8.14",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 3.0,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 69
+    },
+    "2025-26": {
+     "price": 0.75,
+     "buyer": "Ali",
+     "club_then": "WHU",
+     "points_that_season": 80
+    }
+   }
+  },
+  {
+   "key": "fpl_374",
+   "fpl_id": 374,
+   "display": "Konat\u00e9",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 129,
+   "xgi": "2.17",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Ollie",
+     "club_then": "LIV",
+     "points_that_season": 56
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Simon",
+     "club_then": "LIV",
+     "points_that_season": 106
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Simon",
+     "club_then": "LIV",
+     "points_that_season": 129
+    }
+   }
+  },
+  {
+   "key": "fpl_316",
+   "fpl_id": 316,
+   "display": "Robinson",
+   "position": "DEF",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 65,
+   "xgi": "2.65",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Ollie",
+     "club_then": "FUL",
+     "points_that_season": 104
+    },
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Tiggy",
+     "club_then": "FUL",
+     "points_that_season": 106
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Ali",
+     "club_then": "FUL",
+     "points_that_season": 65
+    }
+   }
+  },
+  {
+   "key": "fpl_580",
+   "fpl_id": 580,
+   "display": "Johnson",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 65,
+   "xgi": "3.76",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.5,
+     "buyer": "Georgeson",
+     "club_then": "NFO",
+     "points_that_season": 131
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Oli",
+     "club_then": "TOT",
+     "points_that_season": 137
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Lucien",
+     "club_then": "TOT",
+     "points_that_season": 65
+    }
+   }
+  },
+  {
+   "key": "fpl_18",
+   "fpl_id": 18,
+   "display": "Madueke",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 72,
+   "xgi": "4.09",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Ali",
+     "club_then": "CHE",
+     "points_that_season": 120
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 72
+    }
+   }
+  },
+  {
+   "key": "fpl_290",
+   "fpl_id": 290,
+   "display": "Branthwaite",
+   "position": "DEF",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 32,
+   "xgi": "0.45",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Rael",
+     "club_then": "EVE",
+     "points_that_season": 88
+    },
+    "2025-26": {
+     "price": 3.0,
+     "buyer": "Rael",
+     "club_then": "EVE",
+     "points_that_season": 32
+    }
+   }
+  },
+  {
+   "key": "fpl_258",
+   "fpl_id": 258,
+   "display": "Mitchell",
+   "position": "DEF",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 135,
+   "xgi": "4.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.0,
+     "buyer": "Rael",
+     "club_then": "CRY",
+     "points_that_season": 123
+    },
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Rael",
+     "club_then": "CRY",
+     "points_that_season": 135
+    }
+   }
+  },
+  {
+   "key": "fpl_516",
+   "fpl_id": 516,
+   "display": "Hudson-Odoi",
+   "position": "MID",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 88,
+   "xgi": "5.79",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 3.0,
+     "buyer": "Rael",
+     "club_then": "NFO",
+     "points_that_season": 103
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Efe",
+     "club_then": "NFO",
+     "points_that_season": 88
+    }
+   }
+  },
+  {
+   "key": "fpl_722",
+   "fpl_id": 722,
+   "display": "Florentino",
+   "position": "FWD",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 84,
+   "xgi": "1.16",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.75,
+     "buyer": "Yath",
+     "club_then": "LUT",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_48",
+   "fpl_id": 48,
+   "display": "Tielemans",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 68,
+   "xgi": "4.40",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "AVL",
+     "points_that_season": 77
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 121
+    },
+    "2025-26": {
+     "price": 2.75,
+     "buyer": "Gav",
+     "club_then": "AVL",
+     "points_that_season": 68
+    }
+   }
+  },
+  {
+   "key": "fpl_408",
+   "fpl_id": 408,
+   "display": "R\u00faben",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "1.22",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.75,
+     "buyer": "Rael",
+     "club_then": "MCI",
+     "points_that_season": 88
+    },
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Lucien",
+     "club_then": "MCI",
+     "points_that_season": 90
+    },
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 113
+    }
+   }
+  },
+  {
+   "key": "fpl_612",
+   "fpl_id": 612,
+   "display": "L.Paquet\u00e1",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "u",
+   "last_season_points": 69,
+   "xgi": "4.85",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.75,
+     "buyer": "Gav",
+     "club_then": "WHU",
+     "points_that_season": 80
+    },
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Yath",
+     "club_then": "WHU",
+     "points_that_season": 69
+    }
+   }
+  },
+  {
+   "key": "name_vardy",
+   "fpl_id": null,
+   "display": "Vardy",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.75,
+     "buyer": "Simon",
+     "club_then": "LEI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_505",
+   "fpl_id": 505,
+   "display": "Milenkovi\u0107",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 119,
+   "xgi": "1.51",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 2.75,
+     "buyer": "Yath",
+     "club_then": "NFO",
+     "points_that_season": 119
+    }
+   }
+  },
+  {
+   "key": "fpl_506",
+   "fpl_id": 506,
+   "display": "Murillo",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 83,
+   "xgi": "1.20",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 2.75,
+     "buyer": "Lloyd",
+     "club_then": "NFO",
+     "points_that_season": 83
+    }
+   }
+  },
+  {
+   "key": "fpl_404",
+   "fpl_id": 404,
+   "display": "Akanji",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "MCI",
+     "points_that_season": 112
+    },
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 61
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Deepesh",
+     "club_then": "MCI",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_raphael varane",
+   "fpl_id": null,
+   "display": "Raphael Varane",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.5,
+     "buyer": "Tiggy",
+     "club_then": "MUN",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_366",
+   "fpl_id": 366,
+   "display": "A.Becker",
+   "position": "GK",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 91,
+   "xgi": "0.03",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.25,
+     "buyer": "Efe",
+     "club_then": "LIV",
+     "points_that_season": 107
+    },
+    "2024-25": {
+     "price": 1.5,
+     "buyer": "Gav",
+     "club_then": "LIV",
+     "points_that_season": 112
+    },
+    "2025-26": {
+     "price": 2.5,
+     "buyer": "Yath",
+     "club_then": "LIV",
+     "points_that_season": 91
+    }
+   }
+  },
+  {
+   "key": "fpl_187",
+   "fpl_id": 187,
+   "display": "Walker",
+   "position": "DEF",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 70,
+   "xgi": "1.44",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Efe",
+     "club_then": "MCI",
+     "points_that_season": 123
+    },
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Simon",
+     "club_then": "MCI",
+     "points_that_season": 13
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "BUR",
+     "points_that_season": 70
+    }
+   }
+  },
+  {
+   "key": "fpl_159",
+   "fpl_id": 159,
+   "display": "March",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 4,
+   "xgi": "0.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.5,
+     "buyer": "Georgeson",
+     "club_then": "BHA",
+     "points_that_season": 39
+    }
+   }
+  },
+  {
+   "key": "fpl_83",
+   "fpl_id": 83,
+   "display": "O.Dango",
+   "position": "FWD",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 136,
+   "xgi": "12.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.5,
+     "buyer": "Georgeson",
+     "club_then": "BOU",
+     "points_that_season": 56
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Gav",
+     "club_then": "BRE",
+     "points_that_season": 136
+    }
+   }
+  },
+  {
+   "key": "fpl_7",
+   "fpl_id": 7,
+   "display": "Calafiori",
+   "position": "DEF",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 109,
+   "xgi": "4.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 39
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 109
+    }
+   }
+  },
+  {
+   "key": "fpl_123",
+   "fpl_id": 123,
+   "display": "Carvalho",
+   "position": "MID",
+   "current_club": "BRE",
+   "status": "d",
+   "last_season_points": 13,
+   "xgi": "0.73",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Simon",
+     "club_then": "BRE",
+     "points_that_season": 35
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "BRE",
+     "points_that_season": 13
+    }
+   }
+  },
+  {
+   "key": "fpl_615",
+   "fpl_id": 615,
+   "display": "Summerville",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 110,
+   "xgi": "8.78",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Oli",
+     "club_then": "WHU",
+     "points_that_season": 33
+    }
+   }
+  },
+  {
+   "key": "fpl_436",
+   "fpl_id": 436,
+   "display": "De Ligt",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "i",
+   "last_season_points": 43,
+   "xgi": "2.21",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.5,
+     "buyer": "Lloyd",
+     "club_then": "MUN",
+     "points_that_season": 68
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Lloyd",
+     "club_then": "MUN",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "fpl_121",
+   "fpl_id": 121,
+   "display": "Damsgaard",
+   "position": "MID",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "8.04",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 2.5,
+     "buyer": "Lucien",
+     "club_then": "BRE",
+     "points_that_season": 113
+    }
+   }
+  },
+  {
+   "key": "fpl_610",
+   "fpl_id": 610,
+   "display": "Wan-Bissaka",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 67,
+   "xgi": "1.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 47
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "WHU",
+     "points_that_season": 118
+    },
+    "2025-26": {
+     "price": 2.25,
+     "buyer": "Tiggy",
+     "club_then": "WHU",
+     "points_that_season": 67
+    }
+   }
+  },
+  {
+   "key": "fpl_300",
+   "fpl_id": 300,
+   "display": "McNeil",
+   "position": "MID",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 53,
+   "xgi": "3.28",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Ollie",
+     "club_then": "EVE",
+     "points_that_season": 124
+    },
+    "2024-25": {
+     "price": 2.25,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": 93
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": 53
+    }
+   }
+  },
+  {
+   "key": "fpl_260",
+   "fpl_id": 260,
+   "display": "Gu\u00e9hi",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 179,
+   "xgi": "6.42",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Efe",
+     "club_then": "CRY",
+     "points_that_season": 66
+    },
+    "2024-25": {
+     "price": 1.5,
+     "buyer": "Maccers",
+     "club_then": "CRY",
+     "points_that_season": 116
+    },
+    "2025-26": {
+     "price": 2.25,
+     "buyer": "Maccers",
+     "club_then": "CRY",
+     "points_that_season": 179
+    }
+   }
+  },
+  {
+   "key": "fpl_473",
+   "fpl_id": 473,
+   "display": "Hall",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 79,
+   "xgi": "3.79",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "NEW",
+     "points_that_season": 102
+    },
+    "2025-26": {
+     "price": 2.25,
+     "buyer": "Tiggy",
+     "club_then": "NEW",
+     "points_that_season": 79
+    }
+   }
+  },
+  {
+   "key": "fpl_561",
+   "fpl_id": 561,
+   "display": "Mayenda",
+   "position": "FWD",
+   "current_club": "SUN",
+   "status": "a",
+   "last_season_points": 40,
+   "xgi": "2.35",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 2.25,
+     "buyer": "Friede",
+     "club_then": "SUN",
+     "points_that_season": 40
+    }
+   }
+  },
+  {
+   "key": "fpl_220",
+   "fpl_id": 220,
+   "display": "S\u00e1nchez",
+   "position": "GK",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "0.04",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 59
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": 126
+    },
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 113
+    }
+   }
+  },
+  {
+   "key": "fpl_469",
+   "fpl_id": 469,
+   "display": "Pope",
+   "position": "GK",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 96,
+   "xgi": "0.16",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 57
+    },
+    "2024-25": {
+     "price": 1.25,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 102
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Friede",
+     "club_then": "NEW",
+     "points_that_season": 96
+    }
+   }
+  },
+  {
+   "key": "fpl_432",
+   "fpl_id": 432,
+   "display": "Onana",
+   "position": "GK",
+   "current_club": "MUN",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.5,
+     "buyer": "Friede",
+     "club_then": "MUN",
+     "points_that_season": 133
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Lucien",
+     "club_then": "MUN",
+     "points_that_season": 120
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Oli",
+     "club_then": "MUN",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_399",
+   "fpl_id": 399,
+   "display": "Ederson M.",
+   "position": "GK",
+   "current_club": "MCI",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Friede",
+     "club_then": "MCI",
+     "points_that_season": 112
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Tiggy",
+     "club_then": "MCI",
+     "points_that_season": 111
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Rob",
+     "club_then": "MCI",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_12",
+   "fpl_id": 12,
+   "display": "Zinchenko",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "u",
+   "last_season_points": 7,
+   "xgi": "0.43",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 104
+    }
+   }
+  },
+  {
+   "key": "name_michael olise",
+   "fpl_id": null,
+   "display": "Michael Olise",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Friede",
+     "club_then": "CRY",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_527",
+   "fpl_id": 527,
+   "display": "Awoniyi",
+   "position": "FWD",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 43,
+   "xgi": "4.45",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Friede",
+     "club_then": "NFO",
+     "points_that_season": 67
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Simon",
+     "club_then": "NFO",
+     "points_that_season": 32
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Friede",
+     "club_then": "NFO",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "fpl_475",
+   "fpl_id": 475,
+   "display": "Botman",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 89,
+   "xgi": "2.59",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 2.0,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 51
+    }
+   }
+  },
+  {
+   "key": "fpl_317",
+   "fpl_id": 317,
+   "display": "Andersen",
+   "position": "DEF",
+   "current_club": "FUL",
+   "status": "s",
+   "last_season_points": 123,
+   "xgi": "3.26",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Georgeson",
+     "club_then": "CRY",
+     "points_that_season": 121
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Gav",
+     "club_then": "CRY",
+     "points_that_season": 51
+    }
+   }
+  },
+  {
+   "key": "fpl_41",
+   "fpl_id": 41,
+   "display": "Pau",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 64,
+   "xgi": "1.72",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Georgeson",
+     "club_then": "AVL",
+     "points_that_season": 85
+    },
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Richard",
+     "club_then": "AVL",
+     "points_that_season": 55
+    }
+   }
+  },
+  {
+   "key": "fpl_253",
+   "fpl_id": 253,
+   "display": "Henderson",
+   "position": "GK",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 131,
+   "xgi": "0.11",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "CRY",
+     "points_that_season": 135
+    },
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Gav",
+     "club_then": "CRY",
+     "points_that_season": 131
+    }
+   }
+  },
+  {
+   "key": "name_osimhen",
+   "fpl_id": null,
+   "display": "Osimhen",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_davis",
+   "fpl_id": null,
+   "display": "Davis",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Deepesh",
+     "club_then": "IPS",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_507",
+   "fpl_id": 507,
+   "display": "Aina",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 67,
+   "xgi": "1.25",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "NFO",
+     "points_that_season": 128
+    },
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Lloyd",
+     "club_then": "NFO",
+     "points_that_season": 67
+    }
+   }
+  },
+  {
+   "key": "name_archer",
+   "fpl_id": null,
+   "display": "Archer",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 2.0,
+     "buyer": "Lucien",
+     "club_then": "AVL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_502",
+   "fpl_id": 502,
+   "display": "Sels",
+   "position": "GK",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 105,
+   "xgi": "0.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Tiggy",
+     "club_then": "NFO",
+     "points_that_season": 105
+    }
+   }
+  },
+  {
+   "key": "fpl_526",
+   "fpl_id": 526,
+   "display": "Igor Jesus",
+   "position": "FWD",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 114,
+   "xgi": "7.74",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 2.0,
+     "buyer": "Lucien",
+     "club_then": "NFO",
+     "points_that_season": 114
+    }
+   }
+  },
+  {
+   "key": "fpl_565",
+   "fpl_id": 565,
+   "display": "Vicario",
+   "position": "GK",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 90,
+   "xgi": "0.04",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "TOT",
+     "points_that_season": 112
+    },
+    "2024-25": {
+     "price": 1.75,
+     "buyer": "Richard",
+     "club_then": "TOT",
+     "points_that_season": 66
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Friede",
+     "club_then": "TOT",
+     "points_that_season": 90
+    }
+   }
+  },
+  {
+   "key": "fpl_106",
+   "fpl_id": 106,
+   "display": "Collins",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 129,
+   "xgi": "3.95",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "BRE",
+     "points_that_season": 84
+    },
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Friede",
+     "club_then": "BRE",
+     "points_that_season": 129
+    }
+   }
+  },
+  {
+   "key": "fpl_161",
+   "fpl_id": 161,
+   "display": "Enciso",
+   "position": "FWD",
+   "current_club": "BHA",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Gav",
+     "club_then": "BHA",
+     "points_that_season": 20
+    }
+   }
+  },
+  {
+   "key": "fpl_111",
+   "fpl_id": 111,
+   "display": "Pinnock",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 14,
+   "xgi": "0.07",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Rael",
+     "club_then": "BRE",
+     "points_that_season": 77
+    }
+   }
+  },
+  {
+   "key": "fpl_437",
+   "fpl_id": 437,
+   "display": "Martinez",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 51,
+   "xgi": "0.75",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Friede",
+     "club_then": "MUN",
+     "points_that_season": 15
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Ciaran",
+     "club_then": "MUN",
+     "points_that_season": 68
+    }
+   }
+  },
+  {
+   "key": "name_raheem sterling",
+   "fpl_id": null,
+   "display": "Raheem Sterling",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.75,
+     "buyer": "Lloyd",
+     "club_then": "CHE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_32",
+   "fpl_id": 32,
+   "display": "Martinez",
+   "position": "GK",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 120,
+   "xgi": "0.08",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Ollie",
+     "club_then": "AVL",
+     "points_that_season": 115
+    },
+    "2024-25": {
+     "price": 1.75,
+     "buyer": "Rael",
+     "club_then": "AVL",
+     "points_that_season": 111
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Simon",
+     "club_then": "AVL",
+     "points_that_season": 120
+    }
+   }
+  },
+  {
+   "key": "name_barco",
+   "fpl_id": null,
+   "display": "Barco",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 1.75,
+     "buyer": "Gav",
+     "club_then": "BRI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_38",
+   "fpl_id": 38,
+   "display": "Konsa",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 100,
+   "xgi": "1.86",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 1.5,
+     "buyer": "Rael",
+     "club_then": "AVL",
+     "points_that_season": 103
+    },
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Tiggy",
+     "club_then": "AVL",
+     "points_that_season": 100
+    }
+   }
+  },
+  {
+   "key": "fpl_101",
+   "fpl_id": 101,
+   "display": "Kelleher",
+   "position": "GK",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 143,
+   "xgi": "0.22",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Ciaran",
+     "club_then": "BRE",
+     "points_that_season": 143
+    }
+   }
+  },
+  {
+   "key": "fpl_252",
+   "fpl_id": 252,
+   "display": "Marc Guiu",
+   "position": "FWD",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 13,
+   "xgi": "1.83",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Ali",
+     "club_then": "SUN",
+     "points_that_season": 13
+    }
+   }
+  },
+  {
+   "key": "fpl_158",
+   "fpl_id": 158,
+   "display": "Georginio",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 87,
+   "xgi": "5.80",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.75,
+     "buyer": "Efe",
+     "club_then": "BRI",
+     "points_that_season": 87
+    }
+   }
+  },
+  {
+   "key": "fpl_54",
+   "fpl_id": 54,
+   "display": "McGinn",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 103,
+   "xgi": "7.11",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Richard",
+     "club_then": "AVL",
+     "points_that_season": 119
+    },
+    "2024-25": {
+     "price": 1.5,
+     "buyer": "Lloyd",
+     "club_then": "AVL",
+     "points_that_season": 78
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 103
+    }
+   }
+  },
+  {
+   "key": "fpl_517",
+   "fpl_id": 517,
+   "display": "Anderson",
+   "position": "MID",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 180,
+   "xgi": "7.73",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "NEW",
+     "points_that_season": 42
+    },
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Lucien",
+     "club_then": "NFO",
+     "points_that_season": 180
+    }
+   }
+  },
+  {
+   "key": "fpl_109",
+   "fpl_id": 109,
+   "display": "Henry",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 52,
+   "xgi": "0.72",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.5,
+     "buyer": "Ollie",
+     "club_then": "BRE",
+     "points_that_season": 13
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Friede",
+     "club_then": "BRE",
+     "points_that_season": 4
+    }
+   }
+  },
+  {
+   "key": "fpl_575",
+   "fpl_id": 575,
+   "display": "Van de Ven",
+   "position": "DEF",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 116,
+   "xgi": "3.20",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "TOT",
+     "points_that_season": 81
+    },
+    "2024-25": {
+     "price": 1.5,
+     "buyer": "Maccers",
+     "club_then": "TOT",
+     "points_that_season": 32
+    },
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Simon",
+     "club_then": "TOT",
+     "points_that_season": 116
+    }
+   }
+  },
+  {
+   "key": "fpl_241",
+   "fpl_id": 241,
+   "display": "Caicedo",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 110,
+   "xgi": "3.83",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "BHA",
+     "points_that_season": 84
+    },
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Tiggy",
+     "club_then": "CHE",
+     "points_that_season": 110
+    }
+   }
+  },
+  {
+   "key": "fpl_8",
+   "fpl_id": 8,
+   "display": "J.Timber",
+   "position": "DEF",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 149,
+   "xgi": "6.24",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.5,
+     "buyer": "Georgeson",
+     "club_then": "ARS",
+     "points_that_season": 0
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Friede",
+     "club_then": "ARS",
+     "points_that_season": 114
+    },
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 149
+    }
+   }
+  },
+  {
+   "key": "fpl_603",
+   "fpl_id": 603,
+   "display": "Diouf",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 104,
+   "xgi": "3.08",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Gav",
+     "club_then": "WHU",
+     "points_that_season": 104
+    }
+   }
+  },
+  {
+   "key": "fpl_417",
+   "fpl_id": 417,
+   "display": "Cherki",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 135,
+   "xgi": "13.14",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Tiggy",
+     "club_then": "MCI",
+     "points_that_season": 135
+    }
+   }
+  },
+  {
+   "key": "fpl_441",
+   "fpl_id": 441,
+   "display": "Dorgu",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 95,
+   "xgi": "4.23",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.5,
+     "buyer": "Lucien",
+     "club_then": "MUN",
+     "points_that_season": 95
+    }
+   }
+  },
+  {
+   "key": "fpl_66",
+   "fpl_id": 66,
+   "display": "Neto",
+   "position": "GK",
+   "current_club": "BOU",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BOU",
+     "points_that_season": 110
+    },
+    "2024-25": {
+     "price": 1.25,
+     "buyer": "Oli",
+     "club_then": "BOU",
+     "points_that_season": 7
+    }
+   }
+  },
+  {
+   "key": "fpl_569",
+   "fpl_id": 569,
+   "display": "Romero",
+   "position": "DEF",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 91,
+   "xgi": "2.64",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "TOT",
+     "points_that_season": 107
+    },
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Tiggy",
+     "club_then": "TOT",
+     "points_that_season": 49
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Oli",
+     "club_then": "TOT",
+     "points_that_season": 91
+    }
+   }
+  },
+  {
+   "key": "fpl_491",
+   "fpl_id": 491,
+   "display": "Tonali",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 81,
+   "xgi": "4.62",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.25,
+     "buyer": "Friede",
+     "club_then": "NEW",
+     "points_that_season": 16
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "NEW",
+     "points_that_season": 81
+    }
+   }
+  },
+  {
+   "key": "fpl_139",
+   "fpl_id": 139,
+   "display": "Verbruggen",
+   "position": "GK",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 130,
+   "xgi": "0.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "BHA",
+     "points_that_season": 68
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "BRI",
+     "points_that_season": 103
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Rael",
+     "club_then": "BRI",
+     "points_that_season": 130
+    }
+   }
+  },
+  {
+   "key": "fpl_195",
+   "fpl_id": 195,
+   "display": "Lucas Pires",
+   "position": "MID",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 25,
+   "xgi": "2.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.25,
+     "buyer": "Lloyd",
+     "club_then": "WHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_said benrahma",
+   "fpl_id": null,
+   "display": "Said Benrahma",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.25,
+     "buyer": "Ollie",
+     "club_then": "WHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_476",
+   "fpl_id": 476,
+   "display": "Burn",
+   "position": "DEF",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 93,
+   "xgi": "1.44",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Georgeson",
+     "club_then": "NEW",
+     "points_that_season": 97
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Ali",
+     "club_then": "NEW",
+     "points_that_season": 115
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Friede",
+     "club_then": "NEW",
+     "points_that_season": 93
+    }
+   }
+  },
+  {
+   "key": "fpl_160",
+   "fpl_id": 160,
+   "display": "Minteh",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 117,
+   "xgi": "8.87",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "BRI",
+     "points_that_season": 102
+    },
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Oli",
+     "club_then": "BRI",
+     "points_that_season": 117
+    }
+   }
+  },
+  {
+   "key": "fpl_427",
+   "fpl_id": 427,
+   "display": "Reijnders",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 92,
+   "xgi": "6.96",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 92
+    }
+   }
+  },
+  {
+   "key": "fpl_181",
+   "fpl_id": 181,
+   "display": "Kostoulas",
+   "position": "FWD",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 35,
+   "xgi": "2.66",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.25,
+     "buyer": "Oli",
+     "club_then": "BRI",
+     "points_that_season": 35
+    }
+   }
+  },
+  {
+   "key": "fpl_628",
+   "fpl_id": 628,
+   "display": "Jos\u00e9 S\u00e1",
+   "position": "GK",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 68,
+   "xgi": "0.04",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Yath",
+     "club_then": "WOL",
+     "points_that_season": 107
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Ciaran",
+     "club_then": "WOL",
+     "points_that_season": 93
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Lucien",
+     "club_then": "WOL",
+     "points_that_season": 68
+    }
+   }
+  },
+  {
+   "key": "fpl_440",
+   "fpl_id": 440,
+   "display": "Dalot",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 111,
+   "xgi": "4.50",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Richard",
+     "club_then": "MUN",
+     "points_that_season": 111
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Lucien",
+     "club_then": "MUN",
+     "points_that_season": 95
+    }
+   }
+  },
+  {
+   "key": "fpl_422",
+   "fpl_id": 422,
+   "display": "Kova\u010di\u0107",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 9,
+   "xgi": "0.55",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 59
+    }
+   }
+  },
+  {
+   "key": "fpl_407",
+   "fpl_id": 407,
+   "display": "Matheus N.",
+   "position": "FWD",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 154,
+   "xgi": "2.57",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "WOL",
+     "points_that_season": 32
+    },
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Yath",
+     "club_then": "MCI",
+     "points_that_season": 154
+    }
+   }
+  },
+  {
+   "key": "name_alexander mitrovic",
+   "fpl_id": null,
+   "display": "Alexander Mitrovic",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Lloyd",
+     "club_then": "FUL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_moussa diaby",
+   "fpl_id": null,
+   "display": "Moussa Diaby",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Ollie",
+     "club_then": "AVL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_314",
+   "fpl_id": 314,
+   "display": "Leno",
+   "position": "GK",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 122,
+   "xgi": "0.02",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 1.0,
+     "buyer": "Georgeson",
+     "club_then": "FUL",
+     "points_that_season": 133
+    },
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Gav",
+     "club_then": "FUL",
+     "points_that_season": 115
+    },
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Lucien",
+     "club_then": "FUL",
+     "points_that_season": 122
+    }
+   }
+  },
+  {
+   "key": "fpl_292",
+   "fpl_id": 292,
+   "display": "Mykolenko",
+   "position": "DEF",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 95,
+   "xgi": "2.74",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Gav",
+     "club_then": "EVE",
+     "points_that_season": 121
+    },
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Lucien",
+     "club_then": "EVE",
+     "points_that_season": 95
+    }
+   }
+  },
+  {
+   "key": "name_antonio",
+   "fpl_id": null,
+   "display": "Antonio",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Ali",
+     "club_then": "WHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_415",
+   "fpl_id": 415,
+   "display": "Savinho",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 43,
+   "xgi": "4.09",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "MCI",
+     "points_that_season": 106
+    },
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "name_mavididi",
+   "fpl_id": null,
+   "display": "Mavididi",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 1.0,
+     "buyer": "Lucien",
+     "club_then": "LEI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_257",
+   "fpl_id": 257,
+   "display": "Lacroix",
+   "position": "DEF",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 154,
+   "xgi": "3.28",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Gav",
+     "club_then": "CRY",
+     "points_that_season": 154
+    }
+   }
+  },
+  {
+   "key": "fpl_367",
+   "fpl_id": 367,
+   "display": "Mamardashvili",
+   "position": "GK",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 34,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Ali",
+     "club_then": "LIV",
+     "points_that_season": 34
+    }
+   }
+  },
+  {
+   "key": "fpl_52",
+   "fpl_id": 52,
+   "display": "J.Ramsey",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 62,
+   "xgi": "2.65",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Oli",
+     "club_then": "AVL",
+     "points_that_season": 62
+    }
+   }
+  },
+  {
+   "key": "fpl_215",
+   "fpl_id": 215,
+   "display": "Flemming",
+   "position": "FWD",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 99,
+   "xgi": "8.35",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Oli",
+     "club_then": "BUR",
+     "points_that_season": 99
+    }
+   }
+  },
+  {
+   "key": "fpl_226",
+   "fpl_id": 226,
+   "display": "Chalobah",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 136,
+   "xgi": "2.47",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Lloyd",
+     "club_then": "CHE",
+     "points_that_season": 136
+    }
+   }
+  },
+  {
+   "key": "fpl_322",
+   "fpl_id": 322,
+   "display": "Tete",
+   "position": "DEF",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 81,
+   "xgi": "2.38",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Yath",
+     "club_then": "FUL",
+     "points_that_season": 27
+    }
+   }
+  },
+  {
+   "key": "fpl_457",
+   "fpl_id": 457,
+   "display": "Casemiro",
+   "position": "MID",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 165,
+   "xgi": "8.61",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Tiggy",
+     "club_then": "MUN",
+     "points_that_season": 58
+    }
+   }
+  },
+  {
+   "key": "name_josh brownhill",
+   "fpl_id": null,
+   "display": "Josh Brownhill",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Tiggy",
+     "club_then": "BUR",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_182",
+   "fpl_id": 182,
+   "display": "Trafford",
+   "position": "GK",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 13,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Lloyd",
+     "club_then": "BUR",
+     "points_that_season": 70
+    },
+    "2025-26": {
+     "price": 0.75,
+     "buyer": "Rob",
+     "club_then": "MCI",
+     "points_that_season": 13
+    }
+   }
+  },
+  {
+   "key": "fpl_126",
+   "fpl_id": 126,
+   "display": "Jensen",
+   "position": "MID",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 98,
+   "xgi": "8.27",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2023-24": {
+     "price": 0.75,
+     "buyer": "Georgeson",
+     "club_then": "BRE",
+     "points_that_season": 98
+    }
+   }
+  },
+  {
+   "key": "fpl_605",
+   "fpl_id": 605,
+   "display": "Kilman",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 36,
+   "xgi": "0.81",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Georgeson",
+     "club_then": "WOL",
+     "points_that_season": 82
+    },
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 82
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 36
+    }
+   }
+  },
+  {
+   "key": "fpl_600",
+   "fpl_id": 600,
+   "display": "Areola",
+   "position": "GK",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 51,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Yath",
+     "club_then": "WHU",
+     "points_that_season": 69
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Ali",
+     "club_then": "WHU",
+     "points_that_season": 51
+    }
+   }
+  },
+  {
+   "key": "fpl_72",
+   "fpl_id": 72,
+   "display": "Senesi",
+   "position": "DEF",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 175,
+   "xgi": "6.25",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Yath",
+     "club_then": "BOU",
+     "points_that_season": 31
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "BOU",
+     "points_that_season": 175
+    }
+   }
+  },
+  {
+   "key": "name_hurst",
+   "fpl_id": null,
+   "display": "Hurst",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.75,
+     "buyer": "Oli",
+     "club_then": "IPS",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_36",
+   "fpl_id": 36,
+   "display": "Cash",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 117,
+   "xgi": "4.08",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "AVL",
+     "points_that_season": 64
+    },
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Maccers",
+     "club_then": "AVL",
+     "points_that_season": 76
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "AVL",
+     "points_that_season": 117
+    }
+   }
+  },
+  {
+   "key": "fpl_470",
+   "fpl_id": 470,
+   "display": "D\u00fabravka",
+   "position": "GK",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 96,
+   "xgi": "0.04",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "NEW",
+     "points_that_season": 75
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "NEW",
+     "points_that_season": 44
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Efe",
+     "club_then": "BUR",
+     "points_that_season": 96
+    }
+   }
+  },
+  {
+   "key": "fpl_405",
+   "fpl_id": 405,
+   "display": "Ak\u00e9",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 36,
+   "xgi": "1.25",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "MCI",
+     "points_that_season": 99
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "MCI",
+     "points_that_season": 25
+    }
+   }
+  },
+  {
+   "key": "fpl_285",
+   "fpl_id": 285,
+   "display": "\u00c9douard",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "u",
+   "last_season_points": 1,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "CRY",
+     "points_that_season": 79
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Yath",
+     "club_then": "CRY",
+     "points_that_season": 7
+    }
+   }
+  },
+  {
+   "key": "fpl_284",
+   "fpl_id": 284,
+   "display": "Nketiah",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 23,
+   "xgi": "2.23",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "ARS",
+     "points_that_season": 71
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "CRY",
+     "points_that_season": 23
+    }
+   }
+  },
+  {
+   "key": "name_mark flekken",
+   "fpl_id": null,
+   "display": "Mark Flekken",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Tiggy",
+     "club_then": "BRE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_40",
+   "fpl_id": 40,
+   "display": "Mings",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 50,
+   "xgi": "1.72",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Tiggy",
+     "club_then": "AVL",
+     "points_that_season": 0
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 47
+    }
+   }
+  },
+  {
+   "key": "fpl_699",
+   "fpl_id": 699,
+   "display": "Douglas Luiz",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 35,
+   "xgi": "1.95",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Lloyd",
+     "club_then": "AVL",
+     "points_that_season": 148
+    }
+   }
+  },
+  {
+   "key": "fpl_227",
+   "fpl_id": 227,
+   "display": "Colwill",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 8,
+   "xgi": "0.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "CHE",
+     "points_that_season": 65
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 109
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rael",
+     "club_then": "CHE",
+     "points_that_season": 8
+    }
+   }
+  },
+  {
+   "key": "fpl_490",
+   "fpl_id": 490,
+   "display": "Joelinton",
+   "position": "MID",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 73,
+   "xgi": "3.71",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.5,
+     "buyer": "Georgeson",
+     "club_then": "NEW",
+     "points_that_season": 45
+    },
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Maccers",
+     "club_then": "NEW",
+     "points_that_season": 99
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "NEW",
+     "points_that_season": 73
+    }
+   }
+  },
+  {
+   "key": "name_almiron",
+   "fpl_id": null,
+   "display": "Almiron",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Yath",
+     "club_then": "NEW",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_319",
+   "fpl_id": 319,
+   "display": "Castagne",
+   "position": "DEF",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 61,
+   "xgi": "2.97",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "FUL",
+     "points_that_season": 46
+    }
+   }
+  },
+  {
+   "key": "name_zaha",
+   "fpl_id": null,
+   "display": "Zaha",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "LEI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_lukaku",
+   "fpl_id": null,
+   "display": "Lukaku",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Simon",
+     "club_then": "AVL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_flekken",
+   "fpl_id": null,
+   "display": "Flekken",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Friede",
+     "club_then": "BRE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_242",
+   "fpl_id": 242,
+   "display": "Dewsbury-Hall",
+   "position": "MID",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 151,
+   "xgi": "9.69",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Oli",
+     "club_then": "CHE",
+     "points_that_season": 18
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Ali",
+     "club_then": "EVE",
+     "points_that_season": 151
+    }
+   }
+  },
+  {
+   "key": "name_quansah",
+   "fpl_id": null,
+   "display": "Quansah",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.5,
+     "buyer": "Rael",
+     "club_then": "LIV",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_71",
+   "fpl_id": 71,
+   "display": "Zabarnyi",
+   "position": "DEF",
+   "current_club": "BOU",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lucien",
+     "club_then": "BOU",
+     "points_that_season": 94
+    },
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rob",
+     "club_then": "BOU",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_110",
+   "fpl_id": 110,
+   "display": "Kayode",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 113,
+   "xgi": "4.17",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Yath",
+     "club_then": "BRE",
+     "points_that_season": 113
+    }
+   }
+  },
+  {
+   "key": "fpl_145",
+   "fpl_id": 145,
+   "display": "De Cuyper",
+   "position": "DEF",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 84,
+   "xgi": "5.74",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Gav",
+     "club_then": "BRI",
+     "points_that_season": 84
+    }
+   }
+  },
+  {
+   "key": "fpl_444",
+   "fpl_id": 444,
+   "display": "Yoro",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 56,
+   "xgi": "1.93",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 56
+    }
+   }
+  },
+  {
+   "key": "name_cadioglu",
+   "fpl_id": null,
+   "display": "Cadioglu",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Deepesh",
+     "club_then": "",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_543",
+   "fpl_id": 543,
+   "display": "Adingra",
+   "position": "MID",
+   "current_club": "SUN",
+   "status": "u",
+   "last_season_points": 34,
+   "xgi": "0.97",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Rob",
+     "club_then": "BRI",
+     "points_that_season": 34
+    }
+   }
+  },
+  {
+   "key": "fpl_25",
+   "fpl_id": 25,
+   "display": "Nwaneri",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "u",
+   "last_season_points": 8,
+   "xgi": "0.31",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Maccers",
+     "club_then": "ARS",
+     "points_that_season": 8
+    }
+   }
+  },
+  {
+   "key": "fpl_74",
+   "fpl_id": 74,
+   "display": "Truffert",
+   "position": "DEF",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 165,
+   "xgi": "4.42",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Lloyd",
+     "club_then": "BOU",
+     "points_that_season": 165
+    }
+   }
+  },
+  {
+   "key": "fpl_107",
+   "fpl_id": 107,
+   "display": "Lewis-Potter",
+   "position": "DEF",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 115,
+   "xgi": "5.52",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Lucien",
+     "club_then": "BRE",
+     "points_that_season": 115
+    }
+   }
+  },
+  {
+   "key": "fpl_390",
+   "fpl_id": 390,
+   "display": "Gravenberch",
+   "position": "MID",
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 144,
+   "xgi": "4.15",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.5,
+     "buyer": "Efe",
+     "club_then": "LIV",
+     "points_that_season": 144
+    }
+   }
+  },
+  {
+   "key": "fpl_43",
+   "fpl_id": 43,
+   "display": "Alex Moreno",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "AVL",
+     "points_that_season": 49
+    }
+   }
+  },
+  {
+   "key": "fpl_93",
+   "fpl_id": 93,
+   "display": "H.Traor\u00e8",
+   "position": "MID",
+   "current_club": "BOU",
+   "status": "u",
+   "last_season_points": 4,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "BOU",
+     "points_that_season": 3
+    }
+   }
+  },
+  {
+   "key": "fpl_194",
+   "fpl_id": 194,
+   "display": "Jordan",
+   "position": "DEF",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "BUR",
+     "points_that_season": 30
+    }
+   }
+  },
+  {
+   "key": "name_tom lockyer",
+   "fpl_id": null,
+   "display": "Tom Lockyer",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "LUT",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_738",
+   "fpl_id": 738,
+   "display": "Fabianski",
+   "position": "GK",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Gav",
+     "club_then": "WHU",
+     "points_that_season": 24
+    }
+   }
+  },
+  {
+   "key": "fpl_89",
+   "fpl_id": 89,
+   "display": "Philip",
+   "position": "MID",
+   "current_club": "BOU",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.25,
+     "buyer": "Gav",
+     "club_then": "BOU",
+     "points_that_season": 60
+    }
+   }
+  },
+  {
+   "key": "fpl_146",
+   "fpl_id": 146,
+   "display": "Dunk",
+   "position": "DEF",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 100,
+   "xgi": "2.39",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "BHA",
+     "points_that_season": 89
+    },
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "BRI",
+     "points_that_season": 44
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "BRI",
+     "points_that_season": 100
+    }
+   }
+  },
+  {
+   "key": "fpl_377",
+   "fpl_id": 377,
+   "display": "Tsimikas",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "LIV",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "fpl_221",
+   "fpl_id": 221,
+   "display": "J\u00f6rgensen",
+   "position": "GK",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 9,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "CHE",
+     "points_that_season": 18
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 9
+    }
+   }
+  },
+  {
+   "key": "fpl_67",
+   "fpl_id": 67,
+   "display": "Petrovi\u0107",
+   "position": "GK",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 124,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 0
+    },
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Gav",
+     "club_then": "BOU",
+     "points_that_season": 124
+    }
+   }
+  },
+  {
+   "key": "fpl_73",
+   "fpl_id": 73,
+   "display": "Smith",
+   "position": "DEF",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 58,
+   "xgi": "0.23",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Yath",
+     "club_then": "BOU",
+     "points_that_season": 58
+    }
+   }
+  },
+  {
+   "key": "fpl_151",
+   "fpl_id": 151,
+   "display": "Van Hecke",
+   "position": "DEF",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 148,
+   "xgi": "4.87",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Ciaran",
+     "club_then": "BRI",
+     "points_that_season": 148
+    }
+   }
+  },
+  {
+   "key": "fpl_164",
+   "fpl_id": 164,
+   "display": "O'Riley",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 16,
+   "xgi": "1.39",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Deepesh",
+     "club_then": "BRI",
+     "points_that_season": 16
+    }
+   }
+  },
+  {
+   "key": "fpl_632",
+   "fpl_id": 632,
+   "display": "Doherty",
+   "position": "DEF",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 14,
+   "xgi": "0.28",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Rob",
+     "club_then": "WOL",
+     "points_that_season": 14
+    }
+   }
+  },
+  {
+   "key": "fpl_358",
+   "fpl_id": 358,
+   "display": "Tanaka",
+   "position": "MID",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 67,
+   "xgi": "2.83",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Simon",
+     "club_then": "LEE",
+     "points_that_season": 67
+    }
+   }
+  },
+  {
+   "key": "fpl_670",
+   "fpl_id": 670,
+   "display": "Roefs",
+   "position": "GK",
+   "current_club": "SUN",
+   "status": "a",
+   "last_season_points": 136,
+   "xgi": "0.10",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Maccers",
+     "club_then": "SUN",
+     "points_that_season": 136
+    }
+   }
+  },
+  {
+   "key": "fpl_637",
+   "fpl_id": 637,
+   "display": "Toti",
+   "position": "DEF",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 41,
+   "xgi": "0.82",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.25,
+     "buyer": "Oli",
+     "club_then": "WOL",
+     "points_that_season": 41
+    }
+   }
+  },
+  {
+   "key": "fpl_50",
+   "fpl_id": 50,
+   "display": "Buend\u00eda",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 102,
+   "xgi": "5.61",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Yath",
+     "club_then": "AVL",
+     "points_that_season": 0
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "AVL",
+     "points_that_season": 11
+    }
+   }
+  },
+  {
+   "key": "fpl_2",
+   "fpl_id": 2,
+   "display": "Arrizabalaga",
+   "position": "GK",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 2,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 0
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "ARS",
+     "points_that_season": 2
+    }
+   }
+  },
+  {
+   "key": "fpl_785",
+   "fpl_id": 785,
+   "display": "Pablo",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 26,
+   "xgi": "2.16",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "WOL",
+     "points_that_season": null
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "LEI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_279",
+   "fpl_id": 279,
+   "display": "M.Fran\u00e7a",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "CRY",
+     "points_that_season": 16
+    }
+   }
+  },
+  {
+   "key": "name_anel ahmedhodzic",
+   "fpl_id": null,
+   "display": "Anel Ahmedhodzic",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "SHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_kurt zouma",
+   "fpl_id": null,
+   "display": "Kurt Zouma",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "WHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_410",
+   "fpl_id": 410,
+   "display": "Lewis",
+   "position": "DEF",
+   "current_club": "MCI",
+   "status": "a",
+   "last_season_points": 19,
+   "xgi": "1.58",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "MCI",
+     "points_that_season": 52
+    }
+   }
+  },
+  {
+   "key": "fpl_456",
+   "fpl_id": 456,
+   "display": "Sancho",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 37,
+   "xgi": "2.48",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "MUN",
+     "points_that_season": 3
+    }
+   }
+  },
+  {
+   "key": "name_miguel almiron",
+   "fpl_id": null,
+   "display": "Miguel Almiron",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "NEW",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_86",
+   "fpl_id": 86,
+   "display": "Brooks",
+   "position": "MID",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 59,
+   "xgi": "9.21",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BOU",
+     "points_that_season": 23
+    }
+   }
+  },
+  {
+   "key": "fpl_511",
+   "fpl_id": 511,
+   "display": "Morato",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 53,
+   "xgi": "1.47",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "NFO",
+     "points_that_season": null
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "NFO",
+     "points_that_season": 36
+    }
+   }
+  },
+  {
+   "key": "fpl_268",
+   "fpl_id": 268,
+   "display": "Doucour\u00e9",
+   "position": "MID",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "EVE",
+     "points_that_season": 21
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "EVE",
+     "points_that_season": 19
+    }
+   }
+  },
+  {
+   "key": "name_vicente guaita",
+   "fpl_id": null,
+   "display": "Vicente Guaita",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "CRY",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_627",
+   "fpl_id": 627,
+   "display": "Johnstone",
+   "position": "GK",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 21,
+   "xgi": "0.02",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "CRY",
+     "points_that_season": 68
+    }
+   }
+  },
+  {
+   "key": "fpl_152",
+   "fpl_id": 152,
+   "display": "Veltman",
+   "position": "DEF",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 46,
+   "xgi": "1.35",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "BHA",
+     "points_that_season": 49
+    }
+   }
+  },
+  {
+   "key": "name_christian eriksen",
+   "fpl_id": null,
+   "display": "Christian Eriksen",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "MUN",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_613",
+   "fpl_id": 613,
+   "display": "Sou\u010dek",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 103,
+   "xgi": "6.25",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 116
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 126
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "WHU",
+     "points_that_season": 103
+    }
+   }
+  },
+  {
+   "key": "name_oliver mcburnie",
+   "fpl_id": null,
+   "display": "Oliver McBurnie",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "SHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_138",
+   "fpl_id": 138,
+   "display": "Steele",
+   "position": "GK",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "BHA",
+     "points_that_season": 42
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "BRI",
+     "points_that_season": 9
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "BRI",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_vitinho",
+   "fpl_id": null,
+   "display": "Vitinho",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "BUR",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_803",
+   "fpl_id": 803,
+   "display": "Sharman-Lowe",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "SHU",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_amari bell",
+   "fpl_id": null,
+   "display": "Amari Bell",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "LUT",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_craig dawson",
+   "fpl_id": null,
+   "display": "Craig Dawson",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "WOL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_633",
+   "fpl_id": 633,
+   "display": "H.Bueno",
+   "position": "DEF",
+   "current_club": "WOL",
+   "status": "a",
+   "last_season_points": 83,
+   "xgi": "4.35",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "WOL",
+     "points_that_season": 29
+    }
+   }
+  },
+  {
+   "key": "fpl_429",
+   "fpl_id": 429,
+   "display": "Phillips",
+   "position": "MID",
+   "current_club": "MCI",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "MCI",
+     "points_that_season": 10
+    }
+   }
+  },
+  {
+   "key": "fpl_272",
+   "fpl_id": 272,
+   "display": "Lerma",
+   "position": "MID",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 69,
+   "xgi": "3.32",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "CRY",
+     "points_that_season": 64
+    }
+   }
+  },
+  {
+   "key": "fpl_125",
+   "fpl_id": 125,
+   "display": "Janelt",
+   "position": "MID",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 74,
+   "xgi": "3.09",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "BRF",
+     "points_that_season": 93
+    }
+   }
+  },
+  {
+   "key": "name_elijah adebayo",
+   "fpl_id": null,
+   "display": "Elijah Adebayo",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": null,
+     "buyer": "Ali",
+     "club_then": "LUT",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_318",
+   "fpl_id": 318,
+   "display": "Bassey",
+   "position": "DEF",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 103,
+   "xgi": "2.05",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "FUL",
+     "points_that_season": 66
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "FUL",
+     "points_that_season": 103
+    }
+   }
+  },
+  {
+   "key": "fpl_607",
+   "fpl_id": 607,
+   "display": "N.Aguerd",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "u",
+   "last_season_points": 3,
+   "xgi": "0.13",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "WHU",
+     "points_that_season": 36
+    }
+   }
+  },
+  {
+   "key": "fpl_674",
+   "fpl_id": 674,
+   "display": "Ramsdale",
+   "position": "GK",
+   "current_club": "NEW",
+   "status": "a",
+   "last_season_points": 25,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "ARS",
+     "points_that_season": 20
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "NEW",
+     "points_that_season": 25
+    }
+   }
+  },
+  {
+   "key": "name_danilo",
+   "fpl_id": null,
+   "display": "Danilo",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ollie",
+     "club_then": "NFO",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_295",
+   "fpl_id": 295,
+   "display": "Keane",
+   "position": "DEF",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 131,
+   "xgi": "2.79",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Ollie",
+     "club_then": "EVE",
+     "points_that_season": 18
+    }
+   }
+  },
+  {
+   "key": "fpl_176",
+   "fpl_id": 176,
+   "display": "Mazilu",
+   "position": "GK",
+   "current_club": "BHA",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "LIV",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_auston trusty",
+   "fpl_id": null,
+   "display": "Auston Trusty",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "ARS",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_24",
+   "fpl_id": 24,
+   "display": "N\u00f8rgaard",
+   "position": "MID",
+   "current_club": "ARS",
+   "status": "a",
+   "last_season_points": 7,
+   "xgi": "0.12",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "BRE",
+     "points_that_season": 74
+    }
+   }
+  },
+  {
+   "key": "fpl_59",
+   "fpl_id": 59,
+   "display": "Onana",
+   "position": "MID",
+   "current_club": "AVL",
+   "status": "i",
+   "last_season_points": 76,
+   "xgi": "2.37",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "EVE",
+     "points_that_season": 66
+    }
+   }
+  },
+  {
+   "key": "fpl_87",
+   "fpl_id": 87,
+   "display": "Christie",
+   "position": "MID",
+   "current_club": "BOU",
+   "status": "s",
+   "last_season_points": 47,
+   "xgi": "2.60",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "BOU",
+     "points_that_season": 90
+    }
+   }
+  },
+  {
+   "key": "fpl_228",
+   "fpl_id": 228,
+   "display": "Gusto",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 96,
+   "xgi": "4.53",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Yath",
+     "club_then": "CHE",
+     "points_that_season": 60
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "CHE",
+     "points_that_season": 96
+    }
+   }
+  },
+  {
+   "key": "fpl_301",
+   "fpl_id": 301,
+   "display": "Alcaraz",
+   "position": "FWD",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 29,
+   "xgi": "1.71",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Yath",
+     "club_then": "AVL",
+     "points_that_season": 44
+    }
+   }
+  },
+  {
+   "key": "name_bazunu",
+   "fpl_id": null,
+   "display": "Bazunu",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "SOU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_262",
+   "fpl_id": 262,
+   "display": "Chadi Riad",
+   "position": "DEF",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 20,
+   "xgi": "0.46",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "CRY",
+     "points_that_season": 1
+    }
+   }
+  },
+  {
+   "key": "fpl_424",
+   "fpl_id": 424,
+   "display": "Bobb",
+   "position": "MID",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 42,
+   "xgi": "3.57",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "MCI",
+     "points_that_season": 3
+    }
+   }
+  },
+  {
+   "key": "name_jebbison",
+   "fpl_id": null,
+   "display": "Jebbison",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BOU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_352",
+   "fpl_id": 352,
+   "display": "Harrison",
+   "position": "MID",
+   "current_club": "LEE",
+   "status": "u",
+   "last_season_points": 12,
+   "xgi": "0.51",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "EVE",
+     "points_that_season": 81
+    }
+   }
+  },
+  {
+   "key": "name_hutchison",
+   "fpl_id": null,
+   "display": "Hutchison",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "IPS",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_zouma",
+   "fpl_id": null,
+   "display": "Zouma",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "WHU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_508",
+   "fpl_id": 508,
+   "display": "N.Williams",
+   "position": "DEF",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 128,
+   "xgi": "5.98",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "NFO",
+     "points_that_season": 109
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "NFO",
+     "points_that_season": 128
+    }
+   }
+  },
+  {
+   "key": "fpl_706",
+   "fpl_id": 706,
+   "display": "Justin",
+   "position": "DEF",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 94,
+   "xgi": "2.99",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "LEI",
+     "points_that_season": 70
+    }
+   }
+  },
+  {
+   "key": "name_sugawara",
+   "fpl_id": null,
+   "display": "Soudawara",
+   "position": "DEF",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "SOU",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_232",
+   "fpl_id": 232,
+   "display": "Tosin",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 34,
+   "xgi": "0.50",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "CHE",
+     "points_that_season": 71
+    }
+   }
+  },
+  {
+   "key": "name_daka",
+   "fpl_id": null,
+   "display": "Daka",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "LEI",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_679",
+   "fpl_id": 679,
+   "display": "Hermansen",
+   "position": "GK",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 76,
+   "xgi": "0.01",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "LEI",
+     "points_that_season": 63
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Yath",
+     "club_then": "WHU",
+     "points_that_season": 76
+    }
+   }
+  },
+  {
+   "key": "fpl_229",
+   "fpl_id": 229,
+   "display": "B.Badiashile",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 7,
+   "xgi": "0.06",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "CHE",
+     "points_that_season": 7
+    }
+   }
+  },
+  {
+   "key": "fpl_375",
+   "fpl_id": 375,
+   "display": "Bradley",
+   "position": "DEF",
+   "current_club": "LIV",
+   "status": "d",
+   "last_season_points": 42,
+   "xgi": "1.02",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "LIV",
+     "points_that_season": 41
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "LIV",
+     "points_that_season": 42
+    }
+   }
+  },
+  {
+   "key": "fpl_105",
+   "fpl_id": 105,
+   "display": "Valdimarsson",
+   "position": "GK",
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 1,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Friede",
+     "club_then": "BRE",
+     "points_that_season": 2
+    }
+   }
+  },
+  {
+   "key": "name_virginia",
+   "fpl_id": null,
+   "display": "Virginia",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "EVE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_hlozek",
+   "fpl_id": null,
+   "display": "Hlozek",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "-",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_288",
+   "fpl_id": 288,
+   "display": "Travers",
+   "position": "GK",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "BOU",
+     "points_that_season": 19
+    },
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_gauchi",
+   "fpl_id": null,
+   "display": "Gauchi",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "AVL",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_438",
+   "fpl_id": 438,
+   "display": "Mazraoui",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 53,
+   "xgi": "0.53",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "MUN",
+     "points_that_season": 88
+    }
+   }
+  },
+  {
+   "key": "name_maupay",
+   "fpl_id": null,
+   "display": "Maupay",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "EVE",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_muric",
+   "fpl_id": null,
+   "display": "Muric",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Lucien",
+     "club_then": "IPS",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_167",
+   "fpl_id": 167,
+   "display": "Baleba",
+   "position": "MID",
+   "current_club": "BHA",
+   "status": "a",
+   "last_season_points": 56,
+   "xgi": "1.50",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Yath",
+     "club_then": "BRI",
+     "points_that_season": 56
+    }
+   }
+  },
+  {
+   "key": "fpl_638",
+   "fpl_id": 638,
+   "display": "Hoever",
+   "position": "DEF",
+   "current_club": "WOL",
+   "status": "u",
+   "last_season_points": 10,
+   "xgi": "0.38",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Gav",
+     "club_then": "WOL",
+     "points_that_season": 10
+    }
+   }
+  },
+  {
+   "key": "fpl_665",
+   "fpl_id": 665,
+   "display": "Perri",
+   "position": "GK",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 43,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "LEE",
+     "points_that_season": 43
+    }
+   }
+  },
+  {
+   "key": "fpl_659",
+   "fpl_id": 659,
+   "display": "Walker-Peters",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 53,
+   "xgi": "1.50",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "WHU",
+     "points_that_season": 53
+    }
+   }
+  },
+  {
+   "key": "fpl_293",
+   "fpl_id": 293,
+   "display": "O'Brien",
+   "position": "DEF",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 116,
+   "xgi": "2.67",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "EVE",
+     "points_that_season": 116
+    }
+   }
+  },
+  {
+   "key": "name_barcola",
+   "fpl_id": null,
+   "display": "Barcola",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "LIV",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_207",
+   "fpl_id": 207,
+   "display": "Hannibal",
+   "position": "MID",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 59,
+   "xgi": "2.98",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "",
+     "points_that_season": 59
+    }
+   }
+  },
+  {
+   "key": "fpl_663",
+   "fpl_id": 663,
+   "display": "J.Arias",
+   "position": "MID",
+   "current_club": "WOL",
+   "status": "u",
+   "last_season_points": 45,
+   "xgi": "4.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "WOL",
+     "points_that_season": 45
+    }
+   }
+  },
+  {
+   "key": "fpl_218",
+   "fpl_id": 218,
+   "display": "Barnes",
+   "position": "FWD",
+   "current_club": "BUR",
+   "status": "a",
+   "last_season_points": 5,
+   "xgi": "0.29",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "BUR",
+     "points_that_season": 5
+    }
+   }
+  },
+  {
+   "key": "name_vlahovic",
+   "fpl_id": null,
+   "display": "Vlahovic",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ciaran",
+     "club_then": "",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "name_vice",
+   "fpl_id": null,
+   "display": "Vice",
+   "position": "GK",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Tiggy",
+     "club_then": "BUR",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_230",
+   "fpl_id": 230,
+   "display": "Fofana",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "s",
+   "last_season_points": 65,
+   "xgi": "1.32",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "CHE",
+     "points_that_season": 65
+    }
+   }
+  },
+  {
+   "key": "fpl_573",
+   "fpl_id": 573,
+   "display": "Spence",
+   "position": "DEF",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 78,
+   "xgi": "2.67",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "TOT",
+     "points_that_season": 78
+    }
+   }
+  },
+  {
+   "key": "fpl_342",
+   "fpl_id": 342,
+   "display": "Bogle",
+   "position": "DEF",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 96,
+   "xgi": "5.19",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Ali",
+     "club_then": "",
+     "points_that_season": 96
+    }
+   }
+  },
+  {
+   "key": "fpl_669",
+   "fpl_id": 669,
+   "display": "Ndoye",
+   "position": "MID",
+   "current_club": "NFO",
+   "status": "a",
+   "last_season_points": 50,
+   "xgi": "2.56",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "NFO",
+     "points_that_season": 50
+    }
+   }
+  },
+  {
+   "key": "fpl_677",
+   "fpl_id": 677,
+   "display": "Guessand",
+   "position": "FWD",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 44,
+   "xgi": "2.41",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "AVL",
+     "points_that_season": 44
+    }
+   }
+  },
+  {
+   "key": "fpl_339",
+   "fpl_id": 339,
+   "display": "Meslier",
+   "position": "GK",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "LEE",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_439",
+   "fpl_id": 439,
+   "display": "D.Leon",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_668",
+   "fpl_id": 668,
+   "display": "Xhaka",
+   "position": "MID",
+   "current_club": "SUN",
+   "status": "a",
+   "last_season_points": 124,
+   "xgi": "4.74",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "SUN",
+     "points_that_season": 124
+    }
+   }
+  },
+  {
+   "key": "fpl_655",
+   "fpl_id": 655,
+   "display": "F\u00e1bio Silva",
+   "position": "FWD",
+   "current_club": "WOL",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "WOL",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "name_boniface",
+   "fpl_id": null,
+   "display": "Boniface",
+   "position": "FWD",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "",
+     "points_that_season": null
+    }
+   }
+  },
+  {
+   "key": "fpl_604",
+   "fpl_id": 604,
+   "display": "Emerson",
+   "position": "DEF",
+   "current_club": "WHU",
+   "status": "u",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rob",
+     "club_then": "WHU",
+     "points_that_season": 0
+    }
+   }
+  },
+  {
+   "key": "fpl_37",
+   "fpl_id": 37,
+   "display": "Digne",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 97,
+   "xgi": "3.95",
+   "penalties": false,
+   "corners": true,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rob",
+     "club_then": "AVL",
+     "points_that_season": 97
+    }
+   }
+  },
+  {
+   "key": "fpl_343",
+   "fpl_id": 343,
+   "display": "Struijk",
+   "position": "DEF",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 108,
+   "xgi": "3.82",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rob",
+     "club_then": "LEE",
+     "points_that_season": 108
+    }
+   }
+  },
+  {
+   "key": "fpl_326",
+   "fpl_id": 326,
+   "display": "Adama",
+   "position": "MID",
+   "current_club": "WHU",
+   "status": "a",
+   "last_season_points": 25,
+   "xgi": "1.26",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rob",
+     "club_then": "FUL",
+     "points_that_season": 25
+    }
+   }
+  },
+  {
+   "key": "fpl_98",
+   "fpl_id": 98,
+   "display": "Enes \u00dcnal",
+   "position": "FWD",
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 27,
+   "xgi": "2.07",
+   "penalties": false,
+   "corners": false,
+   "freekicks": true,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rob",
+     "club_then": "BOU",
+     "points_that_season": 27
+    }
+   }
+  },
+  {
+   "key": "fpl_33",
+   "fpl_id": 33,
+   "display": "M.Bizot",
+   "position": "GK",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 16,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "AVL",
+     "points_that_season": 16
+    }
+   }
+  },
+  {
+   "key": "fpl_727",
+   "fpl_id": 727,
+   "display": "Chukwueze",
+   "position": "FWD",
+   "current_club": "FUL",
+   "status": "a",
+   "last_season_points": 62,
+   "xgi": "5.46",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "NEW",
+     "points_that_season": 62
+    }
+   }
+  },
+  {
+   "key": "fpl_259",
+   "fpl_id": 259,
+   "display": "Sosa",
+   "position": "DEF",
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 6,
+   "xgi": "0.11",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "CRY",
+     "points_that_season": 6
+    }
+   }
+  },
+  {
+   "key": "fpl_238",
+   "fpl_id": 238,
+   "display": "Est\u00eav\u00e3o",
+   "position": "MID",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 58,
+   "xgi": "5.05",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 58
+    }
+   }
+  },
+  {
+   "key": "fpl_560",
+   "fpl_id": 560,
+   "display": "Isidor",
+   "position": "FWD",
+   "current_club": "SUN",
+   "status": "a",
+   "last_season_points": 74,
+   "xgi": "5.08",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "SUN",
+     "points_that_season": 74
+    }
+   }
+  },
+  {
+   "key": "fpl_672",
+   "fpl_id": 672,
+   "display": "Hato",
+   "position": "DEF",
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 19,
+   "xgi": "0.91",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "CHE",
+     "points_that_season": 19
+    }
+   }
+  },
+  {
+   "key": "fpl_707",
+   "fpl_id": 707,
+   "display": "Dibling",
+   "position": "MID",
+   "current_club": "EVE",
+   "status": "a",
+   "last_season_points": 18,
+   "xgi": "0.34",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Oli",
+     "club_then": "EVE",
+     "points_that_season": 18
+    }
+   }
+  },
+  {
+   "key": "fpl_584",
+   "fpl_id": 584,
+   "display": "Tel",
+   "position": "MID",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 78,
+   "xgi": "4.89",
+   "penalties": false,
+   "corners": true,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "TOT",
+     "points_that_season": 78
+    }
+   }
+  },
+  {
+   "key": "fpl_180",
+   "fpl_id": 180,
+   "display": "Tzimas",
+   "position": "FWD",
+   "current_club": "BHA",
+   "status": "d",
+   "last_season_points": 16,
+   "xgi": "0.55",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Rael",
+     "club_then": "BRI",
+     "points_that_season": 16
+    }
+   }
+  },
+  {
+   "key": "fpl_350",
+   "fpl_id": 350,
+   "display": "Aaronson",
+   "position": "MID",
+   "current_club": "LEE",
+   "status": "a",
+   "last_season_points": 126,
+   "xgi": "8.13",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Lloyd",
+     "club_then": "LEE",
+     "points_that_season": 126
+    }
+   }
+  },
+  {
+   "key": "fpl_431",
+   "fpl_id": 431,
+   "display": "Bayindir",
+   "position": "GK",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 11,
+   "xgi": "0.05",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "MUN",
+     "points_that_season": 11
+    }
+   }
+  },
+  {
+   "key": "fpl_442",
+   "fpl_id": 442,
+   "display": "Maguire",
+   "position": "DEF",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 90,
+   "xgi": "1.62",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "MUN",
+     "points_that_season": 90
+    }
+   }
+  },
+  {
+   "key": "fpl_467",
+   "fpl_id": 467,
+   "display": "Obi",
+   "position": "FWD",
+   "current_club": "MUN",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 0.0,
+     "buyer": "Efe",
+     "club_then": "MUN",
+     "points_that_season": 0
+    }
+   }
+  }
+ ]
+}
