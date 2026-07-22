@@ -1,0 +1,35 @@
+name: Bake FPL data
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 05:00 UTC daily through August (pre-draft window); harmless after
+    - cron: "0 5 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bake dataset
+        run: python draft-advisor/scripts/bake_fpl_data.py
+
+      - name: Commit dataset
+        run: |
+          git config user.name "fpl-data-bot"
+          git config user.email "actions@github.com"
+          git add draft-advisor/data/fpl_data.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Bake FPL dataset ($(date -u +%Y-%m-%d))"
+            git push
+          fi
