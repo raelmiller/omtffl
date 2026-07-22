@@ -582,7 +582,7 @@ document.body.addEventListener("click",e=>{
   if(tr){const p=FPL.players.find(x=>x.id===+tr.dataset.id);
     if(p){state.currentAuction={player:{...p,position:p.pos},currentBid:null,leadingTeamId:null};renderAuction();window.scrollTo({top:0,behavior:"smooth"})}}
 });
-$("serverUrl").value=localStorage.getItem("omtffl_server")||"http://localhost:3001";
+$("serverUrl").value=localStorage.getItem("omtffl_server")||"https://omtffl.up.railway.app";
 loadData().catch(e=>{$("auctionBody").innerHTML=`<div class="idle">Failed to load data files — serve this folder over http (python3 -m http.server) rather than opening the file directly.<br><span class="small">${esc(e.message)}</span></div>`});
 </script>
 </body>
