@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMTFFL Draft Advisor</title>
+<style>
+:root{
+  --bg:#0d0f12; --surface:#141720; --surface2:#1c2030;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+  --text:#e8eaf0; --muted:#6b7280; --accent:#7fffb2; --hot:#ff6b6b; --gold:#ffd166; --blue:#60a5fa;
+  --mono:ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
+  --sans:'Avenir Next','Futura','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh}
+header{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(13,15,18,.95);backdrop-filter:blur(8px);z-index:10}
+.logo{font-family:var(--sans);font-weight:800;font-size:16px}
+.logo span{color:var(--accent)}
+.pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.dot.live{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.dot.err{background:var(--hot)}
+input,select,button{background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:12px;padding:.45rem .7rem}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#0d0f12;font-weight:700;border-color:var(--accent)}
+main{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1rem;padding:1rem 1.4rem;align-items:start}
+@media (max-width:980px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem}
+.panel h2{font-family:var(--sans);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.7rem}
+.idle{color:var(--muted);padding:2.5rem 0;text-align:center}
+.auctionhead{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.auctionhead .name{font-family:var(--sans);font-size:26px;font-weight:800}
+.auctionhead .meta{color:var(--muted)}
+.verdict{border-radius:10px;padding:.7rem 1rem;margin:.8rem 0;font-family:var(--sans);font-weight:700;font-size:15px;border:1px solid var(--border2)}
+.verdict small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;margin-top:.3rem;color:rgba(0,0,0,.55)}
+.v-priority{background:var(--accent);color:#0d0f12}
+.v-value{background:#2a4d3a;color:var(--accent);border-color:var(--accent)}.v-value small{color:#9fb8a8}
+.v-fair{background:var(--surface2);color:var(--gold)}.v-fair small{color:var(--muted)}
+.v-pass{background:var(--surface2);color:var(--hot)}.v-pass small{color:var(--muted)}
+.rangebar{position:relative;height:34px;background:var(--surface2);border-radius:8px;margin:.6rem 0 .2rem;overflow:hidden}
+.rangebar .band{position:absolute;top:0;bottom:0;background:rgba(127,255,178,.18);border-left:1px solid var(--accent);border-right:1px solid var(--accent)}
+.rangebar .tick{position:absolute;top:0;bottom:0;width:2px;background:var(--gold)}
+.rangebar .bid{position:absolute;top:0;bottom:0;width:2px;background:var(--hot)}
+.rangelabels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-bottom:.6rem}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:.5rem;margin:.7rem 0}
+.stat{background:var(--surface2);border-radius:8px;padding:.5rem .6rem}
+.stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:9px;letter-spacing:.05em;text-transform:uppercase}
+.stat b.g{color:var(--accent)} .stat b.y{color:var(--gold)} .stat b.r{color:var(--hot)} .stat b.b{color:var(--blue)}
+.flags{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}
+.flag{border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:2px 9px;font-size:11px}
+.flag.injury{border-color:var(--hot);color:var(--hot)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:.05em;text-align:right;padding:3px 6px;border-bottom:1px solid var(--border)}
+td{padding:3px 6px;font-size:12px;text-align:right;border-bottom:1px solid var(--border)}
+th:first-child,td:first-child{text-align:left}
+.rival{display:flex;align-items:center;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--border)}
+.rival .who{width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rival .why{color:var(--muted);font-size:11px;flex:1}
+.meter{width:70px;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--hot)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:.7rem}
+.tabs button{background:none;border:none;border-bottom:2px solid transparent;border-radius:0;color:var(--muted);padding:.5rem .8rem}
+.tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+.scroll{max-height:52vh;overflow-y:auto}
+.row-click{cursor:pointer}
+.row-click:hover td{background:var(--surface2)}
+.small{font-size:11px;color:var(--muted)}
+.teamrow{display:grid;grid-template-columns:1fr 1fr auto;gap:.4rem;align-items:center;padding:.25rem 0}
+.mini{font-size:11px}
+#toast{position:fixed;bottom:1rem;right:1rem;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:.6rem 1rem;display:none;z-index:20}
+.gap-ok{color:var(--accent)} .gap-full{color:var(--muted);text-decoration:line-through}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">OMTFFL <span>ADVISOR</span></div>
+  <div class="pill"><div class="dot" id="connDot"></div><span id="connText">offline</span></div>
+  <input id="serverUrl" size="28" placeholder="auction server url" value="">
+  <button id="connectBtn">connect</button>
+  <select id="myTeam" title="which auction team is you"><option value="">I am team...</option></select>
+  <div class="pill"><span id="roomState">room: —</span></div>
+  <button id="demoBtn" title="replay 25-26 sales to test the tool">demo</button>
+</header>
+<main>
+  <section class="panel" id="auctionPanel">
+    <h2>On the block</h2>
+    <div id="auctionBody"><div class="idle">Waiting for a nomination… connect to the auction server, use search, or hit demo.</div></div>
+  </section>
+  <section class="panel">
+    <div class="tabs">
+      <button class="active" data-tab="gems">Gems</button>
+      <button data-tab="search">Search</button>
+      <button data-tab="teams">Teams</button>
+      <button data-tab="log">Log</button>
+    </div>
+    <div id="tab-gems" class="tabpane">
+      <div class="small" style="margin-bottom:.5rem">Best remaining value: projection ÷ expected price. Your board for the late draft.</div>
+      <div class="scroll" id="gemsList"></div>
+    </div>
+    <div id="tab-search" class="tabpane" style="display:none">
+      <input id="q" size="30" placeholder="type a player name…" style="width:100%;margin-bottom:.5rem">
+      <div class="scroll" id="searchList"></div>
+    </div>
+    <div id="tab-teams" class="tabpane" style="display:none">
+      <div class="small" style="margin-bottom:.5rem">Map auction teams to league managers so history informs rival predictions.</div>
+      <div id="teamsList"></div>
+    </div>
+    <div id="tab-log" class="tabpane" style="display:none">
+      <div class="scroll"><table id="logTable"><tr><th>player</th><th>pos</th><th>£m</th><th>team</th></tr></table></div>
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+<script>
+"use strict";
+// ── data ───────────────────────────────────────────────────────────────
+let FPL=null, MODEL=null, DOSSIERS=null, SALES=null;
+let state={teams:[],currentAuction:null,soldPlayers:[]};
+let socket=null, demo=null;
+const $=id=>document.getElementById(id);
+const POSN={1:"GK",2:"DEF",3:"MID",4:"FWD"};
+const SLOTS={GK:2,DEF:5,MID:5,FWD:3};
+const BANDS=[["0-49",0,49],["50-79",50,79],["80-99",80,99],["100-124",100,124],["125-149",125,149],["150-179",150,179],["180+",180,1e4]];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function loadData(){
+  const [f,m,d,s]=await Promise.all([
+    fetch("data/fpl_data.json"),fetch("data/price_model.json"),
+    fetch("data/manager_dossiers.json"),fetch("data/enriched_sales.json")
+  ].map(p=>p.then(r=>r.json())));
+  FPL=f;MODEL=m;DOSSIERS=d;SALES=s;
+  FPL.players.forEach(p=>{p.pos=POSN[p.element_type]||"?";p.hist=FPL.history_past[p.id]||[]});
+  toast(`data loaded: ${FPL.players.length} players, baked ${FPL.baked_at.slice(0,10)}`);
+  renderGems();renderTeams();
+}
+// ── model ──────────────────────────────────────────────────────────────
+function seasonPts(p,name){const h=p.hist.find(h=>h.season_name===name);return h?h.total_points:null}
+function latestSeasons(p){ // newest first [ [name,pts,minutes], ... ]
+  return [...p.hist].sort((a,b)=>b.season_name.localeCompare(a.season_name));
+}
+function startYear(name){return parseInt(name.slice(0,4),10)} // "2024/25" -> 2024
+function projection(p){
+  const hs=latestSeasons(p);
+  if(!hs.length)return {pts:0,basis:"no PL history"};
+  const s1=hs[0], s2=hs[1];
+  // only blend the prior season if it directly precedes the latest and the
+  // player actually played it — stops a stale/cameo year dragging form down
+  const consecutive=s2&&s2.total_points!=null&&startYear(s1.season_name)-startYear(s2.season_name)===1&&(s2.minutes||0)>=500;
+  if(consecutive){
+    return {pts:Math.round(.7*s1.total_points+.3*s2.total_points),
+            basis:`0.7×${s1.total_points} (${s1.season_name}) + 0.3×${s2.total_points} (${s2.season_name})`};
+  }
+  return {pts:s1.total_points,basis:`${s1.total_points} pts in ${s1.season_name}`};
+}
+function bandOf(pts){for(const[l,lo,hi]of BANDS)if(pts>=lo&&pts<=hi)return l;return"0-49"}
+function baseRange(pos,projPts){
+  const bands=MODEL.price_bands[pos]||{};
+  let b=bands[bandOf(projPts)];
+  if(!b){ // fall back to nearest populated band below
+    const idx=BANDS.findIndex(x=>x[0]===bandOf(projPts));
+    for(let i=idx;i>=0;i--){if(bands[BANDS[i][0]]){b=bands[BANDS[i][0]];break}}
+  }
+  return b||{p25:0,median:.25,p75:1,n:0};
+}
+function liquidity(){
+  if(!state.teams.length)return {mult:1,label:"no live room data"};
+  let money=0,slots=0;
+  state.teams.forEach(t=>{money+=t.budget;slots+=15-t.squad.length});
+  if(!slots)return {mult:1,label:"draft complete"};
+  const perSlotNow=money/slots, perSlotStart=50/15;
+  const mult=Math.min(1.6,Math.max(.6,Math.sqrt(perSlotNow/perSlotStart)));
+  return {mult,money,slots,label:`£${money.toFixed(2)}m over ${slots} slots (×${mult.toFixed(2)})`};
+}
+function fairRange(p){
+  const proj=projection(p), base=baseRange(p.pos,proj.pts), liq=liquidity();
+  const r=x=>Math.max(.25,Math.round(x*liq.mult*4)/4);
+  return {proj,base,liq,low:r(base.p25),mid:r(base.median),high:r(base.p75)};
+}
+function teamManager(t){ // mapped dossier name for an auction team
+  const manual=teamMap[t.id];if(manual)return manual;
+  const tn=(t.name||"").toLowerCase();
+  const hit=DOSSIERS.find(d=>tn.includes(d.name.toLowerCase()));
+  return hit?hit.name:null;
+}
+function draftHistoryOf(p){
+  return SALES.filter(s=>s.fpl_id===p.id).map(s=>({season:s.season,price:s.cost,buyer:s.manager}));
+}
+function rivalScores(p,est){
+  const mine=+$("myTeam").value;
+  const out=[];
+  state.teams.forEach(t=>{
+    if(t.id===mine)return;
+    const have=t.squad.filter(x=>x.position===p.pos).length;
+    const open=SLOTS[p.pos]-have;
+    if(open<=0)return;
+    const slotsLeft=15-t.squad.length;
+    const maxBid=t.budget-(slotsLeft-1)*.25;
+    if(maxBid<est.low)return;
+    const mgrName=teamManager(t);
+    const prior=mgrName?MODEL.managers[mgrName]:null;
+    let score=20+10*open, why=[`${open} ${p.pos} slot${open>1?"s":""} open`];
+    if(maxBid>=est.high){score+=15;why.push(`can pay £${maxBid.toFixed(2)}m`)}
+    if(prior){
+      const share=prior.pos_share[p.pos]||0;
+      score+=share*60; if(share>=.4)why.push(`spends ${(share*100)|0}% on ${p.pos}`);
+      if(prior.club_affinity[p.team_short]){score+=15;why.push(`${p.team_short} fan (${prior.club_affinity[p.team_short]} buys)`)}
+      if(est.mid>=10){score+=prior.big_bids_per_season*8;if(prior.big_bids_per_season>=1.5)why.push("chases marquees")}
+      const past=SALES.find(s=>s.fpl_id===p.id&&s.manager===mgrName);
+      if(past){score+=20;why.push(`bought him in ${past.season}`)}
+    }
+    out.push({team:t,mgr:mgrName,score:Math.min(99,Math.round(score)),why:why.slice(0,3).join(" · ")});
+  });
+  return out.sort((a,b)=>b.score-a.score).slice(0,4);
+}
+function replacementValue(pos){ // projection of best players likely still cheap
+  const undrafted=poolRemaining().filter(p=>p.pos===pos);
+  const projs=undrafted.map(p=>projection(p).pts).sort((a,b)=>b-a);
+  return projs[Math.min(3,projs.length-1)]||0; // 4th best remaining ≈ what you can still get
+}
+function soldIds(){return new Set(state.soldPlayers.map(s=>s.player.id))}
+function poolRemaining(){
+  const gone=soldIds();
+  return FPL.players.filter(p=>!gone.has(p.id)&&p.status!=="u"&&projection(p).pts>0);
+}
+function myVerdict(p,est){
+  const mine=state.teams.find(t=>t.id===+$("myTeam").value);
+  if(!mine)return {cls:"v-fair",head:"SET 'I AM TEAM…' FOR A VERDICT",sub:"pick your team in the header so I know your budget and gaps"};
+  const have=mine.squad.filter(x=>x.position===p.pos).length;
+  const open=SLOTS[p.pos]-have;
+  const slotsLeft=15-mine.squad.length;
+  const maxBid=mine.budget-(slotsLeft-1)*.25;
+  const proj=est.proj.pts, repl=replacementValue(p.pos);
+  const edge=proj-repl;
+  if(open<=0)return {cls:"v-pass",head:"PASS — POSITION FULL",sub:`you already hold ${have}/${SLOTS[p.pos]} ${p.pos}`};
+  if(maxBid<est.low)return {cls:"v-pass",head:"PASS — CAN'T AFFORD",sub:`your max bid is £${maxBid.toFixed(2)}m (must keep £0.25 × ${slotsLeft-1} remaining slots)`};
+  const ceiling=Math.min(maxBid,est.high+(edge>40?1:0));
+  if(edge>40)return {cls:"v-priority",head:`PRIORITY — WORTH UP TO £${ceiling.toFixed(2)}m`,sub:`projects ${proj} pts, ${edge} above what will still be around at ${p.pos} (~${repl}). Fair £${est.low}–£${est.high}m.`};
+  if(edge>15)return {cls:"v-value",head:`BID TO £${Math.min(maxBid,est.high).toFixed(2)}m`,sub:`projects ${proj} pts vs ~${repl} still gettable later. Walk away above £${est.high}m.`};
+  return {cls:"v-fair",head:`ONLY IF CHEAP — UNDER £${est.low.toFixed(2)}m`,sub:`similar value (~${repl} pts) will still be in the pool at ${p.pos}; don't chase this`};
+}
+// ── render ─────────────────────────────────────────────────────────────
+function factsheet(p,currentBid,leadingTeam){
+  const est=fairRange(p);
+  const v=myVerdict(p,est);
+  const s1=latestSeasons(p)[0]||{};
+  const dh=draftHistoryOf(p);
+  const rivals=state.teams.length?rivalScores(p,est):[];
+  const spn=(FPL.set_piece_notes[p.team]||[]).join(" ");
+  const flags=[];
+  if(p.penalties_order===1)flags.push("penalties");
+  if((p.corners_and_indirect_freekicks_order||9)<=2)flags.push("corners");
+  if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
+  if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
+  const scale=Math.max(est.high*1.5,currentBid*1.2,8);
+  const pct=x=>Math.min(98,x/scale*100);
+  const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
+  return `
+  <div class="auctionhead"><span class="name">${esc(p.web_name)}</span>
+    <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${currentBid!=null?` · bid £${currentBid}m${leadingTeam?" — "+esc(leadingTeam):""}`:""}</span></div>
+  <div class="verdict ${v.cls}">${v.head}<small>${v.sub}</small></div>
+  <div class="rangebar">
+    <div class="band" style="left:${pct(est.low)}%;width:${Math.max(2,pct(est.high)-pct(est.low))}%"></div>
+    <div class="tick" style="left:${pct(est.mid)}%" title="median £${est.mid}m"></div>
+    ${currentBid!=null?`<div class="bid" style="left:${pct(currentBid)}%"></div>`:""}
+  </div>
+  <div class="rangelabels"><span>fair £${est.low}–£${est.high}m (median £${est.mid}m)</span><span>room ${est.liq.label}</span></div>
+  <div class="statgrid">
+    <div class="stat"><b class="g">${est.proj.pts}</b><span>proj pts</span></div>
+    <div class="stat"><b>${s1.total_points??"–"}</b><span>pts ${s1.season_name||"last"}</span></div>
+    <div class="stat"><b>${s1.goals_scored??"–"}/${s1.assists??"–"}</b><span>G/A</span></div>
+    <div class="stat"><b class="b">${s1.expected_goals??"–"}</b><span>xG</span></div>
+    <div class="stat"><b class="b">${s1.expected_assists??"–"}</b><span>xA</span></div>
+    <div class="stat"><b>${s1.minutes??"–"}</b><span>mins</span></div>
+    ${p.pos==="DEF"||p.pos==="GK"?`<div class="stat"><b class="y">${s1.defensive_contribution??p.defensive_contribution??"–"}</b><span>def con</span></div>
+    <div class="stat"><b>${s1.clean_sheets??"–"}</b><span>clean sheets</span></div>`:""}
+  </div>
+  <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag injury">${f.t}</span>`).join("")}</div>
+  ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
+    <div><h2>Season history</h2><table><tr><th>season</th><th>pts</th><th>mins</th></tr>
+      ${hist.map(h=>`<tr><td>${h.season_name}</td><td>${h.total_points}</td><td>${h.minutes}</td></tr>`).join("")||"<tr><td colspan=3 class='small'>new to the Premier League</td></tr>"}</table>
+      ${dh.length?`<h2 style="margin-top:.6rem">OMTFFL history</h2><table>${dh.map(d=>`<tr><td>${d.season}</td><td>£${d.price??"?"}m</td><td>${esc(d.buyer)}</td></tr>`).join("")}</table>`:""}
+    </div>
+    <div><h2>Likely rivals</h2>
+      ${rivals.map(r=>`<div class="rival"><span class="who">${esc(r.mgr||r.team.name)}</span><div class="meter"><i style="width:${r.score}%"></i></div><span class="why">${esc(r.why)}</span></div>`).join("")||"<div class='small'>no live room data — connect or run demo</div>"}
+    </div>
+  </div>`;
+}
+function renderAuction(){
+  const a=state.currentAuction;
+  if(!a){$("auctionBody").innerHTML=`<div class="idle">No player on the block.</div>`;return}
+  const p=FPL.players.find(x=>x.id===a.player.id);
+  const lead=state.teams.find(t=>t.id===a.leadingTeamId);
+  $("auctionBody").innerHTML=p
+    ?factsheet(p,a.currentBid,lead?(teamManager(lead)||lead.name):null)
+    :`<div class="auctionhead"><span class="name">${esc(a.player.web_name)}</span><span class="meta">custom entry — no FPL match, judge manually</span></div>`;
+}
+function renderGems(){
+  if(!FPL)return;
+  const rows=poolRemaining().map(p=>{
+    const est=fairRange(p);
+    return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid)};
+  }).filter(r=>r.proj>=60).sort((a,b)=>b.val-a.val).slice(0,60);
+  $("gemsList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
+    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}</td><td>${r.p.pos}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+}
+function renderSearch(){
+  const q=$("q").value.toLowerCase().trim();
+  if(q.length<2){$("searchList").innerHTML="";return}
+  const gone=soldIds();
+  const hits=FPL.players.filter(p=>(p.web_name+" "+p.first_name+" "+p.second_name).toLowerCase().includes(q)).slice(0,20);
+  $("searchList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>pts</th><th></th></tr>
+    ${hits.map(p=>`<tr class="row-click" data-id="${p.id}"><td>${esc(p.web_name)}</td><td>${p.pos}</td><td>${p.team_short}</td><td>${p.total_points}</td><td>${gone.has(p.id)?"sold":""}</td></tr>`).join("")}</table>`;
+}
+let teamMap=JSON.parse(localStorage.getItem("omtffl_teamMap")||"{}");
+function renderTeams(){
+  if(!state.teams.length){$("teamsList").innerHTML="<div class='small'>connect to the auction server to see teams</div>";return}
+  const opts=n=>`<option value="">– unmapped –</option>`+DOSSIERS.map(d=>`<option ${teamMap[n]===d.name?"selected":""}>${esc(d.name)}</option>`).join("");
+  $("teamsList").innerHTML=state.teams.map(t=>`
+    <div class="teamrow mini"><span>${esc(t.name)} <span class="small">£${t.budget}m · ${t.squad.length}/15</span></span>
+    <select data-team="${t.id}">${opts(t.id)}</select>
+    <span class="small">${["GK","DEF","MID","FWD"].map(pos=>{const h=t.squad.filter(s=>s.position===pos).length;return `<span class="${h>=SLOTS[pos]?"gap-full":"gap-ok"}">${pos} ${h}/${SLOTS[pos]}</span>`}).join(" ")}</span></div>`).join("");
+  $("teamsList").querySelectorAll("select").forEach(sel=>{
+    sel.addEventListener("change",()=>{teamMap[sel.dataset.team]=sel.value||undefined;
+      localStorage.setItem("omtffl_teamMap",JSON.stringify(teamMap));renderAuction()});
+  });
+  const my=$("myTeam");const cur=my.value;
+  my.innerHTML=`<option value="">I am team...</option>`+state.teams.map(t=>`<option value="${t.id}" ${String(t.id)===cur?"selected":""}>${esc(t.name)}</option>`).join("");
+  // auto-map by name where obvious
+  state.teams.forEach(t=>{if(!teamMap[t.id]){const m=teamManager(t);if(m)teamMap[t.id]=m}});
+}
+function renderLog(){
+  $("logTable").innerHTML=`<tr><th>player</th><th>pos</th><th>£m</th><th>team</th></tr>`+
+    state.soldPlayers.map(s=>`<tr><td>${esc(s.player.web_name)}</td><td>${esc(s.player.position)}</td><td>${s.price}</td><td>${esc(s.teamName)}</td></tr>`).join("");
+}
+function renderRoom(){
+  const liq=liquidity();
+  $("roomState").textContent=state.teams.length?`room: ${liq.label}`:"room: —";
+}
+function renderAll(){renderAuction();renderGems();renderTeams();renderLog();renderRoom()}
+function toast(msg){const t=$("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",3500)}
+// ── socket ─────────────────────────────────────────────────────────────
+function connect(){
+  const url=$("serverUrl").value.trim().replace(/\/$/,"");
+  if(!url)return toast("enter the auction server url");
+  localStorage.setItem("omtffl_server",url);
+  const s=document.createElement("script");
+  s.src=url+"/socket.io/socket.io.js";
+  s.onload=()=>{
+    socket=io(url,{transports:["websocket","polling"]});
+    socket.on("connect",()=>{$("connDot").className="dot live";$("connText").textContent="live";toast("connected to auction")});
+    socket.on("disconnect",()=>{$("connDot").className="dot err";$("connText").textContent="lost"});
+    socket.on("stateUpdate",st=>{demo=null;state={...state,...st};renderAll()});
+  };
+  s.onerror=()=>{$("connDot").className="dot err";$("connText").textContent="unreachable";toast("could not reach server — check url / wifi")};
+  document.head.appendChild(s);
+}
+// ── demo: replay 25-26 sales through the live pipeline ────────────────
+function startDemo(){
+  if(!demo){
+    const sold=SALES.filter(s=>s.season==="2025-26"&&s.fpl_id&&s.cost!=null);
+    const managers=[...new Set(sold.map(s=>s.manager))];
+    demo={queue:[...sold].sort(()=>Math.random()-.5),i:0,
+      teams:managers.map((m,i)=>({id:i+1,name:m,budget:50,squad:[]}))};
+    teamMap={};demo.teams.forEach(t=>teamMap[t.id]=t.name);
+    state={teams:demo.teams,currentAuction:null,soldPlayers:[]};
+    toast("demo: replaying the 25-26 draft in random order — keep pressing demo");
+  }
+  // confirm previous sale, nominate next
+  const a=state.currentAuction;
+  if(a){
+    const sale=demo.queue[demo.i-1];
+    const t=demo.teams.find(t=>t.name===sale.manager);
+    t.budget=Math.round((t.budget-sale.cost)*100)/100;
+    t.squad.push({playerId:a.player.id,playerName:a.player.web_name,position:sale.position,price:sale.cost});
+    state.soldPlayers.unshift({player:a.player,teamId:t.id,teamName:t.name,price:sale.cost});
+    toast(`sold: ${a.player.web_name} £${sale.cost}m → ${sale.manager}`);
+  }
+  if(demo.i>=demo.queue.length){state.currentAuction=null;renderAll();return toast("demo draft complete")}
+  const sale=demo.queue[demo.i++];
+  const p=FPL.players.find(x=>x.id===sale.fpl_id);
+  state.currentAuction={player:{...p,position:p.pos},currentBid:.25,leadingTeamId:null};
+  renderAll();
+}
+// ── wire up ────────────────────────────────────────────────────────────
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active",x===b));
+  document.querySelectorAll(".tabpane").forEach(p=>p.style.display="none");
+  $("tab-"+b.dataset.tab).style.display="";
+  if(b.dataset.tab==="gems")renderGems();
+}));
+$("connectBtn").addEventListener("click",connect);
+$("demoBtn").addEventListener("click",startDemo);
+$("q").addEventListener("input",renderSearch);
+$("myTeam").addEventListener("change",renderAuction);
+document.body.addEventListener("click",e=>{
+  const tr=e.target.closest("tr.row-click");
+  if(tr){const p=FPL.players.find(x=>x.id===+tr.dataset.id);
+    if(p){state.currentAuction={player:{...p,position:p.pos},currentBid:null,leadingTeamId:null};renderAuction();window.scrollTo({top:0,behavior:"smooth"})}}
+});
+$("serverUrl").value=localStorage.getItem("omtffl_server")||"http://localhost:3001";
+loadData().catch(e=>{$("auctionBody").innerHTML=`<div class="idle">Failed to load data files — serve this folder over http (python3 -m http.server) rather than opening the file directly.<br><span class="small">${esc(e.message)}</span></div>`});
+</script>
+</body>
+</html>

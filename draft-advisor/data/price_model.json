@@ -1,0 +1,571 @@
+{
+ "trained_on_sales": 492,
+ "prior_points_bands": [
+  "0-49",
+  "50-79",
+  "80-99",
+  "100-124",
+  "125-149",
+  "150-179",
+  "180+"
+ ],
+ "price_bands": {
+  "DEF": {
+   "0-49": {
+    "n": 38,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.62,
+    "max": 8.25
+   },
+   "100-124": {
+    "n": 43,
+    "p25": 0.75,
+    "median": 2.0,
+    "p75": 3.0,
+    "max": 5.5
+   },
+   "125-149": {
+    "n": 19,
+    "p25": 2.0,
+    "median": 2.75,
+    "p75": 5.0,
+    "max": 7.75
+   },
+   "150-179": {
+    "n": 3,
+    "p25": 3.0,
+    "median": 4.75,
+    "p75": 5.25,
+    "max": 5.25
+   },
+   "180+": {
+    "n": 2,
+    "p25": 5.0,
+    "median": 8.5,
+    "p75": 12.0,
+    "max": 12.0
+   },
+   "50-79": {
+    "n": 36,
+    "p25": 0.0,
+    "median": 0.25,
+    "p75": 0.69,
+    "max": 4.25
+   },
+   "80-99": {
+    "n": 30,
+    "p25": 0.25,
+    "median": 0.62,
+    "p75": 1.81,
+    "max": 4.0
+   }
+  },
+  "FWD": {
+   "0-49": {
+    "n": 12,
+    "p25": 0.12,
+    "median": 2.12,
+    "p75": 4.94,
+    "max": 10.75
+   },
+   "100-124": {
+    "n": 13,
+    "p25": 1.75,
+    "median": 5.25,
+    "p75": 9.75,
+    "max": 15.0
+   },
+   "125-149": {
+    "n": 15,
+    "p25": 5.75,
+    "median": 7.75,
+    "p75": 12.75,
+    "max": 17.5
+   },
+   "150-179": {
+    "n": 8,
+    "p25": 7.19,
+    "median": 14.5,
+    "p75": 16.88,
+    "max": 19.0
+   },
+   "180+": {
+    "n": 12,
+    "p25": 14.88,
+    "median": 19.12,
+    "p75": 24.62,
+    "max": 29.75
+   },
+   "50-79": {
+    "n": 14,
+    "p25": 0.5,
+    "median": 1.88,
+    "p75": 3.0,
+    "max": 7.5
+   },
+   "80-99": {
+    "n": 7,
+    "p25": 3.5,
+    "median": 6.5,
+    "p75": 8.0,
+    "max": 9.0
+   }
+  },
+  "GK": {
+   "0-49": {
+    "n": 14,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.25,
+    "max": 1.75
+   },
+   "100-124": {
+    "n": 18,
+    "p25": 0.69,
+    "median": 1.25,
+    "p75": 1.56,
+    "max": 2.5
+   },
+   "125-149": {
+    "n": 12,
+    "p25": 0.31,
+    "median": 1.0,
+    "p75": 2.0,
+    "max": 4.0
+   },
+   "150-179": {
+    "n": 5,
+    "p25": 2.0,
+    "median": 2.25,
+    "p75": 3.0,
+    "max": 3.5
+   },
+   "50-79": {
+    "n": 8,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 1.06,
+    "max": 1.25
+   },
+   "80-99": {
+    "n": 4,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.19,
+    "max": 0.25
+   }
+  },
+  "MID": {
+   "0-49": {
+    "n": 19,
+    "p25": 0.0,
+    "median": 0.25,
+    "p75": 3.75,
+    "max": 6.5
+   },
+   "100-124": {
+    "n": 42,
+    "p25": 0.5,
+    "median": 2.25,
+    "p75": 5.25,
+    "max": 20.5
+   },
+   "125-149": {
+    "n": 47,
+    "p25": 2.5,
+    "median": 4.75,
+    "p75": 7.0,
+    "max": 20.0
+   },
+   "150-179": {
+    "n": 17,
+    "p25": 5.12,
+    "median": 6.0,
+    "p75": 10.25,
+    "max": 25.0
+   },
+   "180+": {
+    "n": 13,
+    "p25": 10.25,
+    "median": 15.75,
+    "p75": 19.62,
+    "max": 22.75
+   },
+   "50-79": {
+    "n": 22,
+    "p25": 0.0,
+    "median": 0.38,
+    "p75": 2.56,
+    "max": 12.0
+   },
+   "80-99": {
+    "n": 19,
+    "p25": 0.0,
+    "median": 0.75,
+    "p75": 1.75,
+    "max": 7.0
+   }
+  }
+ },
+ "seasons": {
+  "2023-24": {
+   "teams": 13,
+   "spent": 592.75,
+   "pool": 650
+  },
+  "2024-25": {
+   "teams": 14,
+   "spent": 685.75,
+   "pool": 700
+  },
+  "2025-26": {
+   "teams": 16,
+   "spent": 794.75,
+   "pool": 800
+  }
+ },
+ "managers": {
+  "Yath": {
+   "seasons": 3,
+   "club_affinity": {
+    "BRE": 5,
+    "NEW": 5,
+    "AVL": 4,
+    "BOU": 4,
+    "LIV": 4,
+    "MCI": 3,
+    "WHU": 3,
+    "CRY": 3
+   },
+   "pos_share": {
+    "GK": 0.027,
+    "FWD": 0.393,
+    "DEF": 0.131,
+    "MID": 0.449
+   },
+   "max_bid": 19.0,
+   "big_bids_per_season": 1.0,
+   "avg_spend_per_season": 49.58
+  },
+  "Deepesh": {
+   "seasons": 3,
+   "club_affinity": {
+    "CHE": 7,
+    "MUN": 6,
+    "ARS": 6,
+    "NFO": 3
+   },
+   "pos_share": {
+    "GK": 0.03,
+    "DEF": 0.144,
+    "MID": 0.519,
+    "FWD": 0.307
+   },
+   "max_bid": 17.5,
+   "big_bids_per_season": 1.67,
+   "avg_spend_per_season": 49.92
+  },
+  "Ciaran": {
+   "seasons": 3,
+   "club_affinity": {
+    "BOU": 5,
+    "LIV": 5,
+    "TOT": 3,
+    "MUN": 3,
+    "NEW": 3,
+    "WOL": 3
+   },
+   "pos_share": {
+    "GK": 0.018,
+    "DEF": 0.035,
+    "MID": 0.397,
+    "FWD": 0.55
+   },
+   "max_bid": 29.0,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 50.0
+  },
+  "Gav": {
+   "seasons": 3,
+   "club_affinity": {
+    "EVE": 5,
+    "CRY": 5,
+    "MCI": 4,
+    "BRE": 4,
+    "FUL": 4,
+    "WHU": 3,
+    "NEW": 3,
+    "BRI": 3
+   },
+   "pos_share": {
+    "GK": 0.033,
+    "DEF": 0.245,
+    "MID": 0.307,
+    "FWD": 0.415
+   },
+   "max_bid": 16.0,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 50.0
+  },
+  "Richard": {
+   "seasons": 3,
+   "club_affinity": {
+    "ARS": 10,
+    "NEW": 6,
+    "MCI": 6,
+    "LIV": 4,
+    "CHE": 4,
+    "AVL": 3
+   },
+   "pos_share": {
+    "GK": 0.052,
+    "DEF": 0.287,
+    "MID": 0.327,
+    "FWD": 0.334
+   },
+   "max_bid": 10.0,
+   "big_bids_per_season": 0.33,
+   "avg_spend_per_season": 49.67
+  },
+  "Rael": {
+   "seasons": 3,
+   "club_affinity": {
+    "WHU": 7,
+    "MCI": 5,
+    "CRY": 4,
+    "BRI": 4,
+    "CHE": 3,
+    "FUL": 3,
+    "TOT": 3,
+    "AVL": 3,
+    "EVE": 3,
+    "LIV": 3
+   },
+   "pos_share": {
+    "GK": 0.02,
+    "DEF": 0.212,
+    "MID": 0.505,
+    "FWD": 0.263
+   },
+   "max_bid": 20.5,
+   "big_bids_per_season": 1.33,
+   "avg_spend_per_season": 50.0
+  },
+  "Friede": {
+   "seasons": 3,
+   "club_affinity": {
+    "MCI": 6,
+    "TOT": 6,
+    "ARS": 6,
+    "NEW": 5,
+    "BRE": 4,
+    "LIV": 3,
+    "NFO": 3
+   },
+   "pos_share": {
+    "GK": 0.037,
+    "DEF": 0.2,
+    "MID": 0.506,
+    "FWD": 0.257
+   },
+   "max_bid": 13.25,
+   "big_bids_per_season": 0.67,
+   "avg_spend_per_season": 47.42
+  },
+  "Ali": {
+   "seasons": 3,
+   "club_affinity": {
+    "AVL": 6,
+    "WHU": 4,
+    "WOL": 3,
+    "MCI": 3,
+    "CRY": 3,
+    "NEW": 3
+   },
+   "pos_share": {
+    "GK": 0.015,
+    "DEF": 0.039,
+    "MID": 0.386,
+    "FWD": 0.56
+   },
+   "max_bid": 25.0,
+   "big_bids_per_season": 1.33,
+   "avg_spend_per_season": 32.42
+  },
+  "Tiggy": {
+   "seasons": 3,
+   "club_affinity": {
+    "CHE": 6,
+    "MUN": 5,
+    "ARS": 4,
+    "EVE": 3,
+    "AVL": 3,
+    "MCI": 3,
+    "LIV": 3,
+    "CRY": 3,
+    "WHU": 3
+   },
+   "pos_share": {
+    "GK": 0.034,
+    "DEF": 0.224,
+    "MID": 0.294,
+    "FWD": 0.448
+   },
+   "max_bid": 16.0,
+   "big_bids_per_season": 1.0,
+   "avg_spend_per_season": 48.75
+  },
+  "Lloyd": {
+   "seasons": 3,
+   "club_affinity": {
+    "NEW": 6,
+    "EVE": 6,
+    "FUL": 4,
+    "AVL": 4,
+    "MUN": 4,
+    "WHU": 3,
+    "ARS": 3,
+    "LIV": 3,
+    "CHE": 3,
+    "NFO": 3
+   },
+   "pos_share": {
+    "GK": 0.037,
+    "FWD": 0.527,
+    "DEF": 0.109,
+    "MID": 0.328
+   },
+   "max_bid": 18.5,
+   "big_bids_per_season": 1.67,
+   "avg_spend_per_season": 49.83
+  },
+  "Oli": {
+   "seasons": 3,
+   "club_affinity": {
+    "CHE": 5,
+    "TOT": 5,
+    "AVL": 4,
+    "EVE": 4,
+    "NEW": 4,
+    "LIV": 3,
+    "BOU": 3,
+    "MUN": 3
+   },
+   "pos_share": {
+    "GK": 0.014,
+    "MID": 0.623,
+    "DEF": 0.131,
+    "FWD": 0.232
+   },
+   "max_bid": 22.75,
+   "big_bids_per_season": 1.33,
+   "avg_spend_per_season": 48.42
+  },
+  "Efe": {
+   "seasons": 2,
+   "club_affinity": {
+    "MUN": 5,
+    "LIV": 4,
+    "MCI": 3,
+    "TOT": 3,
+    "ARS": 3
+   },
+   "pos_share": {
+    "GK": 0.028,
+    "DEF": 0.158,
+    "MID": 0.173,
+    "FWD": 0.642
+   },
+   "max_bid": 29.75,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 49.88
+  },
+  "Georgeson": {
+   "seasons": 1,
+   "club_affinity": {},
+   "pos_share": {
+    "GK": 0.02,
+    "MID": 0.795,
+    "DEF": 0.085,
+    "FWD": 0.1
+   },
+   "max_bid": 25.0,
+   "big_bids_per_season": 1.0,
+   "avg_spend_per_season": 50.0
+  },
+  "Simon": {
+   "seasons": 2,
+   "club_affinity": {
+    "LIV": 5,
+    "ARS": 4,
+    "LEI": 3,
+    "MCI": 3,
+    "CHE": 3,
+    "AVL": 3,
+    "NEW": 3
+   },
+   "pos_share": {
+    "GK": 0.013,
+    "DEF": 0.128,
+    "MID": 0.58,
+    "FWD": 0.28
+   },
+   "max_bid": 19.0,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 50.0
+  },
+  "Maccers": {
+   "seasons": 2,
+   "club_affinity": {
+    "CHE": 6,
+    "EVE": 3,
+    "CRY": 3,
+    "MUN": 3,
+    "ARS": 3
+   },
+   "pos_share": {
+    "GK": 0.031,
+    "DEF": 0.083,
+    "MID": 0.492,
+    "FWD": 0.393
+   },
+   "max_bid": 19.5,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 48.0
+  },
+  "Lucien": {
+   "seasons": 2,
+   "club_affinity": {
+    "MUN": 5,
+    "MCI": 3,
+    "TOT": 3,
+    "NFO": 3
+   },
+   "pos_share": {
+    "GK": 0.033,
+    "DEF": 0.259,
+    "MID": 0.382,
+    "FWD": 0.327
+   },
+   "max_bid": 17.0,
+   "big_bids_per_season": 0.5,
+   "avg_spend_per_season": 49.75
+  },
+  "Rob": {
+   "seasons": 1,
+   "club_affinity": {
+    "MCI": 4
+   },
+   "pos_share": {
+    "GK": 0.04,
+    "DEF": 0.015,
+    "MID": 0.135,
+    "FWD": 0.81
+   },
+   "max_bid": 23.5,
+   "big_bids_per_season": 2.0,
+   "avg_spend_per_season": 50.0
+  }
+ }
+}
