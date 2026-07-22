@@ -50,6 +50,10 @@ main{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1rem;pad
 .stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
 .stat span{color:var(--muted);font-size:9px;letter-spacing:.05em;text-transform:uppercase}
 .stat b.g{color:var(--accent)} .stat b.y{color:var(--gold)} .stat b.r{color:var(--hot)} .stat b.b{color:var(--blue)}
+.stat.adj{outline:1px solid var(--gold)}
+.stat input{background:transparent;border:none;color:var(--accent);font-family:var(--mono);font-size:16px;font-weight:700;width:3.4em;padding:0}
+.stat input:focus{outline:1px solid var(--accent);border-radius:3px}
+.stat span a{color:var(--blue)}
 .flags{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}
 .flag{border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:2px 9px;font-size:11px}
 .flag.injury{border-color:var(--hot);color:var(--hot)}
@@ -143,9 +147,31 @@ function latestSeasons(p){ // newest first [ [name,pts,minutes], ... ]
   return [...p.hist].sort((a,b)=>b.season_name.localeCompare(a.season_name));
 }
 function startYear(name){return parseInt(name.slice(0,4),10)} // "2024/25" -> 2024
+let projAdj=JSON.parse(localStorage.getItem("omtffl_projadj")||"{}");
+function setProjAdj(id,val){
+  if(val==null||val===""||isNaN(+val))delete projAdj[id];else projAdj[id]=Math.max(0,Math.round(+val));
+  localStorage.setItem("omtffl_projadj",JSON.stringify(projAdj));
+  renderAll();
+}
 function projection(p){
+  if(projAdj[p.id]!=null)return {pts:projAdj[p.id],basis:"your estimate (data says "+modelProjection(p).pts+")",manual:true};
+  return modelProjection(p);
+}
+// new-to-PL players have no history: estimate from FPL's own price, using
+// the median projection of same-position peers priced within £0.5m. FPL
+// prices new signings by expectation, so this is a real (if rough) prior.
+function estimateFromPrice(p){
+  const peers=FPL.players.filter(q=>q.pos===p.pos&&q.hist.length&&Math.abs((q.now_cost||0)-(p.now_cost||0))<=5)
+    .map(q=>modelProjection(q).pts).sort((a,b)=>a-b);
+  if(!peers.length)return 0;
+  return Math.round(peers[Math.floor(peers.length/2)]);
+}
+function modelProjection(p){
   const hs=latestSeasons(p);
-  if(!hs.length)return {pts:0,basis:"no PL history"};
+  if(!hs.length){
+    const e=estimateFromPrice(p);
+    return {pts:e,basis:`new to PL — est. from £${((p.now_cost||0)/10).toFixed(1)}m FPL price`,isNew:true};
+  }
   const s1=hs[0], s2=hs[1];
   // only blend the prior season if it directly precedes the latest and the
   // player actually played it — stops a stale/cameo year dragging form down
@@ -280,6 +306,8 @@ function factsheet(p,currentBid,leadingTeam){
   if((p.corners_and_indirect_freekicks_order||9)<=2)flags.push("corners");
   if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
+  if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
+  if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
@@ -294,7 +322,8 @@ function factsheet(p,currentBid,leadingTeam){
   </div>
   <div class="rangelabels"><span>fair £${est.low}–£${est.high}m (median £${est.mid}m)</span><span>room ${est.liq.label}</span></div>
   <div class="statgrid">
-    <div class="stat"><b class="g">${est.proj.pts}</b><span>proj pts</span></div>
+    <div class="stat ${est.proj.manual?"adj":""}"><b class="g"><input id="projInput" type="number" value="${est.proj.pts}" min="0" step="5" aria-label="adjust projected points"
+       onchange="setProjAdj(${p.id},this.value)"><\/b><span>proj pts ${est.proj.manual?'· <a href="#" onclick="setProjAdj('+p.id+',null);return false">reset<\/a>':"· editable (enter)"}</span></div>
     <div class="stat"><b>${s1.total_points??"–"}</b><span>pts ${s1.season_name||"last"}</span></div>
     <div class="stat"><b>${s1.goals_scored??"–"}/${s1.assists??"–"}</b><span>G/A</span></div>
     <div class="stat"><b class="b">${s1.expected_goals??"–"}</b><span>xG</span></div>
