@@ -156,10 +156,15 @@ const CLUB_BIAS={
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 async function loadData(){
-  const [f,m,d,s]=await Promise.all([
-    fetch("data/fpl_data.json"),fetch("data/price_model.json"),
-    fetch("data/manager_dossiers.json"),fetch("data/enriched_sales.json")
-  ].map(p=>p.then(r=>r.json())));
+  let f,m,d,s;
+  if(window.__BAKED__){                       // standalone build: data is inlined
+    ({fpl:f,model:m,dossiers:d,sales:s}=window.__BAKED__);
+  }else{                                        // served build: fetch the data files
+    [f,m,d,s]=await Promise.all([
+      fetch("data/fpl_data.json"),fetch("data/price_model.json"),
+      fetch("data/manager_dossiers.json"),fetch("data/enriched_sales.json")
+    ].map(p=>p.then(r=>r.json())));
+  }
   FPL=f;MODEL=m;DOSSIERS=d;SALES=s;
   FPL.players.forEach(p=>{p.pos=POSN[p.element_type]||"?";p.hist=FPL.history_past[p.id]||[]});
   buildCostTables();

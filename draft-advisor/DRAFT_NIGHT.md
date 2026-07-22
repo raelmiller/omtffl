@@ -75,18 +75,21 @@ into the group chat — only you need it.
 just share `http://<your-laptop-ip>:3001/` over WiFi instead — find the IP
 with `ipconfig getifaddr en0` / `ipconfig` / `hostname -I`.)*
 
-### 4. Start your advisor (private)
-In a second terminal:
-```
-cd omtffl/draft-advisor
-python3 -m http.server 8099
-```
-Open **`http://localhost:8099/advisor.html`** on your laptop. Keep it on a
-screen only you can see.
+### 4. Open your advisor (private)
+**The easy way — just double-click a file:**
+Download **`draft-advisor/advisor-standalone.html`** from the repo (open it
+on GitHub → the download/raw button) and **double-click it**. It opens in
+your browser with all the data built in — no terminal, no server. Keep it on
+a screen only you can see. (This file refreshes automatically each day, so
+grab the latest the day before the draft.)
+
+*(Alternative, if you prefer: `cd omtffl/draft-advisor && python3 -m http.server 8099`,
+then open `http://localhost:8099/advisor.html`. Same tool, just served
+instead of standalone.)*
 
 ### 5. Wire the advisor to the auction
-1. In the advisor header, set the server URL to **`http://localhost:3001`**
-   and hit **connect** — the dot should go green ("live").
+1. In the advisor header the server URL is already your Railway link — just
+   hit **connect**; the dot should go green ("live").
 2. Open the **Teams** tab and map each auction team to its manager (it
    auto-maps by name where it can) so rival predictions use their history.
 3. Set **"I am team…"** in the header to your own team.
