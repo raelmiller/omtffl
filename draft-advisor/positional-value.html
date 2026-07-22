@@ -1,0 +1,222 @@
+<title>OMTFFL &mdash; Where the Points Are</title>
+<style>
+:root{
+  --bg:#0d0f12; --surface:#141720; --surface2:#1c2030; --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.14); --text:#e8eaf0; --muted:#7a8394; --faint:#4a5160;
+  --fwd:#ff6b6b; --mid:#7fffb2; --def:#60a5fa; --gk:#ffd166;
+  --mono:ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
+  --sans:'Avenir Next','Futura','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.5;
+  padding:2.4rem 1.4rem 5rem;max-width:1000px;margin:0 auto}
+.eyebrow{color:var(--mid);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+h1{font-family:var(--sans);font-weight:800;font-size:30px;letter-spacing:-.6px;margin:.35rem 0 .5rem;text-wrap:balance}
+.lede{color:var(--muted);max-width:64ch;margin-bottom:2.2rem}
+.lede b{color:var(--text)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1.4rem}
+h2{font-family:var(--sans);font-size:17px;font-weight:700;margin-bottom:.2rem}
+.sub{color:var(--muted);font-size:12px;margin-bottom:1rem}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;margin:.2rem 0 1rem;font-size:12px}
+.legend span{display:inline-flex;align-items:center;gap:.45rem;color:var(--text)}
+.legend i{width:16px;height:2px;position:relative;display:inline-block}
+.legend i::after{content:"";position:absolute;left:5px;top:-2.5px;width:6px;height:6px}
+.lg-fwd i{background:var(--fwd)} .lg-fwd i::after{background:var(--fwd);border-radius:50%}
+.lg-mid i{background:var(--mid)} .lg-mid i::after{background:var(--mid);transform:rotate(45deg)}
+.lg-def i{background:var(--def)} .lg-def i::after{background:var(--def)}
+.lg-gk  i{background:var(--gk)}  .lg-gk  i::after{background:var(--gk);border-radius:50%;left:5.5px}
+.chartwrap{width:100%;overflow-x:auto}
+svg{display:block;width:100%;height:auto;font-family:var(--mono)}
+.grid line{stroke:var(--border);stroke-width:1}
+.axis text{fill:var(--muted);font-size:11px}
+.axis-title{fill:var(--faint);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase}
+.serieslabel{font-family:var(--sans);font-weight:700;font-size:12px}
+.repl{fill:var(--muted);font-size:10.5px}
+.anno{fill:var(--text);font-size:11px}
+.annoDim{fill:var(--muted);font-size:10.5px}
+.dot{cursor:pointer}
+.tip{position:fixed;pointer-events:none;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;padding:.5rem .7rem;font-size:12px;opacity:0;transition:opacity .1s;z-index:10;white-space:nowrap}
+.tip b{font-family:var(--sans)}
+.takeaway{border-left:3px solid var(--mid);background:var(--surface2);border-radius:0 10px 10px 0;
+  padding:1rem 1.2rem;margin:1.4rem 0}
+.takeaway h3{font-family:var(--sans);font-size:14px;margin-bottom:.4rem}
+.takeaway p{color:var(--muted);font-size:12.5px;max-width:70ch}
+.takeaway p+p{margin-top:.5rem}
+.k{color:var(--text);font-weight:600}
+.k.fwd{color:var(--fwd)} .k.def{color:var(--def)} .k.mid{color:var(--mid)}
+table{width:100%;border-collapse:collapse;margin-top:.5rem;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:4px 8px;border-bottom:1px solid var(--border);font-size:12px}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+details{margin-top:.6rem}
+summary{color:var(--muted);cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+summary:focus-visible{outline:2px solid var(--mid);border-radius:4px}
+.foot{color:var(--faint);font-size:11px;margin-top:1.6rem;text-align:center}
+.bars{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-top:.4rem}
+.barcol{display:flex;flex-direction:column;justify-content:flex-end;gap:.35rem}
+.barcol .tierlab{color:var(--muted);font-size:10.5px;text-align:center;order:99}
+.stack{display:flex;align-items:flex-end;gap:4px;height:150px}
+.bar{flex:1;border-radius:4px 4px 0 0;position:relative;min-height:2px;transition:filter .12s}
+.bar:hover{filter:brightness(1.25)}
+.bar span{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:10px;color:var(--text);font-variant-numeric:tabular-nums}
+</style>
+
+<div class="eyebrow">OMTFFL &middot; draft economics</div>
+<h1>Where the points are &mdash; and what they cost</h1>
+<p class="lede">A &pound;50m budget is really a question of <b>where a marginal pound buys the most points</b>. Three seasons of your league's own drafts, joined to what each player actually scored, answer it. The short version: <b>attack is a cliff, defence is a plateau.</b></p>
+
+<div class="panel">
+  <h2>Scarcity &mdash; the drop-off from the best to the last starter</h2>
+  <div class="sub">Minutes-adjusted projection of the Nth-best player at each position. Where a line falls off a cliff, the position is scarce; where it plateaus, you can wait.</div>
+  <div class="legend">
+    <span class="lg-fwd"><i></i>Forwards</span>
+    <span class="lg-mid"><i></i>Midfielders</span>
+    <span class="lg-def"><i></i>Defenders</span>
+    <span class="lg-gk"><i></i>Goalkeepers</span>
+  </div>
+  <div class="chartwrap"><svg id="lineChart" viewBox="0 0 720 400" role="img" aria-label="Projection by draft rank per position"></svg></div>
+  <div class="takeaway">
+    <h3>Your third striker falls off a cliff; your fifth defender doesn't.</h3>
+    <p>Filling 16 teams needs the top <span class="k fwd">48 forwards</span> and top <span class="k def">80 defenders</span>. By the last forward slot the projection has collapsed to <span class="k fwd">43</span> &mdash; a near-dead pick. The last defender still projects <span class="k def">96</span>, and the last midfielder <span class="k mid">113</span>. Skimping in defence costs you little; skimping in attack leaves a hole you can't fill later.</p>
+  </div>
+  <details><summary>Show the numbers</summary>
+  <table><thead><tr><th>Rank</th><th style="color:var(--fwd)">FWD</th><th style="color:var(--mid)">MID</th><th style="color:var(--def)">DEF</th><th style="color:var(--gk)">GK</th></tr></thead><tbody id="rankTable"></tbody></table>
+  </details>
+</div>
+
+<div class="panel">
+  <h2>Impact &mdash; what a price tier actually returned</h2>
+  <div class="sub">Mean points scored the season after purchase, by what was paid. Bar height = points; the label under each is the price tier.</div>
+  <div class="legend">
+    <span class="lg-fwd"><i></i>Forwards</span>
+    <span class="lg-mid"><i></i>Midfielders</span>
+    <span class="lg-def"><i></i>Defenders</span>
+    <span class="lg-gk"><i></i>Goalkeepers</span>
+  </div>
+  <div id="valueChart"></div>
+  <div class="takeaway">
+    <h3>Paying up works in attack. In defence, the curve is flat &mdash; and the market knows it.</h3>
+    <p>A <span class="k fwd">&pound;15m+ forward</span> returned <span class="k">159</span> points; a cheap one just <span class="k">54</span> &mdash; spending buys real points. But defenders top out around <span class="k">104</span> however much you pay, and your league has <span class="k def">never once</span> paid &pound;15m for one. The whole top-to-bottom defender upgrade is worth ~30 points.</p>
+    <p><b>The trade-off, settled:</b> an extra &pound;3m upgrading a decent defender buys ~20&ndash;30 points; the same &pound;3m lifting a second striker off the 43-point replacement floor buys 50&ndash;75. <b>The pound belongs in attack.</b> The one edge the field misses: top defenders <em>project</em> 160+ yet sell for &pound;2&ndash;10m &mdash; grab them cheap, never in a bidding war.</p>
+  </div>
+</div>
+
+<div class="foot">OMTFFL 2023&ndash;24 &rarr; 2025&ndash;26 &middot; projections minutes-adjusted &middot; points = FPL total the season after purchase</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const CURVES={GK:[156,142,136,135,132,128,124,122,122,122,122,120,120,118,114,109,108,101,95,88,85,69,60,54,43,36,36,30,29,29,26,26,21,19,18,18,18,11,11,10,10,9,2,2,0,0,0,0],
+DEF:[204,170,165,165,163,162,162,160,157,157,152,151,151,149,149,146,146,145,143,141,140,139,138,136,134,132,131,130,129,129,128,128,127,126,125,124,123,122,121,120,119,119,118,118,117,116,116,115],
+MID:[224,216,191,183,180,178,177,176,175,174,172,170,168,167,166,165,164,164,163,162,162,161,160,160,159,158,158,157,157,157,156,155,154,153,152,151,150,149,148,147,146,145,144,143,142,141,140,140],
+FWD:[230,198,188,181,178,171,166,162,158,152,148,140,135,130,126,119,113,108,101,96,90,85,80,72,65,58,54,50,47,43,40,38,35,32,30,28,26,24,22,20,18,16,14,12,10,8,6,4]};
+const NEED={FWD:48,DEF:80,MID:80,GK:32};
+const REPL={FWD:43,MID:113,DEF:96,GK:26};
+const PRICE={FWD:[{tier:"&pound;0-2m",mean:54},{tier:"&pound;2-5m",mean:78},{tier:"&pound;5-10m",mean:104},{tier:"&pound;10-15m",mean:111},{tier:"&pound;15m+",mean:159}],
+MID:[{tier:"&pound;0-2m",mean:83},{tier:"&pound;2-5m",mean:109},{tier:"&pound;5-10m",mean:112},{tier:"&pound;10-15m",mean:125},{tier:"&pound;15m+",mean:170}],
+DEF:[{tier:"&pound;0-2m",mean:74},{tier:"&pound;2-5m",mean:92},{tier:"&pound;5-10m",mean:104},{tier:"&pound;10-15m",mean:111},{tier:"&pound;15m+",mean:null}],
+GK:[{tier:"&pound;0-2m",mean:66},{tier:"&pound;2-5m",mean:119},{tier:"&pound;5-10m",mean:null},{tier:"&pound;10-15m",mean:null},{tier:"&pound;15m+",mean:null}]};
+const COL={FWD:"#ff6b6b",MID:"#7fffb2",DEF:"#60a5fa",GK:"#ffd166"};
+const NAME={FWD:"FWD",MID:"MID",DEF:"DEF",GK:"GK"};
+
+// -- line chart --
+(function(){
+  const W=720,H=400,m={l:44,r:52,t:18,b:44};
+  const XMAX=48, YMAX=240;
+  const px=r=>m.l+(r-1)/(XMAX-1)*(W-m.l-m.r);
+  const py=v=>m.t+(1-v/YMAX)*(H-m.t-m.b);
+  const svg=document.getElementById("lineChart");
+  let s='';
+  // grid + y axis
+  for(let v=0;v<=YMAX;v+=40){const y=py(v);
+    s+=`<g class="grid"><line x1="${m.l}" y1="${y}" x2="${W-m.r}" y2="${y}"/></g>`;
+    s+=`<text class="axis" x="${m.l-8}" y="${y+4}" text-anchor="end">${v}</text>`;}
+  // x axis ticks
+  [1,8,16,24,32,40,48].forEach(r=>{const x=px(r);
+    s+=`<text class="axis" x="${x}" y="${H-m.b+18}" text-anchor="middle">${r}</text>`;});
+  s+=`<text class="axis-title" x="${(m.l+W-m.r)/2}" y="${H-6}" text-anchor="middle">draft rank at position (Nth-best available)</text>`;
+  s+=`<text class="axis-title" transform="translate(13 ${(m.t+H-m.b)/2}) rotate(-90)" text-anchor="middle">projected points</text>`;
+  const shape={FWD:"circle",MID:"diamond",DEF:"square",GK:"circle"};
+  const marker=(x,y,pos)=>{const c=COL[pos];
+    if(shape[pos]==="diamond")return `<rect class="dot" x="${x-3.3}" y="${y-3.3}" width="6.6" height="6.6" transform="rotate(45 ${x} ${y})" fill="${c}"/>`;
+    if(shape[pos]==="square")return `<rect class="dot" x="${x-3.1}" y="${y-3.1}" width="6.2" height="6.2" fill="${c}"/>`;
+    return `<circle class="dot" cx="${x}" cy="${y}" r="3.4" fill="${c}"/>`;};
+  ["DEF","GK","MID","FWD"].forEach(pos=>{
+    const d=CURVES[pos], c=COL[pos];
+    let path='';
+    for(let i=0;i<XMAX;i++){const x=px(i+1),y=py(d[i]??0);path+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+    s+=`<path d="${path}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" opacity=".95"/>`;
+    // markers every 4th rank
+    for(let i=0;i<XMAX;i+=4){s+=marker(px(i+1),py(d[i]),pos);}
+    // end label — FWD(4) and GK(0) both bottom out at rank 48, so stagger them
+    const lx=px(XMAX)+7;
+    const dy=pos==="GK"?15:(pos==="FWD"?2:4);
+    s+=`<text class="serieslabel" x="${lx}" y="${py(d[XMAX-1])+dy}" fill="${c}">${NAME[pos]}</text>`;
+  });
+  // replacement annotations at each position's last-starter rank (if within view)
+  Object.keys(NEED).forEach(pos=>{const r=NEED[pos];if(r>XMAX)return;
+    const x=px(r),y=py(REPL[pos]);
+    s+=`<circle cx="${x}" cy="${y}" r="5.5" fill="none" stroke="${COL[pos]}" stroke-width="1.5"/>`;
+  });
+  // FWD cliff callout
+  const cx=px(48),cy=py(43);
+  s+=`<line x1="${cx}" y1="${cy}" x2="${cx-58}" y2="${cy-46}" stroke="var(--faint)" stroke-width="1"/>`;
+  s+=`<text class="anno" x="${cx-62}" y="${cy-50}" text-anchor="end">last starting FWD</text>`;
+  s+=`<text class="annoDim" x="${cx-62}" y="${cy-37}" text-anchor="end">projects just 43</text>`;
+  // DEF/MID plateau callout
+  const bx=px(30),by=py(CURVES.DEF[29]);
+  s+=`<text class="anno" x="${bx}" y="${by-30}" text-anchor="middle">DEF &amp; MID stay strong deep &mdash;</text>`;
+  s+=`<text class="annoDim" x="${bx}" y="${by-17}" text-anchor="middle">you can wait and buy cheap</text>`;
+  svg.innerHTML=s;
+
+  // hover
+  const tip=document.getElementById("tip");
+  svg.querySelectorAll(".dot").forEach((el,idx)=>{});
+  ["DEF","GK","MID","FWD"].forEach(pos=>{
+    const d=CURVES[pos];
+    for(let i=0;i<XMAX;i+=4){
+      // invisible fat hit target
+      const x=px(i+1),y=py(d[i]);
+      const hit=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      hit.setAttribute("cx",x);hit.setAttribute("cy",y);hit.setAttribute("r",11);
+      hit.setAttribute("fill","transparent");hit.style.cursor="pointer";
+      hit.addEventListener("mousemove",e=>{tip.style.opacity=1;
+        tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px";
+        tip.innerHTML=`<b style="color:${COL[pos]}">${NAME[pos]} #${i+1}</b> &mdash; projects ${d[i]} pts`;});
+      hit.addEventListener("mouseleave",()=>tip.style.opacity=0);
+      svg.appendChild(hit);
+    }
+  });
+})();
+
+// -- value bars --
+(function(){
+  const tiers=["&pound;0-2m","&pound;2-5m","&pound;5-10m","&pound;10-15m","&pound;15m+"];
+  const MAXV=170;
+  const wrap=document.getElementById("valueChart");
+  let html='<div class="bars">';
+  tiers.forEach((t,ti)=>{
+    html+='<div class="barcol"><div class="stack">';
+    ["FWD","MID","DEF","GK"].forEach(pos=>{
+      const v=PRICE[pos][ti].mean;
+      if(v==null){html+=`<div class="bar" style="background:transparent;flex:1"></div>`;return;}
+      const h=Math.max(2,v/MAXV*100);
+      html+=`<div class="bar" style="height:${h}%;background:${COL[pos]}" title="${NAME[pos]} ${t}: ${v} pts"><span>${v}</span></div>`;
+    });
+    html+=`</div><div class="tierlab">${t}</div></div>`;
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
+})();
+
+// -- rank table --
+(function(){
+  const rows=[1,3,5,8,12,16,24,32,48];
+  let h='';
+  rows.forEach(r=>{h+=`<tr><td>${r}${NEED.FWD===r?' &middot;fwd last':''}${NEED.GK===r?' &middot;gk last':''}</td>`+
+    ["FWD","MID","DEF","GK"].map(p=>`<td>${CURVES[p][r-1]??'&ndash;'}</td>`).join('')+`</tr>`;});
+  h+=`<tr style="border-top:1px solid var(--border2)"><td>last starter</td>`+
+    ["FWD","MID","DEF","GK"].map(p=>`<td style="color:${COL[p]}">${REPL[p]}</td>`).join('')+`</tr>`;
+  document.getElementById("rankTable").innerHTML=h;
+})();
+</script>
