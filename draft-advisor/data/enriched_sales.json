@@ -6,9 +6,9 @@
   "player": "Jose Sa",
   "club": "WOL",
   "cost": 0.5,
-  "fpl_id": 628,
-  "fpl_name": "Jos\u00e9 S\u00e1",
-  "points_that_season": 107
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -17,7 +17,7 @@
   "player": "Yoane Wissa",
   "club": "BRE",
   "cost": 0.5,
-  "fpl_id": 135,
+  "fpl_id": 464,
   "fpl_name": "Wissa",
   "points_that_season": 131
  },
@@ -28,9 +28,9 @@
   "player": "Pervis Estupinan",
   "club": "BHA",
   "cost": 5.25,
-  "fpl_id": 147,
-  "fpl_name": "Estupi\u00f1an",
-  "points_that_season": 57
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -39,7 +39,7 @@
   "player": "Fabian Schar",
   "club": "NEW",
   "cost": 1.5,
-  "fpl_id": 474,
+  "fpl_id": 446,
   "fpl_name": "Sch\u00e4r",
   "points_that_season": 123
  },
@@ -50,7 +50,7 @@
   "player": "James Tarkowski",
   "club": "EVE",
   "cost": 2.0,
-  "fpl_id": 291,
+  "fpl_id": 229,
   "fpl_name": "Tarkowski",
   "points_that_season": 117
  },
@@ -61,7 +61,7 @@
   "player": "Kenny Tete",
   "club": "FUL",
   "cost": 0.75,
-  "fpl_id": 322,
+  "fpl_id": 256,
   "fpl_name": "Tete",
   "points_that_season": 27
  },
@@ -72,9 +72,9 @@
   "player": "Alex Moreno",
   "club": "AVL",
   "cost": 0.25,
-  "fpl_id": 43,
-  "fpl_name": "Alex Moreno",
-  "points_that_season": 49
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -83,7 +83,7 @@
   "player": "Jack Grealish",
   "club": "MCI",
   "cost": 7.25,
-  "fpl_id": 419,
+  "fpl_id": 238,
   "fpl_name": "Grealish",
   "points_that_season": 50
  },
@@ -94,7 +94,7 @@
   "player": "Kaoru Mitoma",
   "club": "BHA",
   "cost": 8.25,
-  "fpl_id": 157,
+  "fpl_id": 121,
   "fpl_name": "Mitoma",
   "points_that_season": 74
  },
@@ -105,7 +105,7 @@
   "player": "Morgan Gibbs-White",
   "club": "NFO",
   "cost": 7.0,
-  "fpl_id": 515,
+  "fpl_id": 480,
   "fpl_name": "Gibbs-White",
   "points_that_season": 142
  },
@@ -116,7 +116,7 @@
   "player": "Emiliano Buendia",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 50,
+  "fpl_id": 41,
   "fpl_name": "Buend\u00eda",
   "points_that_season": 0
  },
@@ -127,9 +127,9 @@
   "player": "Hamed Traore",
   "club": "BOU",
   "cost": 0.25,
-  "fpl_id": 93,
-  "fpl_name": "H.Traor\u00e8",
-  "points_that_season": 3
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -138,7 +138,7 @@
   "player": "Cody Gakpo",
   "club": "LIV",
   "cost": 8.0,
-  "fpl_id": 384,
+  "fpl_id": 367,
   "fpl_name": "Gakpo",
   "points_that_season": 106
  },
@@ -149,8 +149,8 @@
   "player": "Carlton Morris",
   "club": "LUT",
   "cost": 2.75,
-  "fpl_id": 722,
-  "fpl_name": "Florentino",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -160,7 +160,7 @@
   "player": "Bryan Mbeumo",
   "club": "BRE",
   "cost": 5.75,
-  "fpl_id": 119,
+  "fpl_id": 427,
   "fpl_name": "Mbeumo",
   "points_that_season": 127
  },
@@ -182,7 +182,7 @@
   "player": "Robert Sanchez",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 220,
+  "fpl_id": 140,
   "fpl_name": "S\u00e1nchez",
   "points_that_season": 59
  },
@@ -193,7 +193,7 @@
   "player": "Luke Shaw",
   "club": "MUN",
   "cost": 4.5,
-  "fpl_id": 443,
+  "fpl_id": 423,
   "fpl_name": "Shaw",
   "points_that_season": 31
  },
@@ -204,9 +204,9 @@
   "player": "Aaron Wan-Bissaka",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 610,
-  "fpl_name": "Wan-Bissaka",
-  "points_that_season": 47
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -215,9 +215,9 @@
   "player": "Jordan Beyer",
   "club": "BUR",
   "cost": 0.25,
-  "fpl_id": 194,
-  "fpl_name": "Jordan",
-  "points_that_season": 30
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -226,7 +226,7 @@
   "player": "Matty Cash",
   "club": "AVL",
   "cost": 0.25,
-  "fpl_id": 36,
+  "fpl_id": 32,
   "fpl_name": "Cash",
   "points_that_season": 64
  },
@@ -248,7 +248,7 @@
   "player": "Bukayo Saka",
   "club": "ARS",
   "cost": 17.5,
-  "fpl_id": 16,
+  "fpl_id": 12,
   "fpl_name": "Saka",
   "points_that_season": 226
  },
@@ -259,9 +259,9 @@
   "player": "Mykhailo Mudryk",
   "club": "CHE",
   "cost": 6.0,
-  "fpl_id": 245,
-  "fpl_name": "Mudryk",
-  "points_that_season": 94
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -270,7 +270,7 @@
   "player": "Youri Tielemans",
   "club": "AVL",
   "cost": 0.25,
-  "fpl_id": 48,
+  "fpl_id": 43,
   "fpl_name": "Tielemans",
   "points_that_season": 77
  },
@@ -281,8 +281,8 @@
   "player": "Pablo Sarabia",
   "club": "WOL",
   "cost": 0.0,
-  "fpl_id": 785,
-  "fpl_name": "Pablo",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -292,7 +292,7 @@
   "player": "Justin Kluivert",
   "club": "NFO",
   "cost": 0.25,
-  "fpl_id": 81,
+  "fpl_id": 70,
   "fpl_name": "Kluivert",
   "points_that_season": 100
  },
@@ -303,7 +303,7 @@
   "player": "Gabriel Jesus",
   "club": "ARS",
   "cost": 12.5,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 149
  },
@@ -314,9 +314,9 @@
   "player": "Rasmus Hojlund",
   "club": "MUN",
   "cost": 8.0,
-  "fpl_id": 465,
-  "fpl_name": "H\u00f8jlund",
-  "points_that_season": 112
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -325,7 +325,7 @@
   "player": "Matheus Franca",
   "club": "CRY",
   "cost": 0.0,
-  "fpl_id": 279,
+  "fpl_id": 217,
   "fpl_name": "M.Fran\u00e7a",
   "points_that_season": 16
  },
@@ -336,7 +336,7 @@
   "player": "James Shea",
   "club": "LUT",
   "cost": 0.0,
-  "fpl_id": 225,
+  "fpl_id": 142,
   "fpl_name": "James",
   "points_that_season": 11
  },
@@ -347,9 +347,9 @@
   "player": "Neto",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 66,
+  "fpl_id": 156,
   "fpl_name": "Neto",
-  "points_that_season": 110
+  "points_that_season": 86
  },
  {
   "season": "2023-24",
@@ -369,7 +369,7 @@
   "player": "Milos Kerkez",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 371,
+  "fpl_id": 358,
   "fpl_name": "Kerkez",
   "points_that_season": 59
  },
@@ -380,7 +380,7 @@
   "player": "Cristian Romero",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 569,
+  "fpl_id": 500,
   "fpl_name": "Romero",
   "points_that_season": 107
  },
@@ -402,7 +402,7 @@
   "player": "Rico Lewis",
   "club": "MCI",
   "cost": 0.0,
-  "fpl_id": 410,
+  "fpl_id": 395,
   "fpl_name": "Lewis",
   "points_that_season": 52
  },
@@ -413,7 +413,7 @@
   "player": "Pascal Gross",
   "club": "BHA",
   "cost": 5.5,
-  "fpl_id": 783,
+  "fpl_id": 124,
   "fpl_name": "Gro\u00df",
   "points_that_season": 153
  },
@@ -424,9 +424,9 @@
   "player": "Jadon Sancho",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 456,
-  "fpl_name": "Sancho",
-  "points_that_season": 3
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -446,7 +446,7 @@
   "player": "David Brooks",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 86,
+  "fpl_id": 74,
   "fpl_name": "Brooks",
   "points_that_season": 23
  },
@@ -457,7 +457,7 @@
   "player": "Tino Livramento",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 477,
+  "fpl_id": 450,
   "fpl_name": "Livramento",
   "points_that_season": 45
  },
@@ -479,9 +479,9 @@
   "player": "Mohamed Salah",
   "club": "LIV",
   "cost": 29.0,
-  "fpl_id": 381,
-  "fpl_name": "M.Salah",
-  "points_that_season": 211
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -490,8 +490,8 @@
   "player": "Diogo Jota",
   "club": "LIV",
   "cost": 5.5,
-  "fpl_id": 518,
-  "fpl_name": "Jota",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -501,9 +501,9 @@
   "player": "Lukas Fabianski",
   "club": "WHU",
   "cost": 0.25,
-  "fpl_id": 738,
-  "fpl_name": "Fabianski",
-  "points_that_season": 24
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -512,7 +512,7 @@
   "player": "Vicario",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 565,
+  "fpl_id": 494,
   "fpl_name": "Vicario",
   "points_that_season": 112
  },
@@ -523,9 +523,9 @@
   "player": "Kieran Trippier",
   "club": "NEW",
   "cost": 12.0,
-  "fpl_id": 478,
-  "fpl_name": "Trippier",
-  "points_that_season": 111
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -545,7 +545,7 @@
   "player": "Felipe",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 511,
+  "fpl_id": 470,
   "fpl_name": "Morato",
   "points_that_season": null
  },
@@ -556,9 +556,9 @@
   "player": "Manuel Akanji",
   "club": "MCI",
   "cost": 0.0,
-  "fpl_id": 404,
-  "fpl_name": "Akanji",
-  "points_that_season": 112
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -567,7 +567,7 @@
   "player": "Nathan Collins",
   "club": "BRE",
   "cost": 0.0,
-  "fpl_id": 106,
+  "fpl_id": 84,
   "fpl_name": "Collins",
   "points_that_season": 84
  },
@@ -578,9 +578,9 @@
   "player": "Andreas Pereira",
   "club": "FUL",
   "cost": 2.0,
-  "fpl_id": 327,
-  "fpl_name": "Andreas",
-  "points_that_season": 127
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -589,7 +589,7 @@
   "player": "Rodri",
   "club": "MCI",
   "cost": 1.5,
-  "fpl_id": 421,
+  "fpl_id": 402,
   "fpl_name": "Rodrigo",
   "points_that_season": 159
  },
@@ -600,9 +600,9 @@
   "player": "Philip Billing",
   "club": "BOU",
   "cost": 0.25,
-  "fpl_id": 89,
-  "fpl_name": "Philip",
-  "points_that_season": 60
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -611,7 +611,7 @@
   "player": "Alejandro Garnacho",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 453,
+  "fpl_id": 160,
   "fpl_name": "Garnacho",
   "points_that_season": 131
  },
@@ -622,7 +622,7 @@
   "player": "Abdoulaye Doucoure",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 268,
+  "fpl_id": 218,
   "fpl_name": "Doucour\u00e9",
   "points_that_season": 21
  },
@@ -633,9 +633,9 @@
   "player": "Christopher Nkunku",
   "club": "CHE",
   "cost": 10.5,
-  "fpl_id": 240,
-  "fpl_name": "Nkunku",
-  "points_that_season": 29
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -644,9 +644,9 @@
   "player": "Julio Enciso",
   "club": "BHA",
   "cost": 1.75,
-  "fpl_id": 161,
-  "fpl_name": "Enciso",
-  "points_that_season": 20
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -655,7 +655,7 @@
   "player": "Dominic Calvert-Lewin",
   "club": "EVE",
   "cost": 6.0,
-  "fpl_id": 691,
+  "fpl_id": 346,
   "fpl_name": "Calvert-Lewin",
   "points_that_season": 101
  },
@@ -666,7 +666,7 @@
   "player": "Nick Pope",
   "club": "NEW",
   "cost": 2.0,
-  "fpl_id": 469,
+  "fpl_id": 442,
   "fpl_name": "Pope",
   "points_that_season": 57
  },
@@ -677,8 +677,8 @@
   "player": "Martin Dubravka",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 470,
-  "fpl_name": "D\u00fabravka",
+  "fpl_id": 497,
+  "fpl_name": "Dubravka",
   "points_that_season": 75
  },
  {
@@ -688,7 +688,7 @@
   "player": "Ben White",
   "club": "ARS",
   "cost": 3.0,
-  "fpl_id": 11,
+  "fpl_id": 10,
   "fpl_name": "White",
   "points_that_season": 182
  },
@@ -699,9 +699,9 @@
   "player": "John Stones",
   "club": "MCI",
   "cost": 3.5,
-  "fpl_id": 409,
-  "fpl_name": "Stones",
-  "points_that_season": 53
+  "fpl_id": 468,
+  "fpl_name": "John",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -710,7 +710,7 @@
   "player": "Virgil Van Dijk",
   "club": "LIV",
   "cost": 3.5,
-  "fpl_id": 373,
+  "fpl_id": 356,
   "fpl_name": "Virgil",
   "points_that_season": 117
  },
@@ -732,7 +732,7 @@
   "player": "Diogo Dalot",
   "club": "MUN",
   "cost": 1.0,
-  "fpl_id": 440,
+  "fpl_id": 417,
   "fpl_name": "Dalot",
   "points_that_season": 111
  },
@@ -743,7 +743,7 @@
   "player": "Martin Odegaard",
   "club": "ARS",
   "cost": 10.0,
-  "fpl_id": 17,
+  "fpl_id": 15,
   "fpl_name": "\u00d8degaard",
   "points_that_season": 186
  },
@@ -754,9 +754,9 @@
   "player": "Leandro Trossard",
   "club": "ARS",
   "cost": 6.0,
-  "fpl_id": 20,
-  "fpl_name": "Trossard",
-  "points_that_season": 138
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -765,7 +765,7 @@
   "player": "Bruno Guimaraes",
   "club": "NEW",
   "cost": 1.75,
-  "fpl_id": 488,
+  "fpl_id": 452,
   "fpl_name": "Bruno G.",
   "points_that_season": 153
  },
@@ -776,7 +776,7 @@
   "player": "Mateo Kovacic",
   "club": "MCI",
   "cost": 1.0,
-  "fpl_id": 422,
+  "fpl_id": 406,
   "fpl_name": "Kova\u010di\u0107",
   "points_that_season": 59
  },
@@ -787,7 +787,7 @@
   "player": "John McGinn",
   "club": "AVL",
   "cost": 1.0,
-  "fpl_id": 54,
+  "fpl_id": 45,
   "fpl_name": "McGinn",
   "points_that_season": 119
  },
@@ -798,9 +798,9 @@
   "player": "Luis Diaz",
   "club": "LIV",
   "cost": 7.5,
-  "fpl_id": 383,
-  "fpl_name": "Luis D\u00edaz",
-  "points_that_season": 142
+  "fpl_id": 163,
+  "fpl_name": "D.Essugo",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -809,7 +809,7 @@
   "player": "Evan Ferguson",
   "club": "BHA",
   "cost": 2.75,
-  "fpl_id": 179,
+  "fpl_id": 139,
   "fpl_name": "Ferguson",
   "points_that_season": 69
  },
@@ -820,7 +820,7 @@
   "player": "Callum Wilson",
   "club": "NEW",
   "cost": 3.0,
-  "fpl_id": 671,
+  "fpl_id": 108,
   "fpl_name": "Wilson",
   "points_that_season": 69
  },
@@ -842,9 +842,9 @@
   "player": "Sam Johnstone",
   "club": "CRY",
   "cost": 0.0,
-  "fpl_id": 627,
-  "fpl_name": "Johnstone",
-  "points_that_season": 68
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -853,7 +853,7 @@
   "player": "Reece James",
   "club": "CHE",
   "cost": 8.25,
-  "fpl_id": 225,
+  "fpl_id": 142,
   "fpl_name": "James",
   "points_that_season": 11
  },
@@ -864,7 +864,7 @@
   "player": "Ruben Dias",
   "club": "MCI",
   "cost": 2.75,
-  "fpl_id": 408,
+  "fpl_id": 390,
   "fpl_name": "R\u00faben",
   "points_that_season": 88
  },
@@ -875,7 +875,7 @@
   "player": "Ethan Pinnock",
   "club": "BRE",
   "cost": 1.75,
-  "fpl_id": 111,
+  "fpl_id": 91,
   "fpl_name": "Pinnock",
   "points_that_season": 77
  },
@@ -886,9 +886,9 @@
   "player": "Joel Veltman",
   "club": "BHA",
   "cost": 0.0,
-  "fpl_id": 152,
-  "fpl_name": "Veltman",
-  "points_that_season": 49
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -897,9 +897,9 @@
   "player": "Nathan Ake",
   "club": "MCI",
   "cost": 0.0,
-  "fpl_id": 405,
-  "fpl_name": "Ak\u00e9",
-  "points_that_season": 99
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -908,9 +908,9 @@
   "player": "Kevin De Bruyne",
   "club": "MCI",
   "cost": 20.5,
-  "fpl_id": 416,
-  "fpl_name": "Bernardo",
-  "points_that_season": 141
+  "fpl_id": 403,
+  "fpl_name": "Savinho",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -919,7 +919,7 @@
   "player": "Harry Wilson",
   "club": "FUL",
   "cost": 3.75,
-  "fpl_id": 329,
+  "fpl_id": 260,
   "fpl_name": "Wilson",
   "points_that_season": 94
  },
@@ -930,9 +930,9 @@
   "player": "James Ward-Prowse",
   "club": "WHU",
   "cost": 0.25,
-  "fpl_id": 614,
-  "fpl_name": "Ward-Prowse",
-  "points_that_season": 146
+  "fpl_id": 142,
+  "fpl_name": "James",
+  "points_that_season": 11
  },
  {
   "season": "2023-24",
@@ -952,9 +952,9 @@
   "player": "Tomas Soucek",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 613,
-  "fpl_name": "Sou\u010dek",
-  "points_that_season": 116
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -963,7 +963,7 @@
   "player": "Nicolas Jackson",
   "club": "CHE",
   "cost": 9.0,
-  "fpl_id": 251,
+  "fpl_id": 166,
   "fpl_name": "N.Jackson",
   "points_that_season": 142
  },
@@ -974,7 +974,7 @@
   "player": "Richarlison",
   "club": "TOT",
   "cost": 3.75,
-  "fpl_id": 597,
+  "fpl_id": 527,
   "fpl_name": "Richarlison",
   "points_that_season": 122
  },
@@ -985,9 +985,9 @@
   "player": "Oliver McBurnie",
   "club": "SHU",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 295,
+  "fpl_name": "McBurnie",
+  "points_that_season": 66
  },
  {
   "season": "2023-24",
@@ -996,9 +996,9 @@
   "player": "Andre Onana",
   "club": "MUN",
   "cost": 1.5,
-  "fpl_id": 432,
+  "fpl_id": 48,
   "fpl_name": "Onana",
-  "points_that_season": 133
+  "points_that_season": 66
  },
  {
   "season": "2023-24",
@@ -1007,9 +1007,9 @@
   "player": "Ederson",
   "club": "MCI",
   "cost": 0.75,
-  "fpl_id": 399,
-  "fpl_name": "Ederson M.",
-  "points_that_season": 112
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1018,7 +1018,7 @@
   "player": "Andrew Robertson",
   "club": "LIV",
   "cost": 5.0,
-  "fpl_id": 372,
+  "fpl_id": 502,
   "fpl_name": "Robertson",
   "points_that_season": 76
  },
@@ -1029,7 +1029,7 @@
   "player": "Josko Gvardiol",
   "club": "MCI",
   "cost": 3.25,
-  "fpl_id": 403,
+  "fpl_id": 391,
   "fpl_name": "Gvardiol",
   "points_that_season": 123
  },
@@ -1040,7 +1040,7 @@
   "player": "Lisandro Martinez",
   "club": "MUN",
   "cost": 1.75,
-  "fpl_id": 437,
+  "fpl_id": 419,
   "fpl_name": "Martinez",
   "points_that_season": 15
  },
@@ -1051,7 +1051,7 @@
   "player": "Pedro Porro",
   "club": "TOT",
   "cost": 2.25,
-  "fpl_id": 568,
+  "fpl_id": 499,
   "fpl_name": "Pedro Porro",
   "points_that_season": 136
  },
@@ -1062,9 +1062,9 @@
   "player": "Oleksandr Zinchenko",
   "club": "ARS",
   "cost": 2.0,
-  "fpl_id": 12,
-  "fpl_name": "Zinchenko",
-  "points_that_season": 104
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1073,9 +1073,9 @@
   "player": "Jarrod Bowen",
   "club": "WHU",
   "cost": 5.75,
-  "fpl_id": 624,
-  "fpl_name": "Bowen",
-  "points_that_season": 182
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1084,7 +1084,7 @@
   "player": "Dominik Szoboszlai",
   "club": "LIV",
   "cost": 4.75,
-  "fpl_id": 387,
+  "fpl_id": 368,
   "fpl_name": "Szoboszlai",
   "points_that_season": 99
  },
@@ -1095,7 +1095,7 @@
   "player": "Phil Foden",
   "club": "MCI",
   "cost": 7.0,
-  "fpl_id": 414,
+  "fpl_id": 398,
   "fpl_name": "Foden",
   "points_that_season": 230
  },
@@ -1117,7 +1117,7 @@
   "player": "Sandro Tonali",
   "club": "NEW",
   "cost": 1.25,
-  "fpl_id": 491,
+  "fpl_id": 455,
   "fpl_name": "Tonali",
   "points_that_season": 16
  },
@@ -1128,7 +1128,7 @@
   "player": "Kai Havertz",
   "club": "ARS",
   "cost": 2.75,
-  "fpl_id": 30,
+  "fpl_id": 26,
   "fpl_name": "Havertz",
   "points_that_season": 180
  },
@@ -1139,7 +1139,7 @@
   "player": "Joao Pedro",
   "club": "BHA",
   "cost": 2.0,
-  "fpl_id": 568,
+  "fpl_id": 499,
   "fpl_name": "Pedro Porro",
   "points_that_season": 136
  },
@@ -1150,7 +1150,7 @@
   "player": "Taiwo Awoniyi",
   "club": "NFO",
   "cost": 1.0,
-  "fpl_id": 527,
+  "fpl_id": 492,
   "fpl_name": "Awoniyi",
   "points_that_season": 67
  },
@@ -1161,7 +1161,7 @@
   "player": "Jason Steele",
   "club": "BHA",
   "cost": null,
-  "fpl_id": 138,
+  "fpl_id": 111,
   "fpl_name": "Steele",
   "points_that_season": 42
  },
@@ -1172,7 +1172,7 @@
   "player": "Bart Verbruggen",
   "club": "BHA",
   "cost": null,
-  "fpl_id": 139,
+  "fpl_id": 109,
   "fpl_name": "Verbruggen",
   "points_that_season": 68
  },
@@ -1194,9 +1194,9 @@
   "player": "Max Lowe",
   "club": "SHU",
   "cost": null,
-  "fpl_id": 803,
-  "fpl_name": "Sharman-Lowe",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1227,9 +1227,9 @@
   "player": "Hugo Bueno",
   "club": "WOL",
   "cost": null,
-  "fpl_id": 633,
-  "fpl_name": "H.Bueno",
-  "points_that_season": 29
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1238,7 +1238,7 @@
   "player": "Kalvin Phillips",
   "club": "MCI",
   "cost": null,
-  "fpl_id": 429,
+  "fpl_id": 408,
   "fpl_name": "Phillips",
   "points_that_season": 10
  },
@@ -1249,7 +1249,7 @@
   "player": "Jefferson Lerma",
   "club": "CRY",
   "cost": null,
-  "fpl_id": 272,
+  "fpl_id": 213,
   "fpl_name": "Lerma",
   "points_that_season": 64
  },
@@ -1260,7 +1260,7 @@
   "player": "Vitaly Janelt",
   "club": "BRF",
   "cost": null,
-  "fpl_id": 125,
+  "fpl_id": 98,
   "fpl_name": "Janelt",
   "points_that_season": 93
  },
@@ -1271,7 +1271,7 @@
   "player": "Elliot Anderson",
   "club": "NEW",
   "cost": null,
-  "fpl_id": 517,
+  "fpl_id": 481,
   "fpl_name": "Anderson",
   "points_that_season": 42
  },
@@ -1282,9 +1282,9 @@
   "player": "Odsonne Edouard",
   "club": "CRY",
   "cost": null,
-  "fpl_id": 285,
-  "fpl_name": "\u00c9douard",
-  "points_that_season": 79
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1293,7 +1293,7 @@
   "player": "Matheus Cunha",
   "club": "WOL",
   "cost": null,
-  "fpl_id": 407,
+  "fpl_id": 389,
   "fpl_name": "Matheus N.",
   "points_that_season": 32
  },
@@ -1315,7 +1315,7 @@
   "player": "Eddie Nketiah",
   "club": "ARS",
   "cost": null,
-  "fpl_id": 284,
+  "fpl_id": 224,
   "fpl_name": "Nketiah",
   "points_that_season": 71
  },
@@ -1326,7 +1326,7 @@
   "player": "Jordan Pickford",
   "club": "EVE",
   "cost": 0.5,
-  "fpl_id": 287,
+  "fpl_id": 226,
   "fpl_name": "Pickford",
   "points_that_season": 153
  },
@@ -1348,9 +1348,9 @@
   "player": "Ben Mee",
   "club": "BRE",
   "cost": 3.25,
-  "fpl_id": 435,
-  "fpl_name": "Mee",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1359,7 +1359,7 @@
   "player": "Gabriel Magalhaes",
   "club": "ARS",
   "cost": 2.0,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 149
  },
@@ -1370,7 +1370,7 @@
   "player": "Tyrone Mings",
   "club": "AVL",
   "cost": 0.5,
-  "fpl_id": 40,
+  "fpl_id": 33,
   "fpl_name": "Mings",
   "points_that_season": 0
  },
@@ -1403,7 +1403,7 @@
   "player": "Declan Rice",
   "club": "ARS",
   "cost": 2.5,
-  "fpl_id": 21,
+  "fpl_id": 13,
   "fpl_name": "Rice",
   "points_that_season": 165
  },
@@ -1414,9 +1414,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 3.5,
-  "fpl_id": 416,
-  "fpl_name": "Bernardo",
-  "points_that_season": 141
+  "fpl_id": 470,
+  "fpl_name": "Morato",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1425,7 +1425,7 @@
   "player": "Enzo Fernandez",
   "club": "CHE",
   "cost": 2.25,
-  "fpl_id": 237,
+  "fpl_id": 155,
   "fpl_name": "Enzo",
   "points_that_season": 77
  },
@@ -1436,9 +1436,9 @@
   "player": "Casemiro",
   "club": "MUN",
   "cost": 0.75,
-  "fpl_id": 457,
-  "fpl_name": "Casemiro",
-  "points_that_season": 58
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1458,9 +1458,9 @@
   "player": "Darwin Nunez",
   "club": "LIV",
   "cost": 12.75,
-  "fpl_id": 397,
-  "fpl_name": "Darwin",
-  "points_that_season": 132
+  "fpl_id": 309,
+  "fpl_name": "N\u00fa\u00f1ez",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1469,7 +1469,7 @@
   "player": "Marcus Rashford",
   "club": "MUN",
   "cost": 16.0,
-  "fpl_id": 451,
+  "fpl_id": 429,
   "fpl_name": "Rashford",
   "points_that_season": 108
  },
@@ -1480,7 +1480,7 @@
   "player": "Mohammad Kudus",
   "club": "BHA",
   "cost": 0.5,
-  "fpl_id": 582,
+  "fpl_id": 512,
   "fpl_name": "Kudus",
   "points_that_season": 137
  },
@@ -1491,7 +1491,7 @@
   "player": "James Trafford",
   "club": "BUR",
   "cost": 0.75,
-  "fpl_id": 182,
+  "fpl_id": 385,
   "fpl_name": "Trafford",
   "points_that_season": 70
  },
@@ -1502,9 +1502,9 @@
   "player": "Julian Alvarez",
   "club": "MCI",
   "cost": 4.75,
-  "fpl_id": 616,
-  "fpl_name": "\u00c1lvarez",
-  "points_that_season": 62
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1513,7 +1513,7 @@
   "player": "Sven Botman",
   "club": "NEW",
   "cost": 2.0,
-  "fpl_id": 475,
+  "fpl_id": 447,
   "fpl_name": "Botman",
   "points_that_season": 51
  },
@@ -1524,7 +1524,7 @@
   "player": "Calvin Bassey",
   "club": "FUL",
   "cost": 0.0,
-  "fpl_id": 318,
+  "fpl_id": 257,
   "fpl_name": "Bassey",
   "points_that_season": 66
  },
@@ -1535,9 +1535,9 @@
   "player": "Nayef Aguerd",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 607,
-  "fpl_name": "N.Aguerd",
-  "points_that_season": 36
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1546,7 +1546,7 @@
   "player": "Lewis Dunk",
   "club": "BHA",
   "cost": 0.0,
-  "fpl_id": 146,
+  "fpl_id": 116,
   "fpl_name": "Dunk",
   "points_that_season": 89
  },
@@ -1557,9 +1557,9 @@
   "player": "Aaron Ramsdale",
   "club": "ARS",
   "cost": 0.0,
-  "fpl_id": 674,
-  "fpl_name": "Ramsdale",
-  "points_that_season": 20
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1568,7 +1568,7 @@
   "player": "Gabriel Martinelli",
   "club": "ARS",
   "cost": 13.0,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 149
  },
@@ -1579,7 +1579,7 @@
   "player": "Alexis Mac Allister",
   "club": "LIV",
   "cost": 4.25,
-  "fpl_id": 386,
+  "fpl_id": 372,
   "fpl_name": "Mac Allister",
   "points_that_season": 109
  },
@@ -1590,7 +1590,7 @@
   "player": "Harvey Barnes",
   "club": "NEW",
   "cost": 4.25,
-  "fpl_id": 487,
+  "fpl_id": 453,
   "fpl_name": "Barnes",
   "points_that_season": 64
  },
@@ -1601,8 +1601,8 @@
   "player": "Lucas Paqueta",
   "club": "WHU",
   "cost": 1.25,
-  "fpl_id": 195,
-  "fpl_name": "Lucas Pires",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -1612,9 +1612,9 @@
   "player": "Douglas Luiz",
   "club": "AVL",
   "cost": 0.5,
-  "fpl_id": 699,
-  "fpl_name": "Douglas Luiz",
-  "points_that_season": 148
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1623,7 +1623,7 @@
   "player": "Ollie Watkins",
   "club": "AVL",
   "cost": 16.5,
-  "fpl_id": 64,
+  "fpl_id": 55,
   "fpl_name": "Watkins",
   "points_that_season": 228
  },
@@ -1656,7 +1656,7 @@
   "player": "Emiliano Martinez",
   "club": "AVL",
   "cost": 0.5,
-  "fpl_id": 32,
+  "fpl_id": 28,
   "fpl_name": "Martinez",
   "points_that_season": 115
  },
@@ -1678,9 +1678,9 @@
   "player": "Ibrahima Konate",
   "club": "LIV",
   "cost": 1.0,
-  "fpl_id": 374,
-  "fpl_name": "Konat\u00e9",
-  "points_that_season": 56
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1689,7 +1689,7 @@
   "player": "Antonee Robinson",
   "club": "FUL",
   "cost": 0.5,
-  "fpl_id": 316,
+  "fpl_id": 254,
   "fpl_name": "Robinson",
   "points_that_season": 104
  },
@@ -1700,7 +1700,7 @@
   "player": "Thiago Silva",
   "club": "CHE",
   "cost": 0.75,
-  "fpl_id": 136,
+  "fpl_id": 106,
   "fpl_name": "Thiago",
   "points_that_season": null
  },
@@ -1711,7 +1711,7 @@
   "player": "Rico Henry",
   "club": "BRE",
   "cost": 1.5,
-  "fpl_id": 109,
+  "fpl_id": 89,
   "fpl_name": "Henry",
   "points_that_season": 13
  },
@@ -1722,7 +1722,7 @@
   "player": "Michael Keane",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 295,
+  "fpl_id": 231,
   "fpl_name": "Keane",
   "points_that_season": 18
  },
@@ -1733,7 +1733,7 @@
   "player": "Dejan Kulusevski",
   "club": "TOT",
   "cost": 7.0,
-  "fpl_id": 583,
+  "fpl_id": 521,
   "fpl_name": "Kulusevski",
   "points_that_season": 130
  },
@@ -1744,7 +1744,7 @@
   "player": "James Maddison",
   "club": "TOT",
   "cost": 9.5,
-  "fpl_id": 581,
+  "fpl_id": 515,
   "fpl_name": "Maddison",
   "points_that_season": 117
  },
@@ -1755,7 +1755,7 @@
   "player": "Eberechi Eze",
   "club": "CRY",
   "cost": 6.5,
-  "fpl_id": 266,
+  "fpl_id": 14,
   "fpl_name": "Eze",
   "points_that_season": 136
  },
@@ -1766,7 +1766,7 @@
   "player": "Dwight McNeil",
   "club": "EVE",
   "cost": 0.5,
-  "fpl_id": 300,
+  "fpl_id": 241,
   "fpl_name": "McNeil",
   "points_that_season": 124
  },
@@ -1788,7 +1788,7 @@
   "player": "Alexander Isak",
   "club": "NEW",
   "cost": 14.25,
-  "fpl_id": 499,
+  "fpl_id": 379,
   "fpl_name": "Isak",
   "points_that_season": 172
  },
@@ -1799,7 +1799,7 @@
   "player": "Dominic Solanke",
   "club": "BOU",
   "cost": 5.75,
-  "fpl_id": 596,
+  "fpl_id": 526,
   "fpl_name": "Solanke",
   "points_that_season": 175
  },
@@ -1821,7 +1821,7 @@
   "player": "Alisson",
   "club": "LIV",
   "cost": 2.25,
-  "fpl_id": 366,
+  "fpl_id": 350,
   "fpl_name": "A.Becker",
   "points_that_season": 107
  },
@@ -1832,8 +1832,8 @@
   "player": "Adrian",
   "club": "LIV",
   "cost": 0.0,
-  "fpl_id": 176,
-  "fpl_name": "Mazilu",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -1843,9 +1843,9 @@
   "player": "Kyle Walker",
   "club": "MCI",
   "cost": 0.25,
-  "fpl_id": 187,
-  "fpl_name": "Walker",
-  "points_that_season": 123
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1854,7 +1854,7 @@
   "player": "Marc Guehi",
   "club": "CRY",
   "cost": 0.25,
-  "fpl_id": 260,
+  "fpl_id": 388,
   "fpl_name": "Gu\u00e9hi",
   "points_that_season": 66
  },
@@ -1865,7 +1865,7 @@
   "player": "Levi Colwill",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 227,
+  "fpl_id": 149,
   "fpl_name": "Colwill",
   "points_that_season": 65
  },
@@ -1876,7 +1876,7 @@
   "player": "Micky van de Ven",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 575,
+  "fpl_id": 503,
   "fpl_name": "Van de Ven",
   "points_that_season": 81
  },
@@ -1898,7 +1898,7 @@
   "player": "Christain Norgaard",
   "club": "BRE",
   "cost": 0.0,
-  "fpl_id": 24,
+  "fpl_id": 21,
   "fpl_name": "N\u00f8rgaard",
   "points_that_season": 74
  },
@@ -1909,7 +1909,7 @@
   "player": "Mois\u00e9s Caicedo",
   "club": "BHA",
   "cost": 0.0,
-  "fpl_id": 241,
+  "fpl_id": 159,
   "fpl_name": "Caicedo",
   "points_that_season": 84
  },
@@ -1920,9 +1920,9 @@
   "player": "Anthony Gordon",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 485,
-  "fpl_name": "Gordon",
-  "points_that_season": 183
+  "fpl_id": 105,
+  "fpl_name": "Anthony",
+  "points_that_season": 3
  },
  {
   "season": "2023-24",
@@ -1931,7 +1931,7 @@
   "player": "Amadou Onana",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 59,
+  "fpl_id": 48,
   "fpl_name": "Onana",
   "points_that_season": 66
  },
@@ -1942,7 +1942,7 @@
   "player": "Ryan Christie",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 87,
+  "fpl_id": 75,
   "fpl_name": "Christie",
   "points_that_season": 90
  },
@@ -1953,7 +1953,7 @@
   "player": "Erling Haaland",
   "club": "MCI",
   "cost": 29.75,
-  "fpl_id": 430,
+  "fpl_id": 411,
   "fpl_name": "Haaland",
   "points_that_season": 217
  },
@@ -1964,9 +1964,9 @@
   "player": "Son Heung-Min",
   "club": "TOT",
   "cost": 14.0,
-  "fpl_id": 579,
-  "fpl_name": "Son",
-  "points_that_season": 213
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1975,9 +1975,9 @@
   "player": "Antony",
   "club": "MUN",
   "cost": 3.5,
-  "fpl_id": 454,
-  "fpl_name": "Antony",
-  "points_that_season": 47
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -1986,7 +1986,7 @@
   "player": "Bernd Leno",
   "club": "FUL",
   "cost": 1.0,
-  "fpl_id": 314,
+  "fpl_id": 250,
   "fpl_name": "Leno",
   "points_that_season": 133
  },
@@ -1997,7 +1997,7 @@
   "player": "Mathias Jensen",
   "club": "BRE",
   "cost": 0.75,
-  "fpl_id": 126,
+  "fpl_id": 97,
   "fpl_name": "Jensen",
   "points_that_season": 98
  },
@@ -2008,7 +2008,7 @@
   "player": "Dan Burn",
   "club": "NEW",
   "cost": 1.0,
-  "fpl_id": 476,
+  "fpl_id": 448,
   "fpl_name": "Burn",
   "points_that_season": 97
  },
@@ -2019,7 +2019,7 @@
   "player": "Jurrien TImber",
   "club": "ARS",
   "cost": 1.5,
-  "fpl_id": 8,
+  "fpl_id": 5,
   "fpl_name": "J.Timber",
   "points_that_season": 0
  },
@@ -2030,7 +2030,7 @@
   "player": "Joachim Andersen",
   "club": "CRY",
   "cost": 0.5,
-  "fpl_id": 317,
+  "fpl_id": 253,
   "fpl_name": "Andersen",
   "points_that_season": 121
  },
@@ -2041,9 +2041,9 @@
   "player": "Max Kilman",
   "club": "WOL",
   "cost": 0.5,
-  "fpl_id": 605,
-  "fpl_name": "Kilman",
-  "points_that_season": 82
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -2052,7 +2052,7 @@
   "player": "Pau Torres",
   "club": "AVL",
   "cost": 0.75,
-  "fpl_id": 41,
+  "fpl_id": 34,
   "fpl_name": "Pau",
   "points_that_season": 85
  },
@@ -2063,7 +2063,7 @@
   "player": "Bruno Fernandes",
   "club": "MUN",
   "cost": 25.0,
-  "fpl_id": 449,
+  "fpl_id": 426,
   "fpl_name": "B.Fernandes",
   "points_that_season": 166
  },
@@ -2074,7 +2074,7 @@
   "player": "Alex Iwobi",
   "club": "EVE",
   "cost": 4.0,
-  "fpl_id": 324,
+  "fpl_id": 261,
   "fpl_name": "Iwobi",
   "points_that_season": 102
  },
@@ -2085,7 +2085,7 @@
   "player": "Mason Mount",
   "club": "MUN",
   "cost": 7.0,
-  "fpl_id": 455,
+  "fpl_id": 430,
   "fpl_name": "Mount",
   "points_that_season": 23
  },
@@ -2096,9 +2096,9 @@
   "player": "Solly March",
   "club": "BHA",
   "cost": 2.5,
-  "fpl_id": 159,
-  "fpl_name": "March",
-  "points_that_season": 39
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -2107,7 +2107,7 @@
   "player": "Joelinton",
   "club": "NEW",
   "cost": 0.5,
-  "fpl_id": 490,
+  "fpl_id": 458,
   "fpl_name": "Joelinton",
   "points_that_season": 45
  },
@@ -2118,7 +2118,7 @@
   "player": "Brennan Johnson",
   "club": "NFO",
   "cost": 2.5,
-  "fpl_id": 580,
+  "fpl_id": 209,
   "fpl_name": "Johnson",
   "points_that_season": 131
  },
@@ -2129,7 +2129,7 @@
   "player": "Dango Outtara",
   "club": "BOU",
   "cost": 2.5,
-  "fpl_id": 83,
+  "fpl_id": 95,
   "fpl_name": "O.Dango",
   "points_that_season": 56
  },
@@ -2140,7 +2140,7 @@
   "player": "Leon Bailey",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 49,
+  "fpl_id": 44,
   "fpl_name": "Bailey",
   "points_that_season": 148
  },
@@ -2151,9 +2151,9 @@
   "player": "Areola",
   "club": "WHU",
   "cost": 0.75,
-  "fpl_id": 600,
-  "fpl_name": "Areola",
-  "points_that_season": 69
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2162,7 +2162,7 @@
   "player": "Henderson",
   "club": "CRY",
   "cost": 0.25,
-  "fpl_id": 253,
+  "fpl_id": 198,
   "fpl_name": "Henderson",
   "points_that_season": 135
  },
@@ -2173,7 +2173,7 @@
   "player": "Dunk",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 146,
+  "fpl_id": 116,
   "fpl_name": "Dunk",
   "points_that_season": 44
  },
@@ -2184,7 +2184,7 @@
   "player": "Senesi",
   "club": "BOU",
   "cost": 0.75,
-  "fpl_id": 72,
+  "fpl_id": 498,
   "fpl_name": "Senesi",
   "points_that_season": 31
  },
@@ -2195,7 +2195,7 @@
   "player": "Gusto",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 228,
+  "fpl_id": 144,
   "fpl_name": "Gusto",
   "points_that_season": 60
  },
@@ -2206,7 +2206,7 @@
   "player": "Tsimikas",
   "club": "LIV",
   "cost": 0.25,
-  "fpl_id": 377,
+  "fpl_id": 364,
   "fpl_name": "Tsimikas",
   "points_that_season": 43
  },
@@ -2217,7 +2217,7 @@
   "player": "Livramento",
   "club": "NEW",
   "cost": 1.0,
-  "fpl_id": 477,
+  "fpl_id": 450,
   "fpl_name": "Livramento",
   "points_that_season": 105
  },
@@ -2228,7 +2228,7 @@
   "player": "Foden",
   "club": "MCI",
   "cost": 15.25,
-  "fpl_id": 414,
+  "fpl_id": 398,
   "fpl_name": "Foden",
   "points_that_season": 105
  },
@@ -2239,9 +2239,9 @@
   "player": "Jota",
   "club": "LIV",
   "cost": 5.5,
-  "fpl_id": 518,
-  "fpl_name": "Jota",
-  "points_that_season": 52
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2250,7 +2250,7 @@
   "player": "Mbeumo",
   "club": "BRE",
   "cost": 4.5,
-  "fpl_id": 119,
+  "fpl_id": 427,
   "fpl_name": "Mbeumo",
   "points_that_season": 236
  },
@@ -2272,7 +2272,7 @@
   "player": "Rogers",
   "club": "AVL",
   "cost": 0.25,
-  "fpl_id": 47,
+  "fpl_id": 40,
   "fpl_name": "Rogers",
   "points_that_season": 161
  },
@@ -2283,7 +2283,7 @@
   "player": "Isak",
   "club": "NEW",
   "cost": 19.0,
-  "fpl_id": 499,
+  "fpl_id": 379,
   "fpl_name": "Isak",
   "points_that_season": 211
  },
@@ -2294,9 +2294,9 @@
   "player": "Edouard",
   "club": "CRY",
   "cost": 0.5,
-  "fpl_id": 285,
-  "fpl_name": "\u00c9douard",
-  "points_that_season": 7
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2305,7 +2305,7 @@
   "player": "Duran",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 301,
+  "fpl_id": 243,
   "fpl_name": "Alcaraz",
   "points_that_season": 44
  },
@@ -2316,7 +2316,7 @@
   "player": "Leno",
   "club": "FUL",
   "cost": 1.0,
-  "fpl_id": 314,
+  "fpl_id": 250,
   "fpl_name": "Leno",
   "points_that_season": 115
  },
@@ -2327,7 +2327,7 @@
   "player": "Alisson",
   "club": "LIV",
   "cost": 1.5,
-  "fpl_id": 366,
+  "fpl_id": 350,
   "fpl_name": "A.Becker",
   "points_that_season": 112
  },
@@ -2338,7 +2338,7 @@
   "player": "Mykolenko",
   "club": "EVE",
   "cost": 0.75,
-  "fpl_id": 292,
+  "fpl_id": 233,
   "fpl_name": "Mykolenko",
   "points_that_season": 121
  },
@@ -2349,9 +2349,9 @@
   "player": "Ak\u00e9",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 405,
-  "fpl_name": "Ak\u00e9",
-  "points_that_season": 25
+  "fpl_id": 232,
+  "fpl_name": "O'Brien",
+  "points_that_season": 65
  },
  {
   "season": "2024-25",
@@ -2360,7 +2360,7 @@
   "player": "Castagne",
   "club": "FUL",
   "cost": 0.5,
-  "fpl_id": 319,
+  "fpl_id": 258,
   "fpl_name": "Castagne",
   "points_that_season": 46
  },
@@ -2371,7 +2371,7 @@
   "player": "Andersen",
   "club": "CRY",
   "cost": 2.0,
-  "fpl_id": 317,
+  "fpl_id": 253,
   "fpl_name": "Andersen",
   "points_that_season": 51
  },
@@ -2393,9 +2393,9 @@
   "player": "Gordon",
   "club": "NEW",
   "cost": 9.25,
-  "fpl_id": 485,
-  "fpl_name": "Gordon",
-  "points_that_season": 124
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2404,9 +2404,9 @@
   "player": "Paqueta",
   "club": "WHU",
   "cost": 2.75,
-  "fpl_id": 612,
-  "fpl_name": "L.Paquet\u00e1",
-  "points_that_season": 80
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2415,7 +2415,7 @@
   "player": "Doku",
   "club": "MCI",
   "cost": 5.0,
-  "fpl_id": 418,
+  "fpl_id": 400,
   "fpl_name": "Doku",
   "points_that_season": 88
  },
@@ -2426,7 +2426,7 @@
   "player": "Minteh",
   "club": "BRI",
   "cost": 0.5,
-  "fpl_id": 160,
+  "fpl_id": 122,
   "fpl_name": "Minteh",
   "points_that_season": 102
  },
@@ -2448,7 +2448,7 @@
   "player": "Mateta",
   "club": "CRY",
   "cost": 11.5,
-  "fpl_id": 283,
+  "fpl_id": 223,
   "fpl_name": "Mateta",
   "points_that_season": 150
  },
@@ -2459,7 +2459,7 @@
   "player": "Muniz",
   "club": "FUL",
   "cost": 7.0,
-  "fpl_id": 338,
+  "fpl_id": 271,
   "fpl_name": "Muniz",
   "points_that_season": 86
  },
@@ -2470,7 +2470,7 @@
   "player": "Wissa",
   "club": "BRE",
   "cost": 5.5,
-  "fpl_id": 135,
+  "fpl_id": 464,
   "fpl_name": "Wissa",
   "points_that_season": 185
  },
@@ -2481,9 +2481,9 @@
   "player": "Jose S\u00e1",
   "club": "WOL",
   "cost": 1.0,
-  "fpl_id": 628,
-  "fpl_name": "Jos\u00e9 S\u00e1",
-  "points_that_season": 93
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2503,7 +2503,7 @@
   "player": "Gabriel",
   "club": "ARS",
   "cost": 4.25,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 117
  },
@@ -2514,7 +2514,7 @@
   "player": "L. Martinez",
   "club": "MUN",
   "cost": 0.5,
-  "fpl_id": 437,
+  "fpl_id": 419,
   "fpl_name": "Martinez",
   "points_that_season": 68
  },
@@ -2525,9 +2525,9 @@
   "player": "Estupinan",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 147,
-  "fpl_name": "Estupi\u00f1an",
-  "points_that_season": 63
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2536,7 +2536,7 @@
   "player": "Riad",
   "club": "CRY",
   "cost": 0.0,
-  "fpl_id": 262,
+  "fpl_id": 206,
   "fpl_name": "Chadi Riad",
   "points_that_season": 1
  },
@@ -2547,7 +2547,7 @@
   "player": "Shaw",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 443,
+  "fpl_id": 423,
   "fpl_name": "Shaw",
   "points_that_season": 5
  },
@@ -2558,9 +2558,9 @@
   "player": "Salah",
   "club": "LIV",
   "cost": 19.75,
-  "fpl_id": 381,
-  "fpl_name": "M.Salah",
-  "points_that_season": 344
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2569,9 +2569,9 @@
   "player": "Hwang Hee Chan",
   "club": "WOL",
   "cost": 6.0,
-  "fpl_id": 642,
-  "fpl_name": "Hee Chan",
-  "points_that_season": 37
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2580,7 +2580,7 @@
   "player": "Bobb",
   "club": "MCI",
   "cost": 0.0,
-  "fpl_id": 424,
+  "fpl_id": 264,
   "fpl_name": "Bobb",
   "points_that_season": 3
  },
@@ -2591,7 +2591,7 @@
   "player": "Kluivert",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 81,
+  "fpl_id": 70,
   "fpl_name": "Kluivert",
   "points_that_season": 158
  },
@@ -2602,7 +2602,7 @@
   "player": "Enzo",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 237,
+  "fpl_id": 155,
   "fpl_name": "Enzo",
   "points_that_season": 135
  },
@@ -2613,9 +2613,9 @@
   "player": "Armstrong",
   "club": "SOU",
   "cost": 3.25,
-  "fpl_id": 817,
+  "fpl_id": 244,
   "fpl_name": "Armstrong",
-  "points_that_season": 45
+  "points_that_season": 2
  },
  {
   "season": "2024-25",
@@ -2624,7 +2624,7 @@
   "player": "Solanke",
   "club": "TOT",
   "cost": 15.0,
-  "fpl_id": 596,
+  "fpl_id": 526,
   "fpl_name": "Solanke",
   "points_that_season": 108
  },
@@ -2646,9 +2646,9 @@
   "player": "Ederson",
   "club": "MCI",
   "cost": 2.0,
-  "fpl_id": 399,
-  "fpl_name": "Ederson M.",
-  "points_that_season": 111
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2657,7 +2657,7 @@
   "player": "Sanchez",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 220,
+  "fpl_id": 140,
   "fpl_name": "S\u00e1nchez",
   "points_that_season": 126
  },
@@ -2668,7 +2668,7 @@
   "player": "Van Dijk",
   "club": "LIV",
   "cost": 4.25,
-  "fpl_id": 373,
+  "fpl_id": 356,
   "fpl_name": "Virgil",
   "points_that_season": 143
  },
@@ -2679,7 +2679,7 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 3.25,
-  "fpl_id": 256,
+  "fpl_id": 201,
   "fpl_name": "Mu\u00f1oz",
   "points_that_season": 142
  },
@@ -2690,7 +2690,7 @@
   "player": "Romero",
   "club": "TOT",
   "cost": 0.75,
-  "fpl_id": 569,
+  "fpl_id": 500,
   "fpl_name": "Romero",
   "points_that_season": 49
  },
@@ -2701,7 +2701,7 @@
   "player": "Robinson",
   "club": "FUL",
   "cost": 0.75,
-  "fpl_id": 316,
+  "fpl_id": 254,
   "fpl_name": "Robinson",
   "points_that_season": 106
  },
@@ -2712,7 +2712,7 @@
   "player": "Maatsen",
   "club": "AVL",
   "cost": 3.5,
-  "fpl_id": 39,
+  "fpl_id": 36,
   "fpl_name": "Maatsen",
   "points_that_season": 57
  },
@@ -2723,7 +2723,7 @@
   "player": "Eze",
   "club": "CRY",
   "cost": 8.0,
-  "fpl_id": 266,
+  "fpl_id": 14,
   "fpl_name": "Eze",
   "points_that_season": 148
  },
@@ -2734,7 +2734,7 @@
   "player": "Smith-Rowe",
   "club": "FUL",
   "cost": 4.0,
-  "fpl_id": 325,
+  "fpl_id": 262,
   "fpl_name": "Smith Rowe",
   "points_that_season": 114
  },
@@ -2745,7 +2745,7 @@
   "player": "Kudus",
   "club": "WHU",
   "cost": 4.75,
-  "fpl_id": 582,
+  "fpl_id": 512,
   "fpl_name": "Kudus",
   "points_that_season": 106
  },
@@ -2756,7 +2756,7 @@
   "player": "Harrison",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 352,
+  "fpl_id": 342,
   "fpl_name": "Harrison",
   "points_that_season": 81
  },
@@ -2778,9 +2778,9 @@
   "player": "Darwin",
   "club": "LIV",
   "cost": 8.25,
-  "fpl_id": 397,
-  "fpl_name": "Darwin",
-  "points_that_season": 66
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2789,9 +2789,9 @@
   "player": "Hojlund",
   "club": "MUN",
   "cost": 5.25,
-  "fpl_id": 465,
-  "fpl_name": "H\u00f8jlund",
-  "points_that_season": 78
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2811,7 +2811,7 @@
   "player": "Verbruggen",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 139,
+  "fpl_id": 109,
   "fpl_name": "Verbruggen",
   "points_that_season": 103
  },
@@ -2822,7 +2822,7 @@
   "player": "Steele",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 138,
+  "fpl_id": 111,
   "fpl_name": "Steele",
   "points_that_season": 9
  },
@@ -2833,8 +2833,8 @@
   "player": "Zouma",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 461,
+  "fpl_name": "Tour\u00e9",
   "points_that_season": null
  },
  {
@@ -2844,7 +2844,7 @@
   "player": "Neco Williams",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 508,
+  "fpl_id": 469,
   "fpl_name": "N.Williams",
   "points_that_season": 109
  },
@@ -2855,7 +2855,7 @@
   "player": "Mings",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 40,
+  "fpl_id": 33,
   "fpl_name": "Mings",
   "points_that_season": 47
  },
@@ -2866,9 +2866,9 @@
   "player": "Walker-Peters",
   "club": "SOU",
   "cost": 0.0,
-  "fpl_id": 187,
-  "fpl_name": "Walker",
-  "points_that_season": 13
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -2877,7 +2877,7 @@
   "player": "Burn",
   "club": "NEW",
   "cost": 0.5,
-  "fpl_id": 476,
+  "fpl_id": 448,
   "fpl_name": "Burn",
   "points_that_season": 115
  },
@@ -2888,7 +2888,7 @@
   "player": "Grealish",
   "club": "MCI",
   "cost": 7.5,
-  "fpl_id": 419,
+  "fpl_id": 238,
   "fpl_name": "Grealish",
   "points_that_season": 38
  },
@@ -2899,7 +2899,7 @@
   "player": "Rice",
   "club": "ARS",
   "cost": 6.0,
-  "fpl_id": 21,
+  "fpl_id": 13,
   "fpl_name": "Rice",
   "points_that_season": 127
  },
@@ -2910,7 +2910,7 @@
   "player": "Madueke",
   "club": "CHE",
   "cost": 0.25,
-  "fpl_id": 18,
+  "fpl_id": 16,
   "fpl_name": "Madueke",
   "points_that_season": 120
  },
@@ -2921,7 +2921,7 @@
   "player": "Tielemans",
   "club": "AVL",
   "cost": 1.0,
-  "fpl_id": 48,
+  "fpl_id": 43,
   "fpl_name": "Tielemans",
   "points_that_season": 121
  },
@@ -2932,7 +2932,7 @@
   "player": "Buendia",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 50,
+  "fpl_id": 41,
   "fpl_name": "Buend\u00eda",
   "points_that_season": 11
  },
@@ -2943,7 +2943,7 @@
   "player": "Haaland",
   "club": "MCI",
   "cost": 25.0,
-  "fpl_id": 430,
+  "fpl_id": 411,
   "fpl_name": "Haaland",
   "points_that_season": 181
  },
@@ -2954,7 +2954,7 @@
   "player": "Wood",
   "club": "NFO",
   "cost": 6.0,
-  "fpl_id": 525,
+  "fpl_id": 490,
   "fpl_name": "Wood",
   "points_that_season": 200
  },
@@ -2976,7 +2976,7 @@
   "player": "Vicario",
   "club": "TOT",
   "cost": 1.75,
-  "fpl_id": 565,
+  "fpl_id": 494,
   "fpl_name": "Vicario",
   "points_that_season": 66
  },
@@ -2987,7 +2987,7 @@
   "player": "Jorgensen",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 221,
+  "fpl_id": 141,
   "fpl_name": "J\u00f6rgensen",
   "points_that_season": 18
  },
@@ -2998,9 +2998,9 @@
   "player": "Cucurella",
   "club": "CHE",
   "cost": 2.0,
-  "fpl_id": 224,
-  "fpl_name": "Cucurella",
-  "points_that_season": 133
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3009,9 +3009,9 @@
   "player": "Akanji",
   "club": "MCI",
   "cost": 2.5,
-  "fpl_id": 404,
-  "fpl_name": "Akanji",
-  "points_that_season": 61
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3020,7 +3020,7 @@
   "player": "Calafiori",
   "club": "ARS",
   "cost": 2.5,
-  "fpl_id": 7,
+  "fpl_id": 8,
   "fpl_name": "Calafiori",
   "points_that_season": 39
  },
@@ -3031,7 +3031,7 @@
   "player": "Pau Torres",
   "club": "AVL",
   "cost": 2.0,
-  "fpl_id": 41,
+  "fpl_id": 34,
   "fpl_name": "Pau",
   "points_that_season": 55
  },
@@ -3042,9 +3042,9 @@
   "player": "Wan-Bissaka",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 610,
-  "fpl_name": "Wan-Bissaka",
-  "points_that_season": 118
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3053,7 +3053,7 @@
   "player": "Mitoma",
   "club": "BRI",
   "cost": 4.75,
-  "fpl_id": 157,
+  "fpl_id": 121,
   "fpl_name": "Mitoma",
   "points_that_season": 145
  },
@@ -3064,9 +3064,9 @@
   "player": "Trossard",
   "club": "ARS",
   "cost": 3.75,
-  "fpl_id": 20,
-  "fpl_name": "Trossard",
-  "points_that_season": 152
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3075,9 +3075,9 @@
   "player": "Nkunku",
   "club": "CHE",
   "cost": 6.0,
-  "fpl_id": 240,
-  "fpl_name": "Nkunku",
-  "points_that_season": 60
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3086,7 +3086,7 @@
   "player": "Barnes",
   "club": "NEW",
   "cost": 2.25,
-  "fpl_id": 487,
+  "fpl_id": 453,
   "fpl_name": "Barnes",
   "points_that_season": 130
  },
@@ -3097,7 +3097,7 @@
   "player": "Sarr",
   "club": "CRY",
   "cost": 0.5,
-  "fpl_id": 267,
+  "fpl_id": 208,
   "fpl_name": "Sarr",
   "points_that_season": 149
  },
@@ -3119,7 +3119,7 @@
   "player": "Gakpo",
   "club": "LIV",
   "cost": 6.75,
-  "fpl_id": 384,
+  "fpl_id": 367,
   "fpl_name": "Gakpo",
   "points_that_season": 127
  },
@@ -3130,7 +3130,7 @@
   "player": "Larsen",
   "club": "WOL",
   "cost": 8.25,
-  "fpl_id": 654,
+  "fpl_id": 222,
   "fpl_name": "Strand Larsen",
   "points_that_season": 145
  },
@@ -3152,7 +3152,7 @@
   "player": "Petrovic",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 67,
+  "fpl_id": 57,
   "fpl_name": "Petrovi\u0107",
   "points_that_season": 0
  },
@@ -3163,9 +3163,9 @@
   "player": "Davis",
   "club": "IPS",
   "cost": 2.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 305,
+  "fpl_name": "Davis",
+  "points_that_season": 52
  },
  {
   "season": "2024-25",
@@ -3174,7 +3174,7 @@
   "player": "White",
   "club": "ARS",
   "cost": 5.0,
-  "fpl_id": 11,
+  "fpl_id": 10,
   "fpl_name": "White",
   "points_that_season": 50
  },
@@ -3185,7 +3185,7 @@
   "player": "Justin",
   "club": "LEI",
   "cost": 0.0,
-  "fpl_id": 706,
+  "fpl_id": 332,
   "fpl_name": "Justin",
   "points_that_season": 70
  },
@@ -3207,7 +3207,7 @@
   "player": "Tosin",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 232,
+  "fpl_id": 147,
   "fpl_name": "Tosin",
   "points_that_season": 71
  },
@@ -3218,7 +3218,7 @@
   "player": "Maddison",
   "club": "TOT",
   "cost": 7.0,
-  "fpl_id": 581,
+  "fpl_id": 515,
   "fpl_name": "Maddison",
   "points_that_season": 133
  },
@@ -3229,7 +3229,7 @@
   "player": "Rashford",
   "club": "MUN",
   "cost": 7.0,
-  "fpl_id": 451,
+  "fpl_id": 429,
   "fpl_name": "Rashford",
   "points_that_season": 95
  },
@@ -3240,9 +3240,9 @@
   "player": "De Bruyne",
   "club": "MCI",
   "cost": 11.5,
-  "fpl_id": 416,
-  "fpl_name": "Bernardo",
-  "points_that_season": 110
+  "fpl_id": 403,
+  "fpl_name": "Savinho",
+  "points_that_season": 106
  },
  {
   "season": "2024-25",
@@ -3251,9 +3251,9 @@
   "player": "Brereton-Diaz",
   "club": "SOU",
   "cost": 2.25,
-  "fpl_id": 383,
-  "fpl_name": "Luis D\u00edaz",
-  "points_that_season": 183
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3262,7 +3262,7 @@
   "player": "Semenyo",
   "club": "BOU",
   "cost": 2.25,
-  "fpl_id": 82,
+  "fpl_id": 397,
   "fpl_name": "Semenyo",
   "points_that_season": 165
  },
@@ -3273,7 +3273,7 @@
   "player": "Havertz",
   "club": "ARS",
   "cost": 10.5,
-  "fpl_id": 30,
+  "fpl_id": 26,
   "fpl_name": "Havertz",
   "points_that_season": 97
  },
@@ -3295,7 +3295,7 @@
   "player": "Jota Silva",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 511,
+  "fpl_id": 470,
   "fpl_name": "Morato",
   "points_that_season": 36
  },
@@ -3306,9 +3306,9 @@
   "player": "Hermansson",
   "club": "LEI",
   "cost": 0.0,
-  "fpl_id": 679,
-  "fpl_name": "Hermansen",
-  "points_that_season": 63
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3317,9 +3317,9 @@
   "player": "Ward",
   "club": "LEI",
   "cost": 0.0,
-  "fpl_id": 614,
-  "fpl_name": "Ward-Prowse",
-  "points_that_season": 51
+  "fpl_id": 52,
+  "fpl_name": "Alysson",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3339,9 +3339,9 @@
   "player": "Walker",
   "club": "MCI",
   "cost": 2.5,
-  "fpl_id": 187,
-  "fpl_name": "Walker",
-  "points_that_season": 13
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3350,7 +3350,7 @@
   "player": "Badiashile",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 229,
+  "fpl_id": 146,
   "fpl_name": "B.Badiashile",
   "points_that_season": 7
  },
@@ -3361,7 +3361,7 @@
   "player": "Bradley",
   "club": "LIV",
   "cost": 0.0,
-  "fpl_id": 375,
+  "fpl_id": 360,
   "fpl_name": "Bradley",
   "points_that_season": 41
  },
@@ -3372,9 +3372,9 @@
   "player": "Konate",
   "club": "LIV",
   "cost": 0.5,
-  "fpl_id": 374,
-  "fpl_name": "Konat\u00e9",
-  "points_that_season": 106
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3383,7 +3383,7 @@
   "player": "Saka",
   "club": "ARS",
   "cost": 19.0,
-  "fpl_id": 16,
+  "fpl_id": 12,
   "fpl_name": "Saka",
   "points_that_season": 127
  },
@@ -3394,7 +3394,7 @@
   "player": "Odegaard",
   "club": "ARS",
   "cost": 14.75,
-  "fpl_id": 17,
+  "fpl_id": 15,
   "fpl_name": "\u00d8degaard",
   "points_that_season": 116
  },
@@ -3405,7 +3405,7 @@
   "player": "Carvalho",
   "club": "BRE",
   "cost": 2.5,
-  "fpl_id": 123,
+  "fpl_id": 100,
   "fpl_name": "Carvalho",
   "points_that_season": 35
  },
@@ -3416,7 +3416,7 @@
   "player": "Neto",
   "club": "CHE",
   "cost": 0.25,
-  "fpl_id": 236,
+  "fpl_id": 156,
   "fpl_name": "Neto",
   "points_that_season": 104
  },
@@ -3427,7 +3427,7 @@
   "player": "Savio",
   "club": "MCI",
   "cost": 0.0,
-  "fpl_id": 415,
+  "fpl_id": 403,
   "fpl_name": "Savinho",
   "points_that_season": 106
  },
@@ -3460,7 +3460,7 @@
   "player": "Awoniyi",
   "club": "NFO",
   "cost": 2.0,
-  "fpl_id": 527,
+  "fpl_id": 492,
   "fpl_name": "Awoniyi",
   "points_that_season": 32
  },
@@ -3482,7 +3482,7 @@
   "player": "Valdimarsson",
   "club": "BRE",
   "cost": 0.0,
-  "fpl_id": 105,
+  "fpl_id": 83,
   "fpl_name": "Valdimarsson",
   "points_that_season": 2
  },
@@ -3493,7 +3493,7 @@
   "player": "Robertson",
   "club": "LIV",
   "cost": 3.25,
-  "fpl_id": 372,
+  "fpl_id": 502,
   "fpl_name": "Robertson",
   "points_that_season": 91
  },
@@ -3504,9 +3504,9 @@
   "player": "Trippier",
   "club": "NEW",
   "cost": 2.75,
-  "fpl_id": 478,
-  "fpl_name": "Trippier",
-  "points_that_season": 72
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3515,7 +3515,7 @@
   "player": "Henry",
   "club": "BRE",
   "cost": 0.0,
-  "fpl_id": 109,
+  "fpl_id": 89,
   "fpl_name": "Henry",
   "points_that_season": 4
  },
@@ -3526,7 +3526,7 @@
   "player": "Timber",
   "club": "ARS",
   "cost": 0.0,
-  "fpl_id": 8,
+  "fpl_id": 5,
   "fpl_name": "J.Timber",
   "points_that_season": 114
  },
@@ -3537,7 +3537,7 @@
   "player": "Ait-Nouri",
   "club": "WOL",
   "cost": 3.5,
-  "fpl_id": 402,
+  "fpl_id": 392,
   "fpl_name": "A\u00eft-Nouri",
   "points_that_season": 125
  },
@@ -3548,7 +3548,7 @@
   "player": "Gibbs-White",
   "club": "NFO",
   "cost": 5.5,
-  "fpl_id": 515,
+  "fpl_id": 480,
   "fpl_name": "Gibbs-White",
   "points_that_season": 154
  },
@@ -3559,7 +3559,7 @@
   "player": "Kulusevski",
   "club": "TOT",
   "cost": 1.75,
-  "fpl_id": 583,
+  "fpl_id": 521,
   "fpl_name": "Kulusevski",
   "points_that_season": 117
  },
@@ -3570,9 +3570,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 6.0,
-  "fpl_id": 416,
-  "fpl_name": "Bernardo",
-  "points_that_season": 110
+  "fpl_id": 470,
+  "fpl_name": "Morato",
+  "points_that_season": 36
  },
  {
   "season": "2024-25",
@@ -3581,7 +3581,7 @@
   "player": "Rodri",
   "club": "MCI",
   "cost": 5.25,
-  "fpl_id": 421,
+  "fpl_id": 402,
   "fpl_name": "Rodrigo",
   "points_that_season": 3
  },
@@ -3592,7 +3592,7 @@
   "player": "Martinelli",
   "club": "ARS",
   "cost": 6.75,
-  "fpl_id": 19,
+  "fpl_id": 18,
   "fpl_name": "Martinelli",
   "points_that_season": 125
  },
@@ -3603,7 +3603,7 @@
   "player": "Joao Pedro",
   "club": "BRI",
   "cost": 5.75,
-  "fpl_id": 568,
+  "fpl_id": 499,
   "fpl_name": "Pedro Porro",
   "points_that_season": 98
  },
@@ -3614,7 +3614,7 @@
   "player": "Ferguson",
   "club": "BRI",
   "cost": 4.0,
-  "fpl_id": 179,
+  "fpl_id": 139,
   "fpl_name": "Ferguson",
   "points_that_season": 28
  },
@@ -3625,7 +3625,7 @@
   "player": "Delap",
   "club": "IPS",
   "cost": 5.0,
-  "fpl_id": 250,
+  "fpl_id": 167,
   "fpl_name": "Delap",
   "points_that_season": 132
  },
@@ -3636,7 +3636,7 @@
   "player": "Pickford",
   "club": "EVE",
   "cost": 2.5,
-  "fpl_id": 287,
+  "fpl_id": 226,
   "fpl_name": "Pickford",
   "points_that_season": 158
  },
@@ -3658,9 +3658,9 @@
   "player": "Stones",
   "club": "MCI",
   "cost": 1.0,
-  "fpl_id": 409,
-  "fpl_name": "Stones",
-  "points_that_season": 29
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3669,9 +3669,9 @@
   "player": "Van de Ven",
   "club": "TOT",
   "cost": 1.5,
-  "fpl_id": 575,
-  "fpl_name": "Van de Ven",
-  "points_that_season": 32
+  "fpl_id": 112,
+  "fpl_name": "Van Hecke",
+  "points_that_season": 87
  },
  {
   "season": "2024-25",
@@ -3680,7 +3680,7 @@
   "player": "Guehi",
   "club": "CRY",
   "cost": 1.5,
-  "fpl_id": 260,
+  "fpl_id": 388,
   "fpl_name": "Gu\u00e9hi",
   "points_that_season": 116
  },
@@ -3691,7 +3691,7 @@
   "player": "Colwill",
   "club": "CHE",
   "cost": 0.5,
-  "fpl_id": 227,
+  "fpl_id": 149,
   "fpl_name": "Colwill",
   "points_that_season": 109
  },
@@ -3702,7 +3702,7 @@
   "player": "Cash",
   "club": "AVL",
   "cost": 0.25,
-  "fpl_id": 36,
+  "fpl_id": 32,
   "fpl_name": "Cash",
   "points_that_season": 76
  },
@@ -3713,7 +3713,7 @@
   "player": "Mainoo",
   "club": "MUN",
   "cost": 3.5,
-  "fpl_id": 458,
+  "fpl_id": 432,
   "fpl_name": "Mainoo",
   "points_that_season": 42
  },
@@ -3724,7 +3724,7 @@
   "player": "Palmer",
   "club": "CHE",
   "cost": 19.5,
-  "fpl_id": 235,
+  "fpl_id": 154,
   "fpl_name": "Palmer",
   "points_that_season": 214
  },
@@ -3735,7 +3735,7 @@
   "player": "Garnacho",
   "club": "MUN",
   "cost": 6.25,
-  "fpl_id": 453,
+  "fpl_id": 160,
   "fpl_name": "Garnacho",
   "points_that_season": 106
  },
@@ -3746,7 +3746,7 @@
   "player": "Joelinton",
   "club": "NEW",
   "cost": 0.5,
-  "fpl_id": 490,
+  "fpl_id": 458,
   "fpl_name": "Joelinton",
   "points_that_season": 99
  },
@@ -3757,9 +3757,9 @@
   "player": "Mudryk",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 245,
-  "fpl_name": "Mudryk",
-  "points_that_season": 7
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3768,7 +3768,7 @@
   "player": "Gabriel Jesus",
   "club": "ARS",
   "cost": 10.0,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 117
  },
@@ -3779,7 +3779,7 @@
   "player": "Welbeck",
   "club": "BRI",
   "cost": 2.5,
-  "fpl_id": 178,
+  "fpl_id": 136,
   "fpl_name": "Welbeck",
   "points_that_season": 125
  },
@@ -3801,9 +3801,9 @@
   "player": "Neto",
   "club": "BOU",
   "cost": 1.25,
-  "fpl_id": 66,
+  "fpl_id": 156,
   "fpl_name": "Neto",
-  "points_that_season": 7
+  "points_that_season": 104
  },
  {
   "season": "2024-25",
@@ -3812,7 +3812,7 @@
   "player": "Travers",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 288,
+  "fpl_id": 227,
   "fpl_name": "Travers",
   "points_that_season": 19
  },
@@ -3834,8 +3834,8 @@
   "player": "Ricardo Pereira",
   "club": "LEI",
   "cost": 0.0,
-  "fpl_id": 785,
-  "fpl_name": "Pablo",
+  "fpl_id": null,
+  "fpl_name": null,
   "points_that_season": null
  },
  {
@@ -3845,7 +3845,7 @@
   "player": "Udogie",
   "club": "TOT",
   "cost": 4.25,
-  "fpl_id": 574,
+  "fpl_id": 506,
   "fpl_name": "Udogie",
   "points_that_season": 43
  },
@@ -3856,7 +3856,7 @@
   "player": "Aina",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 507,
+  "fpl_id": 473,
   "fpl_name": "Aina",
   "points_that_season": 128
  },
@@ -3867,7 +3867,7 @@
   "player": "Hall",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 473,
+  "fpl_id": 449,
   "fpl_name": "Hall",
   "points_that_season": 102
  },
@@ -3878,7 +3878,7 @@
   "player": "Fernandes",
   "club": "MUN",
   "cost": 16.75,
-  "fpl_id": 449,
+  "fpl_id": 426,
   "fpl_name": "B.Fernandes",
   "points_that_season": 174
  },
@@ -3889,7 +3889,7 @@
   "player": "Dewsbury-Hall",
   "club": "CHE",
   "cost": 0.5,
-  "fpl_id": 242,
+  "fpl_id": 236,
   "fpl_name": "Dewsbury-Hall",
   "points_that_season": 18
  },
@@ -3900,7 +3900,7 @@
   "player": "B. Johnson",
   "club": "TOT",
   "cost": 1.0,
-  "fpl_id": 580,
+  "fpl_id": 209,
   "fpl_name": "Johnson",
   "points_that_season": 137
  },
@@ -3911,9 +3911,9 @@
   "player": "Summerville",
   "club": "WHU",
   "cost": 2.5,
-  "fpl_id": 615,
-  "fpl_name": "Summerville",
-  "points_that_season": 33
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3922,7 +3922,7 @@
   "player": "Doucoure",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 268,
+  "fpl_id": 218,
   "fpl_name": "Doucour\u00e9",
   "points_that_season": 19
  },
@@ -3933,7 +3933,7 @@
   "player": "N. Jackson",
   "club": "CHE",
   "cost": 7.25,
-  "fpl_id": 251,
+  "fpl_id": 166,
   "fpl_name": "N.Jackson",
   "points_that_season": 121
  },
@@ -3955,7 +3955,7 @@
   "player": "Wilson",
   "club": "NEW",
   "cost": 2.0,
-  "fpl_id": 329,
+  "fpl_id": 260,
   "fpl_name": "Wilson",
   "points_that_season": 78
  },
@@ -3966,7 +3966,7 @@
   "player": "E. Martinez",
   "club": "AVL",
   "cost": 1.75,
-  "fpl_id": 32,
+  "fpl_id": 28,
   "fpl_name": "Martinez",
   "points_that_season": 111
  },
@@ -3988,7 +3988,7 @@
   "player": "Konsa",
   "club": "AVL",
   "cost": 1.5,
-  "fpl_id": 38,
+  "fpl_id": 31,
   "fpl_name": "Konsa",
   "points_that_season": 103
  },
@@ -3999,7 +3999,7 @@
   "player": "Branthwaite",
   "club": "EVE",
   "cost": 2.0,
-  "fpl_id": 290,
+  "fpl_id": 230,
   "fpl_name": "Branthwaite",
   "points_that_season": 88
  },
@@ -4010,7 +4010,7 @@
   "player": "Mitchell",
   "club": "CRY",
   "cost": 3.0,
-  "fpl_id": 258,
+  "fpl_id": 204,
   "fpl_name": "Mitchell",
   "points_that_season": 123
  },
@@ -4021,9 +4021,9 @@
   "player": "Kilman",
   "club": "WHU",
   "cost": 0.75,
-  "fpl_id": 605,
-  "fpl_name": "Kilman",
-  "points_that_season": 82
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4043,9 +4043,9 @@
   "player": "Son",
   "club": "TOT",
   "cost": 15.75,
-  "fpl_id": 579,
-  "fpl_name": "Son",
-  "points_that_season": 129
+  "fpl_id": 527,
+  "fpl_name": "Richarlison",
+  "points_that_season": 35
  },
  {
   "season": "2024-25",
@@ -4054,9 +4054,9 @@
   "player": "Luis Diaz",
   "club": "LIV",
   "cost": 7.5,
-  "fpl_id": 383,
-  "fpl_name": "Luis D\u00edaz",
-  "points_that_season": 183
+  "fpl_id": 163,
+  "fpl_name": "D.Essugo",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4065,7 +4065,7 @@
   "player": "Hudson-Odoi",
   "club": "NFO",
   "cost": 3.0,
-  "fpl_id": 516,
+  "fpl_id": 482,
   "fpl_name": "Hudson-Odoi",
   "points_that_season": 103
  },
@@ -4076,9 +4076,9 @@
   "player": "Andreas Pereira",
   "club": "FUL",
   "cost": 4.25,
-  "fpl_id": 327,
-  "fpl_name": "Andreas",
-  "points_that_season": 81
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4087,9 +4087,9 @@
   "player": "Soucek",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 613,
-  "fpl_name": "Sou\u010dek",
-  "points_that_season": 126
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4098,9 +4098,9 @@
   "player": "Fullkrug",
   "club": "WHU",
   "cost": 4.25,
-  "fpl_id": 625,
-  "fpl_name": "F\u00fcllkrug",
-  "points_that_season": 42
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4109,7 +4109,7 @@
   "player": "Calvert-Lewin",
   "club": "EVE",
   "cost": 5.75,
-  "fpl_id": 691,
+  "fpl_id": 346,
   "fpl_name": "Calvert-Lewin",
   "points_that_season": 63
  },
@@ -4120,9 +4120,9 @@
   "player": "Raul Jimenez",
   "club": "FUL",
   "cost": 0.0,
-  "fpl_id": 337,
-  "fpl_name": "Ra\u00fal",
-  "points_that_season": 147
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4131,7 +4131,7 @@
   "player": "Pope",
   "club": "NEW",
   "cost": 1.25,
-  "fpl_id": 469,
+  "fpl_id": 442,
   "fpl_name": "Pope",
   "points_that_season": 102
  },
@@ -4142,8 +4142,8 @@
   "player": "Dubravka",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 470,
-  "fpl_name": "D\u00fabravka",
+  "fpl_id": 497,
+  "fpl_name": "Dubravka",
   "points_that_season": 44
  },
  {
@@ -4153,7 +4153,7 @@
   "player": "James",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 225,
+  "fpl_id": 142,
   "fpl_name": "James",
   "points_that_season": 54
  },
@@ -4164,7 +4164,7 @@
   "player": "De Ligt",
   "club": "MUN",
   "cost": 2.5,
-  "fpl_id": 436,
+  "fpl_id": 416,
   "fpl_name": "De Ligt",
   "points_that_season": 68
  },
@@ -4175,7 +4175,7 @@
   "player": "Schar",
   "club": "NEW",
   "cost": 3.0,
-  "fpl_id": 474,
+  "fpl_id": 446,
   "fpl_name": "Sch\u00e4r",
   "points_that_season": 118
  },
@@ -4186,7 +4186,7 @@
   "player": "Tarkowski",
   "club": "EVE",
   "cost": 2.25,
-  "fpl_id": 291,
+  "fpl_id": 229,
   "fpl_name": "Tarkowski",
   "points_that_season": 105
  },
@@ -4197,7 +4197,7 @@
   "player": "Mazraoui",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 438,
+  "fpl_id": 422,
   "fpl_name": "Mazraoui",
   "points_that_season": 88
  },
@@ -4208,9 +4208,9 @@
   "player": "Bowen",
   "club": "WHU",
   "cost": 9.0,
-  "fpl_id": 624,
-  "fpl_name": "Bowen",
-  "points_that_season": 193
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4219,7 +4219,7 @@
   "player": "Guimaraes",
   "club": "NEW",
   "cost": 5.0,
-  "fpl_id": 488,
+  "fpl_id": 452,
   "fpl_name": "Bruno G.",
   "points_that_season": 135
  },
@@ -4230,7 +4230,7 @@
   "player": "Szoboszlai",
   "club": "LIV",
   "cost": 1.0,
-  "fpl_id": 387,
+  "fpl_id": 368,
   "fpl_name": "Szoboszlai",
   "points_that_season": 143
  },
@@ -4241,7 +4241,7 @@
   "player": "McNeil",
   "club": "EVE",
   "cost": 2.25,
-  "fpl_id": 300,
+  "fpl_id": 241,
   "fpl_name": "McNeil",
   "points_that_season": 93
  },
@@ -4252,7 +4252,7 @@
   "player": "McGinn",
   "club": "AVL",
   "cost": 1.5,
-  "fpl_id": 54,
+  "fpl_id": 45,
   "fpl_name": "McGinn",
   "points_that_season": 78
  },
@@ -4263,7 +4263,7 @@
   "player": "Watkins",
   "club": "AVL",
   "cost": 18.5,
-  "fpl_id": 64,
+  "fpl_id": 55,
   "fpl_name": "Watkins",
   "points_that_season": 186
  },
@@ -4274,7 +4274,7 @@
   "player": "Zrikzee",
   "club": "MUN",
   "cost": 3.5,
-  "fpl_id": 466,
+  "fpl_id": 440,
   "fpl_name": "Zirkzee",
   "points_that_season": 64
  },
@@ -4296,9 +4296,9 @@
   "player": "Onana",
   "club": "MUN",
   "cost": 2.0,
-  "fpl_id": 432,
+  "fpl_id": 48,
   "fpl_name": "Onana",
-  "points_that_season": 120
+  "points_that_season": 65
  },
  {
   "season": "2024-25",
@@ -4318,7 +4318,7 @@
   "player": "Gvardiol",
   "club": "MCI",
   "cost": 5.5,
-  "fpl_id": 403,
+  "fpl_id": 391,
   "fpl_name": "Gvardiol",
   "points_that_season": 153
  },
@@ -4329,7 +4329,7 @@
   "player": "Pedro Porro",
   "club": "TOT",
   "cost": 5.0,
-  "fpl_id": 568,
+  "fpl_id": 499,
   "fpl_name": "Pedro Porro",
   "points_that_season": 98
  },
@@ -4340,7 +4340,7 @@
   "player": "Dalot",
   "club": "MUN",
   "cost": 1.0,
-  "fpl_id": 440,
+  "fpl_id": 417,
   "fpl_name": "Dalot",
   "points_that_season": 95
  },
@@ -4351,7 +4351,7 @@
   "player": "Ruben Dias",
   "club": "MCI",
   "cost": 2.5,
-  "fpl_id": 408,
+  "fpl_id": 390,
   "fpl_name": "R\u00faben",
   "points_that_season": 90
  },
@@ -4362,9 +4362,9 @@
   "player": "Zabaryni",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 71,
-  "fpl_name": "Zabarnyi",
-  "points_that_season": 94
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4373,7 +4373,7 @@
   "player": "Mac Allister",
   "club": "LIV",
   "cost": 5.0,
-  "fpl_id": 386,
+  "fpl_id": 372,
   "fpl_name": "Mac Allister",
   "points_that_season": 122
  },
@@ -4384,9 +4384,9 @@
   "player": "Ward-Prowse",
   "club": "WHU",
   "cost": 5.0,
-  "fpl_id": 614,
-  "fpl_name": "Ward-Prowse",
-  "points_that_season": 51
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4395,7 +4395,7 @@
   "player": "Bailey",
   "club": "AVL",
   "cost": 7.0,
-  "fpl_id": 49,
+  "fpl_id": 44,
   "fpl_name": "Bailey",
   "points_that_season": 47
  },
@@ -4406,7 +4406,7 @@
   "player": "Elanga",
   "club": "NFO",
   "cost": 3.0,
-  "fpl_id": 486,
+  "fpl_id": 454,
   "fpl_name": "Elanga",
   "points_that_season": 153
  },
@@ -4428,7 +4428,7 @@
   "player": "Cunha",
   "club": "WOL",
   "cost": 7.0,
-  "fpl_id": 450,
+  "fpl_id": 428,
   "fpl_name": "Cunha",
   "points_that_season": 178
  },
@@ -4439,7 +4439,7 @@
   "player": "Richarlison",
   "club": "TOT",
   "cost": 3.5,
-  "fpl_id": 597,
+  "fpl_id": 527,
   "fpl_name": "Richarlison",
   "points_that_season": 35
  },
@@ -4461,7 +4461,7 @@
   "player": "Alisson",
   "club": "LIV",
   "cost": 2.5,
-  "fpl_id": 366,
+  "fpl_id": 350,
   "fpl_name": "A.Becker",
   "points_that_season": 91
  },
@@ -4472,9 +4472,9 @@
   "player": "Hermansson",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 679,
-  "fpl_name": "Hermansen",
-  "points_that_season": 76
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4483,7 +4483,7 @@
   "player": "Tarkowski",
   "club": "EVE",
   "cost": 3.0,
-  "fpl_id": 291,
+  "fpl_id": 229,
   "fpl_name": "Tarkowski",
   "points_that_season": 170
  },
@@ -4494,7 +4494,7 @@
   "player": "Smith",
   "club": "BOU",
   "cost": 0.25,
-  "fpl_id": 73,
+  "fpl_id": 64,
   "fpl_name": "Smith",
   "points_that_season": 58
  },
@@ -4505,7 +4505,7 @@
   "player": "Milenkovic",
   "club": "NFO",
   "cost": 2.75,
-  "fpl_id": 505,
+  "fpl_id": 471,
   "fpl_name": "Milenkovi\u0107",
   "points_that_season": 119
  },
@@ -4516,7 +4516,7 @@
   "player": "Kayode",
   "club": "BRE",
   "cost": 0.5,
-  "fpl_id": 110,
+  "fpl_id": 88,
   "fpl_name": "Kayode",
   "points_that_season": 113
  },
@@ -4527,7 +4527,7 @@
   "player": "Nunes",
   "club": "MCI",
   "cost": 1.0,
-  "fpl_id": 407,
+  "fpl_id": 389,
   "fpl_name": "Matheus N.",
   "points_that_season": 154
  },
@@ -4538,7 +4538,7 @@
   "player": "Sarr",
   "club": "CRY",
   "cost": 5.0,
-  "fpl_id": 267,
+  "fpl_id": 208,
   "fpl_name": "Sarr",
   "points_that_season": 117
  },
@@ -4549,7 +4549,7 @@
   "player": "Schade",
   "club": "BRE",
   "cost": 6.0,
-  "fpl_id": 120,
+  "fpl_id": 94,
   "fpl_name": "Schade",
   "points_that_season": 125
  },
@@ -4560,7 +4560,7 @@
   "player": "Semenyo",
   "club": "BOU",
   "cost": 5.5,
-  "fpl_id": 82,
+  "fpl_id": 397,
   "fpl_name": "Semenyo",
   "points_that_season": 202
  },
@@ -4571,7 +4571,7 @@
   "player": "Baleba",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 167,
+  "fpl_id": 131,
   "fpl_name": "Baleba",
   "points_that_season": 56
  },
@@ -4582,9 +4582,9 @@
   "player": "Paqueta",
   "club": "WHU",
   "cost": 1.5,
-  "fpl_id": 612,
-  "fpl_name": "L.Paquet\u00e1",
-  "points_that_season": 69
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4593,7 +4593,7 @@
   "player": "Jackson",
   "club": "NEW",
   "cost": 5.25,
-  "fpl_id": 251,
+  "fpl_id": 166,
   "fpl_name": "N.Jackson",
   "points_that_season": 0
  },
@@ -4604,9 +4604,9 @@
   "player": "Broja",
   "club": "BUR",
   "cost": 4.0,
-  "fpl_id": 680,
-  "fpl_name": "Broja",
-  "points_that_season": 43
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4615,7 +4615,7 @@
   "player": "Strand Larsen",
   "club": "WOL",
   "cost": 12.75,
-  "fpl_id": 654,
+  "fpl_id": 222,
   "fpl_name": "Strand Larsen",
   "points_that_season": 75
  },
@@ -4626,7 +4626,7 @@
   "player": "Henderson",
   "club": "CRY",
   "cost": 2.0,
-  "fpl_id": 253,
+  "fpl_id": 198,
   "fpl_name": "Henderson",
   "points_that_season": 131
  },
@@ -4637,7 +4637,7 @@
   "player": "Petrovic",
   "club": "BOU",
   "cost": 0.25,
-  "fpl_id": 67,
+  "fpl_id": 57,
   "fpl_name": "Petrovi\u0107",
   "points_that_season": 124
  },
@@ -4648,9 +4648,9 @@
   "player": "Diouf",
   "club": "WHU",
   "cost": 1.5,
-  "fpl_id": 603,
-  "fpl_name": "Diouf",
-  "points_that_season": 104
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4659,7 +4659,7 @@
   "player": "Lacroix",
   "club": "CRY",
   "cost": 1.0,
-  "fpl_id": 257,
+  "fpl_id": 200,
   "fpl_name": "Lacroix",
   "points_that_season": 154
  },
@@ -4670,7 +4670,7 @@
   "player": "Cash",
   "club": "AVL",
   "cost": 0.5,
-  "fpl_id": 36,
+  "fpl_id": 32,
   "fpl_name": "Cash",
   "points_that_season": 117
  },
@@ -4681,7 +4681,7 @@
   "player": "De Cuyper",
   "club": "BRI",
   "cost": 0.5,
-  "fpl_id": 145,
+  "fpl_id": 115,
   "fpl_name": "De Cuyper",
   "points_that_season": 84
  },
@@ -4692,9 +4692,9 @@
   "player": "Hoever",
   "club": "WOL",
   "cost": 0.0,
-  "fpl_id": 638,
-  "fpl_name": "Hoever",
-  "points_that_season": 10
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4703,7 +4703,7 @@
   "player": "Fernandes",
   "club": "MUN",
   "cost": 16.0,
-  "fpl_id": 449,
+  "fpl_id": 426,
   "fpl_name": "B.Fernandes",
   "points_that_season": 235
  },
@@ -4714,7 +4714,7 @@
   "player": "Tielemans",
   "club": "AVL",
   "cost": 2.75,
-  "fpl_id": 48,
+  "fpl_id": 43,
   "fpl_name": "Tielemans",
   "points_that_season": 68
  },
@@ -4725,7 +4725,7 @@
   "player": "Ndiaye",
   "club": "EVE",
   "cost": 3.75,
-  "fpl_id": 299,
+  "fpl_id": 237,
   "fpl_name": "Ndiaye",
   "points_that_season": 128
  },
@@ -4736,7 +4736,7 @@
   "player": "Tonali",
   "club": "NEW",
   "cost": 0.5,
-  "fpl_id": 491,
+  "fpl_id": 455,
   "fpl_name": "Tonali",
   "points_that_season": 81
  },
@@ -4747,7 +4747,7 @@
   "player": "Outtara",
   "club": "BRE",
   "cost": 1.25,
-  "fpl_id": 83,
+  "fpl_id": 95,
   "fpl_name": "O.Dango",
   "points_that_season": 136
  },
@@ -4758,7 +4758,7 @@
   "player": "Wissa",
   "club": "BRE",
   "cost": 14.5,
-  "fpl_id": 135,
+  "fpl_id": 464,
   "fpl_name": "Wissa",
   "points_that_season": 27
  },
@@ -4769,7 +4769,7 @@
   "player": "Beto",
   "club": "EVE",
   "cost": 5.0,
-  "fpl_id": 311,
+  "fpl_id": 248,
   "fpl_name": "Beto",
   "points_that_season": 104
  },
@@ -4780,7 +4780,7 @@
   "player": "Nketiah",
   "club": "CRY",
   "cost": 0.5,
-  "fpl_id": 284,
+  "fpl_id": 224,
   "fpl_name": "Nketiah",
   "points_that_season": 23
  },
@@ -4791,7 +4791,7 @@
   "player": "Kelleher",
   "club": "BRE",
   "cost": 1.75,
-  "fpl_id": 101,
+  "fpl_id": 82,
   "fpl_name": "Kelleher",
   "points_that_season": 143
  },
@@ -4802,7 +4802,7 @@
   "player": "Perri",
   "club": "LEE",
   "cost": 0.0,
-  "fpl_id": 665,
+  "fpl_id": 326,
   "fpl_name": "Perri",
   "points_that_season": 43
  },
@@ -4813,9 +4813,9 @@
   "player": "Walker-Peters",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 659,
-  "fpl_name": "Walker-Peters",
-  "points_that_season": 53
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4824,9 +4824,9 @@
   "player": "Van Hecke",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 151,
-  "fpl_name": "Van Hecke",
-  "points_that_season": 148
+  "fpl_id": 356,
+  "fpl_name": "Virgil",
+  "points_that_season": 175
  },
  {
   "season": "2025-26",
@@ -4835,7 +4835,7 @@
   "player": "Bradley",
   "club": "LIV",
   "cost": 0.0,
-  "fpl_id": 375,
+  "fpl_id": 360,
   "fpl_name": "Bradley",
   "points_that_season": 42
  },
@@ -4846,7 +4846,7 @@
   "player": "Williams",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 508,
+  "fpl_id": 469,
   "fpl_name": "N.Williams",
   "points_that_season": 128
  },
@@ -4857,7 +4857,7 @@
   "player": "O'Brien",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 293,
+  "fpl_id": 232,
   "fpl_name": "O'Brien",
   "points_that_season": 116
  },
@@ -4868,7 +4868,7 @@
   "player": "Saka",
   "club": "ARS",
   "cost": 20.0,
-  "fpl_id": 16,
+  "fpl_id": 12,
   "fpl_name": "Saka",
   "points_that_season": 157
  },
@@ -4879,9 +4879,9 @@
   "player": "Gordon",
   "club": "NEW",
   "cost": 8.25,
-  "fpl_id": 485,
-  "fpl_name": "Gordon",
-  "points_that_season": 101
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4901,9 +4901,9 @@
   "player": "Hannibal",
   "club": "",
   "cost": 0.0,
-  "fpl_id": 207,
-  "fpl_name": "Hannibal",
-  "points_that_season": 59
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4912,9 +4912,9 @@
   "player": "Arias",
   "club": "WOL",
   "cost": 0.0,
-  "fpl_id": 663,
-  "fpl_name": "J.Arias",
-  "points_that_season": 45
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4923,7 +4923,7 @@
   "player": "Isak",
   "club": "FOR",
   "cost": 19.75,
-  "fpl_id": 499,
+  "fpl_id": 379,
   "fpl_name": "Isak",
   "points_that_season": 41
  },
@@ -4934,9 +4934,9 @@
   "player": "Barnes",
   "club": "BUR",
   "cost": 0.0,
-  "fpl_id": 218,
+  "fpl_id": 453,
   "fpl_name": "Barnes",
-  "points_that_season": 5
+  "points_that_season": 106
  },
  {
   "season": "2025-26",
@@ -4956,7 +4956,7 @@
   "player": "Sels",
   "club": "NFO",
   "cost": 2.0,
-  "fpl_id": 502,
+  "fpl_id": 467,
   "fpl_name": "Sels",
   "points_that_season": 105
  },
@@ -4978,9 +4978,9 @@
   "player": "Wan-Bissaka",
   "club": "WHU",
   "cost": 2.25,
-  "fpl_id": 610,
-  "fpl_name": "Wan-Bissaka",
-  "points_that_season": 67
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -4989,7 +4989,7 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 2.75,
-  "fpl_id": 256,
+  "fpl_id": 201,
   "fpl_name": "Mu\u00f1oz",
   "points_that_season": 136
  },
@@ -5000,7 +5000,7 @@
   "player": "Hall",
   "club": "NEW",
   "cost": 2.25,
-  "fpl_id": 473,
+  "fpl_id": 449,
   "fpl_name": "Hall",
   "points_that_season": 79
  },
@@ -5011,7 +5011,7 @@
   "player": "Konsa",
   "club": "AVL",
   "cost": 1.75,
-  "fpl_id": 38,
+  "fpl_id": 31,
   "fpl_name": "Konsa",
   "points_that_season": 100
  },
@@ -5022,7 +5022,7 @@
   "player": "James",
   "club": "CHE",
   "cost": 1.25,
-  "fpl_id": 225,
+  "fpl_id": 142,
   "fpl_name": "James",
   "points_that_season": 115
  },
@@ -5033,7 +5033,7 @@
   "player": "Cunha",
   "club": "MUN",
   "cost": 8.25,
-  "fpl_id": 450,
+  "fpl_id": 428,
   "fpl_name": "Cunha",
   "points_that_season": 143
  },
@@ -5044,7 +5044,7 @@
   "player": "Elanga",
   "club": "NEW",
   "cost": 5.25,
-  "fpl_id": 486,
+  "fpl_id": 454,
   "fpl_name": "Elanga",
   "points_that_season": 48
  },
@@ -5055,7 +5055,7 @@
   "player": "Caicedo",
   "club": "CHE",
   "cost": 1.5,
-  "fpl_id": 241,
+  "fpl_id": 159,
   "fpl_name": "Caicedo",
   "points_that_season": 110
  },
@@ -5066,7 +5066,7 @@
   "player": "Cherki",
   "club": "MCI",
   "cost": 1.5,
-  "fpl_id": 417,
+  "fpl_id": 399,
   "fpl_name": "Cherki",
   "points_that_season": 135
  },
@@ -5077,7 +5077,7 @@
   "player": "Garnacho",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 453,
+  "fpl_id": 160,
   "fpl_name": "Garnacho",
   "points_that_season": 56
  },
@@ -5088,7 +5088,7 @@
   "player": "Gyokeres",
   "club": "ARS",
   "cost": 15.5,
-  "fpl_id": 666,
+  "fpl_id": 25,
   "fpl_name": "Gy\u00f6keres",
   "points_that_season": 128
  },
@@ -5099,9 +5099,9 @@
   "player": "Fullkrug",
   "club": "WHU",
   "cost": 5.25,
-  "fpl_id": 625,
-  "fpl_name": "F\u00fcllkrug",
-  "points_that_season": 12
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5110,7 +5110,7 @@
   "player": "Calvert-Lewin",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 691,
+  "fpl_id": 346,
   "fpl_name": "Calvert-Lewin",
   "points_that_season": 142
  },
@@ -5121,7 +5121,7 @@
   "player": "Mamardashvili",
   "club": "LIV",
   "cost": 1.0,
-  "fpl_id": 367,
+  "fpl_id": 351,
   "fpl_name": "Mamardashvili",
   "points_that_season": 34
  },
@@ -5132,9 +5132,9 @@
   "player": "Areola",
   "club": "WHU",
   "cost": 0.5,
-  "fpl_id": 600,
-  "fpl_name": "Areola",
-  "points_that_season": 51
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5143,7 +5143,7 @@
   "player": "Robinson",
   "club": "FUL",
   "cost": 3.0,
-  "fpl_id": 316,
+  "fpl_id": 254,
   "fpl_name": "Robinson",
   "points_that_season": 65
  },
@@ -5154,7 +5154,7 @@
   "player": "Fofana",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 230,
+  "fpl_id": 145,
   "fpl_name": "Fofana",
   "points_that_season": 65
  },
@@ -5165,7 +5165,7 @@
   "player": "Spence",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 573,
+  "fpl_id": 505,
   "fpl_name": "Spence",
   "points_that_season": 78
  },
@@ -5176,7 +5176,7 @@
   "player": "Schar",
   "club": "NEW",
   "cost": 0.25,
-  "fpl_id": 474,
+  "fpl_id": 446,
   "fpl_name": "Sch\u00e4r",
   "points_that_season": 51
  },
@@ -5187,7 +5187,7 @@
   "player": "Bogle",
   "club": "",
   "cost": 0.0,
-  "fpl_id": 342,
+  "fpl_id": 330,
   "fpl_name": "Bogle",
   "points_that_season": 96
  },
@@ -5198,7 +5198,7 @@
   "player": "Eze",
   "club": "CRY",
   "cost": 10.0,
-  "fpl_id": 266,
+  "fpl_id": 14,
   "fpl_name": "Eze",
   "points_that_season": 113
  },
@@ -5209,7 +5209,7 @@
   "player": "Rogers",
   "club": "AVL",
   "cost": 12.25,
-  "fpl_id": 47,
+  "fpl_id": 40,
   "fpl_name": "Rogers",
   "points_that_season": 169
  },
@@ -5220,7 +5220,7 @@
   "player": "Dewsbury-Hall",
   "club": "EVE",
   "cost": 0.5,
-  "fpl_id": 242,
+  "fpl_id": 236,
   "fpl_name": "Dewsbury-Hall",
   "points_that_season": 151
  },
@@ -5231,7 +5231,7 @@
   "player": "McGinn",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 54,
+  "fpl_id": 45,
   "fpl_name": "McGinn",
   "points_that_season": 103
  },
@@ -5242,7 +5242,7 @@
   "player": "Carvalho",
   "club": "BRE",
   "cost": 0.0,
-  "fpl_id": 123,
+  "fpl_id": 100,
   "fpl_name": "Carvalho",
   "points_that_season": 13
  },
@@ -5253,7 +5253,7 @@
   "player": "Watkins",
   "club": "AVL",
   "cost": 20.0,
-  "fpl_id": 64,
+  "fpl_id": 55,
   "fpl_name": "Watkins",
   "points_that_season": 167
  },
@@ -5264,7 +5264,7 @@
   "player": "Guiu",
   "club": "SUN",
   "cost": 1.75,
-  "fpl_id": 252,
+  "fpl_id": 168,
   "fpl_name": "Marc Guiu",
   "points_that_season": 13
  },
@@ -5275,9 +5275,9 @@
   "player": "Wilson",
   "club": "WHU",
   "cost": 0.75,
-  "fpl_id": 671,
+  "fpl_id": 260,
   "fpl_name": "Wilson",
-  "points_that_season": 80
+  "points_that_season": 168
  },
  {
   "season": "2025-26",
@@ -5308,7 +5308,7 @@
   "player": "Gabriel",
   "club": "ARS",
   "cost": 5.0,
-  "fpl_id": 5,
+  "fpl_id": 4,
   "fpl_name": "Gabriel",
   "points_that_season": 209
  },
@@ -5319,7 +5319,7 @@
   "player": "Pedro Porro",
   "club": "TOT",
   "cost": 4.0,
-  "fpl_id": 568,
+  "fpl_id": 499,
   "fpl_name": "Pedro Porro",
   "points_that_season": 117
  },
@@ -5330,7 +5330,7 @@
   "player": "Gvardiol",
   "club": "MCI",
   "cost": 4.75,
-  "fpl_id": 403,
+  "fpl_id": 391,
   "fpl_name": "Gvardiol",
   "points_that_season": 79
  },
@@ -5341,7 +5341,7 @@
   "player": "Livramento",
   "club": "NEW",
   "cost": 3.5,
-  "fpl_id": 477,
+  "fpl_id": 450,
   "fpl_name": "Livramento",
   "points_that_season": 59
  },
@@ -5352,7 +5352,7 @@
   "player": "Timber",
   "club": "ARS",
   "cost": 1.5,
-  "fpl_id": 8,
+  "fpl_id": 5,
   "fpl_name": "J.Timber",
   "points_that_season": 149
  },
@@ -5363,7 +5363,7 @@
   "player": "Gakpo",
   "club": "LIV",
   "cost": 6.5,
-  "fpl_id": 384,
+  "fpl_id": 367,
   "fpl_name": "Gakpo",
   "points_that_season": 131
  },
@@ -5374,7 +5374,7 @@
   "player": "Madueke",
   "club": "ARS",
   "cost": 3.0,
-  "fpl_id": 18,
+  "fpl_id": 16,
   "fpl_name": "Madueke",
   "points_that_season": 72
  },
@@ -5385,7 +5385,7 @@
   "player": "Savinho",
   "club": "MCI",
   "cost": 1.0,
-  "fpl_id": 415,
+  "fpl_id": 403,
   "fpl_name": "Savinho",
   "points_that_season": 43
  },
@@ -5396,7 +5396,7 @@
   "player": "Ndoye",
   "club": "NFO",
   "cost": 0.0,
-  "fpl_id": 669,
+  "fpl_id": 483,
   "fpl_name": "Ndoye",
   "points_that_season": 50
  },
@@ -5407,7 +5407,7 @@
   "player": "Reijnders",
   "club": "MCI",
   "cost": 1.25,
-  "fpl_id": 427,
+  "fpl_id": 404,
   "fpl_name": "Reijnders",
   "points_that_season": 92
  },
@@ -5418,7 +5418,7 @@
   "player": "Muniz",
   "club": "FUL",
   "cost": 6.5,
-  "fpl_id": 338,
+  "fpl_id": 271,
   "fpl_name": "Muniz",
   "points_that_season": 36
  },
@@ -5429,7 +5429,7 @@
   "player": "Barry",
   "club": "EVE",
   "cost": 9.0,
-  "fpl_id": 310,
+  "fpl_id": 249,
   "fpl_name": "Barry",
   "points_that_season": 95
  },
@@ -5440,7 +5440,7 @@
   "player": "Guesson",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 677,
+  "fpl_id": 42,
   "fpl_name": "Guessand",
   "points_that_season": 44
  },
@@ -5451,7 +5451,7 @@
   "player": "Sanchez",
   "club": "CHE",
   "cost": 2.0,
-  "fpl_id": 220,
+  "fpl_id": 140,
   "fpl_name": "S\u00e1nchez",
   "points_that_season": 113
  },
@@ -5462,7 +5462,7 @@
   "player": "Meslier",
   "club": "LEE",
   "cost": 0.0,
-  "fpl_id": 339,
+  "fpl_id": 3,
   "fpl_name": "Meslier",
   "points_that_season": 0
  },
@@ -5473,7 +5473,7 @@
   "player": "Virgil",
   "club": "LIV",
   "cost": 7.75,
-  "fpl_id": 373,
+  "fpl_id": 356,
   "fpl_name": "Virgil",
   "points_that_season": 175
  },
@@ -5484,7 +5484,7 @@
   "player": "Yoro",
   "club": "MUN",
   "cost": 0.5,
-  "fpl_id": 444,
+  "fpl_id": 420,
   "fpl_name": "Yoro",
   "points_that_season": 56
  },
@@ -5506,9 +5506,9 @@
   "player": "Akanji",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 404,
-  "fpl_name": "Akanji",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5517,9 +5517,9 @@
   "player": "Diego Leon",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 439,
-  "fpl_name": "D.Leon",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5528,7 +5528,7 @@
   "player": "Rice",
   "club": "ARS",
   "cost": 9.75,
-  "fpl_id": 21,
+  "fpl_id": 13,
   "fpl_name": "Rice",
   "points_that_season": 184
  },
@@ -5539,7 +5539,7 @@
   "player": "Gibbs-White",
   "club": "NFO",
   "cost": 7.75,
-  "fpl_id": 515,
+  "fpl_id": 480,
   "fpl_name": "Gibbs-White",
   "points_that_season": 188
  },
@@ -5550,7 +5550,7 @@
   "player": "Pedro Neto",
   "club": "CHE",
   "cost": 6.0,
-  "fpl_id": 236,
+  "fpl_id": 156,
   "fpl_name": "Neto",
   "points_that_season": 125
  },
@@ -5561,7 +5561,7 @@
   "player": "O'Riley",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 164,
+  "fpl_id": 126,
   "fpl_name": "O'Riley",
   "points_that_season": 16
  },
@@ -5572,7 +5572,7 @@
   "player": "Xhaka",
   "club": "SUN",
   "cost": 0.0,
-  "fpl_id": 668,
+  "fpl_id": 544,
   "fpl_name": "Xhaka",
   "points_that_season": 124
  },
@@ -5583,7 +5583,7 @@
   "player": "Solanke",
   "club": "TOT",
   "cost": 15.0,
-  "fpl_id": 596,
+  "fpl_id": 526,
   "fpl_name": "Solanke",
   "points_that_season": 40
  },
@@ -5594,8 +5594,8 @@
   "player": "Fabio Silva",
   "club": "WOL",
   "cost": 0.0,
-  "fpl_id": 655,
-  "fpl_name": "F\u00e1bio Silva",
+  "fpl_id": 23,
+  "fpl_name": "F\u00e1bio Vieira",
   "points_that_season": 0
  },
  {
@@ -5616,9 +5616,9 @@
   "player": "Ederson",
   "club": "MCI",
   "cost": 1.25,
-  "fpl_id": 399,
-  "fpl_name": "Ederson M.",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5627,7 +5627,7 @@
   "player": "Trafford",
   "club": "MCI",
   "cost": 0.75,
-  "fpl_id": 182,
+  "fpl_id": 385,
   "fpl_name": "Trafford",
   "points_that_season": 13
  },
@@ -5638,9 +5638,9 @@
   "player": "Doherty",
   "club": "WOL",
   "cost": 0.25,
-  "fpl_id": 632,
-  "fpl_name": "Doherty",
-  "points_that_season": 14
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5649,9 +5649,9 @@
   "player": "Zabarnyi",
   "club": "BOU",
   "cost": 0.5,
-  "fpl_id": 71,
-  "fpl_name": "Zabarnyi",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5660,9 +5660,9 @@
   "player": "Emerson",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 604,
-  "fpl_name": "Emerson",
-  "points_that_season": 0
+  "fpl_id": 316,
+  "fpl_name": "Emersonn",
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5671,7 +5671,7 @@
   "player": "Digne",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 37,
+  "fpl_id": 30,
   "fpl_name": "Digne",
   "points_that_season": 97
  },
@@ -5682,7 +5682,7 @@
   "player": "Struijk",
   "club": "LEE",
   "cost": 0.0,
-  "fpl_id": 343,
+  "fpl_id": 328,
   "fpl_name": "Struijk",
   "points_that_season": 108
  },
@@ -5693,9 +5693,9 @@
   "player": "Trossard",
   "club": "ARS",
   "cost": 2.0,
-  "fpl_id": 20,
-  "fpl_name": "Trossard",
-  "points_that_season": 119
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5704,7 +5704,7 @@
   "player": "Rodri",
   "club": "MCI",
   "cost": 3.75,
-  "fpl_id": 421,
+  "fpl_id": 402,
   "fpl_name": "Rodrigo",
   "points_that_season": 69
  },
@@ -5715,7 +5715,7 @@
   "player": "Adingra",
   "club": "BRI",
   "cost": 0.5,
-  "fpl_id": 543,
+  "fpl_id": 546,
   "fpl_name": "Adingra",
   "points_that_season": 34
  },
@@ -5726,9 +5726,9 @@
   "player": "Adama",
   "club": "FUL",
   "cost": 0.0,
-  "fpl_id": 326,
-  "fpl_name": "Adama",
-  "points_that_season": 25
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5737,7 +5737,7 @@
   "player": "Smith-Rowe",
   "club": "FUL",
   "cost": 0.5,
-  "fpl_id": 325,
+  "fpl_id": 262,
   "fpl_name": "Smith Rowe",
   "points_that_season": 80
  },
@@ -5748,7 +5748,7 @@
   "player": "Haaland",
   "club": "MCI",
   "cost": 23.5,
-  "fpl_id": 430,
+  "fpl_id": 411,
   "fpl_name": "Haaland",
   "points_that_season": 239
  },
@@ -5759,7 +5759,7 @@
   "player": "Mateta",
   "club": "CRY",
   "cost": 17.0,
-  "fpl_id": 283,
+  "fpl_id": 223,
   "fpl_name": "Mateta",
   "points_that_season": 114
  },
@@ -5770,7 +5770,7 @@
   "player": "Unal",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 98,
+  "fpl_id": 80,
   "fpl_name": "Enes \u00dcnal",
   "points_that_season": 27
  },
@@ -5781,7 +5781,7 @@
   "player": "Martinez",
   "club": "AVL",
   "cost": 1.25,
-  "fpl_id": 32,
+  "fpl_id": 28,
   "fpl_name": "Martinez",
   "points_that_season": 120
  },
@@ -5792,7 +5792,7 @@
   "player": "Bizot",
   "club": "AVL",
   "cost": 0.0,
-  "fpl_id": 33,
+  "fpl_id": 29,
   "fpl_name": "M.Bizot",
   "points_that_season": 16
  },
@@ -5803,9 +5803,9 @@
   "player": "Van De Ven",
   "club": "TOT",
   "cost": 1.5,
-  "fpl_id": 575,
-  "fpl_name": "Van de Ven",
-  "points_that_season": 116
+  "fpl_id": 112,
+  "fpl_name": "Van Hecke",
+  "points_that_season": 148
  },
  {
   "season": "2025-26",
@@ -5814,9 +5814,9 @@
   "player": "Konate",
   "club": "LIV",
   "cost": 3.0,
-  "fpl_id": 374,
-  "fpl_name": "Konat\u00e9",
-  "points_that_season": 129
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -5825,7 +5825,7 @@
   "player": "Gusto",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 228,
+  "fpl_id": 144,
   "fpl_name": "Gusto",
   "points_that_season": 96
  },
@@ -5836,7 +5836,7 @@
   "player": "Dunk",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 146,
+  "fpl_id": 116,
   "fpl_name": "Dunk",
   "points_that_season": 100
  },
@@ -5847,7 +5847,7 @@
   "player": "Senesi",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": 72,
+  "fpl_id": 498,
   "fpl_name": "Senesi",
   "points_that_season": 175
  },
@@ -5858,7 +5858,7 @@
   "player": "Wirtz",
   "club": "LIV",
   "cost": 17.5,
-  "fpl_id": 382,
+  "fpl_id": 366,
   "fpl_name": "Wirtz",
   "points_that_season": 125
  },
@@ -5869,7 +5869,7 @@
   "player": "Tanaka",
   "club": "LEE",
   "cost": 0.25,
-  "fpl_id": 358,
+  "fpl_id": 345,
   "fpl_name": "Tanaka",
   "points_that_season": 67
  },
@@ -5880,7 +5880,7 @@
   "player": "Doku",
   "club": "MCI",
   "cost": 2.5,
-  "fpl_id": 418,
+  "fpl_id": 400,
   "fpl_name": "Doku",
   "points_that_season": 120
  },
@@ -5891,7 +5891,7 @@
   "player": "Barnes",
   "club": "NEW",
   "cost": 1.25,
-  "fpl_id": 487,
+  "fpl_id": 453,
   "fpl_name": "Barnes",
   "points_that_season": 106
  },
@@ -5902,7 +5902,7 @@
   "player": "Joelinton",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 490,
+  "fpl_id": 458,
   "fpl_name": "Joelinton",
   "points_that_season": 73
  },
@@ -5913,7 +5913,7 @@
   "player": "Havertz",
   "club": "ARS",
   "cost": 9.0,
-  "fpl_id": 30,
+  "fpl_id": 26,
   "fpl_name": "Havertz",
   "points_that_season": 36
  },
@@ -5924,7 +5924,7 @@
   "player": "Ekitike",
   "club": "LIV",
   "cost": 13.75,
-  "fpl_id": 661,
+  "fpl_id": 380,
   "fpl_name": "Ekitik\u00e9",
   "points_that_season": 125
  },
@@ -5935,9 +5935,9 @@
   "player": "Samu",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 727,
-  "fpl_name": "Chukwueze",
-  "points_that_season": 62
+  "fpl_id": 149,
+  "fpl_name": "Colwill",
+  "points_that_season": 8
  },
  {
   "season": "2025-26",
@@ -5946,7 +5946,7 @@
   "player": "Vicario",
   "club": "TOT",
   "cost": 1.25,
-  "fpl_id": 565,
+  "fpl_id": 494,
   "fpl_name": "Vicario",
   "points_that_season": 90
  },
@@ -5957,7 +5957,7 @@
   "player": "Pope",
   "club": "NEW",
   "cost": 1.25,
-  "fpl_id": 469,
+  "fpl_id": 442,
   "fpl_name": "Pope",
   "points_that_season": 96
  },
@@ -5968,7 +5968,7 @@
   "player": "Collins",
   "club": "BRE",
   "cost": 1.75,
-  "fpl_id": 106,
+  "fpl_id": 84,
   "fpl_name": "Collins",
   "points_that_season": 129
  },
@@ -5979,7 +5979,7 @@
   "player": "Ruben Dias",
   "club": "MCI",
   "cost": 1.75,
-  "fpl_id": 408,
+  "fpl_id": 390,
   "fpl_name": "R\u00faben",
   "points_that_season": 113
  },
@@ -5990,7 +5990,7 @@
   "player": "Burn",
   "club": "NEW",
   "cost": 1.25,
-  "fpl_id": 476,
+  "fpl_id": 448,
   "fpl_name": "Burn",
   "points_that_season": 93
  },
@@ -6001,7 +6001,7 @@
   "player": "Udogie",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 574,
+  "fpl_id": 506,
   "fpl_name": "Udogie",
   "points_that_season": 29
  },
@@ -6012,7 +6012,7 @@
   "player": "Calafiori",
   "club": "ARS",
   "cost": 0.0,
-  "fpl_id": 7,
+  "fpl_id": 8,
   "fpl_name": "Calafiori",
   "points_that_season": 109
  },
@@ -6023,7 +6023,7 @@
   "player": "Odegaard",
   "club": "ARS",
   "cost": 11.0,
-  "fpl_id": 17,
+  "fpl_id": 15,
   "fpl_name": "\u00d8degaard",
   "points_that_season": 74
  },
@@ -6034,7 +6034,7 @@
   "player": "Kudus",
   "club": "TOT",
   "cost": 6.5,
-  "fpl_id": 582,
+  "fpl_id": 512,
   "fpl_name": "Kudus",
   "points_that_season": 75
  },
@@ -6045,7 +6045,7 @@
   "player": "Bruno G.",
   "club": "NEW",
   "cost": 4.25,
-  "fpl_id": 488,
+  "fpl_id": 452,
   "fpl_name": "Bruno G.",
   "points_that_season": 154
  },
@@ -6056,7 +6056,7 @@
   "player": "Enzo",
   "club": "CHE",
   "cost": 3.75,
-  "fpl_id": 237,
+  "fpl_id": 155,
   "fpl_name": "Enzo",
   "points_that_season": 157
  },
@@ -6067,7 +6067,7 @@
   "player": "Kulusevski",
   "club": "TOT",
   "cost": 0.5,
-  "fpl_id": 583,
+  "fpl_id": 521,
   "fpl_name": "Kulusevski",
   "points_that_season": 0
  },
@@ -6078,7 +6078,7 @@
   "player": "Delap",
   "club": "CHE",
   "cost": 13.25,
-  "fpl_id": 250,
+  "fpl_id": 167,
   "fpl_name": "Delap",
   "points_that_season": 45
  },
@@ -6089,7 +6089,7 @@
   "player": "Awoniyi",
   "club": "NFO",
   "cost": 0.5,
-  "fpl_id": 527,
+  "fpl_id": 492,
   "fpl_name": "Awoniyi",
   "points_that_season": 43
  },
@@ -6100,9 +6100,9 @@
   "player": "Mayenda",
   "club": "SUN",
   "cost": 2.25,
-  "fpl_id": 561,
-  "fpl_name": "Mayenda",
-  "points_that_season": 40
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6111,7 +6111,7 @@
   "player": "Roefs",
   "club": "SUN",
   "cost": 0.25,
-  "fpl_id": 670,
+  "fpl_id": 529,
   "fpl_name": "Roefs",
   "points_that_season": 136
  },
@@ -6122,7 +6122,7 @@
   "player": "Jorgenson",
   "club": "CHE",
   "cost": 0.25,
-  "fpl_id": 221,
+  "fpl_id": 141,
   "fpl_name": "J\u00f6rgensen",
   "points_that_season": 9
  },
@@ -6133,7 +6133,7 @@
   "player": "Guehi",
   "club": "CRY",
   "cost": 2.25,
-  "fpl_id": 260,
+  "fpl_id": 388,
   "fpl_name": "Gu\u00e9hi",
   "points_that_season": 179
  },
@@ -6144,9 +6144,9 @@
   "player": "Stones",
   "club": "MCI",
   "cost": 0.25,
-  "fpl_id": 409,
-  "fpl_name": "Stones",
-  "points_that_season": 16
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6155,9 +6155,9 @@
   "player": "Trippier",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 478,
-  "fpl_name": "Trippier",
-  "points_that_season": 54
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6166,7 +6166,7 @@
   "player": "White",
   "club": "ARS",
   "cost": 0.75,
-  "fpl_id": 11,
+  "fpl_id": 10,
   "fpl_name": "White",
   "points_that_season": 45
  },
@@ -6177,7 +6177,7 @@
   "player": "Sosa",
   "club": "CRY",
   "cost": 0.0,
-  "fpl_id": 259,
+  "fpl_id": 205,
   "fpl_name": "Sosa",
   "points_that_season": 6
  },
@@ -6188,7 +6188,7 @@
   "player": "Mbeumo",
   "club": "MUN",
   "cost": 10.5,
-  "fpl_id": 119,
+  "fpl_id": 427,
   "fpl_name": "Mbeumo",
   "points_that_season": 148
  },
@@ -6199,7 +6199,7 @@
   "player": "Grealish",
   "club": "EVE",
   "cost": 6.5,
-  "fpl_id": 419,
+  "fpl_id": 238,
   "fpl_name": "Grealish",
   "points_that_season": 79
  },
@@ -6210,7 +6210,7 @@
   "player": "Nwaneri",
   "club": "ARS",
   "cost": 0.5,
-  "fpl_id": 25,
+  "fpl_id": 22,
   "fpl_name": "Nwaneri",
   "points_that_season": 8
  },
@@ -6221,9 +6221,9 @@
   "player": "Hwang",
   "club": "WOL",
   "cost": 0.0,
-  "fpl_id": 642,
-  "fpl_name": "Hee Chan",
-  "points_that_season": 54
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6232,7 +6232,7 @@
   "player": "Estevao",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 238,
+  "fpl_id": 157,
   "fpl_name": "Est\u00eav\u00e3o",
   "points_that_season": 58
  },
@@ -6243,7 +6243,7 @@
   "player": "Joao Pedro",
   "club": "CHE",
   "cost": 17.5,
-  "fpl_id": 249,
+  "fpl_id": 165,
   "fpl_name": "Jo\u00e3o Pedro",
   "points_that_season": 177
  },
@@ -6254,7 +6254,7 @@
   "player": "Welbeck",
   "club": "BRI",
   "cost": 7.75,
-  "fpl_id": 178,
+  "fpl_id": 136,
   "fpl_name": "Welbeck",
   "points_that_season": 126
  },
@@ -6265,7 +6265,7 @@
   "player": "Isidor",
   "club": "SUN",
   "cost": 0.0,
-  "fpl_id": 560,
+  "fpl_id": 553,
   "fpl_name": "Isidor",
   "points_that_season": 74
  },
@@ -6276,9 +6276,9 @@
   "player": "Onana",
   "club": "MUN",
   "cost": 0.25,
-  "fpl_id": 432,
+  "fpl_id": 48,
   "fpl_name": "Onana",
-  "points_that_season": 0
+  "points_that_season": 76
  },
  {
   "season": "2025-26",
@@ -6287,9 +6287,9 @@
   "player": "Ramsdale",
   "club": "NEW",
   "cost": 0.0,
-  "fpl_id": 674,
-  "fpl_name": "Ramsdale",
-  "points_that_season": 25
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6298,7 +6298,7 @@
   "player": "Maatsen",
   "club": "AVL",
   "cost": 0.5,
-  "fpl_id": 39,
+  "fpl_id": 36,
   "fpl_name": "Maatsen",
   "points_that_season": 54
  },
@@ -6309,7 +6309,7 @@
   "player": "Romero",
   "club": "TOT",
   "cost": 1.25,
-  "fpl_id": 569,
+  "fpl_id": 500,
   "fpl_name": "Romero",
   "points_that_season": 91
  },
@@ -6320,9 +6320,9 @@
   "player": "Totti",
   "club": "WOL",
   "cost": 0.25,
-  "fpl_id": 637,
-  "fpl_name": "Toti",
-  "points_that_season": 41
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6331,9 +6331,9 @@
   "player": "Walker",
   "club": "BUR",
   "cost": 0.0,
-  "fpl_id": 187,
-  "fpl_name": "Walker",
-  "points_that_season": 70
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6342,7 +6342,7 @@
   "player": "Hato",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": 672,
+  "fpl_id": 148,
   "fpl_name": "Hato",
   "points_that_season": 19
  },
@@ -6353,7 +6353,7 @@
   "player": "Palmer",
   "club": "CHE",
   "cost": 20.0,
-  "fpl_id": 235,
+  "fpl_id": 154,
   "fpl_name": "Palmer",
   "points_that_season": 114
  },
@@ -6364,9 +6364,9 @@
   "player": "Salah",
   "club": "LIV",
   "cost": 22.75,
-  "fpl_id": 381,
-  "fpl_name": "M.Salah",
-  "points_that_season": 123
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6375,7 +6375,7 @@
   "player": "Minteh",
   "club": "BRI",
   "cost": 1.25,
-  "fpl_id": 160,
+  "fpl_id": 122,
   "fpl_name": "Minteh",
   "points_that_season": 117
  },
@@ -6386,7 +6386,7 @@
   "player": "Ramsey",
   "club": "AVL",
   "cost": 1.0,
-  "fpl_id": 52,
+  "fpl_id": 456,
   "fpl_name": "J.Ramsey",
   "points_that_season": 62
  },
@@ -6397,7 +6397,7 @@
   "player": "Dibling",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 707,
+  "fpl_id": 245,
   "fpl_name": "Dibling",
   "points_that_season": 18
  },
@@ -6408,9 +6408,9 @@
   "player": "Hojlund",
   "club": "MUN",
   "cost": 0.5,
-  "fpl_id": 465,
-  "fpl_name": "H\u00f8jlund",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6419,7 +6419,7 @@
   "player": "Kostoulas",
   "club": "BRI",
   "cost": 1.25,
-  "fpl_id": 181,
+  "fpl_id": 138,
   "fpl_name": "Kostoulas",
   "points_that_season": 35
  },
@@ -6430,9 +6430,9 @@
   "player": "Fleming",
   "club": "BUR",
   "cost": 1.0,
-  "fpl_id": 215,
-  "fpl_name": "Flemming",
-  "points_that_season": 99
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6441,7 +6441,7 @@
   "player": "Verbruggen",
   "club": "BRI",
   "cost": 1.25,
-  "fpl_id": 139,
+  "fpl_id": 109,
   "fpl_name": "Verbruggen",
   "points_that_season": 130
  },
@@ -6452,7 +6452,7 @@
   "player": "Steele",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 138,
+  "fpl_id": 111,
   "fpl_name": "Steele",
   "points_that_season": 0
  },
@@ -6463,7 +6463,7 @@
   "player": "Kerkez",
   "club": "LIV",
   "cost": 5.25,
-  "fpl_id": 371,
+  "fpl_id": 358,
   "fpl_name": "Kerkez",
   "points_that_season": 85
  },
@@ -6474,7 +6474,7 @@
   "player": "Branthwaite",
   "club": "EVE",
   "cost": 3.0,
-  "fpl_id": 290,
+  "fpl_id": 230,
   "fpl_name": "Branthwaite",
   "points_that_season": 32
  },
@@ -6485,9 +6485,9 @@
   "player": "Kilman",
   "club": "WHU",
   "cost": 0.5,
-  "fpl_id": 605,
-  "fpl_name": "Kilman",
-  "points_that_season": 36
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6496,7 +6496,7 @@
   "player": "Mitchell",
   "club": "CRY",
   "cost": 2.0,
-  "fpl_id": 258,
+  "fpl_id": 204,
   "fpl_name": "Mitchell",
   "points_that_season": 135
  },
@@ -6507,7 +6507,7 @@
   "player": "Colwill",
   "club": "CHE",
   "cost": 0.5,
-  "fpl_id": 227,
+  "fpl_id": 149,
   "fpl_name": "Colwill",
   "points_that_season": 8
  },
@@ -6518,7 +6518,7 @@
   "player": "Mitoma",
   "club": "BRI",
   "cost": 8.25,
-  "fpl_id": 157,
+  "fpl_id": 121,
   "fpl_name": "Mitoma",
   "points_that_season": 62
  },
@@ -6529,7 +6529,7 @@
   "player": "Marmoush",
   "club": "MCI",
   "cost": 12.0,
-  "fpl_id": 413,
+  "fpl_id": 401,
   "fpl_name": "Marmoush",
   "points_that_season": 56
  },
@@ -6540,9 +6540,9 @@
   "player": "Soucek",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": 613,
-  "fpl_name": "Sou\u010dek",
-  "points_that_season": 103
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6551,9 +6551,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 416,
-  "fpl_name": "Bernardo",
-  "points_that_season": 102
+  "fpl_id": 470,
+  "fpl_name": "Morato",
+  "points_that_season": 53
  },
  {
   "season": "2025-26",
@@ -6562,7 +6562,7 @@
   "player": "Tels",
   "club": "TOT",
   "cost": 0.0,
-  "fpl_id": 584,
+  "fpl_id": 514,
   "fpl_name": "Tel",
   "points_that_season": 78
  },
@@ -6573,7 +6573,7 @@
   "player": "Piroe",
   "club": "LEE",
   "cost": 6.0,
-  "fpl_id": 362,
+  "fpl_id": 348,
   "fpl_name": "Piroe",
   "points_that_season": 17
  },
@@ -6584,7 +6584,7 @@
   "player": "Thiago",
   "club": "BRE",
   "cost": 10.75,
-  "fpl_id": 136,
+  "fpl_id": 106,
   "fpl_name": "Thiago",
   "points_that_season": 181
  },
@@ -6595,7 +6595,7 @@
   "player": "Tzimas",
   "club": "BRI",
   "cost": 0.0,
-  "fpl_id": 180,
+  "fpl_id": 137,
   "fpl_name": "Tzimas",
   "points_that_season": 16
  },
@@ -6606,7 +6606,7 @@
   "player": "Pickford",
   "club": "EVE",
   "cost": 3.5,
-  "fpl_id": 287,
+  "fpl_id": 226,
   "fpl_name": "Pickford",
   "points_that_season": 135
  },
@@ -6617,7 +6617,7 @@
   "player": "Travers",
   "club": "EVE",
   "cost": 0.0,
-  "fpl_id": 288,
+  "fpl_id": 227,
   "fpl_name": "Travers",
   "points_that_season": 0
  },
@@ -6628,7 +6628,7 @@
   "player": "De Ligt",
   "club": "MUN",
   "cost": 0.25,
-  "fpl_id": 436,
+  "fpl_id": 416,
   "fpl_name": "De Ligt",
   "points_that_season": 43
  },
@@ -6639,7 +6639,7 @@
   "player": "Aina",
   "club": "NFO",
   "cost": 2.0,
-  "fpl_id": 507,
+  "fpl_id": 473,
   "fpl_name": "Aina",
   "points_that_season": 67
  },
@@ -6650,7 +6650,7 @@
   "player": "Murillo",
   "club": "NFO",
   "cost": 2.75,
-  "fpl_id": 506,
+  "fpl_id": 472,
   "fpl_name": "Murillo",
   "points_that_season": 83
  },
@@ -6661,7 +6661,7 @@
   "player": "Chalobah",
   "club": "CHE",
   "cost": 1.0,
-  "fpl_id": 226,
+  "fpl_id": 143,
   "fpl_name": "Chalobah",
   "points_that_season": 136
  },
@@ -6672,7 +6672,7 @@
   "player": "Truffert",
   "club": "BOU",
   "cost": 0.5,
-  "fpl_id": 74,
+  "fpl_id": 61,
   "fpl_name": "Truffert",
   "points_that_season": 165
  },
@@ -6683,7 +6683,7 @@
   "player": "Mac Allister",
   "club": "LIV",
   "cost": 3.0,
-  "fpl_id": 386,
+  "fpl_id": 372,
   "fpl_name": "Mac Allister",
   "points_that_season": 108
  },
@@ -6694,7 +6694,7 @@
   "player": "Iwobi",
   "club": "FUL",
   "cost": 3.25,
-  "fpl_id": 324,
+  "fpl_id": 261,
   "fpl_name": "Iwobi",
   "points_that_season": 103
  },
@@ -6705,7 +6705,7 @@
   "player": "Martinelli",
   "club": "ARS",
   "cost": 0.5,
-  "fpl_id": 19,
+  "fpl_id": 18,
   "fpl_name": "Martinelli",
   "points_that_season": 57
  },
@@ -6716,7 +6716,7 @@
   "player": "McNeil",
   "club": "EVE",
   "cost": 0.25,
-  "fpl_id": 300,
+  "fpl_id": 241,
   "fpl_name": "McNeil",
   "points_that_season": 53
  },
@@ -6727,7 +6727,7 @@
   "player": "Aaronsen",
   "club": "LEE",
   "cost": 0.0,
-  "fpl_id": 350,
+  "fpl_id": 337,
   "fpl_name": "Aaronson",
   "points_that_season": 126
  },
@@ -6738,7 +6738,7 @@
   "player": "Evanilson",
   "club": "BOU",
   "cost": 13.0,
-  "fpl_id": 97,
+  "fpl_id": 79,
   "fpl_name": "Evanilson",
   "points_that_season": 115
  },
@@ -6749,7 +6749,7 @@
   "player": "Wood",
   "club": "NFO",
   "cost": 14.25,
-  "fpl_id": 525,
+  "fpl_id": 490,
   "fpl_name": "Wood",
   "points_that_season": 41
  },
@@ -6760,9 +6760,9 @@
   "player": "Jimenez",
   "club": "FUL",
   "cost": 5.5,
-  "fpl_id": 337,
-  "fpl_name": "Ra\u00fal",
-  "points_that_season": 112
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6771,7 +6771,7 @@
   "player": "Leno",
   "club": "FUL",
   "cost": 1.0,
-  "fpl_id": 314,
+  "fpl_id": 250,
   "fpl_name": "Leno",
   "points_that_season": 122
  },
@@ -6782,9 +6782,9 @@
   "player": "Jose Sa",
   "club": "WOL",
   "cost": 0.25,
-  "fpl_id": 628,
-  "fpl_name": "Jos\u00e9 S\u00e1",
-  "points_that_season": 68
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6793,9 +6793,9 @@
   "player": "Cucurella",
   "club": "CHE",
   "cost": 4.0,
-  "fpl_id": 224,
-  "fpl_name": "Cucurella",
-  "points_that_season": 104
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6804,7 +6804,7 @@
   "player": "Ait-Nouri",
   "club": "MCI",
   "cost": 4.75,
-  "fpl_id": 402,
+  "fpl_id": 392,
   "fpl_name": "A\u00eft-Nouri",
   "points_that_season": 60
  },
@@ -6815,7 +6815,7 @@
   "player": "Mykolenko",
   "club": "EVE",
   "cost": 1.0,
-  "fpl_id": 292,
+  "fpl_id": 233,
   "fpl_name": "Mykolenko",
   "points_that_season": 95
  },
@@ -6826,7 +6826,7 @@
   "player": "Lewis-Potter",
   "club": "BRE",
   "cost": 0.5,
-  "fpl_id": 107,
+  "fpl_id": 86,
   "fpl_name": "Lewis-Potter",
   "points_that_season": 115
  },
@@ -6837,7 +6837,7 @@
   "player": "Dorgu",
   "club": "MUN",
   "cost": 1.5,
-  "fpl_id": 441,
+  "fpl_id": 415,
   "fpl_name": "Dorgu",
   "points_that_season": 95
  },
@@ -6848,7 +6848,7 @@
   "player": "Szoboszlai",
   "club": "LIV",
   "cost": 4.5,
-  "fpl_id": 387,
+  "fpl_id": 368,
   "fpl_name": "Szoboszlai",
   "points_that_season": 160
  },
@@ -6859,7 +6859,7 @@
   "player": "Johnson",
   "club": "TOT",
   "cost": 3.0,
-  "fpl_id": 580,
+  "fpl_id": 209,
   "fpl_name": "Johnson",
   "points_that_season": 65
  },
@@ -6870,7 +6870,7 @@
   "player": "Amad",
   "club": "MUN",
   "cost": 5.5,
-  "fpl_id": 452,
+  "fpl_id": 431,
   "fpl_name": "Amad",
   "points_that_season": 91
  },
@@ -6881,7 +6881,7 @@
   "player": "Damsgaard",
   "club": "BRE",
   "cost": 2.5,
-  "fpl_id": 121,
+  "fpl_id": 96,
   "fpl_name": "Damsgaard",
   "points_that_season": 113
  },
@@ -6892,7 +6892,7 @@
   "player": "Anderson",
   "club": "NFO",
   "cost": 1.5,
-  "fpl_id": 517,
+  "fpl_id": 481,
   "fpl_name": "Anderson",
   "points_that_season": 180
  },
@@ -6903,9 +6903,9 @@
   "player": "Bowen",
   "club": "WHU",
   "cost": 17.0,
-  "fpl_id": 624,
-  "fpl_name": "Bowen",
-  "points_that_season": 187
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
@@ -6914,7 +6914,7 @@
   "player": "Igor Jesus",
   "club": "NFO",
   "cost": 2.0,
-  "fpl_id": 526,
+  "fpl_id": 491,
   "fpl_name": "Igor Jesus",
   "points_that_season": 114
  },
@@ -6925,7 +6925,7 @@
   "player": "Zirkzee",
   "club": "MUN",
   "cost": 1.0,
-  "fpl_id": 466,
+  "fpl_id": 440,
   "fpl_name": "Zirkzee",
   "points_that_season": 42
  },
@@ -6936,8 +6936,8 @@
   "player": "Dubravka",
   "club": "BUR",
   "cost": 0.5,
-  "fpl_id": 470,
-  "fpl_name": "D\u00fabravka",
+  "fpl_id": 497,
+  "fpl_name": "Dubravka",
   "points_that_season": 96
  },
  {
@@ -6947,7 +6947,7 @@
   "player": "Bayindir",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 431,
+  "fpl_id": 413,
   "fpl_name": "Bayindir",
   "points_that_season": 11
  },
@@ -6969,7 +6969,7 @@
   "player": "Lewis-Skelly",
   "club": "ARS",
   "cost": 4.25,
-  "fpl_id": 10,
+  "fpl_id": 7,
   "fpl_name": "Lewis-Skelly",
   "points_that_season": 29
  },
@@ -6980,7 +6980,7 @@
   "player": "Frimpong",
   "club": "LIV",
   "cost": 5.5,
-  "fpl_id": 370,
+  "fpl_id": 357,
   "fpl_name": "Frimpong",
   "points_that_season": 63
  },
@@ -6991,7 +6991,7 @@
   "player": "Bassey",
   "club": "FUL",
   "cost": 0.0,
-  "fpl_id": 318,
+  "fpl_id": 257,
   "fpl_name": "Bassey",
   "points_that_season": 103
  },
@@ -7002,7 +7002,7 @@
   "player": "Maguire",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 442,
+  "fpl_id": 418,
   "fpl_name": "Maguire",
   "points_that_season": 90
  },
@@ -7013,7 +7013,7 @@
   "player": "Foden",
   "club": "MCI",
   "cost": 10.75,
-  "fpl_id": 414,
+  "fpl_id": 398,
   "fpl_name": "Foden",
   "points_that_season": 131
  },
@@ -7024,7 +7024,7 @@
   "player": "Kluivert",
   "club": "BOU",
   "cost": 3.75,
-  "fpl_id": 81,
+  "fpl_id": 70,
   "fpl_name": "Kluivert",
   "points_that_season": 41
  },
@@ -7035,7 +7035,7 @@
   "player": "Rutter",
   "club": "BRI",
   "cost": 1.75,
-  "fpl_id": 158,
+  "fpl_id": 125,
   "fpl_name": "Georginio",
   "points_that_season": 87
  },
@@ -7046,7 +7046,7 @@
   "player": "Hudson-Odoi",
   "club": "NFO",
   "cost": 0.5,
-  "fpl_id": 516,
+  "fpl_id": 482,
   "fpl_name": "Hudson-Odoi",
   "points_that_season": 88
  },
@@ -7057,7 +7057,7 @@
   "player": "Gravenberch",
   "club": "LIV",
   "cost": 0.5,
-  "fpl_id": 390,
+  "fpl_id": 371,
   "fpl_name": "Gravenberch",
   "points_that_season": 144
  },
@@ -7068,7 +7068,7 @@
   "player": "Sesko",
   "club": "MUN",
   "cost": 14.25,
-  "fpl_id": 681,
+  "fpl_id": 439,
   "fpl_name": "\u0160e\u0161ko",
   "points_that_season": 111
  },
@@ -7079,7 +7079,7 @@
   "player": "Richarlison",
   "club": "TOT",
   "cost": 2.5,
-  "fpl_id": 597,
+  "fpl_id": 527,
   "fpl_name": "Richarlison",
   "points_that_season": 119
  },
@@ -7090,7 +7090,7 @@
   "player": "Obi",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": 467,
+  "fpl_id": 441,
   "fpl_name": "Obi",
   "points_that_season": 0
  }
