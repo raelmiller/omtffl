@@ -9,11 +9,19 @@ on:
 permissions:
   contents: write
 
+# The draft-advisor code lives on the feature branch, not main. Scheduled
+# runs default to main, so we explicitly check out the feature branch,
+# refresh the data + standalone advisor there, and push back to it.
+env:
+  WORK_BRANCH: claude/fpl-draft-tool-scope-nkw048
+
 jobs:
   bake:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.WORK_BRANCH }}
 
       - uses: actions/setup-python@v5
         with:
@@ -22,14 +30,24 @@ jobs:
       - name: Bake dataset
         run: python draft-advisor/scripts/bake_fpl_data.py
 
-      - name: Commit dataset
+      - name: Rebuild derived data + standalone advisor
+        run: |
+          cd draft-advisor
+          pip install --quiet openpyxl
+          python scripts/ingest_draft_history.py
+          python scripts/build_player_breakdown.py
+          python scripts/build_manager_dossiers.py
+          python scripts/fit_price_model.py
+          python scripts/build_standalone.py
+
+      - name: Commit refreshed data + tool
         run: |
           git config user.name "fpl-data-bot"
           git config user.email "actions@github.com"
-          git add draft-advisor/data/fpl_data.json
+          git add draft-advisor/data/*.json draft-advisor/dossiers.html draft-advisor/advisor-standalone.html
           if git diff --cached --quiet; then
             echo "No changes."
           else
-            git commit -m "Bake FPL dataset ($(date -u +%Y-%m-%d))"
-            git push
+            git commit -m "Refresh FPL data + standalone advisor ($(date -u +%Y-%m-%d))"
+            git push origin HEAD:${{ env.WORK_BRANCH }}
           fi
