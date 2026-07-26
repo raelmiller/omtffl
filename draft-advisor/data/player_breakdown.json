@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-07-25T07:20:51Z",
+  "fpl_baked_at": "2026-07-26T07:38:20Z",
   "sales": 645,
   "unique_players": 392,
   "matched_to_fpl": 249
@@ -3417,7 +3417,7 @@
    "display": "Sch\u00e4r",
    "position": "DEF",
    "current_club": "NEW",
-   "status": "d",
+   "status": "a",
    "last_season_points": 51,
    "xgi": "1.57",
    "penalties": false,
