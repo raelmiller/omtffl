@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-07-28T07:41:27Z",
+  "fpl_baked_at": "2026-07-29T07:45:28Z",
   "sales": 645,
   "unique_players": 392,
   "matched_to_fpl": 249
@@ -8328,7 +8328,7 @@
    "display": "Harrison",
    "position": "MID",
    "current_club": "LEE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 12,
    "xgi": "0.51",
    "penalties": false,
