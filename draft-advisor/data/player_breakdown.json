@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-07-29T07:45:28Z",
+  "fpl_baked_at": "2026-07-30T07:35:16Z",
   "sales": 645,
   "unique_players": 392,
   "matched_to_fpl": 249
@@ -1428,7 +1428,7 @@
    "display": "Grealish",
    "position": "MID",
    "current_club": "MCI",
-   "status": "a",
+   "status": "d",
    "last_season_points": 79,
    "xgi": "5.41",
    "penalties": false,
