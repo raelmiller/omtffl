@@ -330,7 +330,14 @@ function rivalScores(p,est){
   });
   return out.sort((a,b)=>b.score-a.score).slice(0,4);
 }
-function soldIds(){return new Set(state.soldPlayers.map(s=>s.player.id))}
+function soldIds(){ // resolve each sold player to our own id so the pool/gems stay correct despite ID drift
+  const set=new Set();
+  for(const sp of state.soldPlayers){
+    const r=resolveAuctionPlayer(sp.player);
+    if(r)set.add(r.id); else if(sp.player&&sp.player.id!=null)set.add(sp.player.id);
+  }
+  return set;
+}
 function poolRemaining(){
   const gone=soldIds();
   return FPL.players.filter(p=>!gone.has(p.id)&&p.status!=="u"&&projection(p).pts>0);
@@ -435,10 +442,36 @@ function factsheet(p,currentBid,leadingTeam){
     </div>
   </div>`;
 }
+// The auction app and this tool fetch FPL data separately, and FPL can
+// reassign player IDs between snapshots (especially at a season reset).
+// Trust the ID first (safe against shared surnames/accents) — but if the
+// ID lands on a player whose name doesn't match the nominated one, the IDs
+// have drifted, so fall back to matching by name + club.
+function resolveAuctionPlayer(ap){
+  if(!ap)return null;
+  const name=(ap.web_name||"").trim();
+  const byId=(ap.id!=null)?FPL.players.find(p=>p.id===ap.id):null;
+  if(!name)return byId||null;                    // nothing to verify against
+  if(byId&&byId.web_name===name)return byId;      // ID agrees with the name → use it
+  // ID missing or points at a different player → resolve by name, club breaks ties
+  let hits=FPL.players.filter(p=>p.web_name===name);
+  const team=(ap.team_name||ap.team_short||"").trim().toUpperCase();
+  if(hits.length>1&&team){
+    const byTeam=hits.filter(p=>(p.team_short||"").toUpperCase()===team);
+    if(byTeam.length)hits=byTeam;
+  }
+  if(hits.length)return hits[0];
+  const full=((ap.first_name||"")+" "+(ap.second_name||"")).trim().toLowerCase();
+  if(full.length>1){
+    const m=FPL.players.find(p=>((p.first_name||"")+" "+(p.second_name||"")).trim().toLowerCase()===full);
+    if(m)return m;
+  }
+  return null;   // genuinely not in our data (custom entry, or player dropped from FPL)
+}
 function renderAuction(){
   const a=state.currentAuction;
   if(!a){$("auctionBody").innerHTML=`<div class="idle">No player on the block.</div>`;return}
-  const p=FPL.players.find(x=>x.id===a.player.id);
+  const p=resolveAuctionPlayer(a.player);
   const lead=state.teams.find(t=>t.id===a.leadingTeamId);
   $("auctionBody").innerHTML=p
     ?factsheet(p,a.currentBid,lead?(teamManager(lead)||lead.name):null)
