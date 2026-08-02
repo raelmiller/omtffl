@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-01T07:29:09Z",
+  "fpl_baked_at": "2026-08-02T07:35:09Z",
   "sales": 645,
   "unique_players": 392,
   "matched_to_fpl": 249
@@ -2337,7 +2337,7 @@
    "display": "White",
    "position": "DEF",
    "current_club": "ARS",
-   "status": "i",
+   "status": "a",
    "last_season_points": 45,
    "xgi": "1.14",
    "penalties": false,
