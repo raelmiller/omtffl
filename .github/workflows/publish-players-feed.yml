@@ -1,0 +1,64 @@
+name: Publish players feed
+
+# Keeps players-feed/players.json — the player list the Railway auction app
+# consumes — fresh from the live FPL API, so the app never falls back to a
+# hand-maintained static file. See players-feed/README.md.
+#
+# NOTE: GitHub only runs `schedule` triggers from the default branch. The daily
+# refresh therefore activates once this workflow is on `main`. `workflow_dispatch`
+# works from any branch for testing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bootstrap_path:
+        description: "Optional committed bootstrap/fpl_data JSON to build from instead of the live API (off-season override)"
+        required: false
+        default: ""
+  schedule:
+    # 05:30 UTC daily — after the existing FPL data bake, offset to avoid overlap.
+    - cron: "30 5 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build players feed
+        id: build
+        env:
+          BOOTSTRAP_PATH: ${{ inputs.bootstrap_path }}
+        run: |
+          set +e
+          python players-feed/build_players_feed.py $BOOTSTRAP_PATH
+          code=$?
+          set -e
+          # exit 3 = source was too thin (off-season), existing feed kept: not an error
+          if [ "$code" = "3" ]; then
+            echo "Source thin; kept existing feed. Nothing to publish."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$code" != "0" ]; then exit "$code"; fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit refreshed feed
+        if: steps.build.outputs.changed == 'true'
+        run: |
+          git config user.name "fpl-data-bot"
+          git config user.email "actions@github.com"
+          git add players-feed/players.json
+          if git diff --cached --quiet; then
+            echo "Feed unchanged."
+          else
+            git commit -m "Refresh players feed ($(date -u +%Y-%m-%d))"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
