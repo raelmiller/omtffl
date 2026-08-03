@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-03T08:32:13Z",
+  "fpl_baked_at": "2026-08-03T14:20:38Z",
   "sales": 645,
-  "unique_players": 392,
-  "matched_to_fpl": 249
+  "unique_players": 390,
+  "matched_to_fpl": 250
  },
  "players": [
   {
@@ -1400,7 +1400,7 @@
    "fpl_id": 136,
    "display": "Welbeck",
    "position": "FWD",
-   "current_club": "BHA",
+   "current_club": "CHE",
    "status": "a",
    "last_season_points": 126,
    "xgi": "13.76",
@@ -2695,14 +2695,14 @@
    }
   },
   {
-   "key": "name_andreas pereira",
-   "fpl_id": null,
-   "display": "Andreas Pereira",
+   "key": "fpl_566",
+   "fpl_id": 566,
+   "display": "Silva",
    "position": "MID",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "BOU",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -5818,27 +5818,6 @@
    }
   },
   {
-   "key": "name_antonio",
-   "fpl_id": null,
-   "display": "Antonio",
-   "position": "FWD",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2024-25": {
-     "price": 1.0,
-     "buyer": "Ali",
-     "club_then": "WHU",
-     "points_that_season": null
-    }
-   }
-  },
-  {
    "key": "name_stones",
    "fpl_id": null,
    "display": "Stones",
@@ -8727,27 +8706,6 @@
      "buyer": "Lloyd",
      "club_then": "EVE",
      "points_that_season": 0
-    }
-   }
-  },
-  {
-   "key": "name_ricardo pereira",
-   "fpl_id": null,
-   "display": "Ricardo Pereira",
-   "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2024-25": {
-     "price": 0.0,
-     "buyer": "Oli",
-     "club_then": "LEI",
-     "points_that_season": null
     }
    }
   },

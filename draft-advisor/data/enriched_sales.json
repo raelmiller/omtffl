@@ -578,8 +578,8 @@
   "player": "Andreas Pereira",
   "club": "FUL",
   "cost": 2.0,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -2965,8 +2965,8 @@
   "player": "Antonio",
   "club": "WHU",
   "cost": 1.0,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -3834,8 +3834,8 @@
   "player": "Ricardo Pereira",
   "club": "LEI",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -4076,8 +4076,8 @@
   "player": "Andreas Pereira",
   "club": "FUL",
   "cost": 4.25,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
