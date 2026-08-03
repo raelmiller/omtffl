@@ -14,24 +14,17 @@ This folder replaces that with **one stable, auto-refreshed URL**.
 | File | What it is |
 |---|---|
 | `players.json` | the feed the app fetches — a small subset of FPL `bootstrap-static` (`teams` + `elements`, ~60 KB) |
-| `bootstrap_latest.json` | a pinned FPL `bootstrap-static` snapshot (the current source — see "Pinned snapshot" below) |
 | `build_players_feed.py` | builds `players.json` from the live FPL API or a committed snapshot |
 | `../.github/workflows/publish-players-feed.yml` | rebuilds and commits `players.json` daily |
 
-## Pinned snapshot (current)
+## Pinning to a snapshot (optional)
 
-Right now the feed is **pinned to the committed `bootstrap_latest.json`** (a
-full FPL `bootstrap-static` export). While that file is present the daily
-workflow rebuilds `players.json` from it instead of hitting the live API, so
-the served list stays exactly this trusted snapshot.
-
-The live FPL API is reachable from GitHub Actions and from Railway (only the
-Claude Code sandbox is blocked, which is why the feed is seeded from a file at
-all). **To resume automatic live refreshes, delete
-`players-feed/bootstrap_latest.json`** — the workflow then falls back to
-pulling `bootstrap-static` live. To refresh the pin instead, replace that file
-with a newer export and let the workflow (or a manual `build_players_feed.py`
-run) rebuild.
+The feed currently refreshes from the **live FPL API**. If you ever want to
+freeze it to a trusted snapshot instead — e.g. to stop late price/injury churn
+from shifting the list right before a draft — commit a full FPL
+`bootstrap-static` export as `players-feed/bootstrap_latest.json`. While that
+file is present the workflow rebuilds `players.json` from it instead of hitting
+the API. Delete the file to resume live refreshes.
 
 ## The URL the app uses
 
@@ -52,12 +45,11 @@ branch copy before this is merged to `main`.
 
 ## How it stays fresh
 
-`publish-players-feed.yml` runs daily (05:30 UTC) and on demand. It builds from
-the committed `bootstrap_latest.json` while that file exists (see "Pinned
-snapshot" above); once it's removed it pulls the live bootstrap from GitHub
-Actions — which, unlike the local sandbox, can reach
-`fantasy.premierleague.com` — slims it, and commits `players.json` if it
-changed.
+`publish-players-feed.yml` runs daily (05:30 UTC) and on demand. In GitHub
+Actions — which, unlike the local sandbox, can reach `fantasy.premierleague.com`
+— it pulls the live bootstrap, slims it, and commits `players.json` if it
+changed. (If a `bootstrap_latest.json` is committed it builds from that instead
+— see "Pinning to a snapshot" above.)
 
 **Safety valve:** if the live source returns fewer than 300 players (an empty
 or transitional off-season feed), the existing `players.json` is kept rather
