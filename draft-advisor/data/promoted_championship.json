@@ -1,0 +1,22 @@
+{
+  "_note": "Last-season (2025/26) Championship output for promoted-club players who have no/limited PL history. Gathered via web search (goals reliable; assists/starts where found). Used to give these players a discounted PL projection instead of a flat FPL price. Season: promoted 2026/27.",
+  "_sources": [
+    "https://www.premierleague.com/en/news/4625396",
+    "https://thefootballfaithful.com/five-promoted-players-to-consider-in-fpl-2026-27/",
+    "https://www.fantasyfootballscout.co.uk/2026/07/30/fpl-promoted-teams-who-are-the-best-hull-attackers",
+    "https://treblestats.co.uk/championship/2025-2026/coventry-city-championship-2025-26",
+    "https://www.sportsmole.co.uk/football/ipswich-town/2025-26/top-scorers.html"
+  ],
+  "players": [
+    {"web_name": "Wright", "club": "COV", "goals": 17, "assists": null, "starts": null, "note": "Championship top scorer, Team of the Season, penalties"},
+    {"web_name": "Simms", "club": "COV", "goals": 13, "assists": null, "starts": 15, "note": "0.71 goals/90 — best rate in the squad"},
+    {"web_name": "Thomas-Asante", "club": "COV", "goals": 13, "assists": null, "starts": 21, "note": "0.63 goals/90"},
+    {"web_name": "Torp", "club": "COV", "goals": 10, "assists": null, "starts": null, "note": "goals from central midfield"},
+    {"web_name": "Rudoni", "club": "COV", "goals": 7, "assists": 5, "starts": null, "note": "goals + assists from midfield"},
+    {"web_name": "Sakamoto", "club": "COV", "goals": 7, "assists": null, "starts": null, "note": "wide midfield"},
+    {"web_name": "McBurnie", "club": "HUL", "goals": 17, "assists": 7, "starts": 39, "note": "17g 7a in 2911 mins, 55% conversion, penalties — clear Hull talisman"},
+    {"web_name": "Clarke", "club": "IPS", "goals": 16, "assists": null, "starts": null, "note": "Ipswich top scorer"},
+    {"web_name": "Hirst", "club": "IPS", "goals": 4, "assists": null, "starts": null, "note": ""},
+    {"web_name": "Egeli", "club": "IPS", "goals": 4, "assists": null, "starts": null, "note": ""}
+  ]
+}

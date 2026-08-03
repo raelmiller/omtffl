@@ -209,8 +209,23 @@ function adjPts(h,proven){
   if(m>=FULL_MIN||!pts||!proven)return pts;
   return Math.round(pts*Math.min(MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
 }
+// Discounted PL projection for a promoted-club player from last season's
+// Championship output. Championship goals roughly halve in the PL; assume a
+// starter's ~28 appearances. A rough prior to research/override, not gospel.
+function champEstimate(p){
+  const c=p.champ; if(!c)return null;
+  const disc=0.5, gVal=p.pos==="MID"?5:(p.pos==="FWD"?4:6), base=56;
+  return Math.round(base+(c.goals||0)*gVal*disc+(c.assists||0)*3*disc);
+}
 function modelProjection(p){
   const hs=latestSeasons(p);
+  const latestPLyear=hs.length?startYear(hs[0].season_name):0;
+  // no recent PL form (promoted from the Championship) but we have last
+  // season's Championship output → use a discounted estimate from it
+  if(p.champ&&latestPLyear<2024){
+    const ce=champEstimate(p);
+    if(ce!=null)return {pts:ce,basis:`Championship 2025/26: ${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""} → discounted PL estimate`,isChamp:true};
+  }
   if(!hs.length){
     const e=estimateFromPrice(p);
     return {pts:e,basis:`new to PL — est. from £${((p.now_cost||0)/10).toFixed(1)}m FPL price`,isNew:true};
@@ -401,7 +416,8 @@ function factsheet(p,currentBid,leadingTeam){
   if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
-  if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
+  if(est.proj.isChamp)flags.push(`promoted club — projection from last season's Championship (${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""}), discounted for the step up${p.champ.note?". "+p.champ.note:""}`);
+  else if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
   if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);

@@ -110,6 +110,19 @@ def main():
             else:
                 history[el["id"]] = []
 
+    # attach Championship output for promoted-club players (no PL history to
+    # project from) so they get a discounted estimate instead of a flat price
+    champ_file = DATA / "promoted_championship.json"
+    champ_hits = 0
+    if champ_file.exists():
+        champ = json.loads(champ_file.read_text()).get("players", [])
+        by_key = {(c["web_name"], c.get("club")): c for c in champ}
+        for p in players:
+            c = by_key.get((p["web_name"], p.get("team_short")))
+            if c:
+                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note")}
+                champ_hits += 1
+
     out = {
         "baked_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "source": f"bootstrap file: {src.name}",
