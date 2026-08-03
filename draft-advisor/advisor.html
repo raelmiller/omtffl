@@ -89,6 +89,15 @@ th:first-child,td:first-child{text-align:left}
 .nudge{border-left:3px solid var(--accent3);background:var(--surface2);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:.4rem 0;font-size:12px;color:var(--text)}
 .nudge.warn{border-color:var(--accent2)} .nudge.good{border-color:var(--accent)}
 .nudge b{font-family:var(--sans)}
+.mgrrow{border:1px solid var(--border);border-radius:9px;padding:.55rem .7rem;margin-bottom:.5rem}
+.mgrrow .mhead{font-family:var(--sans);font-weight:700;font-size:13px;margin-bottom:.4rem}
+.mgrrow label{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;color:var(--muted);margin-right:.6rem}
+.mgrrow input[type=text]{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:.3rem .5rem;width:5.5em}
+.mgrrow input[type=text].loyal{outline:1px solid var(--accent)} .mgrrow input[type=text].averse{outline:1px solid var(--hot)}
+.stylechips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.35rem}
+.stylechip{border:1px solid var(--border2);border-radius:20px;padding:2px 10px;font-size:11px;color:var(--muted);cursor:pointer;user-select:none}
+.stylechip.on{border-color:var(--accent);color:var(--accent);background:rgba(127,255,178,.1)}
+.stylechip:focus-visible{outline:2px solid var(--accent)}
 </style>
 </head>
 <body>
@@ -113,6 +122,7 @@ th:first-child,td:first-child{text-align:left}
       <button data-tab="plan">Plan</button>
       <button data-tab="search">Search</button>
       <button data-tab="teams">Teams</button>
+      <button data-tab="managers">Managers</button>
       <button data-tab="log">Log</button>
     </div>
     <div id="tab-gems" class="tabpane">
@@ -131,6 +141,10 @@ th:first-child,td:first-child{text-align:left}
       <div class="small" style="margin-bottom:.5rem">Map auction teams to league managers so history informs rival predictions.</div>
       <div id="teamsList"></div>
     </div>
+    <div id="tab-managers" class="tabpane" style="display:none">
+      <div class="small" style="margin-bottom:.5rem">Tell the tool what you know about each manager — who they support and how they bid. It sharpens the “likely rivals” read. Saved on this device.</div>
+      <div class="scroll" id="managersList"></div>
+    </div>
     <div id="tab-log" class="tabpane" style="display:none">
       <div class="scroll"><table id="logTable"><tr><th>player</th><th>pos</th><th>£m</th><th>team</th></tr></table></div>
     </div>
@@ -147,13 +161,30 @@ const $=id=>document.getElementById(id);
 const POSN={1:"GK",2:"DEF",3:"MID",4:"FWD"};
 const SLOTS={GK:2,DEF:5,MID:5,FWD:3};
 const BANDS=[["0-49",0,49],["50-79",50,79],["80-99",80,99],["100-124",100,124],["125-149",125,149],["150-179",150,179],["180+",180,1e4]];
-// Real-world club loyalty the buy-history can't see. +1 = loyal, bids up
-// their own club's players; -1 = a fan but reluctant to buy their own club.
-const CLUB_BIAS={
-  Ciaran:{LIV:1}, Simon:{LIV:1}, Yath:{LIV:1},
-  Richard:{ARS:1}, Tiggy:{ARS:1},
-  Oli:{TOT:-1}, Rael:{TOT:-1},
+// Manager knowledge the buy-history can't see. clubs: +1 loyal (bids up
+// their team's players), -1 fan-but-shuns-own. styles: bidding tendencies
+// (marquee / value / hoarder / aggressive) that nudge the rival scoring.
+// Seed values below; the Managers tab lets you add/edit more (saved locally).
+const MANAGER_PROFILES_SEED={
+  Ciaran:{clubs:{LIV:1}, styles:["marquee"]},
+  Simon:{clubs:{LIV:1}},
+  Yath:{clubs:{LIV:1}},
+  Richard:{clubs:{ARS:1}, styles:["value"]},
+  Tiggy:{clubs:{ARS:1}},
+  Oli:{clubs:{TOT:-1}, styles:["marquee"]},
+  Rael:{clubs:{TOT:-1}},
+  Rob:{styles:["marquee"]},
 };
+let mgrProfiles=(()=>{
+  const saved=JSON.parse(localStorage.getItem("omtffl_mgrprofiles")||"{}");
+  const out={};
+  for(const name of new Set([...Object.keys(MANAGER_PROFILES_SEED),...Object.keys(saved)])){
+    out[name]={clubs:{},styles:[],...MANAGER_PROFILES_SEED[name],...saved[name]};
+  }
+  return out;
+})();
+function profileOf(name){return mgrProfiles[name]||{clubs:{},styles:[]}}
+function saveProfiles(){localStorage.setItem("omtffl_mgrprofiles",JSON.stringify(mgrProfiles))}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 async function loadData(){
@@ -329,15 +360,22 @@ function rivalScores(p,est){
     const prior=mgrName?MODEL.managers[mgrName]:null;
     let score=20+10*open, why=[`${open} ${p.pos} slot${open>1?"s":""} open`];
     if(maxBid>=est.high){score+=15;why.push(`can pay £${maxBid.toFixed(2)}m`)}
+    const prof=mgrName?profileOf(mgrName):{clubs:{},styles:[]};
+    // explicit club loyalty (from your Managers profiles) beats the noisy buy-count
+    const bias=(prof.clubs||{})[p.team_short];
+    if(bias>0){score+=30;why.unshift(`loyal ${p.team_short} fan — bids up`)}
+    else if(bias<0){score-=35;why.push(`${p.team_short} fan but shuns own club`)}
+    else if(prior&&prior.club_affinity[p.team_short]){score+=15;why.push(`${p.team_short} fan (${prior.club_affinity[p.team_short]} buys)`)}
+    // bidding-style tendencies you've set
+    const st=prof.styles||[], liq=est.liq.mult;
+    if(st.includes("marquee")&&est.mid>=12){score+=22;why.push("chases marquees")}
+    if(st.includes("value")){if(est.mid>=13){score-=18;why.push("won't overpay")}else if(est.proj.pts/Math.max(.5,est.mid)>=20){score+=12;why.push("value hunter")}}
+    if(st.includes("hoarder")){if(liq>1.05){score-=15}else{score+=10;why.push("hoards then strikes late")}}
+    if(st.includes("aggressive")){score+=12;why.push("aggressive bidder")}
     if(prior){
       const share=prior.pos_share[p.pos]||0;
       score+=share*60; if(share>=.4)why.push(`spends ${(share*100)|0}% on ${p.pos}`);
-      // explicit club loyalty overrides the noisy buy-count signal
-      const bias=(CLUB_BIAS[mgrName]||{})[p.team_short];
-      if(bias>0){score+=30;why.unshift(`loyal ${p.team_short} fan — bids up`)}
-      else if(bias<0){score-=35;why.push(`${p.team_short} fan but shuns own club`)}
-      else if(prior.club_affinity[p.team_short]){score+=15;why.push(`${p.team_short} fan (${prior.club_affinity[p.team_short]} buys)`)}
-      if(est.mid>=10){score+=prior.big_bids_per_season*8;if(prior.big_bids_per_season>=1.5)why.push("chases marquees")}
+      if(est.mid>=10&&!st.includes("marquee")){score+=prior.big_bids_per_season*8;if(prior.big_bids_per_season>=1.5)why.push("chases marquees")}
       const past=SALES.find(s=>s.fpl_id===p.id&&s.manager===mgrName);
       if(past){score+=20;why.push(`bought him in ${past.season}`)}
     }
@@ -651,6 +689,37 @@ function renderPlan(){
     ${nudges.map(n=>`<div class="nudge ${n[0]}">${n[1]}</div>`).join("")}
     <div class="small" style="margin-top:.5rem">White tick on each bar = the best-value drafters' guide spend for that position.</div>`;
 }
+const STYLE_TAGS=[["marquee","chases marquees"],["value","value hunter"],["hoarder","hoards, strikes late"],["aggressive","aggressive"]];
+function renderManagerProfiles(){
+  const names=[...new Set([...(DOSSIERS||[]).map(d=>d.name),...Object.keys(mgrProfiles)])].sort();
+  $("managersList").innerHTML=names.map(name=>{
+    const pr=profileOf(name);
+    const loyal=Object.entries(pr.clubs||{}).filter(([,v])=>v>0).map(([c])=>c).join(",");
+    const averse=Object.entries(pr.clubs||{}).filter(([,v])=>v<0).map(([c])=>c).join(",");
+    const styles=pr.styles||[];
+    return `<div class="mgrrow" data-name="${esc(name)}">
+      <div class="mhead">${esc(name)}</div>
+      <label>loyal to <input type="text" class="loyal" data-f="loyal" value="${esc(loyal)}" placeholder="e.g. LIV"></label>
+      <label>avoids <input type="text" class="averse" data-f="averse" value="${esc(averse)}" placeholder="e.g. TOT"></label>
+      <div class="stylechips">${STYLE_TAGS.map(([k,lbl])=>`<span class="stylechip ${styles.includes(k)?"on":""}" tabindex="0" role="button" data-style="${k}">${lbl}</span>`).join("")}</div>
+    </div>`;
+  }).join("")||"<div class='small'>No managers yet — map some in the Teams tab.</div>";
+  $("managersList").querySelectorAll(".mgrrow").forEach(row=>{
+    const name=row.dataset.name;
+    const commit=()=>{
+      const parse=sel=>row.querySelector(sel).value.toUpperCase().split(/[ ,]+/).filter(Boolean);
+      const clubs={}; parse("[data-f=loyal]").forEach(c=>clubs[c]=1); parse("[data-f=averse]").forEach(c=>clubs[c]=-1);
+      const styles=[...row.querySelectorAll(".stylechip.on")].map(x=>x.dataset.style);
+      mgrProfiles[name]={clubs,styles}; saveProfiles(); renderAuction(); toast(`saved ${name}`);
+    };
+    row.querySelectorAll("input").forEach(i=>i.addEventListener("change",commit));
+    row.querySelectorAll(".stylechip").forEach(ch=>{
+      const toggle=()=>{ch.classList.toggle("on");commit();};
+      ch.addEventListener("click",toggle);
+      ch.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+    });
+  });
+}
 function renderAll(){renderAuction();renderGems();renderTeams();renderLog();renderRoom();renderPlan()}
 function toast(msg){const t=$("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",3500)}
 // ── socket ─────────────────────────────────────────────────────────────
@@ -703,6 +772,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
   $("tab-"+b.dataset.tab).style.display="";
   if(b.dataset.tab==="gems")renderGems();
   if(b.dataset.tab==="plan")renderPlan();
+  if(b.dataset.tab==="managers")renderManagerProfiles();
 }));
 $("connectBtn").addEventListener("click",connect);
 $("demoBtn").addEventListener("click",startDemo);
