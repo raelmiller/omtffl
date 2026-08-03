@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-02T07:35:09Z",
+  "fpl_baked_at": "2026-08-03T08:32:13Z",
   "sales": 645,
   "unique_players": 392,
   "matched_to_fpl": 249
@@ -1404,9 +1404,9 @@
    "status": "a",
    "last_season_points": 126,
    "xgi": "13.76",
-   "penalties": true,
+   "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2024-25": {
      "price": 2.5,
@@ -1959,7 +1959,7 @@
    "status": "a",
    "last_season_points": 78,
    "xgi": "5.34",
-   "penalties": false,
+   "penalties": true,
    "corners": false,
    "freekicks": false,
    "sales": {
@@ -7007,7 +7007,7 @@
    "xgi": "2.39",
    "penalties": false,
    "corners": false,
-   "freekicks": false,
+   "freekicks": true,
    "sales": {
     "2023-24": {
      "price": 0.0,
