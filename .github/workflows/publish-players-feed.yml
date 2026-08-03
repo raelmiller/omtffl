@@ -37,8 +37,19 @@ jobs:
         env:
           BOOTSTRAP_PATH: ${{ inputs.bootstrap_path }}
         run: |
+          # Source precedence:
+          #   1. an explicit `bootstrap_path` workflow input (manual override)
+          #   2. the committed players-feed/bootstrap_latest.json, if present
+          #      — the "use the bootstrap snapshot for now" pin. Delete that
+          #      file to resume pulling live from the FPL API automatically.
+          #   3. the live FPL API
+          SRC="$BOOTSTRAP_PATH"
+          if [ -z "$SRC" ] && [ -f players-feed/bootstrap_latest.json ]; then
+            SRC="players-feed/bootstrap_latest.json"
+          fi
+          echo "Building from: ${SRC:-live FPL API}"
           set +e
-          python players-feed/build_players_feed.py $BOOTSTRAP_PATH
+          python players-feed/build_players_feed.py $SRC
           code=$?
           set -e
           # exit 3 = source was too thin (off-season), existing feed kept: not an error
