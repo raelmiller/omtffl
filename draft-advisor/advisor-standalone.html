@@ -99,6 +99,7 @@ th:first-child,td:first-child{text-align:left}
   <button id="connectBtn">connect</button>
   <select id="myTeam" title="which auction team is you"><option value="">I am team...</option></select>
   <div class="pill"><span id="roomState">room: —</span></div>
+  <button id="nomBtn" class="primary" title="recommend who to nominate next + an opening bid">◎ who to nominate</button>
   <button id="demoBtn" title="replay 25-26 sales to test the tool">demo</button>
 </header>
 <main>
@@ -486,12 +487,88 @@ function resolveAuctionPlayer(ap){
 }
 function renderAuction(){
   const a=state.currentAuction;
-  if(!a){$("auctionBody").innerHTML=`<div class="idle">No player on the block.</div>`;return}
+  if(a)window._showNom=false;                 // a live auction takes over the panel
+  if(!a){
+    $("auctionBody").innerHTML = window._showNom ? renderNomination() : `<div class="idle">No player on the block. Hit <b>◎ who to nominate</b> when it's your turn to pick.</div>`;
+    return;
+  }
   const p=resolveAuctionPlayer(a.player);
   const lead=state.teams.find(t=>t.id===a.leadingTeamId);
   $("auctionBody").innerHTML=p
     ?factsheet(p,a.currentBid,lead?(teamManager(lead)||lead.name):null)
     :`<div class="auctionhead"><span class="name">${esc(a.player.web_name)}</span><span class="meta">custom entry — no FPL match, judge manually</span></div>`;
+}
+// Recommend who to nominate next (fills your biggest need) and a strategic
+// opening bid — low early, but late it rules out the cash-strapped rivals
+// who still need that position when you hold the budget edge.
+function affordableMax(t){const sl=15-t.squad.length;return t.budget-Math.max(0,sl-1)*.25;}
+function recommendNomination(){
+  const mine=state.teams.find(t=>t.id===+$("myTeam").value);
+  if(!mine)return {error:"Set “I am team…” in the header so I know your squad and budget."};
+  const myMax=affordableMax(mine);
+  const needs=POS_ORDER.filter(pos=>SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length>0);
+  if(!needs.length)return {error:"Your squad is already full — nothing to nominate."};
+  const pool=poolRemaining();
+  let best=null;
+  for(const pos of needs){
+    const open=SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
+    const sc=scarcity(pos);
+    const cands=pool.filter(p=>p.pos===pos).map(p=>({p,est:fairRange(p),proj:projection(p).pts}))
+      .filter(x=>x.est.low<=myMax).sort((a,b)=>b.proj-a.proj);
+    if(!cands.length)continue;
+    const urgency=open/Math.max(1,sc.strong);            // need more than are left → urgent
+    const score=cands[0].proj*(1+urgency);
+    if(!best||score>best.score)best={pos,open,sc,cands,score};
+  }
+  if(!best)return {error:"Nothing you can afford fits an open slot — you may be priced out; wait for cheaper players."};
+  const {p,est}=best.cands[0];
+  // rivals who still need this position and can afford a real bid
+  const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>({
+    t, mgr:teamManager(t)||t.name,
+    open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
+    max:affordableMax(t)
+  })).filter(r=>r.open>0&&r.max>=est.low).sort((a,b)=>b.max-a.max);
+  const rivalMax=rivals.length?rivals[0].max:0;
+  let openBid,reason,tactic;
+  if(!rivals.length){
+    openBid=0.25; tactic="uncontested";
+    reason=`No one else needs a ${p.pos} they can afford — open the minimum and you win uncontested.`;
+  }else if(rivalMax<myMax&&rivalMax+0.25<=Math.min(myMax,est.high+0.5)){
+    openBid=Math.round((rivalMax+0.25)*4)/4; tactic="ruleout";
+    reason=`Open <b>£${openBid}m</b> to rule out all ${rivals.length} rival${rivals.length>1?"s":""} who still need a ${p.pos} — the strongest (${esc(rivals[0].mgr)}) can only reach £${rivalMax.toFixed(2)}m. They can't respond, so you win at your opening bid.`;
+  }else{
+    openBid=0.25; tactic="develop";
+    reason=`Can't cheaply price out the field yet (top rival ${esc(rivals[0].mgr)} can reach £${rivalMax.toFixed(2)}m). Open the minimum, let it develop, and bid up to £${Math.min(myMax,est.high).toFixed(2)}m if you want him.`;
+  }
+  return {p,est,pos:best.pos,open:best.open,sc:best.sc,openBid,reason,tactic,rivals,myMax,
+          alts:best.cands.slice(1,4)};
+}
+function renderNomination(){
+  const r=recommendNomination();
+  if(r.error)return `<div class="idle">${r.error}</div>`;
+  const s1=latestSeasons(r.p)[0]||{};
+  const tcol=r.tactic==="ruleout"?"var(--accent)":r.tactic==="uncontested"?"var(--blue)":"var(--gold)";
+  return `
+  <div class="small" style="text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Nominate next — fills your ${r.pos} need (${SLOTS[r.pos]-r.open}/${SLOTS[r.pos]})</div>
+  <div class="auctionhead" style="margin:.3rem 0 .5rem"><span class="name">${esc(r.p.web_name)}</span>
+    <span class="meta">${r.p.pos} · ${esc(r.p.team_short||"?")} · projects ${r.est.proj.pts} pts</span></div>
+  <div class="verdict" style="border-left:3px solid ${tcol};background:var(--surface2)">
+    OPEN AT £${r.openBid}m<small style="color:var(--muted)">${r.reason}</small></div>
+  <div class="rangelabels"><span>fair £${r.est.low}–£${r.est.high}m</span><span>${r.sc.strong} starter-grade ${r.p.pos} left · ${r.sc.demand} the room still needs</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
+    <div><h2>Who else wants a ${r.p.pos}</h2>
+      ${r.rivals.length?`<table><tr><th>rival</th><th>needs</th><th>can reach</th></tr>
+        ${r.rivals.slice(0,6).map(v=>`<tr><td>${esc(v.mgr)}</td><td>${v.open}</td><td>${v.max<=r.openBid?'<span style="color:var(--hot)">£'+v.max.toFixed(2)+'m ✗</span>':'£'+v.max.toFixed(2)+'m'}</td></tr>`).join("")}</table>
+        <div class="small" style="margin-top:.3rem">✗ = priced out by a £${r.openBid}m opening bid</div>`
+        :`<div class="small">no one else needs this position and can afford it</div>`}
+    </div>
+    <div><h2>Other options</h2>
+      ${r.alts.length?`<table><tr><th>player</th><th>pos</th><th>proj</th><th>~£m</th></tr>
+        ${r.alts.map(a=>`<tr class="row-click" data-id="${a.p.id}"><td>${esc(a.p.web_name)}</td><td>${a.p.pos}</td><td>${a.proj}</td><td>${a.est.mid}</td></tr>`).join("")}</table>`
+        :`<div class="small">no clear alternatives at this position</div>`}
+      <div class="small" style="margin-top:.4rem">Your max bid: £${r.myMax.toFixed(2)}m</div>
+    </div>
+  </div>`;
 }
 function renderGems(){
   if(!FPL)return;
@@ -630,6 +707,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
 }));
 $("connectBtn").addEventListener("click",connect);
 $("demoBtn").addEventListener("click",startDemo);
+$("nomBtn").addEventListener("click",()=>{window._showNom=true;renderAuction();window.scrollTo({top:0,behavior:"smooth"})});
 $("q").addEventListener("input",renderSearch);
 $("myTeam").addEventListener("change",()=>{renderAuction();renderPlan()});
 document.body.addEventListener("click",e=>{

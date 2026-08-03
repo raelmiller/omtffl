@@ -105,6 +105,11 @@ instead of standalone.)*
 - Know something the data doesn't (a transfer, a nailed-on new starter)?
   Click the **projected-points number** on the factsheet and type your own
   — everything recomputes.
+- **When it's your turn to nominate**, hit **◎ who to nominate**. It picks
+  the best player for a position you still need and suggests an opening bid
+  — normally the minimum, but late on, if only a couple of cash-strapped
+  rivals need that position, it opens just above what they can afford so
+  they're priced out and you win at your opening bid.
 
 ## If something breaks
 - **Auction server crashes / laptop slept:** just run `npm start` again. The
