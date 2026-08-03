@@ -28,8 +28,8 @@ FILES = {
 
 VALID_POSITIONS = {"GK", "DEF", "MID", "FOR", "FWD"}
 
-# same person, different spelling between seasons (confirmed by Rael)
-MANAGER_ALIASES = {"Ollie": "Oli"}
+# same person, different name recorded between seasons (confirmed by Rael)
+MANAGER_ALIASES = {"Ollie": "Oli", "Lucien": "Luke", "Georgeson": "Luke"}
 
 
 def parse_cost(v):

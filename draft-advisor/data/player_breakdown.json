@@ -75,7 +75,7 @@
    "sales": {
     "2023-24": {
      "price": 25.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 166
     },
@@ -369,7 +369,7 @@
     },
     "2025-26": {
      "price": 17.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "WHU",
      "points_that_season": null
     }
@@ -1263,7 +1263,7 @@
    "sales": {
     "2024-25": {
      "price": 7.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "WOL",
      "points_that_season": 178
     },
@@ -1530,7 +1530,7 @@
    "sales": {
     "2023-24": {
      "price": 7.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 23
     }
@@ -1551,13 +1551,13 @@
    "sales": {
     "2023-24": {
      "price": 0.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "AVL",
      "points_that_season": 148
     },
     "2024-25": {
      "price": 7.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "AVL",
      "points_that_season": 47
     }
@@ -2013,7 +2013,7 @@
     },
     "2024-25": {
      "price": 5.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MCI",
      "points_that_season": 153
     },
@@ -2142,7 +2142,7 @@
    "sales": {
     "2025-26": {
      "price": 5.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 91
     }
@@ -2319,7 +2319,7 @@
    "sales": {
     "2024-25": {
      "price": 3.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "NFO",
      "points_that_season": 153
     },
@@ -2445,7 +2445,7 @@
     },
     "2024-25": {
      "price": 5.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "TOT",
      "points_that_season": 98
     },
@@ -2478,7 +2478,7 @@
     },
     "2024-25": {
      "price": 5.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "LIV",
      "points_that_season": 122
     },
@@ -2559,7 +2559,7 @@
    "sales": {
     "2024-25": {
      "price": 5.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "WHU",
      "points_that_season": null
     }
@@ -2613,7 +2613,7 @@
     },
     "2025-26": {
      "price": 4.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "LIV",
      "points_that_season": 160
     }
@@ -2661,7 +2661,7 @@
     },
     "2025-26": {
      "price": 4.75,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MCI",
      "points_that_season": 60
     }
@@ -2865,7 +2865,7 @@
    "sales": {
     "2023-24": {
      "price": 4.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "EVE",
      "points_that_season": 102
     },
@@ -2925,7 +2925,7 @@
     },
     "2025-26": {
      "price": 4.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "CHE",
      "points_that_season": null
     }
@@ -3066,7 +3066,7 @@
     },
     "2024-25": {
      "price": 3.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "TOT",
      "points_that_season": 35
     },
@@ -3336,7 +3336,7 @@
     },
     "2025-26": {
      "price": 1.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 42
     }
@@ -3546,7 +3546,7 @@
    "sales": {
     "2023-24": {
      "price": 2.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "NFO",
      "points_that_season": 131
     },
@@ -3558,7 +3558,7 @@
     },
     "2025-26": {
      "price": 3.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "TOT",
      "points_that_season": 65
     }
@@ -3774,7 +3774,7 @@
     },
     "2024-25": {
      "price": 2.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MCI",
      "points_that_season": 90
     },
@@ -3972,7 +3972,7 @@
    "sales": {
     "2023-24": {
      "price": 2.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "BHA",
      "points_that_season": null
     }
@@ -3993,7 +3993,7 @@
    "sales": {
     "2023-24": {
      "price": 2.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "BOU",
      "points_that_season": 56
     },
@@ -4176,7 +4176,7 @@
    "sales": {
     "2025-26": {
      "price": 2.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "BRE",
      "points_that_season": 113
     }
@@ -4431,7 +4431,7 @@
     },
     "2024-25": {
      "price": 2.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 65
     },
@@ -4587,7 +4587,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "CRY",
      "points_that_season": 121
     },
@@ -4614,7 +4614,7 @@
    "sales": {
     "2023-24": {
      "price": 0.75,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "AVL",
      "points_that_season": 85
     },
@@ -4737,7 +4737,7 @@
    "sales": {
     "2024-25": {
      "price": 2.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "AVL",
      "points_that_season": null
     }
@@ -4779,7 +4779,7 @@
    "sales": {
     "2025-26": {
      "price": 2.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "NFO",
      "points_that_season": 114
     }
@@ -5133,7 +5133,7 @@
     },
     "2025-26": {
      "price": 1.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "NFO",
      "points_that_season": 180
     }
@@ -5208,7 +5208,7 @@
    "sales": {
     "2023-24": {
      "price": 1.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "ARS",
      "points_that_season": 0
     },
@@ -5310,7 +5310,7 @@
    "sales": {
     "2025-26": {
      "price": 1.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 95
     }
@@ -5499,7 +5499,7 @@
    "sales": {
     "2023-24": {
      "price": 1.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "NEW",
      "points_that_season": 97
     },
@@ -5613,7 +5613,7 @@
     },
     "2025-26": {
      "price": 0.25,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "WOL",
      "points_that_season": null
     }
@@ -5640,7 +5640,7 @@
     },
     "2024-25": {
      "price": 1.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "MUN",
      "points_that_season": 95
     }
@@ -5772,7 +5772,7 @@
    "sales": {
     "2023-24": {
      "price": 1.0,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "FUL",
      "points_that_season": 133
     },
@@ -5784,7 +5784,7 @@
     },
     "2025-26": {
      "price": 1.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "FUL",
      "points_that_season": 122
     }
@@ -5811,7 +5811,7 @@
     },
     "2025-26": {
      "price": 1.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "EVE",
      "points_that_season": 95
     }
@@ -5859,7 +5859,7 @@
    "sales": {
     "2024-25": {
      "price": 1.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "LEI",
      "points_that_season": null
     }
@@ -6075,7 +6075,7 @@
    "sales": {
     "2023-24": {
      "price": 0.75,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "BRE",
      "points_that_season": 98
     }
@@ -6393,7 +6393,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "WOL",
      "points_that_season": null
     }
@@ -6414,7 +6414,7 @@
    "sales": {
     "2023-24": {
      "price": 0.5,
-     "buyer": "Georgeson",
+     "buyer": "Luke",
      "club_then": "NEW",
      "points_that_season": 45
     },
@@ -6648,7 +6648,7 @@
    "sales": {
     "2024-25": {
      "price": 0.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "BOU",
      "points_that_season": null
     },
@@ -6822,7 +6822,7 @@
    "sales": {
     "2025-26": {
      "price": 0.5,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "BRE",
      "points_that_season": 115
     }
@@ -8835,7 +8835,7 @@
    "sales": {
     "2024-25": {
      "price": 0.0,
-     "buyer": "Lucien",
+     "buyer": "Luke",
      "club_then": "IPS",
      "points_that_season": null
     }

@@ -179,21 +179,21 @@ season,manager,position,player,club,cost
 2023-24,Efe,FWD,Erling Haaland,MCI,29.75
 2023-24,Efe,FWD,Son Heung-Min,TOT,14.0
 2023-24,Efe,FWD,Antony,MUN,3.5
-2023-24,Georgeson,GK,Bernd Leno,FUL,1.0
-2023-24,Georgeson,MID,Mathias Jensen,BRE,0.75
-2023-24,Georgeson,DEF,Dan Burn,NEW,1.0
-2023-24,Georgeson,DEF,Jurrien TImber,ARS,1.5
-2023-24,Georgeson,DEF,Joachim Andersen,CRY,0.5
-2023-24,Georgeson,DEF,Max Kilman,WOL,0.5
-2023-24,Georgeson,DEF,Pau Torres,AVL,0.75
-2023-24,Georgeson,MID,Bruno Fernandes,MUN,25.0
-2023-24,Georgeson,MID,Alex Iwobi,EVE,4.0
-2023-24,Georgeson,MID,Mason Mount,MUN,7.0
-2023-24,Georgeson,MID,Solly March,BHA,2.5
-2023-24,Georgeson,MID,Joelinton,NEW,0.5
-2023-24,Georgeson,FWD,Brennan Johnson,NFO,2.5
-2023-24,Georgeson,FWD,Dango Outtara,BOU,2.5
-2023-24,Georgeson,FWD,Leon Bailey,AVL,0.0
+2023-24,Luke,GK,Bernd Leno,FUL,1.0
+2023-24,Luke,MID,Mathias Jensen,BRE,0.75
+2023-24,Luke,DEF,Dan Burn,NEW,1.0
+2023-24,Luke,DEF,Jurrien TImber,ARS,1.5
+2023-24,Luke,DEF,Joachim Andersen,CRY,0.5
+2023-24,Luke,DEF,Max Kilman,WOL,0.5
+2023-24,Luke,DEF,Pau Torres,AVL,0.75
+2023-24,Luke,MID,Bruno Fernandes,MUN,25.0
+2023-24,Luke,MID,Alex Iwobi,EVE,4.0
+2023-24,Luke,MID,Mason Mount,MUN,7.0
+2023-24,Luke,MID,Solly March,BHA,2.5
+2023-24,Luke,MID,Joelinton,NEW,0.5
+2023-24,Luke,FWD,Brennan Johnson,NFO,2.5
+2023-24,Luke,FWD,Dango Outtara,BOU,2.5
+2023-24,Luke,FWD,Leon Bailey,AVL,0.0
 2024-25,Yath,GK,Areola,WHU,0.75
 2024-25,Yath,GK,Henderson,CRY,0.25
 2024-25,Yath,DEF,Dunk,BRI,0.25
@@ -389,21 +389,21 @@ season,manager,position,player,club,cost
 2024-25,Lloyd,FWD,Watkins,AVL,18.5
 2024-25,Lloyd,FWD,Zrikzee,MUN,3.5
 2024-25,Lloyd,FWD,Maupay,EVE,0.0
-2024-25,Lucien,GK,Onana,MUN,2.0
-2024-25,Lucien,GK,Muric,IPS,0.0
-2024-25,Lucien,DEF,Gvardiol,MCI,5.5
-2024-25,Lucien,DEF,Pedro Porro,TOT,5.0
-2024-25,Lucien,DEF,Dalot,MUN,1.0
-2024-25,Lucien,DEF,Ruben Dias,MCI,2.5
-2024-25,Lucien,DEF,Zabaryni,BOU,0.0
-2024-25,Lucien,MID,Mac Allister,LIV,5.0
-2024-25,Lucien,MID,Ward-Prowse,WHU,5.0
-2024-25,Lucien,MID,Bailey,AVL,7.0
-2024-25,Lucien,MID,Elanga,NFO,3.0
-2024-25,Lucien,MID,Mavididi,LEI,1.0
-2024-25,Lucien,FWD,Cunha,WOL,7.0
-2024-25,Lucien,FWD,Richarlison,TOT,3.5
-2024-25,Lucien,FWD,Archer,AVL,2.0
+2024-25,Luke,GK,Onana,MUN,2.0
+2024-25,Luke,GK,Muric,IPS,0.0
+2024-25,Luke,DEF,Gvardiol,MCI,5.5
+2024-25,Luke,DEF,Pedro Porro,TOT,5.0
+2024-25,Luke,DEF,Dalot,MUN,1.0
+2024-25,Luke,DEF,Ruben Dias,MCI,2.5
+2024-25,Luke,DEF,Zabaryni,BOU,0.0
+2024-25,Luke,MID,Mac Allister,LIV,5.0
+2024-25,Luke,MID,Ward-Prowse,WHU,5.0
+2024-25,Luke,MID,Bailey,AVL,7.0
+2024-25,Luke,MID,Elanga,NFO,3.0
+2024-25,Luke,MID,Mavididi,LEI,1.0
+2024-25,Luke,FWD,Cunha,WOL,7.0
+2024-25,Luke,FWD,Richarlison,TOT,3.5
+2024-25,Luke,FWD,Archer,AVL,2.0
 2025-26,Yath,GK,Alisson,LIV,2.5
 2025-26,Yath,GK,Hermansson,WHU,0.0
 2025-26,Yath,DEF,Tarkowski,EVE,3.0
@@ -614,21 +614,21 @@ season,manager,position,player,club,cost
 2025-26,Lloyd,FWD,Evanilson,BOU,13.0
 2025-26,Lloyd,FWD,Wood,NFO,14.25
 2025-26,Lloyd,FWD,Jimenez,FUL,5.5
-2025-26,Lucien,GK,Leno,FUL,1.0
-2025-26,Lucien,GK,Jose Sa,WOL,0.25
-2025-26,Lucien,DEF,Cucurella,CHE,4.0
-2025-26,Lucien,DEF,Ait-Nouri,MCI,4.75
-2025-26,Lucien,DEF,Mykolenko,EVE,1.0
-2025-26,Lucien,DEF,Lewis-Potter,BRE,0.5
-2025-26,Lucien,DEF,Dorgu,MUN,1.5
-2025-26,Lucien,MID,Szoboszlai,LIV,4.5
-2025-26,Lucien,MID,Johnson,TOT,3.0
-2025-26,Lucien,MID,Amad,MUN,5.5
-2025-26,Lucien,MID,Damsgaard,BRE,2.5
-2025-26,Lucien,MID,Anderson,NFO,1.5
-2025-26,Lucien,FWD,Bowen,WHU,17.0
-2025-26,Lucien,FWD,Igor Jesus,NFO,2.0
-2025-26,Lucien,FWD,Zirkzee,MUN,1.0
+2025-26,Luke,GK,Leno,FUL,1.0
+2025-26,Luke,GK,Jose Sa,WOL,0.25
+2025-26,Luke,DEF,Cucurella,CHE,4.0
+2025-26,Luke,DEF,Ait-Nouri,MCI,4.75
+2025-26,Luke,DEF,Mykolenko,EVE,1.0
+2025-26,Luke,DEF,Lewis-Potter,BRE,0.5
+2025-26,Luke,DEF,Dorgu,MUN,1.5
+2025-26,Luke,MID,Szoboszlai,LIV,4.5
+2025-26,Luke,MID,Johnson,TOT,3.0
+2025-26,Luke,MID,Amad,MUN,5.5
+2025-26,Luke,MID,Damsgaard,BRE,2.5
+2025-26,Luke,MID,Anderson,NFO,1.5
+2025-26,Luke,FWD,Bowen,WHU,17.0
+2025-26,Luke,FWD,Igor Jesus,NFO,2.0
+2025-26,Luke,FWD,Zirkzee,MUN,1.0
 2025-26,Efe,GK,Dubravka,BUR,0.5
 2025-26,Efe,GK,Bayindir,MUN,0.0
 2025-26,Efe,DEF,Saliba,ARS,5.5

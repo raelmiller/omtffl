@@ -481,18 +481,26 @@
    "big_bids_per_season": 2.0,
    "avg_spend_per_season": 49.88
   },
-  "Georgeson": {
-   "seasons": 1,
-   "club_affinity": {},
+  "Luke": {
+   "seasons": 3,
+   "club_affinity": {
+    "MUN": 7,
+    "AVL": 4,
+    "NFO": 4,
+    "BRE": 3,
+    "WOL": 3,
+    "MCI": 3,
+    "TOT": 3
+   },
    "pos_share": {
-    "GK": 0.02,
-    "MID": 0.795,
-    "DEF": 0.085,
-    "FWD": 0.1
+    "GK": 0.028,
+    "MID": 0.52,
+    "DEF": 0.201,
+    "FWD": 0.251
    },
    "max_bid": 25.0,
-   "big_bids_per_season": 1.0,
-   "avg_spend_per_season": 50.0
+   "big_bids_per_season": 0.67,
+   "avg_spend_per_season": 49.83
   },
   "Simon": {
    "seasons": 2,
@@ -533,24 +541,6 @@
    "max_bid": 19.5,
    "big_bids_per_season": 2.0,
    "avg_spend_per_season": 48.0
-  },
-  "Lucien": {
-   "seasons": 2,
-   "club_affinity": {
-    "MUN": 5,
-    "MCI": 3,
-    "TOT": 3,
-    "NFO": 3
-   },
-   "pos_share": {
-    "GK": 0.033,
-    "DEF": 0.259,
-    "MID": 0.382,
-    "FWD": 0.327
-   },
-   "max_bid": 17.0,
-   "big_bids_per_season": 0.5,
-   "avg_spend_per_season": 49.75
   },
   "Rob": {
    "seasons": 1,
