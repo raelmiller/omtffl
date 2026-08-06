@@ -1,5 +1,5 @@
 {
- "trained_on_sales": 393,
+ "trained_on_sales": 392,
  "prior_points_bands": [
   "0-49",
   "50-79",
@@ -12,7 +12,7 @@
  "price_bands": {
   "DEF": {
    "0-49": {
-    "n": 33,
+    "n": 32,
     "p25": 0.0,
     "median": 0.0,
     "p75": 0.5,

@@ -150,6 +150,12 @@ th:first-child,td:first-child{text-align:left}
           <input id="cClub" type="text" placeholder="club (e.g. RMA)" maxlength="4">
           <select id="cPos"><option value="FWD">FWD</option><option value="MID">MID</option><option value="DEF">DEF</option><option value="GK">GK</option></select>
           <input id="cProj" type="number" placeholder="proj pts" min="0" step="5">
+        </div>
+        <div class="cform">
+          <input id="cLeague" type="text" placeholder="last league (e.g. La Liga)">
+          <input id="cApps" type="number" placeholder="apps" min="0" style="width:4.5em">
+          <input id="cGoals" type="number" placeholder="goals" min="0" style="width:4.5em">
+          <input id="cAssists" type="number" placeholder="assists" min="0" style="width:5em">
           <input id="cNote" type="text" placeholder="note (optional)">
           <button id="cAdd" class="primary">add</button>
         </div>
@@ -227,25 +233,44 @@ async function loadData(){
 // signings not yet added) that you want to research and value yourself.
 const POS_REV={GK:1,DEF:2,MID:3,FWD:4};
 let basePlayers=[];
-let customPlayers=JSON.parse(localStorage.getItem("omtffl_custom")||"[]");
-function saveCustom(){localStorage.setItem("omtffl_custom",JSON.stringify(customPlayers))}
+// Curated, researched outside-the-league players — always loaded so if one
+// gets nominated you have info + a price ready. Projections are rough,
+// no-PL-history estimates from last season's output in their own league.
+const CUSTOM_SEED=[    // players not in the FPL data that might get nominated (auto-suppressed if FPL later adds them)
+  {id:"seed_vini",name:"Vinícius",club:"RMA",pos:"MID",proj:185,
+   note:"Real Madrid — NOT in the PL; price assumes he'd play here.",
+   stats:{league:"La Liga 25/26",apps:36,goals:16,assists:5}},
+  {id:"seed_barco",name:"Barco",club:"CHE",pos:"DEF",proj:80,
+   note:"New Chelsea signing (from Strasbourg); LB/CM, rotation risk early. Auto-updates once FPL adds him.",
+   stats:{league:"Ligue 1 25/26",apps:43,goals:3,assists:9}},
+];
+let userCustom=JSON.parse(localStorage.getItem("omtffl_custom")||"[]");
+function allCustom(){return [...CUSTOM_SEED,...userCustom]}
+let customPlayers=allCustom();
+function saveCustom(){localStorage.setItem("omtffl_custom",JSON.stringify(userCustom))}
 function toPlayerRecord(c){
+  const s=c.stats||{};
   return {id:c.id,web_name:c.name,first_name:"",second_name:c.name,
     element_type:POS_REV[c.pos]||4,pos:c.pos,team:null,team_short:(c.club||"").toUpperCase(),
     now_cost:0,total_points:c.proj||0,status:"a",hist:[],
-    custom:true,manualProj:c.proj||0,note:c.note||""};
+    goals_scored:s.goals,assists:s.assists,minutes:s.minutes,expected_goals:s.xg,expected_assists:s.xa,
+    custom:true,manualProj:c.proj||0,note:c.note||"",stats:s};
 }
 function applyCustomPlayers(){
+  // suppress a custom/seed player if the FPL data already has that name (avoids
+  // duplicates once FPL adds a new signing we'd been carrying manually)
+  const known=new Set(basePlayers.map(p=>(p.web_name||"").toLowerCase()));
+  customPlayers=allCustom().filter(c=>!known.has((c.name||"").toLowerCase()));
   FPL.players=basePlayers.concat(customPlayers.map(toPlayerRecord));
   buildCostTables();
 }
 function addCustomPlayer(c){
   c.id="cust_"+Date.now()+"_"+Math.floor(Math.random()*1e4);
-  customPlayers.push(c); saveCustom(); applyCustomPlayers(); renderAll();
+  userCustom.push(c); saveCustom(); applyCustomPlayers(); renderAll();
   toast(`added ${c.name}`);
 }
 function removeCustomPlayer(id){
-  customPlayers=customPlayers.filter(c=>c.id!==id); saveCustom(); applyCustomPlayers(); renderAll();
+  userCustom=userCustom.filter(c=>c.id!==id); saveCustom(); applyCustomPlayers(); renderAll();
 }
 // ── model ──────────────────────────────────────────────────────────────
 function seasonPts(p,name){const h=p.hist.find(h=>h.season_name===name);return h?h.total_points:null}
@@ -291,17 +316,18 @@ function adjPts(h,proven){
 // starter's ~28 appearances. A rough prior to research/override, not gospel.
 function champEstimate(p){
   const c=p.champ; if(!c)return null;
+  if(c.proj!=null)return c.proj;         // explicit projection (foreign leagues translate differently)
   const disc=0.5, gVal=p.pos==="MID"?5:(p.pos==="FWD"?4:6), base=56;
   return Math.round(base+(c.goals||0)*gVal*disc+(c.assists||0)*3*disc);
 }
 function modelProjection(p){
   const hs=latestSeasons(p);
   const latestPLyear=hs.length?startYear(hs[0].season_name):0;
-  // no recent PL form (promoted from the Championship) but we have last
-  // season's Championship output → use a discounted estimate from it
+  // no recent PL form (promoted, or a new signing from abroad) but we have
+  // last season's output in their own league → estimate from it
   if(p.champ&&latestPLyear<2024){
-    const ce=champEstimate(p);
-    if(ce!=null)return {pts:ce,basis:`Championship 2025/26: ${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""} → discounted PL estimate`,isChamp:true};
+    const ce=champEstimate(p), c=p.champ, lg=c.league||"lower league";
+    if(ce!=null)return {pts:ce,basis:`${lg} last season: ${c.goals||0}g${c.assists?" "+c.assists+"a":""} → PL estimate`,isChamp:true};
   }
   if(!hs.length){
     const e=estimateFromPrice(p);
@@ -500,8 +526,15 @@ function factsheet(p,currentBid,leadingTeam){
   if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
-  if(est.proj.isCustom)flags.push({t:`custom player — your research projection (${est.proj.pts} pts)${p.note?": "+esc(p.note):""}`,custom:true});
-  else if(est.proj.isChamp)flags.push(`promoted club — projection from last season's Championship (${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""}), discounted for the step up${p.champ.note?". "+p.champ.note:""}`);
+  if(est.proj.isCustom){
+    const s=p.stats||{}, sl=[];
+    if(s.league)sl.push(esc(s.league));
+    if(s.apps!=null)sl.push(`${s.apps} apps`);
+    if(s.goals!=null)sl.push(`${s.goals}g`);
+    if(s.assists!=null)sl.push(`${s.assists}a`);
+    flags.push({t:`no PL history — priced from your projection (${est.proj.pts} pts).${sl.length?" "+sl.join(", ")+" last season.":""}${p.note?" "+esc(p.note):""}`,custom:true});
+  }
+  else if(est.proj.isChamp){const c=p.champ,lg=c.league||"a lower league";flags.push(`no recent PL history — projection from ${esc(lg)} last season (${c.goals||0}g${c.assists?" "+c.assists+"a":""}${c.starts?", "+c.starts+" apps":""})${lg==="Championship"?", discounted for the step up":""}${c.note?". "+esc(c.note):""}`);}
   else if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
   if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
@@ -533,8 +566,9 @@ function factsheet(p,currentBid,leadingTeam){
   <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
   ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
-    <div><h2>Season history</h2><table><tr><th>season</th><th>pts</th><th>mins</th></tr>
-      ${hist.map(h=>`<tr><td>${h.season_name}</td><td>${h.total_points}</td><td>${h.minutes}</td></tr>`).join("")||"<tr><td colspan=3 class='small'>new to the Premier League</td></tr>"}</table>
+    <div><h2>${p.custom?"Last season ("+esc((p.stats&&p.stats.league)||"outside PL")+")":"Season history"}</h2><table>
+      ${p.custom?`<tr><th>apps</th><th>goals</th><th>assists</th></tr><tr><td>${(p.stats&&p.stats.apps)??"–"}</td><td>${(p.stats&&p.stats.goals)??"–"}</td><td>${(p.stats&&p.stats.assists)??"–"}</td></tr>`
+        :`<tr><th>season</th><th>pts</th><th>mins</th></tr>${hist.map(h=>`<tr><td>${h.season_name}</td><td>${h.total_points}</td><td>${h.minutes}</td></tr>`).join("")||"<tr><td colspan=3 class='small'>new to the Premier League</td></tr>"}`}</table>
       ${dh.length?`<h2 style="margin-top:.6rem">OMTFFL history</h2><table>${dh.map(d=>`<tr><td>${d.season}</td><td>£${d.price??"?"}m</td><td>${esc(d.buyer)}</td></tr>`).join("")}</table>`:""}
     </div>
     <div><h2>Likely rivals</h2>
@@ -833,8 +867,10 @@ $("cAdd").addEventListener("click",()=>{
   const name=$("cName").value.trim(); const proj=parseInt($("cProj").value,10);
   if(!name)return toast("enter a name");
   if(isNaN(proj))return toast("enter projected points");
-  addCustomPlayer({name,club:$("cClub").value.trim().toUpperCase(),pos:$("cPos").value,proj,note:$("cNote").value.trim()});
-  ["cName","cClub","cProj","cNote"].forEach(id=>$(id).value=""); renderCustomList();
+  const num=id=>{const v=parseInt($(id).value,10);return isNaN(v)?null:v;};
+  const stats={league:$("cLeague").value.trim(),apps:num("cApps"),goals:num("cGoals"),assists:num("cAssists")};
+  addCustomPlayer({name,club:$("cClub").value.trim().toUpperCase(),pos:$("cPos").value,proj,note:$("cNote").value.trim(),stats});
+  ["cName","cClub","cProj","cNote","cLeague","cApps","cGoals","cAssists"].forEach(id=>$(id).value=""); renderCustomList();
 });
 $("q").addEventListener("input",renderSearch);
 $("myTeam").addEventListener("change",()=>{renderAuction();renderPlan()});

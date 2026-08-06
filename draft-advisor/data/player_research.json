@@ -1,0 +1,23 @@
+{
+  "_note": "Prior-league output for players in the FPL data who have no/limited PL history — promoted-club players (from the Championship) and new signings from abroad. Gives them a real projection + info instead of a flat FPL price. 'proj' overrides the auto estimate (use it for foreign leagues, which translate differently than the Championship). Matched by web_name + club. Season: 2026/27.",
+  "_sources": [
+    "https://www.premierleague.com/en/news/4625396",
+    "https://www.fantasyfootballscout.co.uk/2026/07/30/fpl-promoted-teams-who-are-the-best-hull-attackers",
+    "https://treblestats.co.uk/championship/2025-2026/coventry-city-championship-2025-26",
+    "https://www.sportsmole.co.uk/football/ipswich-town/2025-26/top-scorers.html",
+    "https://www.chelseafc.com/en/news/article/valentin-barco-signs-for-chelsea"
+  ],
+  "players": [
+    {"web_name": "Wright", "club": "COV", "league": "Championship", "goals": 17, "assists": null, "starts": null, "note": "Championship top scorer, Team of the Season, penalties"},
+    {"web_name": "Simms", "club": "COV", "league": "Championship", "goals": 13, "assists": null, "starts": 15, "note": "0.71 goals/90 — best rate in the squad"},
+    {"web_name": "Thomas-Asante", "club": "COV", "league": "Championship", "goals": 13, "assists": null, "starts": 21, "note": "0.63 goals/90"},
+    {"web_name": "Torp", "club": "COV", "league": "Championship", "goals": 10, "assists": null, "starts": null, "note": "goals from central midfield"},
+    {"web_name": "Rudoni", "club": "COV", "league": "Championship", "goals": 7, "assists": 5, "starts": null, "note": "goals + assists from midfield"},
+    {"web_name": "Sakamoto", "club": "COV", "league": "Championship", "goals": 7, "assists": null, "starts": null, "note": "wide midfield"},
+    {"web_name": "McBurnie", "club": "HUL", "league": "Championship", "goals": 17, "assists": 7, "starts": 39, "note": "17g 7a in 2911 mins, 55% conversion, penalties — clear Hull talisman"},
+    {"web_name": "Clarke", "club": "IPS", "league": "Championship", "goals": 16, "assists": null, "starts": null, "note": "Ipswich top scorer"},
+    {"web_name": "Hirst", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
+    {"web_name": "Egeli", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
+    {"web_name": "Barco", "club": "CHE", "league": "Ligue 1", "goals": 3, "assists": 9, "starts": 43, "proj": 80, "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"}
+  ]
+}

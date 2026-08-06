@@ -112,7 +112,7 @@ def main():
 
     # attach Championship output for promoted-club players (no PL history to
     # project from) so they get a discounted estimate instead of a flat price
-    champ_file = DATA / "promoted_championship.json"
+    champ_file = DATA / "player_research.json"
     champ_hits = 0
     if champ_file.exists():
         champ = json.loads(champ_file.read_text()).get("players", [])
@@ -120,7 +120,7 @@ def main():
         for p in players:
             c = by_key.get((p["web_name"], p.get("team_short")))
             if c:
-                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note")}
+                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note", "league", "proj")}
                 champ_hits += 1
 
     out = {

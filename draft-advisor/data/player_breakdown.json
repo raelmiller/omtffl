@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-06T07:42:50Z",
+  "fpl_baked_at": "2026-08-06T12:30:28Z",
   "sales": 645,
   "unique_players": 390,
-  "matched_to_fpl": 251
+  "matched_to_fpl": 250
  },
  "players": [
   {
@@ -4969,14 +4969,14 @@
    }
   },
   {
-   "key": "fpl_568",
-   "fpl_id": 568,
+   "key": "name_barco",
+   "fpl_id": null,
    "display": "Barco",
    "position": "DEF",
-   "current_club": "CHE",
-   "status": "a",
-   "last_season_points": 0,
-   "xgi": "0.00",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4985,7 +4985,7 @@
      "price": 1.75,
      "buyer": "Gav",
      "club_then": "BRI",
-     "points_that_season": 0
+     "points_that_season": null
     }
    }
   },

@@ -2382,9 +2382,9 @@
   "player": "Barco",
   "club": "BRI",
   "cost": 1.75,
-  "fpl_id": 568,
-  "fpl_name": "Barco",
-  "points_that_season": 0
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2024-25",

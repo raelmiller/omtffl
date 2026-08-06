@@ -109,14 +109,14 @@ def main():
         time.sleep(0.05)  # be polite to the API
 
     # attach Championship output for promoted-club players (kept across bakes)
-    champ_file = OUT.parent / "promoted_championship.json"
+    champ_file = OUT.parent / "player_research.json"
     if champ_file.exists():
         champ = json.loads(champ_file.read_text()).get("players", [])
         by_key = {(c["web_name"], c.get("club")): c for c in champ}
         for p in players:
             c = by_key.get((p["web_name"], p.get("team_short")))
             if c:
-                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note")}
+                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note", "league", "proj")}
 
     out = {
         "baked_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
