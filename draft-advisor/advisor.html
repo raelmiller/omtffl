@@ -98,6 +98,12 @@ th:first-child,td:first-child{text-align:left}
 .stylechip{border:1px solid var(--border2);border-radius:20px;padding:2px 10px;font-size:11px;color:var(--muted);cursor:pointer;user-select:none}
 .stylechip.on{border-color:var(--accent);color:var(--accent);background:rgba(127,255,178,.1)}
 .stylechip:focus-visible{outline:2px solid var(--accent)}
+.cform{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem}
+.cform input,.cform select{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:12px;padding:.4rem .5rem}
+.cform input#cName{flex:1;min-width:8em} .cform input#cClub{width:5em} .cform input#cProj{width:5.5em} .cform input#cNote{flex:1;min-width:8em}
+.crow{display:flex;justify-content:space-between;align-items:center;padding:.3rem .1rem;border-bottom:1px solid var(--border);font-size:12px}
+.crow .rm{color:var(--hot);cursor:pointer;border:1px solid var(--border2);border-radius:5px;padding:1px 7px}
+.flag.custom{border-color:var(--blue);color:var(--blue)}
 </style>
 </head>
 <body>
@@ -136,6 +142,19 @@ th:first-child,td:first-child{text-align:left}
     <div id="tab-search" class="tabpane" style="display:none">
       <input id="q" size="30" placeholder="type a player name…" style="width:100%;margin-bottom:.5rem">
       <div class="scroll" id="searchList"></div>
+      <details id="customBox" style="margin-top:.7rem">
+        <summary>Add a player not in the list (Vinícius, new signings…)</summary>
+        <div class="small" style="margin:.4rem 0">For players outside the league or not yet in FPL. Set your own projected points from your research — they'll then show in search, Gems, and get a factsheet.</div>
+        <div class="cform">
+          <input id="cName" type="text" placeholder="name (e.g. Vinícius)">
+          <input id="cClub" type="text" placeholder="club (e.g. RMA)" maxlength="4">
+          <select id="cPos"><option value="FWD">FWD</option><option value="MID">MID</option><option value="DEF">DEF</option><option value="GK">GK</option></select>
+          <input id="cProj" type="number" placeholder="proj pts" min="0" step="5">
+          <input id="cNote" type="text" placeholder="note (optional)">
+          <button id="cAdd" class="primary">add</button>
+        </div>
+        <div id="customList"></div>
+      </details>
     </div>
     <div id="tab-teams" class="tabpane" style="display:none">
       <div class="small" style="margin-bottom:.5rem">Map auction teams to league managers so history informs rival predictions.</div>
@@ -199,9 +218,34 @@ async function loadData(){
   }
   FPL=f;MODEL=m;DOSSIERS=d;SALES=s;
   FPL.players.forEach(p=>{p.pos=POSN[p.element_type]||"?";p.hist=FPL.history_past[p.id]||[]});
-  buildCostTables();
-  toast(`data loaded: ${FPL.players.length} players, baked ${FPL.baked_at.slice(0,10)}`);
+  basePlayers=FPL.players.slice();          // the FPL universe, before custom additions
+  applyCustomPlayers();
+  toast(`data loaded: ${basePlayers.length} players, baked ${FPL.baked_at.slice(0,10)}`);
   renderGems();renderTeams();
+}
+// Custom players — people not in the FPL data (outside the league, or new
+// signings not yet added) that you want to research and value yourself.
+const POS_REV={GK:1,DEF:2,MID:3,FWD:4};
+let basePlayers=[];
+let customPlayers=JSON.parse(localStorage.getItem("omtffl_custom")||"[]");
+function saveCustom(){localStorage.setItem("omtffl_custom",JSON.stringify(customPlayers))}
+function toPlayerRecord(c){
+  return {id:c.id,web_name:c.name,first_name:"",second_name:c.name,
+    element_type:POS_REV[c.pos]||4,pos:c.pos,team:null,team_short:(c.club||"").toUpperCase(),
+    now_cost:0,total_points:c.proj||0,status:"a",hist:[],
+    custom:true,manualProj:c.proj||0,note:c.note||""};
+}
+function applyCustomPlayers(){
+  FPL.players=basePlayers.concat(customPlayers.map(toPlayerRecord));
+  buildCostTables();
+}
+function addCustomPlayer(c){
+  c.id="cust_"+Date.now()+"_"+Math.floor(Math.random()*1e4);
+  customPlayers.push(c); saveCustom(); applyCustomPlayers(); renderAll();
+  toast(`added ${c.name}`);
+}
+function removeCustomPlayer(id){
+  customPlayers=customPlayers.filter(c=>c.id!==id); saveCustom(); applyCustomPlayers(); renderAll();
 }
 // ── model ──────────────────────────────────────────────────────────────
 function seasonPts(p,name){const h=p.hist.find(h=>h.season_name===name);return h?h.total_points:null}
@@ -216,6 +260,7 @@ function setProjAdj(id,val){
   renderAll();
 }
 function projection(p){
+  if(p.custom)return {pts:(projAdj[p.id]!=null?projAdj[p.id]:p.manualProj)||0,basis:`your research${p.note?": "+p.note:""}`,isCustom:true,manual:projAdj[p.id]!=null};
   if(projAdj[p.id]!=null)return {pts:projAdj[p.id],basis:"your estimate (data says "+modelProjection(p).pts+")",manual:true};
   return modelProjection(p);
 }
@@ -317,7 +362,7 @@ function marqueeTier(p){                  // 0 = not marquee, 1 = top of positio
   return Math.max(0,Math.min(1,((p.now_cost||0)-b.lo)/(b.hi-b.lo)));
 }
 function pricingProjection(p,proj){
-  if(proj<=165)return proj;              // only the premium tier is gated
+  if(p.custom||proj<=165)return proj;    // custom players have no FPL price to gate on; trust your projection
   return Math.round(165+(proj-165)*marqueeTier(p));
 }
 function liquidity(){
@@ -455,7 +500,8 @@ function factsheet(p,currentBid,leadingTeam){
   if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
-  if(est.proj.isChamp)flags.push(`promoted club — projection from last season's Championship (${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""}), discounted for the step up${p.champ.note?". "+p.champ.note:""}`);
+  if(est.proj.isCustom)flags.push({t:`custom player — your research projection (${est.proj.pts} pts)${p.note?": "+esc(p.note):""}`,custom:true});
+  else if(est.proj.isChamp)flags.push(`promoted club — projection from last season's Championship (${p.champ.goals||0}g${p.champ.assists?" "+p.champ.assists+"a":""}), discounted for the step up${p.champ.note?". "+p.champ.note:""}`);
   else if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
   if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
@@ -484,7 +530,7 @@ function factsheet(p,currentBid,leadingTeam){
     ${p.pos==="DEF"||p.pos==="GK"?`<div class="stat"><b class="y">${s1.defensive_contribution??p.defensive_contribution??"–"}</b><span>def con</span></div>
     <div class="stat"><b>${s1.clean_sheets??"–"}</b><span>clean sheets</span></div>`:""}
   </div>
-  <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag injury">${f.t}</span>`).join("")}</div>
+  <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
   ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
     <div><h2>Season history</h2><table><tr><th>season</th><th>pts</th><th>mins</th></tr>
@@ -613,8 +659,13 @@ function renderGems(){
     const est=fairRange(p);
     return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid)};
   }).filter(r=>r.proj>=60).sort((a,b)=>b.val-a.val).slice(0,60);
-  $("gemsList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
-    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}</td><td>${r.p.pos}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+  $("gemsList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
+    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}</td><td>${r.p.pos}</td><td>${esc(r.p.team_short||"?")}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+}
+function renderCustomList(){
+  const el=$("customList"); if(!el)return;
+  el.innerHTML=customPlayers.length?customPlayers.map(c=>`<div class="crow"><span>${esc(c.name)} <span class="small">${c.pos} · ${esc(c.club||"?")} · ${c.proj} pts${c.note?" · "+esc(c.note):""}</span></span><span class="rm" data-rm="${c.id}">remove</span></div>`).join(""):`<div class="small">none added yet</div>`;
+  el.querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click",()=>{removeCustomPlayer(b.dataset.rm);renderCustomList();renderSearch();}));
 }
 function renderSearch(){
   const q=$("q").value.toLowerCase().trim();
@@ -773,10 +824,18 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
   if(b.dataset.tab==="gems")renderGems();
   if(b.dataset.tab==="plan")renderPlan();
   if(b.dataset.tab==="managers")renderManagerProfiles();
+  if(b.dataset.tab==="search")renderCustomList();
 }));
 $("connectBtn").addEventListener("click",connect);
 $("demoBtn").addEventListener("click",startDemo);
 $("nomBtn").addEventListener("click",()=>{window._showNom=true;renderAuction();window.scrollTo({top:0,behavior:"smooth"})});
+$("cAdd").addEventListener("click",()=>{
+  const name=$("cName").value.trim(); const proj=parseInt($("cProj").value,10);
+  if(!name)return toast("enter a name");
+  if(isNaN(proj))return toast("enter projected points");
+  addCustomPlayer({name,club:$("cClub").value.trim().toUpperCase(),pos:$("cPos").value,proj,note:$("cNote").value.trim()});
+  ["cName","cClub","cProj","cNote"].forEach(id=>$(id).value=""); renderCustomList();
+});
 $("q").addEventListener("input",renderSearch);
 $("myTeam").addEventListener("change",()=>{renderAuction();renderPlan()});
 document.body.addEventListener("click",e=>{
