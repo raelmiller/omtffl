@@ -212,6 +212,9 @@ let mgrProfiles=(()=>{
 function profileOf(name){return mgrProfiles[name]||{clubs:{},styles:[]}}
 function saveProfiles(){localStorage.setItem("omtffl_mgrprofiles",JSON.stringify(mgrProfiles))}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// accent/punctuation-insensitive normalisation for fuzzy name matching
+const nrm=s=>String(s??"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+function nameKeys(p){return [p.web_name,(p.first_name||"")+" "+(p.second_name||""),...(p.aliases||[])].filter(Boolean).map(nrm).filter(Boolean);}
 
 async function loadData(){
   let f,m,d,s;
@@ -239,9 +242,11 @@ let basePlayers=[];
 // no-PL-history estimates from last season's output in their own league.
 const CUSTOM_SEED=[    // players not in the FPL data that might get nominated (auto-suppressed if FPL later adds them)
   {id:"seed_vini",name:"Vinícius",club:"RMA",pos:"MID",proj:185,
+   aliases:["Vini","Vini Jr","Vinicius","Vinicius Jr","Vinicius Junior","Vinícius Júnior","Vinny"],
    note:"Real Madrid — NOT in the PL; price assumes he'd play here.",
    stats:{league:"La Liga 25/26",apps:36,goals:16,assists:5}},
   {id:"seed_barco",name:"Barco",club:"CHE",pos:"DEF",proj:80,
+   aliases:["Valentin Barco","Valentín Barco","Colo Barco"],
    note:"New Chelsea signing (from Strasbourg); LB/CM, rotation risk early. Auto-updates once FPL adds him.",
    stats:{league:"Ligue 1 25/26",apps:43,goals:3,assists:9}},
 ];
@@ -255,7 +260,7 @@ function toPlayerRecord(c){
     element_type:POS_REV[c.pos]||4,pos:c.pos,team:null,team_short:(c.club||"").toUpperCase(),
     now_cost:0,total_points:c.proj||0,status:"a",hist:[],
     goals_scored:s.goals,assists:s.assists,minutes:s.minutes,expected_goals:s.xg,expected_assists:s.xa,
-    custom:true,manualProj:c.proj||0,note:c.note||"",stats:s};
+    custom:true,manualProj:c.proj||0,note:c.note||"",stats:s,aliases:c.aliases||[]};
 }
 function applyCustomPlayers(){
   // suppress a custom/seed player if the FPL data already has that name (avoids
@@ -588,20 +593,27 @@ function resolveAuctionPlayer(ap){
   const byId=(ap.id!=null)?FPL.players.find(p=>p.id===ap.id):null;
   if(!name)return byId||null;                    // nothing to verify against
   if(byId&&byId.web_name===name)return byId;      // ID agrees with the name → use it
-  // ID missing or points at a different player → resolve by name, club breaks ties
-  let hits=FPL.players.filter(p=>p.web_name===name);
   const team=(ap.team_name||ap.team_short||"").trim().toUpperCase();
-  if(hits.length>1&&team){
-    const byTeam=hits.filter(p=>(p.team_short||"").toUpperCase()===team);
-    if(byTeam.length)hits=byTeam;
-  }
-  if(hits.length)return hits[0];
-  const full=((ap.first_name||"")+" "+(ap.second_name||"")).trim().toLowerCase();
-  if(full.length>1){
-    const m=FPL.players.find(p=>((p.first_name||"")+" "+(p.second_name||"")).trim().toLowerCase()===full);
-    if(m)return m;
-  }
-  return null;   // genuinely not in our data (custom entry, or player dropped from FPL)
+  const pick=arr=>(arr.length>1&&team&&arr.find(p=>(p.team_short||"").toUpperCase()===team))||arr[0];
+  const q=nrm(name);
+  if(!q)return null;
+  // 1) exact normalised web_name (accents/punctuation don't matter)
+  let hits=FPL.players.filter(p=>nrm(p.web_name)===q);
+  if(hits.length)return pick(hits);
+  // 2) exact match on any name key — full name or a curated alias (Vini Jr, etc.)
+  hits=FPL.players.filter(p=>nameKeys(p).includes(q));
+  if(hits.length)return pick(hits);
+  // 3) fuzzy token-subset: the shorter name's tokens all appear in the longer,
+  //    sharing a distinctive (4+ char) token — so "Erling"→Haaland works but
+  //    "Johnson" can't grab "Son"
+  const qt=q.split(" ");
+  hits=FPL.players.filter(p=>nameKeys(p).some(h=>{
+    const ht=h.split(" ");
+    const [sh,lo]=qt.length<=ht.length?[qt,ht]:[ht,qt];
+    return sh.every(t=>lo.includes(t))&&sh.some(t=>t.length>=4);
+  }));
+  if(hits.length)return pick(hits);
+  return null;   // genuinely not in our data
 }
 function renderAuction(){
   const a=state.currentAuction;
@@ -703,10 +715,10 @@ function renderCustomList(){
   el.querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click",()=>{removeCustomPlayer(b.dataset.rm);renderCustomList();renderSearch();}));
 }
 function renderSearch(){
-  const q=$("q").value.toLowerCase().trim();
+  const q=nrm($("q").value);
   if(q.length<2){$("searchList").innerHTML="";return}
   const gone=soldIds();
-  const hits=FPL.players.filter(p=>(p.web_name+" "+p.first_name+" "+p.second_name).toLowerCase().includes(q)).slice(0,20);
+  const hits=FPL.players.filter(p=>nameKeys(p).some(h=>h.includes(q))).slice(0,20);
   $("searchList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>pts</th><th></th></tr>
     ${hits.map(p=>`<tr class="row-click" data-id="${p.id}"><td>${esc(p.web_name)}</td><td>${p.pos}</td><td>${p.team_short}</td><td>${p.total_points}</td><td>${gone.has(p.id)?"sold":""}</td></tr>`).join("")}</table>`;
 }
