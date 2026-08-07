@@ -1,30 +1,364 @@
 {
-  "_note": "Prior-league output for players in the FPL data who have no/limited PL history — promoted-club players (from the Championship) and new signings from abroad. Gives them a real projection + info instead of a flat FPL price. 'proj' overrides the auto estimate (use it for foreign leagues, which translate differently than the Championship). Matched by web_name + club. Season: 2026/27.",
-  "_sources": [
-    "https://www.premierleague.com/en/news/4625396",
-    "https://www.fantasyfootballscout.co.uk/2026/07/30/fpl-promoted-teams-who-are-the-best-hull-attackers",
-    "https://treblestats.co.uk/championship/2025-2026/coventry-city-championship-2025-26",
-    "https://www.sportsmole.co.uk/football/ipswich-town/2025-26/top-scorers.html",
-    "https://www.chelseafc.com/en/news/article/valentin-barco-signs-for-chelsea"
-  ],
-  "players": [
-    {"web_name": "Wright", "club": "COV", "league": "Championship", "goals": 17, "assists": null, "starts": null, "note": "Championship top scorer, Team of the Season, penalties"},
-    {"web_name": "Simms", "club": "COV", "league": "Championship", "goals": 13, "assists": null, "starts": 15, "note": "0.71 goals/90 — best rate in the squad"},
-    {"web_name": "Thomas-Asante", "club": "COV", "league": "Championship", "goals": 13, "assists": null, "starts": 21, "note": "0.63 goals/90"},
-    {"web_name": "Torp", "club": "COV", "league": "Championship", "goals": 10, "assists": null, "starts": null, "note": "goals from central midfield"},
-    {"web_name": "Rudoni", "club": "COV", "league": "Championship", "goals": 7, "assists": 5, "starts": null, "note": "goals + assists from midfield"},
-    {"web_name": "Sakamoto", "club": "COV", "league": "Championship", "goals": 7, "assists": null, "starts": null, "note": "wide midfield"},
-    {"web_name": "McBurnie", "club": "HUL", "league": "Championship", "goals": 17, "assists": 7, "starts": 39, "note": "17g 7a in 2911 mins, 55% conversion, penalties — clear Hull talisman"},
-    {"web_name": "Clarke", "club": "IPS", "league": "Championship", "goals": 16, "assists": null, "starts": null, "note": "Ipswich top scorer"},
-    {"web_name": "Hirst", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
-    {"web_name": "Egeli", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
-    {"web_name": "Barco", "club": "CHE", "league": "Ligue 1", "goals": 3, "assists": 9, "starts": 43, "proj": 80, "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"},
-
-    {"web_name": "B.Fernandes", "club": "MUN", "intel": "FFScout must-have — most-owned MID (48.8%). Easy opening fixtures (Hull, Ipswich) make him an early captaincy challenger to Haaland under Carrick."},
-    {"web_name": "Igor Jesus", "club": "NFO", "intel": "FFScout top FORM pick — 4 goals in 4 pre-season games under new boss Glasner. One to watch as Forest's main striker."},
-    {"web_name": "Osula", "club": "NEW", "intel": "Pre-season form pick — started Newcastle's closing 7 games and scored 5. Cheap forward punt if he keeps the shirt."},
-    {"web_name": "O.Dango", "club": "BRE", "intel": "FFScout value shout — 7g 6a last season with five double-digit hauls; strong link with Thiago (assisted 6 of his goals)."},
-    {"web_name": "João Pedro", "club": "CHE", "intel": "FFScout must-have."},
-    {"web_name": "Gabriel", "club": "ARS", "intel": "FFScout must-have — premium defender with set-piece goal threat."}
-  ]
+ "_note": "Prior-league output for players in the FPL data who have no/limited PL history — promoted-club players (from the Championship) and new signings from abroad. Gives them a real projection + info instead of a flat FPL price. 'proj' overrides the auto estimate (use it for foreign leagues, which translate differently than the Championship). Matched by web_name + club. Season: 2026/27.",
+ "_sources": [
+  "https://www.fantasyfootballscout.co.uk/2026/07/28/best-4-0m-4-5m-goalkeepers-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/07/31/best-5-0m-goalkeepers-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/07/24/best-4-0m-defenders-for-fpl-2026-27-all-46-assessed",
+  "https://www.fantasyfootballscout.co.uk/2026/07/29/best-4-5m-defenders-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/07/30/best-5-0m-defenders-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/08/01/best-5-5m-defenders-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/07/24/best-4-5m-midfielders-for-fpl-2026-27-all-25-assessed",
+  "https://www.fantasyfootballscout.co.uk/2026/08/05/best-5-0m-midfielders-for-fpl-2026-27-all-89-assessed",
+  "https://www.fantasyfootballscout.co.uk/2026/08/06/best-6-5m-7-0m-midfielders-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/08/02/best-7-5m-midfielders-for-fpl-2026-27",
+  "https://www.fantasyfootballscout.co.uk/2026/07/31/best-6-0m-6-5m-forwards-for-fpl-2026-27",
+  "https://www.premierleague.com/en/news/4625396"
+ ],
+ "players": [
+  {
+   "web_name": "Wright",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 17,
+   "assists": null,
+   "starts": null,
+   "note": "Championship top scorer, Team of the Season, penalties"
+  },
+  {
+   "web_name": "Simms",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 13,
+   "assists": null,
+   "starts": 15,
+   "note": "0.71 goals/90 — best rate in the squad"
+  },
+  {
+   "web_name": "Thomas-Asante",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 13,
+   "assists": null,
+   "starts": 21,
+   "note": "0.63 goals/90"
+  },
+  {
+   "web_name": "Torp",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 10,
+   "assists": null,
+   "starts": null,
+   "note": "goals from central midfield"
+  },
+  {
+   "web_name": "Rudoni",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 7,
+   "assists": 5,
+   "starts": null,
+   "note": "goals + assists from midfield"
+  },
+  {
+   "web_name": "Sakamoto",
+   "club": "COV",
+   "league": "Championship",
+   "goals": 7,
+   "assists": null,
+   "starts": null,
+   "note": "wide midfield"
+  },
+  {
+   "web_name": "McBurnie",
+   "club": "HUL",
+   "league": "Championship",
+   "goals": 17,
+   "assists": 7,
+   "starts": 39,
+   "note": "17g 7a in 2911 mins, 55% conversion, penalties — clear Hull talisman"
+  },
+  {
+   "web_name": "Clarke",
+   "club": "IPS",
+   "league": "Championship",
+   "goals": 16,
+   "assists": null,
+   "starts": null,
+   "note": "Ipswich top scorer"
+  },
+  {
+   "web_name": "Hirst",
+   "club": "IPS",
+   "league": "Championship",
+   "goals": 4,
+   "assists": null,
+   "starts": null,
+   "note": ""
+  },
+  {
+   "web_name": "Egeli",
+   "club": "IPS",
+   "league": "Championship",
+   "goals": 4,
+   "assists": null,
+   "starts": null,
+   "note": ""
+  },
+  {
+   "web_name": "Barco",
+   "club": "CHE",
+   "league": "Ligue 1",
+   "goals": 3,
+   "assists": 9,
+   "starts": 43,
+   "proj": 80,
+   "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"
+  },
+  {
+   "web_name": "Verbruggen",
+   "club": "BHA",
+   "intel": "FFScout best-value £4.5m keeper — double-figure clean sheets last season behind a solid Brighton back line."
+  },
+  {
+   "web_name": "Petrović",
+   "club": "BOU",
+   "intel": "FFScout £4.5m value pick — Bournemouth had the 2nd-best home xGC and led the league for limiting big chances; double-figure clean sheets."
+  },
+  {
+   "web_name": "Forster",
+   "club": "BOU",
+   "intel": "£4.0m enabler — one of the few min-priced keepers a single injury from starting."
+  },
+  {
+   "web_name": "Steele",
+   "club": "BHA",
+   "intel": "£4.0m enabler — viable No.2, one injury from starting."
+  },
+  {
+   "web_name": "Lecomte",
+   "club": "FUL",
+   "intel": "£4.0m enabler — viable No.2, one injury from starting."
+  },
+  {
+   "web_name": "Dubravka",
+   "club": "TOT",
+   "intel": "£4.0m — made the most saves in FPL last season; bench fodder unless he wins the No.1 shirt."
+  },
+  {
+   "web_name": "Raya",
+   "club": "ARS",
+   "intel": "Most expensive keeper (£6.0m) — 19 clean sheets and the league's best underlying defensive numbers; premium but reliable."
+  },
+  {
+   "web_name": "Sánchez",
+   "club": "CHE",
+   "intel": "FFScout £5.0m shout — cheapest route into an improving Chelsea defence (new manager, no European football, defensive signings)."
+  },
+  {
+   "web_name": "Kelleher",
+   "club": "BRE",
+   "intel": "£5.0m — 2nd-highest-scoring keeper last season on save volume even as Brentford leaked; high save-point floor."
+  },
+  {
+   "web_name": "Thomas",
+   "club": "COV",
+   "intel": "FFScout £4.0m gem — big centre-half with genuine set-piece goal threat for promoted Coventry."
+  },
+  {
+   "web_name": "Amenda",
+   "club": "COV",
+   "intel": "FFScout £4.0m watch — Swiss CB ex-Frankfurt averaging 8.97 defensive contributions/90; strong DefCon upside if nailed."
+  },
+  {
+   "web_name": "Dasilva",
+   "club": "COV",
+   "intel": "FFScout: best avoided at £4.0m — Coventry linked with new left-backs, so his starts aren't secure."
+  },
+  {
+   "web_name": "Shaw",
+   "club": "MUN",
+   "intel": "Most-owned £4.5m defender — cheap route into Man Utd's strong opening fixtures; 3.9 ppm under Carrick (1g, 7cs, 6 DefCon in 17)."
+  },
+  {
+   "web_name": "Mitchell",
+   "club": "CRY",
+   "intel": "Cheapest secure route into Palace's defence — 135 pts last season (1g 3a, 12cs, 8 bonus); wing-back system boosts him."
+  },
+  {
+   "web_name": "Cash",
+   "club": "AVL",
+   "intel": "Villa's top-scoring defender last season — 117 pts, 3g 3a in 35; attacking full-back returns."
+  },
+  {
+   "web_name": "Rodon",
+   "club": "LEE",
+   "intel": "Joint-most DefCon points among £4.5m defenders (18); Leeds' defence tightened sharply late last season."
+  },
+  {
+   "web_name": "Aina",
+   "club": "NFO",
+   "intel": "Most-owned £5.0m defender — led all defenders for attempts (46) and shots on target (19); attacking full-back."
+  },
+  {
+   "web_name": "Ballard",
+   "club": "SUN",
+   "intel": "FFScout £5.0m value — 15 DefCon returns and 25 box shots off just 24 starts; DefCon + aerial set-piece threat."
+  },
+  {
+   "web_name": "Van Hecke",
+   "club": "TOT",
+   "intel": "No £5.0m defender bettered his 148 points last season — best value-per-match in the bracket."
+  },
+  {
+   "web_name": "Alderete",
+   "club": "SUN",
+   "intel": "£5.0m — early returns last term (GW1 assist, GW6 goal); set-piece aerial threat."
+  },
+  {
+   "web_name": "Thiaw",
+   "club": "NEW",
+   "intel": "£5.0m — 2nd among defenders for big chances and 3rd for xG (4.72); set-piece goal threat."
+  },
+  {
+   "web_name": "Hall",
+   "club": "NEW",
+   "intel": "£5.0m attacking full-back — seven assists in 2024/25; creative upside if he holds the left-back slot."
+  },
+  {
+   "web_name": "Gabriel",
+   "club": "ARS",
+   "intel": "Elite premium defender — 209 pts last season (18 clean sheets, 30 bonus, 3g 5a, 22 DefCon); best-in-class set-piece threat."
+  },
+  {
+   "web_name": "Guéhi",
+   "club": "MCI",
+   "intel": "Top-10 FPL defender last season — premium DefCon and aerial goal threat."
+  },
+  {
+   "web_name": "Saliba",
+   "club": "ARS",
+   "intel": "⚠ Out for an extended period with a back problem — check fitness before committing."
+  },
+  {
+   "web_name": "J.Timber",
+   "club": "ARS",
+   "intel": "⚠ Left Arsenal's training camp for a groin check — fitness watch."
+  },
+  {
+   "web_name": "Tarkowski",
+   "club": "EVE",
+   "intel": "Priced up but justified — Everton's excellent opening fixtures make him a strong early hold; aerial + DefCon."
+  },
+  {
+   "web_name": "Muñoz",
+   "club": "CRY",
+   "intel": "One of FPL's most fun defenders — 4g 4a last season despite knee/shoulder injuries; huge attacking ceiling at wing-back."
+  },
+  {
+   "web_name": "Gomez",
+   "club": "BHA",
+   "intel": "FFScout best £5.0m attacking mid — 2nd for minutes-per-xGI among PL players; nailed under Hürzeler with Mitoma injured."
+  },
+  {
+   "web_name": "Nørgaard",
+   "club": "ARS",
+   "intel": "FFScout £5.0m DefCon shout — reliable defensive-contribution points floor."
+  },
+  {
+   "web_name": "Sangaré",
+   "club": "NFO",
+   "intel": "FFScout £5.0m DefCon machine — high tackle/interception volume; watch Forest's midfield transfers."
+  },
+  {
+   "web_name": "Andrey Santos",
+   "club": "MUN",
+   "intel": "FFScout £5.0m DefCon watch — if he hits his Strasbourg levels, a likely GW1 starter and Bench-Boost enabler."
+  },
+  {
+   "web_name": "Grimes",
+   "club": "COV",
+   "intel": "FFScout £5.0m set-piece pick — Coventry's main corner taker; Bench-Boost enabler with points upside."
+  },
+  {
+   "web_name": "Cook",
+   "club": "BOU",
+   "intel": "FFScout £5.0m DefCon option — strong tackle numbers but rotation risk at Bournemouth."
+  },
+  {
+   "web_name": "J.Ramsey",
+   "club": "NEW",
+   "intel": "FFScout £5.0m one to monitor — attacking mid with upside if he secures minutes."
+  },
+  {
+   "web_name": "Szoboszlai",
+   "club": "LIV",
+   "intel": "36/38 starts last season, 6g 7a — 4 goals from direct free-kicks, 2nd among mids for crosses (205) and chances created (78)."
+  },
+  {
+   "web_name": "Bruno G.",
+   "club": "NEW",
+   "intel": "9 goals (2 pens) + 7 assists in 26 apps last season — strong all-round midfield returns."
+  },
+  {
+   "web_name": "Dewsbury-Hall",
+   "club": "EVE",
+   "intel": "Excellent budget mid — 8g 7a in 31 last season, 84.5 mins/app, on Everton corners and free-kicks."
+  },
+  {
+   "web_name": "B.Fernandes",
+   "club": "MUN",
+   "intel": "FFScout must-have and standout mid — league-leading 235 pts last season; premium captaincy with easy opening fixtures (Everton, Fulham, two promoted sides)."
+  },
+  {
+   "web_name": "Saka",
+   "club": "ARS",
+   "intel": "£9.5m — a World Cup fitness issue clouds him early, but once fully fit a top pick: open play, set-pieces and penalties for the league's best side."
+  },
+  {
+   "web_name": "Rice",
+   "club": "ARS",
+   "intel": "£7.5m — fitness question after the World Cup, but multiple routes to points (set-pieces, open play) for elite Arsenal."
+  },
+  {
+   "web_name": "Cherki",
+   "club": "MCI",
+   "intel": "£7.5m — one to watch; creative Man City signing with a high assist ceiling."
+  },
+  {
+   "web_name": "Doku",
+   "club": "MCI",
+   "intel": "£7.5m — explosive Man City winger; watch for a nailed role and goal/assist upside."
+  },
+  {
+   "web_name": "Calvert-Lewin",
+   "club": "LEE",
+   "intel": "14 goals last season — best points-per-million among forwards but streaky (6 in 6, then 2 in 13); now leads the line at Leeds."
+  },
+  {
+   "web_name": "G.Jesus",
+   "club": "ARS",
+   "intel": "FFScout: strong pre-season (3 friendly goals) — a bargain forward if he nails a starting role."
+  },
+  {
+   "web_name": "Solanke",
+   "club": "TOT",
+   "intel": "19-goal season in 2023/24 shows the ceiling, but two injury-hit years at Spurs (knee/ankle); started most of GW23-34."
+  },
+  {
+   "web_name": "Osula",
+   "club": "NEW",
+   "intel": "£6.0m form punt — scored 5 in Newcastle's closing 7 games, but the striker pecking order is unsettled after Howe's exit."
+  },
+  {
+   "web_name": "Woltemade",
+   "club": "NEW",
+   "intel": "£6.0m — in Newcastle's crowded striker mix (with Osula, Wissa); starting role uncertain post-Howe."
+  },
+  {
+   "web_name": "Wissa",
+   "club": "NEW",
+   "intel": "£6.0m — Newcastle striker option but rotation risk in an unsettled front line post-Howe."
+  }
+ ]
 }
