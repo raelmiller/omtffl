@@ -118,32 +118,32 @@
   {
    "web_name": "Verbruggen",
    "club": "BHA",
-   "intel": "FFScout best-value £4.5m keeper — double-figure clean sheets last season behind a solid Brighton back line."
+   "intel": "FFScout best-value £4.5m keeper — 2nd-best shot-on-target save rate (74.6%) behind Brighton's stingy back line (46 goals, 5th-lowest xGC); RMT's top-scoring keeper at this price GW1-6, with Leeds and Coventry early."
   },
   {
    "web_name": "Petrović",
    "club": "BOU",
-   "intel": "FFScout £4.5m value pick — Bournemouth had the 2nd-best home xGC and led the league for limiting big chances; double-figure clean sheets."
+   "intel": "2nd-best £4.5m keeper by value — Bournemouth's superb home defence (2nd for home xGC, best at limiting big chances) and joint-3rd most saves (109); but a new coach (Rose), first-ever European football and a brutal opening six (2nd-worst on the ticker, no promoted side until GW10)."
   },
   {
    "web_name": "Forster",
    "club": "BOU",
-   "intel": "£4.0m enabler — one of the few min-priced keepers a single injury from starting."
+   "intel": "£4.0m understudy to Petrović — one of the few min-priced keepers a single injury from starting."
   },
   {
    "web_name": "Steele",
    "club": "BHA",
-   "intel": "£4.0m enabler — viable No.2, one injury from starting."
+   "intel": "£4.0m understudy to Verbruggen — viable No.2, one injury from starting."
   },
   {
    "web_name": "Lecomte",
    "club": "FUL",
-   "intel": "£4.0m enabler — viable No.2, one injury from starting."
+   "intel": "£4.0m understudy to Leno — viable No.2, one injury from starting."
   },
   {
    "web_name": "Dubravka",
    "club": "TOT",
-   "intel": "£4.0m — made the most saves in FPL last season; bench fodder unless he wins the No.1 shirt."
+   "intel": "£4.0m — made the most saves in FPL last season, but as a Spurs backup he's bench fodder unless he displaces Kinsky."
   },
   {
    "web_name": "Raya",
@@ -414,6 +414,51 @@
    "web_name": "Van de Ven",
    "club": "TOT",
    "intel": "£5.0m — 4 Premier League goals last season including a 23-point haul, but now competes with Marcos Senesi (£6.0m) for the left centre-back role."
+  },
+  {
+   "web_name": "Kinsky",
+   "club": "TOT",
+   "intel": "£4.5m — in line to be Spurs' No.1 with Vicario expected to leave; a strong late-season redemption run helped clinch survival. Good pick if De Zerbi keeps faith, but Spurs meet no promoted side until GW7."
+  },
+  {
+   "web_name": "Leno",
+   "club": "FUL",
+   "intel": "£4.5m — Fulham conceded the 5th-fewest shots on target but the 3rd-most big chances, so their defence is hard to trust; a risky new manager (Arbeloa), key departures and a tough first five make him the lowest-owned of the value keepers."
+  },
+  {
+   "web_name": "Vicario",
+   "club": "TOT",
+   "intel": "£4.5m — expected to leave Spurs, which would hand the gloves to Kinsky; check his transfer status before drafting."
+  },
+  {
+   "web_name": "Rushworth",
+   "club": "BHA",
+   "intel": "Started all 46 for promoted Coventry on loan last season (tightest Championship backline, 45 conceded) and Lampard wants him permanently — but FPL still lists him at Brighton behind Verbruggen, so check where he actually lands."
+  },
+  {
+   "web_name": "Wilson",
+   "club": "COV",
+   "intel": "£4.5m — nominally Coventry's keeper but only played cup games last season behind loanee Rushworth; the No.1 shirt is unsettled and their opening six fixtures are poor."
+  },
+  {
+   "web_name": "Walton",
+   "club": "IPS",
+   "intel": "£4.5m — moved aside at Ipswich for new signings Van Oevelen and Scherpen, so his starting spot is under threat despite Ipswich's strong record (2nd for xGC, 17 clean sheets)."
+  },
+  {
+   "web_name": "Van Oevelen",
+   "club": "IPS",
+   "intel": "£4.5m new Ipswich signing competing with Scherpen and Walton for the No.1 shirt; Ipswich rank 4th for fixtures to GW6 and were 2nd for Championship xGC (46.60)."
+  },
+  {
+   "web_name": "Scherpen",
+   "club": "IPS",
+   "intel": "£4.5m — 6ft 9in new Ipswich signing vying with Van Oevelen and Walton for the gloves; strong Ipswich defence but the pecking order is unclear."
+  },
+  {
+   "web_name": "Butland",
+   "club": "HUL",
+   "intel": "£4.5m — new Hull signing and likely No.1 (Tzolakis rumoured to join too), but Hull were leaky in the Championship (66 conceded, 2nd-most xG against), so clean sheets look scarce."
   }
  ]
 }
