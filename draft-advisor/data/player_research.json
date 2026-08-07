@@ -196,11 +196,6 @@
    "intel": "Joint-most DefCon points among £4.5m defenders (18); Leeds' defence tightened sharply late last season."
   },
   {
-   "web_name": "Aina",
-   "club": "NFO",
-   "intel": "Most-owned £5.0m defender — led all defenders for attempts (46) and shots on target (19); attacking full-back."
-  },
-  {
    "web_name": "Ballard",
    "club": "SUN",
    "intel": "FFScout £5.0m value — 15 DefCon returns and 25 box shots off just 24 starts; DefCon + aerial set-piece threat."
@@ -208,7 +203,7 @@
   {
    "web_name": "Van Hecke",
    "club": "TOT",
-   "intel": "No £5.0m defender bettered his 148 points last season — best value-per-match in the bracket."
+   "intel": "No £5.0m defender bettered his 148 pts last season (0.82 PPMPM, 3g 3a, 30 DefCon), but he made the most errors leading to goals (4) and 9 yellows; new to a leaky Spurs back line that meets no promoted side until GW7."
   },
   {
    "web_name": "Alderete",
@@ -218,12 +213,12 @@
   {
    "web_name": "Thiaw",
    "club": "NEW",
-   "intel": "£5.0m — 2nd among defenders for big chances and 3rd for xG (4.72); set-piece goal threat."
+   "intel": "£5.0m — 2nd among defenders for big chances and 3rd for xG; Newcastle's opening 10 fixtures rank best in the game."
   },
   {
    "web_name": "Hall",
    "club": "NEW",
-   "intel": "£5.0m attacking full-back — seven assists in 2024/25; creative upside if he holds the left-back slot."
+   "intel": "£5.0m attacking full-back — 7 assists in 2024/25; Newcastle's opening 10 fixtures rank best in the game, so strong early appeal if nailed."
   },
   {
    "web_name": "Gabriel",
@@ -359,6 +354,66 @@
    "web_name": "Wissa",
    "club": "NEW",
    "intel": "£6.0m — Newcastle striker option but rotation risk in an unsettled front line post-Howe."
+  },
+  {
+   "web_name": "Mukiele",
+   "club": "SUN",
+   "intel": "FFScout value shout — 151 pts for Sunderland last season (3g 5a, 9cs, 24 DefCon, 11 bonus, 4.7 pts/start); strong differential before their European fixtures bite."
+  },
+  {
+   "web_name": "Andersen",
+   "club": "FUL",
+   "intel": "FFScout £5.0m pick — finished 4th among all defenders for DefCon points last season; reliable defensive floor."
+  },
+  {
+   "web_name": "Gvardiol",
+   "club": "MCI",
+   "intel": "Injury-hit last season (only 18 starts) — but back to his best he's a cheap route into Man City's defence with real attacking upside."
+  },
+  {
+   "web_name": "N.Williams",
+   "club": "NFO",
+   "intel": "Most-owned £5.0m defender (13.3%) — led all defenders for attempts (46) and shots on target (19, many long-range) and 4th for crosses (142); but Forest had the league's worst xGC (57.32). Attacking wing-back upside if Glasner adds solidity."
+  },
+  {
+   "web_name": "Vuskovic",
+   "club": "BHA",
+   "intel": "19yo £46m wonderkid — 6 goals on loan at Hamburg plus a huge 12.49 DefCon actions/90; set to replace Van Hecke at Brighton, though early fixtures are tough (Liverpool + Man City in October)."
+  },
+  {
+   "web_name": "Maguire",
+   "club": "MUN",
+   "intel": "£5.0m — Man Utd sit among the top 4 for restricting SoT/big chances/xGC and 2nd on the fixture ticker early (two promoted sides first); modest attacking output (1g) but could be the new set-piece target with Casemiro gone."
+  },
+  {
+   "web_name": "Dalot",
+   "club": "MUN",
+   "intel": "£5.0m alternative to Maguire — 6 assists and 5 big chances last season; benefits from Man Utd's soft opening run under Carrick."
+  },
+  {
+   "web_name": "Jacquet",
+   "club": "LIV",
+   "intel": "£5.0m — 21yo Konaté replacement and a cheap route into Liverpool's four good opening fixtures, but returning from a season-ending shoulder injury, so expect a careful easing-in. Monitor pre-season."
+  },
+  {
+   "web_name": "Muharemović",
+   "club": "LEE",
+   "intel": "£5.0m DefCon gem — 10.8 defensive actions/90 (elite; only Senesi, Mavropanos and Lacroix bettered it) plus 4g 4a in two Sassuolo seasons; Leeds avoid the top 7 until GW6."
+  },
+  {
+   "web_name": "Canvot",
+   "club": "CRY",
+   "intel": "£5.0m — Palace regular since GW27 with 4 double-digit hauls and DefCon points in 10 of just 14 starts; strong DefCon rate if he holds the shirt."
+  },
+  {
+   "web_name": "Richards",
+   "club": "CRY",
+   "intel": "£5.0m — worse DefCon rate than Canvot but badly under-performed his xGI (1.00 goal involvement vs 3.74 expected), so positive regression is due; Palace's early fixtures appeal."
+  },
+  {
+   "web_name": "Van de Ven",
+   "club": "TOT",
+   "intel": "£5.0m — 4 Premier League goals last season including a 23-point haul, but now competes with Marcos Senesi (£6.0m) for the left centre-back role."
   }
  ]
 }
