@@ -58,7 +58,8 @@
    "goals": 7,
    "assists": 5,
    "starts": null,
-   "note": "goals + assists from midfield"
+   "note": "goals + assists from midfield",
+   "intel": "£5.0m — Coventry's No.10 with 13 attacking returns in 30 injury-hit Championship games, but not seen in pre-season after spring shoulder surgery; monitor his fitness."
   },
   {
    "web_name": "Sakamoto",
@@ -67,7 +68,8 @@
    "goals": 7,
    "assists": null,
    "starts": null,
-   "note": "wide midfield"
+   "note": "wide midfield",
+   "intel": "£5.0m — a Coventry wide option, but now faces competition from £5.5m signing Tchaouna on the right; minutes not assured."
   },
   {
    "web_name": "McBurnie",
@@ -163,12 +165,12 @@
   {
    "web_name": "Thomas",
    "club": "COV",
-   "intel": "FFScout £4.0m gem — big centre-half with genuine set-piece goal threat for promoted Coventry."
+   "intel": "FFScout's big £4.0m centre-half hope — set-play goal threat (3 goals; 3 of 4 assists from dead balls) and 8.56 DefCon/90 that should rise in the PL; GW1 appeal hinges on Coventry not signing another stopper."
   },
   {
    "web_name": "Amenda",
    "club": "COV",
-   "intel": "FFScout £4.0m watch — Swiss CB ex-Frankfurt averaging 8.97 defensive contributions/90; strong DefCon upside if nailed."
+   "intel": "£4.0m Swiss CB just signed from Frankfurt — 8.97 DefCon/90 (hit the 10-action threshold in 7 of 18 starts); expected to replace Kitching, so confirm the starting spot in pre-season."
   },
   {
    "web_name": "Dasilva",
@@ -223,12 +225,12 @@
   {
    "web_name": "Gabriel",
    "club": "ARS",
-   "intel": "Elite premium defender — 209 pts last season (18 clean sheets, 30 bonus, 3g 5a, 22 DefCon); best-in-class set-piece threat."
+   "intel": "Elite premium — 209 pts last season (18 clean sheets, 30 bonus, 3g 5a, 22 DefCon), just 4 short of the all-time defender record; the £2.0m hike is steep and Saliba's injury weakens the rearguard, but he's the position's gold standard."
   },
   {
    "web_name": "Guéhi",
    "club": "MCI",
-   "intel": "Top-10 FPL defender last season — premium DefCon and aerial goal threat."
+   "intel": "£6.0m — seamless move to Man City; 179 pts and a top-10 defender last season across Palace + City (14 clean sheets, 6 attacking returns, 22 DefCon). City are an unknown after a poor season but adding Gvardiol/Anderson."
   },
   {
    "web_name": "Saliba",
@@ -243,47 +245,47 @@
   {
    "web_name": "Tarkowski",
    "club": "EVE",
-   "intel": "Priced up but justified — Everton's excellent opening fixtures make him a strong early hold; aerial + DefCon."
+   "intel": "£6.0m — DefCon in 21 of 36 games (2nd only to Senesi) plus 16 attacking returns/clean sheets and 4.6 pts/start; priced up but Everton's excellent opening fixtures justify it."
   },
   {
    "web_name": "Muñoz",
    "club": "CRY",
-   "intel": "One of FPL's most fun defenders — 4g 4a last season despite knee/shoulder injuries; huge attacking ceiling at wing-back."
+   "intel": "£5.5m — 4g 4a last season despite a 7-week injury; a genuine attacking wing-back under Sage's 3-4-2-1. Palace have lovely early fixtures (bar City in GW2), though losing Lacroix hurts."
   },
   {
    "web_name": "Gomez",
    "club": "BHA",
-   "intel": "FFScout best £5.0m attacking mid — 2nd for minutes-per-xGI among PL players; nailed under Hürzeler with Mitoma injured."
+   "intel": "FFScout's best £5.0m attacking mid — 2nd only to the not-nailed Brooks for minutes-per-xGI among returning PL players; Hürzeler starts him whenever fit and Mitoma's early injury should lock in a wing start, though European rotation looms and don't expect goal gluts."
   },
   {
    "web_name": "Nørgaard",
    "club": "ARS",
-   "intel": "FFScout £5.0m DefCon shout — reliable defensive-contribution points floor."
+   "intel": "FFScout £5.0m DefCon hope — had the 2nd-best DefCon success rate (50%) of any midfielder at Brentford in 2024/25; a real watch if his rumoured Everton move goes through (an FPL no-go if he stays at Arsenal)."
   },
   {
    "web_name": "Sangaré",
    "club": "NFO",
-   "intel": "FFScout £5.0m DefCon machine — high tackle/interception volume; watch Forest's midfield transfers."
+   "intel": "FFScout £5.0m DefCon machine — 11.58 DefCon actions/90 last season, but Forest have £116m to spend and are chasing midfielders, so his minutes hinge on the window and Glasner's preferences."
   },
   {
    "web_name": "Andrey Santos",
    "club": "MUN",
-   "intel": "FFScout £5.0m DefCon watch — if he hits his Strasbourg levels, a likely GW1 starter and Bench-Boost enabler."
+   "intel": "£5.0m — set to anchor Man Utd's midfield, where he managed 12.85 DefCon/90 at Strasbourg; likely a GW1 starter and Bench-Boost enabler, though Mainoo/Tielemans/Mount compete for spots."
   },
   {
    "web_name": "Grimes",
    "club": "COV",
-   "intel": "FFScout £5.0m set-piece pick — Coventry's main corner taker; Bench-Boost enabler with points upside."
+   "intel": "FFScout's pick for a GW2 Bench Boost — Coventry's main corner taker (team-best 86 key passes) with 9.6 DefCon/90 that should rise in a relegation fight; rare set-piece duty at this price."
   },
   {
    "web_name": "Cook",
    "club": "BOU",
-   "intel": "FFScout £5.0m DefCon option — strong tackle numbers but rotation risk at Bournemouth."
+   "intel": "£5.0m — Lewis Cook posted the best DefCon rate in the whole £5.0m piece (14.03/90), but Bournemouth's crowded midfield and European rotation make starts far from guaranteed."
   },
   {
    "web_name": "J.Ramsey",
    "club": "NEW",
-   "intel": "FFScout £5.0m one to monitor — attacking mid with upside if he secures minutes."
+   "intel": "£5.0m — Jacob Ramsey could get a Newcastle minutes boost with Gordon/Guimarães/Tonali gone, but marrying minutes with returns has long been his issue (14 in 31 starts back in 2022/23)."
   },
   {
    "web_name": "Szoboszlai",
@@ -303,32 +305,32 @@
   {
    "web_name": "B.Fernandes",
    "club": "MUN",
-   "intel": "FFScout must-have and standout mid — league-leading 235 pts last season; premium captaincy with easy opening fixtures (Everton, Fulham, two promoted sides)."
+   "intel": "The standout premium mid (£12.0m) — league-leading 235 pts and the best midfielder NPxGI last season; penalties, set-pieces and Man Utd's soft opening (2nd on the ticker; Everton, Fulham, two promoted sides) make him a GW1 lock and captaincy pick."
   },
   {
    "web_name": "Saka",
    "club": "ARS",
-   "intel": "£9.5m — a World Cup fitness issue clouds him early, but once fully fit a top pick: open play, set-pieces and penalties for the league's best side."
+   "intel": "£9.5m — a World Cup fitness issue makes him hard to trust for GW1, but once fully fit he's a top pick for the league's best side: open play, set-pieces and penalties."
   },
   {
    "web_name": "Rice",
    "club": "ARS",
-   "intel": "£7.5m — fitness question after the World Cup, but multiple routes to points (set-pieces, open play) for elite Arsenal."
+   "intel": "£7.5m — a post-World Cup fitness question early, but multiple routes to points (set-pieces, open play) for elite Arsenal; patience, then he enters the conversation."
   },
   {
    "web_name": "Cherki",
    "club": "MCI",
-   "intel": "£7.5m — one to watch; creative Man City signing with a high assist ceiling."
+   "intel": "£7.5m — finished last season inside the division's top three for xGI/90, a huge attacking ceiling; a genuine alternative route into City's attack if he nails regular minutes."
   },
   {
    "web_name": "Doku",
    "club": "MCI",
-   "intel": "£7.5m — explosive Man City winger; watch for a nailed role and goal/assist upside."
+   "intel": "£7.5m — finished the season strongly and offers explosive wing threat; most will prioritise Haaland/Semenyo for City, but he's a real option with a secure role."
   },
   {
    "web_name": "Calvert-Lewin",
    "club": "LEE",
-   "intel": "14 goals last season — best points-per-million among forwards but streaky (6 in 6, then 2 in 13); now leads the line at Leeds."
+   "intel": "£6.0m — FFScout's best-value forward (0.68 PPMPM) on 14 goals; 3rd among forwards for xG (15.81), 4th for box shots and big chances, and on penalties, with no top-7 opponent until GW6. Streaky and a career xG underachiever, but hit 4 in Leeds' closing 6."
   },
   {
    "web_name": "G.Jesus",
@@ -338,27 +340,27 @@
   {
    "web_name": "Solanke",
    "club": "TOT",
-   "intel": "19-goal season in 2023/24 shows the ceiling, but two injury-hit years at Spurs (knee/ankle); started most of GW23-34."
+   "intel": "£6.0m — a 19-goal 2023/24 shows the ceiling, but two injury-hit Spurs years temper it; FFScout says avoid Spurs assets until GW7, and his appeal hinges on whether De Zerbi still buys a striker."
   },
   {
    "web_name": "Osula",
    "club": "NEW",
-   "intel": "£6.0m form punt — scored 5 in Newcastle's closing 7 games, but the striker pecking order is unsettled after Howe's exit."
+   "intel": "£6.0m — started each of Newcastle's final 7 and scored 5 after a stoppage-time winner over Man Utd; Howe's resignation muddies the striker pecking order, but Newcastle's first 10 fixtures rank best in the game."
   },
   {
    "web_name": "Woltemade",
    "club": "NEW",
-   "intel": "£6.0m — in Newcastle's crowded striker mix (with Osula, Wissa); starting role uncertain post-Howe."
+   "intel": "£6.0m — opened with 4 goals in 5 but Howe lost faith, benching him in 10 of 19 from GW19; a new, possibly more flexible manager could revive him in a top-ranked Newcastle fixture run."
   },
   {
    "web_name": "Wissa",
    "club": "NEW",
-   "intel": "£6.0m — Newcastle striker option but rotation risk in an unsettled front line post-Howe."
+   "intel": "£6.0m — a big-money signing who spent last season a mix of injured and poor, opening the door for Osula; monitor the new manager's plans before backing him."
   },
   {
    "web_name": "Mukiele",
    "club": "SUN",
-   "intel": "FFScout value shout — 151 pts for Sunderland last season (3g 5a, 9cs, 24 DefCon, 11 bonus, 4.7 pts/start); strong differential before their European fixtures bite."
+   "intel": "£5.5m differential (7.6%) — 151 pts last season (3g 5a, 9cs, 24 DefCon, 11 bonus) with 5 double-digit hauls, second only to Gabriel; Sunderland's first three fixtures appeal before Europe stretches the squad. Ballard is slightly cheaper."
   },
   {
    "web_name": "Andersen",
@@ -368,7 +370,7 @@
   {
    "web_name": "Gvardiol",
    "club": "MCI",
-   "intel": "Injury-hit last season (only 18 starts) — but back to his best he's a cheap route into Man City's defence with real attacking upside."
+   "intel": "£5.5m — only 18 starts last season through injury, but 153 pts the year before and told by Maresca he's a 'central pillar'; a cheap route into City's defence if fully fit."
   },
   {
    "web_name": "N.Williams",
@@ -459,6 +461,306 @@
    "web_name": "Butland",
    "club": "HUL",
    "intel": "£4.5m — new Hull signing and likely No.1 (Tzolakis rumoured to join too), but Hull were leaky in the Championship (66 conceded, 2nd-most xG against), so clean sheets look scarce."
+  },
+  {
+   "web_name": "van Ewijk",
+   "club": "COV",
+   "intel": "Budget assist punt from full-back — Coventry's first-choice RB with 8 Championship assists (joint-2nd) and 46 chances created (11 from long throws); little DefCon upside but a 'Gudmundsson-lite' pick if he keeps crossing."
+  },
+  {
+   "web_name": "Kitching",
+   "club": "COV",
+   "intel": "£4.0m — Coventry CB with a strong 8.90 DefCon/90 and set-play shot threat (46 shots), but new signing Amenda is expected to take his place; watch pre-season."
+  },
+  {
+   "web_name": "Egan",
+   "club": "HUL",
+   "intel": "£4.0m veteran Hull CB (34) with top-flight experience — outscored all other Hull defenders (3 goals) with a solid 10.27 DefCon/90, but Hull's leaky defence caps clean sheets."
+  },
+  {
+   "web_name": "Coyle",
+   "club": "HUL",
+   "intel": "£4.0m — Hull captain at RB/WB with 4 assists all from wide deliveries (35 chances created), but heavily booked (12) and almost no goal threat."
+  },
+  {
+   "web_name": "Hughes",
+   "club": "HUL",
+   "intel": "£4.0m Charlie Hughes — best DefCon rate of any promoted defender here (11.78/90), but Hull were bottom-four for goals/xG conceded, so clean sheets look scarce and a squad overhaul adds rotation risk."
+  },
+  {
+   "web_name": "Giles",
+   "club": "HUL",
+   "intel": "£4.0m — Ryan Giles offers assist potential from set plays (8 Championship assists, Hull's top creator) but no goal threat and shaky clean-sheet prospects."
+  },
+  {
+   "web_name": "Ajayi",
+   "club": "HUL",
+   "intel": "£4.0m ageing Hull CB (33) — regular when fit but lost half of last season to AFCON and injuries; rotation risk in a wing-back system."
+  },
+  {
+   "web_name": "O'Shea",
+   "club": "IPS",
+   "intel": "£4.0m — Ipswich captain and ever-present CB with the most attempts of their defenders (42) and set-play goal threat; but new signing Diop may challenge him, or push Ipswich to wing-backs."
+  },
+  {
+   "web_name": "Furlong",
+   "club": "IPS",
+   "intel": "£4.0m — Ipswich's regular RB, 3 assists but heavily booked (11 plus a red); modest creativity next to Davis."
+  },
+  {
+   "web_name": "Davis",
+   "club": "IPS",
+   "intel": "£4.0m — Leif Davis was Ipswich's top chance creator (69) and corner taker (82); a wing-back system would suit, but he flopped in the PL before (1g 2a 2cs in 2024/25)."
+  },
+  {
+   "web_name": "Greaves",
+   "club": "IPS",
+   "intel": "£4.0m — Jacob Greaves had Ipswich's best DefCon rate (9.62/90) and finished strongly, but spent a big midseason chunk on the bench; role not nailed."
+  },
+  {
+   "web_name": "Johnson",
+   "club": "IPS",
+   "intel": "£4.0m Ipswich utility man — on the bench in 28 of 37 squads last season; a punt only if injuries hit."
+  },
+  {
+   "web_name": "Diop",
+   "club": "IPS",
+   "intel": "£4.0m new Ipswich signing — could challenge captain O'Shea for a centre-back spot; one to watch in pre-season."
+  },
+  {
+   "web_name": "Leoni",
+   "club": "LIV",
+   "intel": "£4.0m Liverpool CB — a £26m 18yo the Reds rate highly, but recovering from an ACL injury (out since September); a longer-term watch, not a GW1 option."
+  },
+  {
+   "web_name": "Nedeljkovic",
+   "club": "AVL",
+   "intel": "£4.0m — back-up to Matty Cash at best after loan spells away; avoid unless Villa's right-back situation opens up."
+  },
+  {
+   "web_name": "Mosquera",
+   "club": "ARS",
+   "intel": "£5.5m — the natural cover for the injured Saliba in Arsenal's opening weeks; a quick, interception-strong centre-back by trade. A value route into the Gunners' defence unless they sign another CB."
+  },
+  {
+   "web_name": "O'Reilly",
+   "club": "MCI",
+   "intel": "£6.5m — 'Gvardiol 2.0': only one defender scored more than his 5 goals or had more than his 41 shots, plus 4 assists; from the turn of the year his 5.7 pts/start trailed only Gabriel. Huge ceiling from LB/midfield."
+  },
+  {
+   "web_name": "Virgil",
+   "club": "LIV",
+   "intel": "£6.5m (Virgil van Dijk) — most goals by a defender last season (6) and joint-3rd top scorer (175 pts, 28 DefCon), but Liverpool's back line is depleted (Konaté gone, Gomez & Leoni injured), so his appeal is dented until reinforcements arrive."
+  },
+  {
+   "web_name": "Kerkez",
+   "club": "LIV",
+   "intel": "£5.5m — £1m cheaper than Van Dijk and possibly better value; 2g 1a in 27 starts, and Iraola got 2g 6a / 134 pts out of him at Bournemouth. Superb opening fixtures."
+  },
+  {
+   "web_name": "Pedro Porro",
+   "club": "TOT",
+   "intel": "£5.5m — Spurs' 2nd-top scorer (117 pts); no defender created more chances (53) or crosses (237); new signings Senesi/van Hecke should add the clean sheets to his set-piece threat, if he's fit for GW1."
+  },
+  {
+   "web_name": "Senesi",
+   "club": "TOT",
+   "intel": "£6.0m — last season's DefCon king (50 pts, most of any defender) and joint-3rd top-scoring defender, with 6 assists from set-pieces; only doubt is whether he starts ahead of van Hecke and van de Ven after his Spurs switch."
+  },
+  {
+   "web_name": "Lacroix",
+   "club": "CHE",
+   "intel": "£6.0m — 8th-best defender last season (11 clean sheets, 40 DefCon, 3rd-most) and bought to start centrally for an improving Chelsea under Alonso; strong DefCon floor."
+  },
+  {
+   "web_name": "James",
+   "club": "CHE",
+   "intel": "£5.5m (Reece James) — just past 100 pts but in only 20 starts (joint-5th for pts/start, 5.3); a set-piece specialist with real end-product when fit — fitness is the whole question."
+  },
+  {
+   "web_name": "Palestra",
+   "club": "CHE",
+   "intel": "£5.5m — exciting unknown; Serie A's 2nd-fastest player last season, a two-footed attacking full/wing-back. Alonso loves attacking full-backs, so a canny punt if he nails a starting role."
+  },
+  {
+   "web_name": "Truffert",
+   "club": "BOU",
+   "intel": "£5.5m — 165 pts last season (6 assists, 1 goal, 11 clean sheets, 22 DefCon, 19 bonus — 2nd only to Gabriel for bonus); much depends on Bournemouth holding up under Rose and a brutal opening six."
+  },
+  {
+   "web_name": "Hill",
+   "club": "BOU",
+   "intel": "£5.5m (James Hill) — from GW19 on he never looked back: 3 assists and 26 DefCon, the most of any defender in that span; value if Bournemouth stay solid under Rose."
+  },
+  {
+   "web_name": "White",
+   "club": "ARS",
+   "intel": "£5.5m — Ben White; ended last season injured and, with Timber also fit-questionable, an Arsenal defensive option to monitor rather than back yet."
+  },
+  {
+   "web_name": "Crooks",
+   "club": "HUL",
+   "intel": "£4.5m — Hull's most attacking midfielder (9 attacking returns, Boro pedigree of 20g 14a over three seasons); started the last 9 league games + all playoffs, but has never played in the Premier League."
+  },
+  {
+   "web_name": "Slater",
+   "club": "HUL",
+   "intel": "£4.5m — FFScout's best bet to start GW1 for Hull; a regular last season with a DefCon-friendly 10.16 actions/90, though untested in the top flight."
+  },
+  {
+   "web_name": "Zambrano",
+   "club": "HUL",
+   "intel": "£4.5m — new Hull defensive-midfield signing back on Humberside after a doping ban; squad still being overhauled, so his role is unclear."
+  },
+  {
+   "web_name": "Morita",
+   "club": "HUL",
+   "intel": "£5.0m — experienced Japanese defensive midfielder joining Hull; adds competition in a crowded, still-forming midfield."
+  },
+  {
+   "web_name": "McAteer",
+   "club": "IPS",
+   "intel": "£4.5m — £12m winger but rarely started in the Championship; now behind £20m signing Fatawu (and Burns) on the right, so bench risk is high."
+  },
+  {
+   "web_name": "Taylor",
+   "club": "IPS",
+   "intel": "£4.5m (Jack Taylor) — recovering from a post-promotion knee cartilage op; started 24 Championship games but only 4 of 32 in Ipswich's last PL season. Check pre-season friendlies for his role."
+  },
+  {
+   "web_name": "Hughes",
+   "club": "CRY",
+   "intel": "£4.5m (Will Hughes) — 214 PL appearances give him experience that stands out here (19 of 31 starts last season), but almost no attacking returns (1 goal in five Palace seasons); wait to see if Sage trusts him."
+  },
+  {
+   "web_name": "Reed",
+   "club": "FUL",
+   "intel": "£4.5m — a Fulham squad player (one start in two seasons) but scored 'Goal of the Season' off the bench vs Liverpool; managed 37 apps / 3g 4a back in 2022/23. Depends on Arbeloa's plans."
+  },
+  {
+   "web_name": "Yates",
+   "club": "NFO",
+   "intel": "£4.5m — Forest captain who may initially fill in for the departed Elliot Anderson, but new signing Schlager threatens that; a mostly Europa-League player who's never topped 67 FPL points."
+  },
+  {
+   "web_name": "Matusiwa",
+   "club": "IPS",
+   "intel": "£5.0m DefCon watch — nailed last season (45 starts, 11.75 DefCon/90), but a GW1 fitness doubt and the arrival of Florentino Luis cloud his role."
+  },
+  {
+   "web_name": "Gannon-Doak",
+   "club": "BOU",
+   "intel": "£5.0m — impressed in pre-season after an injury-hit 2025/26; a first Bournemouth PL start may be near, but he's behind Tavernier and Rayan on the flanks."
+  },
+  {
+   "web_name": "Baleba",
+   "club": "BHA",
+   "intel": "£5.0m — form dipped amid Man Utd transfer talk, but his 11.22 DefCon/90 stayed decent; upside if he rediscovers his 2023-25 level."
+  },
+  {
+   "web_name": "Kamara",
+   "club": "AVL",
+   "intel": "£5.0m — Boubacar Kamara is Villa's best bet for regular midfield minutes after injury, but 9.43 DefCon/90 gives him limited FPL appeal."
+  },
+  {
+   "web_name": "Onyeka",
+   "club": "COV",
+   "intel": "£5.0m — expected to help helm Coventry's midfield with a solid 9.8 DefCon/90 in the second tier; DefCon floor if he starts."
+  },
+  {
+   "web_name": "Bamba",
+   "club": "NEW",
+   "intel": "£5.0m — Aladji Bamba, a DefCon-friendly midfield shield (11.7 actions/90 in limited minutes), but new to Newcastle and likely eased in slowly."
+  },
+  {
+   "web_name": "Lavia",
+   "club": "CHE",
+   "intel": "£5.0m — hugely injury-prone (just 15 league starts in three seasons); talented but a fitness gamble with Chelsea likely to reinforce midfield."
+  },
+  {
+   "web_name": "Willock",
+   "club": "NEW",
+   "intel": "£5.0m — may leave Newcastle this summer; squad flux makes him one to avoid until the window shuts."
+  },
+  {
+   "web_name": "Palmer",
+   "club": "CHE",
+   "intel": "£9.5m — injuries limited him to 24 starts (10g 2a) after a 214-pt 2024/25, but he still ranked top-5 for xGI/90; fresh after missing the World Cup, no European football and promising early fixtures set up a bounce-back."
+  },
+  {
+   "web_name": "Semenyo",
+   "club": "MCI",
+   "intel": "£8.5m — 17 goals (most by any midfielder), 6 assists and 202 pts last season; settled at Man City since his January move, though he notably overperformed his underlying numbers, so expect some regression toward them."
+  },
+  {
+   "web_name": "Mbeumo",
+   "club": "MUN",
+   "intel": "£8.0m — only Fernandes bettered his midfielder NPxGI last season, and Mbeumo topped him for xG; the Man Utd double-up is pricey to fit, but his underlying data is elite and he underperformed his xG, hinting at upside."
+  },
+  {
+   "web_name": "Cunha",
+   "club": "MUN",
+   "intel": "£8.0m — an excellent GW1 option in a Man Utd attack only Arsenal and City outscored; strong fixtures under Carrick, though of the United pair Mbeumo's underlying numbers edge it."
+  },
+  {
+   "web_name": "Gibbs-White",
+   "club": "NFO",
+   "intel": "£8.0m — 3rd among all midfielders last season (188 pts, 15 goals) despite a poor Forest side; set-piece threat and no European football help, but he was a big overperformer (+5.03 NPxGI) and Forest's attack/fixtures are only middling."
+  },
+  {
+   "web_name": "Wirtz",
+   "club": "LIV",
+   "intel": "£7.5m — a frustrating first Anfield season (5g 4a in 27 starts, outside the top-15 mids for NPxGI/90), but Iraola has publicly put him behind the striker and the fixtures appeal — a talent-and-role bet."
+  },
+  {
+   "web_name": "Rogers",
+   "club": "CHE",
+   "intel": "£7.5m — 16 attacking returns last season for Villa show the quality, but his role and minutes after a move to Chelsea are the big question."
+  },
+  {
+   "web_name": "Kroupi.Jr",
+   "club": "BOU",
+   "intel": "£7.5m — his forward-to-midfield reclassification excited managers, but surgery is expected to sideline him 3-4 months; a later-season target, not GW1."
+  },
+  {
+   "web_name": "Brobbey",
+   "club": "SUN",
+   "intel": "£6.0m and the most-owned forward at the price (22.5%) — first-choice for Sunderland from GW16 and buzzing after 3 World Cup goals; but he's not on penalties, Europe may bring rotation, and Sunderland's run to GW6 is the 2nd-worst (bar a promising Ipswich opener)."
+  },
+  {
+   "web_name": "Evanilson",
+   "club": "BOU",
+   "intel": "£6.0m — elite chance volume (2nd for box passes received, 3rd for 6-yard shots) wrecked by abysmal finishing: 6 goals, 8.6% conversion, the league's 2nd-worst xG underachiever (-4.59) and worst finisher by SGA. Needs Rose to fix him, and new signing Álvaro Rodríguez adds pressure."
+  },
+  {
+   "web_name": "Mateta",
+   "club": "CRY",
+   "intel": "£6.5m — a GW8 hat-trick and 5th for big chances (31), but wasteful (missed 20) and his starting spot has been insecure since Strand Larsen arrived; a knee injury and a full World Cup mean Sage may ease him into Palace's soft opening run."
+  },
+  {
+   "web_name": "Igor Jesus",
+   "club": "NFO",
+   "intel": "£6.0m — started nearly every game from GW9 but with poor underlying numbers (0.09 xG/shot, 8.6% conversion, few big chances); flying in pre-season (3 friendly goals), so a bargain if Glasner picks him over Wood, Awoniyi and Kalimuendo."
+  },
+  {
+   "web_name": "Welbeck",
+   "club": "CHE",
+   "intel": "£6.0m — coming off his best FPL season (13 goals, 126 pts), but has joined Chelsea as João Pedro's understudy, so regular starts look unlikely."
+  },
+  {
+   "web_name": "N.Jackson",
+   "club": "CHE",
+   "intel": "£6.5m — rumoured to be moving to Aston Villa; his FPL appeal would then hinge on what happens with Ollie Watkins and Tammy Abraham, so hold until it's resolved."
+  },
+  {
+   "web_name": "Strand Larsen",
+   "club": "CRY",
+   "intel": "£6.0m — signed in February and has made Mateta's starting spot insecure; Palace's promising early fixtures give whoever leads the line real appeal."
+  },
+  {
+   "web_name": "Wood",
+   "club": "NFO",
+   "intel": "£6.0m — Chris Wood in a three-way Forest striker battle with Igor Jesus (and Awoniyi/Kalimuendo) under Glasner, so confirm who leads the line before backing him."
   }
  ]
 }
