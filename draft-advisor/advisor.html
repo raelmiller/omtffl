@@ -693,6 +693,31 @@ function recommendNomination(){
   return {p,est,pos:best.pos,open:best.open,sc:best.sc,openBid,reason,tactic,rivals,myMax,
           alts:best.cands.slice(1,4)};
 }
+// "Enemy nomination" — a player YOU don't want but rivals covet, to bleed
+// their budgets early before your own targets come up. Best used while
+// budgets are full; scores by how much rival cash it would soak up.
+function recommendDrain(){
+  const mine=state.teams.find(t=>t.id===+$("myTeam").value);
+  if(!mine)return null;
+  const myOpen=pos=>SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
+  let best=null;
+  for(const p of poolRemaining()){
+    const est=fairRange(p);
+    if(est.mid<4)continue;                       // only pricey players drain meaningfully
+    const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
+      const mgr=teamManager(t)||t.name, prof=profileOf(mgr);
+      return {t,mgr,open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
+        max:affordableMax(t),loyal:((prof.clubs||{})[p.team_short]||0)>0};
+    }).filter(r=>r.open>0&&r.max>=est.low);
+    if(!rivals.length)continue;
+    const anyLoyal=rivals.some(r=>r.loyal);
+    const clear=Math.min(Math.max(...rivals.map(r=>r.max)), est.high*(anyLoyal?1.25:1));
+    const iWant=myOpen(p.pos)>0;
+    const score=clear*(1+0.4*(Math.min(rivals.length,4)-1))*(anyLoyal?1.3:1)*(iWant?0.45:1);
+    if(!best||score>best.score)best={p,est,rivals,clear,anyLoyal,iWant,score};
+  }
+  return best;
+}
 function renderNomination(){
   const r=recommendNomination();
   if(r.error)return `<div class="idle">${r.error}</div>`;
@@ -718,7 +743,18 @@ function renderNomination(){
         :`<div class="small">no clear alternatives at this position</div>`}
       <div class="small" style="margin-top:.4rem">Your max bid: £${r.myMax.toFixed(2)}m</div>
     </div>
-  </div>`;
+  </div>
+  ${(()=>{const d=recommendDrain();if(!d)return "";
+    const rl=d.rivals.slice().sort((a,b)=>b.max-a.max);
+    return `<div style="border-top:1px solid var(--border);margin-top:.9rem;padding-top:.7rem">
+      <div class="small" style="text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Or, to drain the room — nominate someone you don't want</div>
+      <div class="auctionhead" style="margin:.3rem 0 .4rem"><span class="name" style="font-size:20px">${esc(d.p.web_name)}</span>
+        <span class="meta">${d.p.pos} · ${esc(d.p.team_short||"?")} · ${d.rivals.length} rival${d.rivals.length>1?"s":""} in for him</span></div>
+      <div class="verdict" style="border-left:3px solid var(--hot);background:var(--surface2)">
+        BAIT — open low, let them fight<small style="color:var(--muted)">Expect the winner to sink ~£${d.clear.toFixed(2)}m${d.anyLoyal?` (a loyal ${esc(d.p.team_short)} fan is in — they'll overpay)`:""}, draining budget before your targets come up.${d.iWant?` ⚠ you also still need a ${d.p.pos} — only bait if you're not buying him.`:` You're set at ${d.p.pos}, so it costs you nothing.`}</small></div>
+      <div class="small">In for him: ${rl.slice(0,5).map(v=>esc(v.mgr)+(v.loyal?"★":"")+" £"+v.max.toFixed(1)+"m").join(" · ")}</div>
+      <div class="small" style="margin-top:.2rem;color:var(--muted)">Best early, while budgets are full. ★ = loyal fan.</div>
+    </div>`;})()}`;
 }
 function renderGems(){
   if(!FPL)return;
