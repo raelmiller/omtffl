@@ -18,6 +18,13 @@
     {"web_name": "Clarke", "club": "IPS", "league": "Championship", "goals": 16, "assists": null, "starts": null, "note": "Ipswich top scorer"},
     {"web_name": "Hirst", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
     {"web_name": "Egeli", "club": "IPS", "league": "Championship", "goals": 4, "assists": null, "starts": null, "note": ""},
-    {"web_name": "Barco", "club": "CHE", "league": "Ligue 1", "goals": 3, "assists": 9, "starts": 43, "proj": 80, "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"}
+    {"web_name": "Barco", "club": "CHE", "league": "Ligue 1", "goals": 3, "assists": 9, "starts": 43, "proj": 80, "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"},
+
+    {"web_name": "B.Fernandes", "club": "MUN", "intel": "FFScout must-have — most-owned MID (48.8%). Easy opening fixtures (Hull, Ipswich) make him an early captaincy challenger to Haaland under Carrick."},
+    {"web_name": "Igor Jesus", "club": "NFO", "intel": "FFScout top FORM pick — 4 goals in 4 pre-season games under new boss Glasner. One to watch as Forest's main striker."},
+    {"web_name": "Osula", "club": "NEW", "intel": "Pre-season form pick — started Newcastle's closing 7 games and scored 5. Cheap forward punt if he keeps the shirt."},
+    {"web_name": "O.Dango", "club": "BRE", "intel": "FFScout value shout — 7g 6a last season with five double-digit hauls; strong link with Thiago (assisted 6 of his goals)."},
+    {"web_name": "João Pedro", "club": "CHE", "intel": "FFScout must-have."},
+    {"web_name": "Gabriel", "club": "ARS", "intel": "FFScout must-have — premium defender with set-piece goal threat."}
   ]
 }

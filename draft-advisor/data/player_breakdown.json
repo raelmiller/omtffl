@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-07T06:10:44Z",
+  "fpl_baked_at": "2026-08-07T11:02:36Z",
   "sales": 645,
   "unique_players": 390,
-  "matched_to_fpl": 252
+  "matched_to_fpl": 250
  },
  "players": [
   {
@@ -3022,7 +3022,7 @@
    "last_season_points": 168,
    "xgi": "10.65",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -3700,14 +3700,14 @@
    }
   },
   {
-   "key": "fpl_571",
-   "fpl_id": 571,
-   "display": "Florentino",
+   "key": "name_carlton morris",
+   "fpl_id": null,
+   "display": "Carlton Morris",
    "position": "FWD",
-   "current_club": "IPS",
-   "status": "a",
-   "last_season_points": 0,
-   "xgi": "0.00",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4092,7 +4092,7 @@
    "display": "Carvalho",
    "position": "MID",
    "current_club": "BRE",
-   "status": "d",
+   "status": "i",
    "last_season_points": 13,
    "xgi": "0.73",
    "penalties": false,
@@ -4969,14 +4969,14 @@
    }
   },
   {
-   "key": "fpl_568",
-   "fpl_id": 568,
+   "key": "name_barco",
+   "fpl_id": null,
    "display": "Barco",
    "position": "DEF",
-   "current_club": "CHE",
-   "status": "a",
-   "last_season_points": 0,
-   "xgi": "0.00",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4985,7 +4985,7 @@
      "price": 1.75,
      "buyer": "Gav",
      "club_then": "BRI",
-     "points_that_season": 0
+     "points_that_season": null
     }
    }
   },
@@ -8847,7 +8847,7 @@
    "display": "Baleba",
    "position": "MID",
    "current_club": "BHA",
-   "status": "i",
+   "status": "a",
    "last_season_points": 56,
    "xgi": "1.50",
    "penalties": false,

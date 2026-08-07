@@ -3594,8 +3594,8 @@
       "player": "Carlton Morris",
       "club": "LUT",
       "cost": 2.75,
-      "fpl_id": 571,
-      "fpl_name": "Florentino",
+      "fpl_id": null,
+      "fpl_name": null,
       "points_that_season": null
      },
      {
@@ -5455,9 +5455,9 @@
       "player": "Barco",
       "club": "BRI",
       "cost": 1.75,
-      "fpl_id": 568,
-      "fpl_name": "Barco",
-      "points_that_season": 0
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
      },
      {
       "season": "2024-25",
@@ -5539,7 +5539,7 @@
     ],
     "spend": 50.0,
     "points_bought": 1121,
-    "points_matched_players": 12,
+    "points_matched_players": 11,
     "best_value": {
      "season": "2024-25",
      "manager": "Gav",

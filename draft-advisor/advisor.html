@@ -104,6 +104,7 @@ th:first-child,td:first-child{text-align:left}
 .crow{display:flex;justify-content:space-between;align-items:center;padding:.3rem .1rem;border-bottom:1px solid var(--border);font-size:12px}
 .crow .rm{color:var(--hot);cursor:pointer;border:1px solid var(--border2);border-radius:5px;padding:1px 7px}
 .flag.custom{border-color:var(--blue);color:var(--blue)}
+.intel{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:.4rem 0;font-size:12px;color:var(--text)}
 </style>
 </head>
 <body>
@@ -316,6 +317,17 @@ function adjPts(h,proven){
   if(m>=FULL_MIN||!pts||!proven)return pts;
   return Math.round(pts*Math.min(MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
 }
+// Regress a season's finishing toward its xG/xA — over-performers (lucky
+// finishing) come down, under-performers come up. xG is more predictive of
+// next season than raw goals, so this makes a one-season sample forward-
+// looking instead of a straight echo of last year's output.
+function xgRegress(h,pos,weight){
+  const g=h.goals_scored, a=h.assists, xg=parseFloat(h.expected_goals), xa=parseFloat(h.expected_assists), pts=h.total_points||0;
+  if(g==null||a==null||isNaN(xg)||isNaN(xa))return pts;   // no xG data (older seasons) → raw
+  const gPts=(pos==="DEF"||pos==="GK")?6:(pos==="MID"?5:4);
+  const luck=(g-xg)*gPts+(a-xa)*3;
+  return Math.max(0,Math.round(pts-weight*luck));
+}
 // Discounted PL projection for a promoted-club player from last season's
 // Championship output. Championship goals roughly halve in the PL; assume a
 // starter's ~28 appearances. A rough prior to research/override, not gospel.
@@ -350,6 +362,13 @@ function modelProjection(p){
   const consecutive=s2&&s2.total_points!=null&&startYear(s1.season_name)-startYear(s2.season_name)===1&&(s2.minutes||0)>=500;
   if(consecutive){
     return {pts:Math.round(.7*a1+.3*a2),basis:`0.7×${adj1} + 0.3×${a2} (${s2.season_name})`,minAdj,unproven};
+  }
+  // single most-recent season, nothing consecutive to blend it with — instead
+  // of echoing last year's output, regress it toward the underlying xG/xA
+  if(!proven){
+    const raw=s1.total_points||0, reg=xgRegress(s1,p.pos,0.5), xgAdj=reg!==raw;
+    const b=xgAdj?`${reg}* (${s1.season_name}: ${raw} pts, xG-adjusted ${reg>raw?"up":"down"} — ${s1.goals_scored}g/${s1.assists}a vs ${s1.expected_goals}xG/${s1.expected_assists}xA)`:`${reg} (${s1.season_name})`;
+    return {pts:reg,basis:b,unproven,xgAdj};
   }
   return {pts:a1,basis:`${adj1}`,minAdj,unproven};
 }
@@ -541,6 +560,7 @@ function factsheet(p,currentBid,leadingTeam){
   }
   else if(est.proj.isChamp){const c=p.champ,lg=c.league||"a lower league";flags.push(`no recent PL history — projection from ${esc(lg)} last season (${c.goals||0}g${c.assists?" "+c.assists+"a":""}${c.starts?", "+c.starts+" apps":""})${lg==="Championship"?", discounted for the step up":""}${c.note?". "+esc(c.note):""}`);}
   else if(p.hist.length<=1)flags.push("thin PL history — check for transfer/role change");
+  if(est.proj.xgAdj&&!est.proj.manual)flags.push(`one PL season — projection regressed toward his xG/xA (underlying numbers), not just last year's output`);
   if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
@@ -569,6 +589,7 @@ function factsheet(p,currentBid,leadingTeam){
     <div class="stat"><b>${s1.clean_sheets??"–"}</b><span>clean sheets</span></div>`:""}
   </div>
   <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
+  ${p.intel?`<div class="intel">🔎 ${esc(p.intel)}</div>`:""}
   ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
     <div><h2>${p.custom?"Last season ("+esc((p.stats&&p.stats.league)||"outside PL")+")":"Season history"}</h2><table>

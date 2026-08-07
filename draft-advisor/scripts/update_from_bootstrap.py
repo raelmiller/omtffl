@@ -120,7 +120,10 @@ def main():
         for p in players:
             c = by_key.get((p["web_name"], p.get("team_short")))
             if c:
-                p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note", "league", "proj")}
+                if c.get("goals") is not None or c.get("proj") is not None:
+                    p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note", "league", "proj")}
+                if c.get("intel"):
+                    p["intel"] = c["intel"]
                 champ_hits += 1
 
     out = {
