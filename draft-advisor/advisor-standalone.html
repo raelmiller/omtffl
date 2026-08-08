@@ -57,6 +57,7 @@ main{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1rem;pad
 .flags{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}
 .flag{border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:2px 9px;font-size:11px}
 .flag.injury{border-color:var(--hot);color:var(--hot)}
+.flag.edge{border-color:var(--accent);color:var(--accent);background:rgba(127,255,178,.08)}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th{color:var(--muted);font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:.05em;text-align:right;padding:3px 6px;border-bottom:1px solid var(--border)}
 td{padding:3px 6px;font-size:12px;text-align:right;border-bottom:1px solid var(--border)}
@@ -479,6 +480,41 @@ function rivalScores(p,est){
   });
   return out.sort((a,b)=>b.score-a.score).slice(0,4);
 }
+// How likely a given manager is to ACTUALLY bid on this player — not just
+// afford him. Folds their auction-history spend shape (pos_share, marquee
+// appetite, club buys, past purchase) with your editable loyalty/style
+// profile into one multiplier (1 = neutral, >1 keener, <1 unlikely).
+function rivalKeenness(mgrName,p,est){
+  const prof=mgrName?profileOf(mgrName):{clubs:{},styles:[]};
+  const prior=mgrName?MODEL.managers[mgrName]:null;
+  let mult=1; const tags=[];
+  const bias=(prof.clubs||{})[p.team_short];
+  if(bias>0){mult*=1.5;tags.push(`loyal ${p.team_short} fan`)}
+  else if(bias<0){mult*=0.4;tags.push(`shuns ${p.team_short}`)}
+  else if(prior&&prior.club_affinity[p.team_short]){mult*=1.15;tags.push(`${p.team_short} buyer`)}
+  if(prior){
+    const share=prior.pos_share[p.pos]||0;
+    mult*=0.55+share*2.2;                                   // .45→1.54, .13→.84, .03→.62
+    if(share>=.4)tags.push(`spends ${(share*100)|0}% on ${p.pos}`);
+    else if(share<=.07)tags.push(`rarely buys ${p.pos}`);
+  }
+  const st=prof.styles||[];
+  if(est.mid>=10){
+    if(st.includes("marquee")||(prior&&prior.big_bids_per_season>=1.5)){mult*=1.35;tags.push("chases marquees")}
+    if(st.includes("value")){mult*=0.6;tags.push("won't overpay")}
+  }
+  if(mgrName&&SALES.find(s=>s.fpl_id===p.id&&s.manager===mgrName)){mult*=1.3;tags.push("owned him before")}
+  return {mult:Math.max(0.2,mult),tags};
+}
+// The one edge the room misses (from the strategy analysis): defenders
+// project huge but sell cheap in this league — flag high-projection,
+// low-expected-price defenders so you grab them in a lull, never a war.
+function blindSpot(p,est){
+  if(p.pos!=="DEF"||est.proj.manual)return null;
+  if(est.proj.pts>=135&&est.mid<=7.5)
+    return `market blind-spot — projects ${est.proj.pts} pts, but your league underpays defenders (expect ~£${est.mid}m, never £15m+). Grab him in a lull, never a bidding war.`;
+  return null;
+}
 function soldIds(){ // resolve each sold player to our own id so the pool/gems stay correct despite ID drift
   const set=new Set();
   for(const sp of state.soldPlayers){
@@ -565,6 +601,7 @@ function factsheet(p,currentBid,leadingTeam){
   if(est.proj.minAdj&&!est.proj.manual)flags.push(`minutes-adjusted up — proven starter who missed time (likely injury)`);
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
+  const bs=blindSpot(p,est); if(bs)flags.push({t:bs,edge:true});
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
@@ -589,7 +626,7 @@ function factsheet(p,currentBid,leadingTeam){
     ${p.pos==="DEF"||p.pos==="GK"?`<div class="stat"><b class="y">${s1.defensive_contribution??p.defensive_contribution??"–"}</b><span>def con</span></div>
     <div class="stat"><b>${s1.clean_sheets??"–"}</b><span>clean sheets</span></div>`:""}
   </div>
-  <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
+  <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.edge?"edge":f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
   ${p.intel?`<div class="intel">🔎 ${esc(p.intel)}</div>`:""}
   ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
@@ -673,23 +710,31 @@ function recommendNomination(){
   }
   if(!best)return {error:"Nothing you can afford fits an open slot — you may be priced out; wait for cheaper players."};
   const {p,est}=best.cands[0];
-  // rivals who still need this position and can afford a real bid
-  const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>({
-    t, mgr:teamManager(t)||t.name,
-    open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
-    max:affordableMax(t)
-  })).filter(r=>r.open>0&&r.max>=est.low).sort((a,b)=>b.max-a.max);
-  const rivalMax=rivals.length?rivals[0].max:0;
+  // rivals who still need this position and can afford a real bid, weighted
+  // by how likely they actually are to bid (auction-history spend shape)
+  const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
+    const k=rivalKeenness(teamManager(t),p,est);
+    return {t, mgr:teamManager(t)||t.name,
+      open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
+      max:affordableMax(t), keen:k.mult, tags:k.tags};
+  }).filter(r=>r.open>0&&r.max>=est.low).sort((a,b)=>b.max*b.keen-a.max*a.keen);
+  // price out the strongest LIKELY bidder, not a rich rival who never buys here
+  const likely=rivals.filter(r=>r.keen>=0.7);
+  const topRival=likely[0]||rivals[0];
+  const rivalMax=topRival?topRival.max:0;
+  // a rich rival who could gatecrash above the likely ceiling despite low appetite
+  const lurker=rivals.find(r=>r.max>rivalMax+0.5&&r.keen<0.7);
+  const hedge=lurker?` Watch ${esc(lurker.mgr)} (can reach £${lurker.max.toFixed(2)}m but ${esc((lurker.tags[0]||"rarely bids here"))}).`:"";
   let openBid,reason,tactic;
   if(!rivals.length){
     openBid=0.25; tactic="uncontested";
     reason=`No one else needs a ${p.pos} they can afford — open the minimum and you win uncontested.`;
   }else if(rivalMax<myMax&&rivalMax+0.25<=Math.min(myMax,est.high+0.5)){
     openBid=Math.round((rivalMax+0.25)*4)/4; tactic="ruleout";
-    reason=`Open <b>£${openBid}m</b> to rule out all ${rivals.length} rival${rivals.length>1?"s":""} who still need a ${p.pos} — the strongest (${esc(rivals[0].mgr)}) can only reach £${rivalMax.toFixed(2)}m. They can't respond, so you win at your opening bid.`;
+    reason=`Open <b>£${openBid}m</b> to rule out the ${likely.length||rivals.length} likely bidder${(likely.length||rivals.length)>1?"s":""} for a ${p.pos} — the keenest (${esc(topRival.mgr)}) can only reach £${rivalMax.toFixed(2)}m. They can't respond, so you win at your opening bid.${hedge}`;
   }else{
     openBid=0.25; tactic="develop";
-    reason=`Can't cheaply price out the field yet (top rival ${esc(rivals[0].mgr)} can reach £${rivalMax.toFixed(2)}m). Open the minimum, let it develop, and bid up to £${Math.min(myMax,est.high).toFixed(2)}m if you want him.`;
+    reason=`Can't cheaply price out the field yet (keenest rival ${esc(topRival.mgr)} can reach £${rivalMax.toFixed(2)}m). Open the minimum, let it develop, and bid up to £${Math.min(myMax,est.high).toFixed(2)}m if you want him.${hedge}`;
   }
   return {p,est,pos:best.pos,open:best.open,sc:best.sc,openBid,reason,tactic,rivals,myMax,
           alts:best.cands.slice(1,4)};
@@ -706,16 +751,18 @@ function recommendDrain(){
     const est=fairRange(p);
     if(est.mid<4)continue;                       // only pricey players drain meaningfully
     const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
-      const mgr=teamManager(t)||t.name, prof=profileOf(mgr);
+      const mgr=teamManager(t)||t.name, prof=profileOf(mgr), k=rivalKeenness(teamManager(t),p,est);
       return {t,mgr,open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
-        max:affordableMax(t),loyal:((prof.clubs||{})[p.team_short]||0)>0};
+        max:affordableMax(t),keen:k.mult,tags:k.tags,loyal:((prof.clubs||{})[p.team_short]||0)>0};
     }).filter(r=>r.open>0&&r.max>=est.low);
-    if(!rivals.length)continue;
+    const keenRivals=rivals.filter(r=>r.keen>=0.8);
+    if(keenRivals.length<1)continue;                 // no one keen enough to take the bait
     const anyLoyal=rivals.some(r=>r.loyal);
+    const keenSum=rivals.reduce((a,r)=>a+Math.min(1.6,r.keen),0);   // how hot the room is for him
     const clear=Math.min(Math.max(...rivals.map(r=>r.max)), est.high*(anyLoyal?1.25:1));
     const iWant=myOpen(p.pos)>0;
-    const score=clear*(1+0.4*(Math.min(rivals.length,4)-1))*(anyLoyal?1.3:1)*(iWant?0.45:1);
-    if(!best||score>best.score)best={p,est,rivals,clear,anyLoyal,iWant,score};
+    const score=clear*(0.5+0.5*keenSum)*(iWant?0.45:1);
+    if(!best||score>best.score)best={p,est,rivals,keenRivals,clear,anyLoyal,iWant,score};
   }
   return best;
 }
@@ -733,9 +780,9 @@ function renderNomination(){
   <div class="rangelabels"><span>fair £${r.est.low}–£${r.est.high}m</span><span>${r.sc.strong} starter-grade ${r.p.pos} left · ${r.sc.demand} the room still needs</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
     <div><h2>Who else wants a ${r.p.pos}</h2>
-      ${r.rivals.length?`<table><tr><th>rival</th><th>needs</th><th>can reach</th></tr>
-        ${r.rivals.slice(0,6).map(v=>`<tr><td>${esc(v.mgr)}</td><td>${v.open}</td><td>${v.max<=r.openBid?'<span style="color:var(--hot)">£'+v.max.toFixed(2)+'m ✗</span>':'£'+v.max.toFixed(2)+'m'}</td></tr>`).join("")}</table>
-        <div class="small" style="margin-top:.3rem">✗ = priced out by a £${r.openBid}m opening bid</div>`
+      ${r.rivals.length?`<table><tr><th>rival</th><th>needs</th><th>can reach</th><th>tendency</th></tr>
+        ${r.rivals.slice(0,6).map(v=>`<tr><td>${esc(v.mgr)}${v.keen>=1.25?' <span style="color:var(--hot)">▲</span>':v.keen<0.7?' <span style="color:var(--muted)">▽</span>':''}</td><td>${v.open}</td><td>${v.max<=r.openBid?'<span style="color:var(--hot)">£'+v.max.toFixed(2)+'m ✗</span>':'£'+v.max.toFixed(2)+'m'}</td><td class="small" style="text-align:left">${esc((v.tags&&v.tags[0])||"")}</td></tr>`).join("")}</table>
+        <div class="small" style="margin-top:.3rem">✗ = priced out by a £${r.openBid}m opening bid · ▲ keen / ▽ unlikely (from auction history)</div>`
         :`<div class="small">no one else needs this position and can afford it</div>`}
     </div>
     <div><h2>Other options</h2>
@@ -746,25 +793,27 @@ function renderNomination(){
     </div>
   </div>
   ${(()=>{const d=recommendDrain();if(!d)return "";
-    const rl=d.rivals.slice().sort((a,b)=>b.max-a.max);
+    const rl=(d.keenRivals&&d.keenRivals.length?d.keenRivals:d.rivals).slice().sort((a,b)=>b.max*b.keen-a.max*a.keen);
     return `<div style="border-top:1px solid var(--border);margin-top:.9rem;padding-top:.7rem">
       <div class="small" style="text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Or, to drain the room — nominate someone you don't want</div>
       <div class="auctionhead" style="margin:.3rem 0 .4rem"><span class="name" style="font-size:20px">${esc(d.p.web_name)}</span>
-        <span class="meta">${d.p.pos} · ${esc(d.p.team_short||"?")} · ${d.rivals.length} rival${d.rivals.length>1?"s":""} in for him</span></div>
+        <span class="meta">${d.p.pos} · ${esc(d.p.team_short||"?")} · ${rl.length} keen rival${rl.length>1?"s":""} in for him</span></div>
       <div class="verdict" style="border-left:3px solid var(--hot);background:var(--surface2)">
         BAIT — open low, let them fight<small style="color:var(--muted)">Expect the winner to sink ~£${d.clear.toFixed(2)}m${d.anyLoyal?` (a loyal ${esc(d.p.team_short)} fan is in — they'll overpay)`:""}, draining budget before your targets come up.${d.iWant?` ⚠ you also still need a ${d.p.pos} — only bait if you're not buying him.`:` You're set at ${d.p.pos}, so it costs you nothing.`}</small></div>
-      <div class="small">In for him: ${rl.slice(0,5).map(v=>esc(v.mgr)+(v.loyal?"★":"")+" £"+v.max.toFixed(1)+"m").join(" · ")}</div>
-      <div class="small" style="margin-top:.2rem;color:var(--muted)">Best early, while budgets are full. ★ = loyal fan.</div>
+      <div class="small">In for him: ${rl.slice(0,5).map(v=>esc(v.mgr)+(v.loyal?"★":"")+" £"+v.max.toFixed(1)+"m"+(v.tags&&v.tags[0]?" ("+esc(v.tags[0])+")":"")).join(" · ")}</div>
+      <div class="small" style="margin-top:.2rem;color:var(--muted)">Ranked by who'll actually bid (auction history). Best early, while budgets are full. ★ = loyal fan.</div>
     </div>`;})()}`;
 }
 function renderGems(){
   if(!FPL)return;
   const rows=poolRemaining().map(p=>{
     const est=fairRange(p);
-    return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid)};
+    return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid),edge:!!blindSpot(p,est)};
   }).filter(r=>r.proj>=60).sort((a,b)=>b.val-a.val).slice(0,60);
   $("gemsList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
-    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}</td><td>${r.p.pos}</td><td>${esc(r.p.team_short||"?")}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}${r.edge?' <span style="color:var(--accent)" title="market blind-spot — elite projection, defenders sell cheap here">◆</span>':''}</td><td>${r.p.pos}</td><td>${esc(r.p.team_short||"?")}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+  const nedge=rows.filter(r=>r.edge).length;
+  if(nedge)$("gemsList").insertAdjacentHTML("afterbegin",`<div class="small" style="margin-bottom:.5rem;color:var(--accent)">◆ market blind-spot — ${nedge} cheap high-projection defender${nedge>1?"s":""} the room tends to underpay. Grab in a lull, never a war.</div>`);
 }
 function renderCustomList(){
   const el=$("customList"); if(!el)return;
