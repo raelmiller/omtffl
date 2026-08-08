@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-07T11:02:36Z",
+  "fpl_baked_at": "2026-08-08T05:44:46Z",
   "sales": 645,
   "unique_players": 390,
-  "matched_to_fpl": 250
+  "matched_to_fpl": 252
  },
  "players": [
   {
@@ -3022,7 +3022,7 @@
    "last_season_points": 168,
    "xgi": "10.65",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -3700,14 +3700,14 @@
    }
   },
   {
-   "key": "name_carlton morris",
-   "fpl_id": null,
-   "display": "Carlton Morris",
+   "key": "fpl_571",
+   "fpl_id": 571,
+   "display": "Florentino",
    "position": "FWD",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "IPS",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4092,7 +4092,7 @@
    "display": "Carvalho",
    "position": "MID",
    "current_club": "BRE",
-   "status": "i",
+   "status": "d",
    "last_season_points": 13,
    "xgi": "0.73",
    "penalties": false,
@@ -4969,14 +4969,14 @@
    }
   },
   {
-   "key": "name_barco",
-   "fpl_id": null,
+   "key": "fpl_568",
+   "fpl_id": 568,
    "display": "Barco",
    "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4985,7 +4985,7 @@
      "price": 1.75,
      "buyer": "Gav",
      "club_then": "BRI",
-     "points_that_season": null
+     "points_that_season": 0
     }
    }
   },
@@ -6038,7 +6038,7 @@
    "fpl_id": 385,
    "display": "Trafford",
    "position": "GK",
-   "current_club": "MCI",
+   "current_club": "LEE",
    "status": "a",
    "last_season_points": 13,
    "xgi": "0.00",
@@ -8111,7 +8111,7 @@
    "fpl_id": 21,
    "display": "N\u00f8rgaard",
    "position": "MID",
-   "current_club": "ARS",
+   "current_club": "EVE",
    "status": "a",
    "last_season_points": 7,
    "xgi": "0.12",
@@ -8847,7 +8847,7 @@
    "display": "Baleba",
    "position": "MID",
    "current_club": "BHA",
-   "status": "a",
+   "status": "i",
    "last_season_points": 56,
    "xgi": "1.50",
    "penalties": false,
