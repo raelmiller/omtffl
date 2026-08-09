@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-08T05:44:46Z",
+  "fpl_baked_at": "2026-08-09T05:49:21Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 252
@@ -3678,7 +3678,7 @@
    "display": "Hudson-Odoi",
    "position": "MID",
    "current_club": "NFO",
-   "status": "d",
+   "status": "a",
    "last_season_points": 88,
    "xgi": "5.79",
    "penalties": false,
@@ -3888,7 +3888,7 @@
    "display": "Murillo",
    "position": "DEF",
    "current_club": "NFO",
-   "status": "d",
+   "status": "a",
    "last_season_points": 83,
    "xgi": "1.20",
    "penalties": false,
