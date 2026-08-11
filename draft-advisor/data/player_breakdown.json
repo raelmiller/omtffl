@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-10T06:11:50Z",
+  "fpl_baked_at": "2026-08-11T05:55:30Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 252
@@ -2369,13 +2369,13 @@
    "fpl_id": 452,
    "display": "Bruno G.",
    "position": "MID",
-   "current_club": "NEW",
+   "current_club": "ARS",
    "status": "a",
    "last_season_points": 154,
    "xgi": "10.55",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2023-24": {
      "price": 1.75,
@@ -5955,7 +5955,7 @@
    "display": "Chalobah",
    "position": "DEF",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 136,
    "xgi": "2.47",
    "penalties": false,
@@ -9246,7 +9246,7 @@
    "display": "Digne",
    "position": "DEF",
    "current_club": "AVL",
-   "status": "a",
+   "status": "u",
    "last_season_points": 97,
    "xgi": "3.95",
    "penalties": false,
@@ -9561,7 +9561,7 @@
    "display": "Bayindir",
    "position": "GK",
    "current_club": "MUN",
-   "status": "a",
+   "status": "u",
    "last_season_points": 11,
    "xgi": "0.05",
    "penalties": false,
