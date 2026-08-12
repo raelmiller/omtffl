@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-11T05:55:30Z",
+  "fpl_baked_at": "2026-08-12T06:17:43Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 252
@@ -3542,7 +3542,7 @@
    "xgi": "3.76",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2023-24": {
      "price": 2.5,
@@ -4193,7 +4193,7 @@
    "xgi": "3.28",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2023-24": {
      "price": 0.5,
