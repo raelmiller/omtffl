@@ -259,9 +259,9 @@
   "player": "Mykhailo Mudryk",
   "club": "CHE",
   "cost": 6.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 578,
+  "fpl_name": "Mudryk",
+  "points_that_season": 94
  },
  {
   "season": "2023-24",
@@ -3757,9 +3757,9 @@
   "player": "Mudryk",
   "club": "CHE",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 578,
+  "fpl_name": "Mudryk",
+  "points_that_season": 7
  },
  {
   "season": "2024-25",

@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-12T06:17:43Z",
+  "fpl_baked_at": "2026-08-13T06:19:37Z",
   "sales": 645,
-  "unique_players": 390,
-  "matched_to_fpl": 252
+  "unique_players": 389,
+  "matched_to_fpl": 253
  },
  "players": [
   {
@@ -70,7 +70,7 @@
    "last_season_points": 235,
    "xgi": "23.07",
    "penalties": true,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -163,7 +163,7 @@
    "last_season_points": 157,
    "xgi": "14.73",
    "penalties": true,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -454,7 +454,7 @@
    "last_season_points": 131,
    "xgi": "10.79",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -757,7 +757,7 @@
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -901,7 +901,7 @@
    "last_season_points": 148,
    "xgi": "16.97",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -1042,7 +1042,7 @@
    "last_season_points": 184,
    "xgi": "10.47",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -1285,7 +1285,7 @@
    "last_season_points": 131,
    "xgi": "13.02",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -1627,7 +1627,7 @@
    "last_season_points": 75,
    "xgi": "4.33",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -1684,14 +1684,14 @@
    }
   },
   {
-   "key": "name_mykhailo mudryk",
-   "fpl_id": null,
-   "display": "Mykhailo Mudryk",
+   "key": "fpl_578",
+   "fpl_id": 578,
+   "display": "Mudryk",
    "position": "MID",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "CHE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -1700,7 +1700,13 @@
      "price": 6.0,
      "buyer": "Deepesh",
      "club_then": "CHE",
-     "points_that_season": null
+     "points_that_season": 94
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Maccers",
+     "club_then": "CHE",
+     "points_that_season": 7
     }
    }
   },
@@ -1960,7 +1966,7 @@
    "last_season_points": 78,
    "xgi": "5.34",
    "penalties": true,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -2434,7 +2440,7 @@
    "last_season_points": 117,
    "xgi": "5.42",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -2596,7 +2602,7 @@
    "last_season_points": 160,
    "xgi": "11.59",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -2860,7 +2866,7 @@
    "last_season_points": 103,
    "xgi": "6.61",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -3088,7 +3094,7 @@
    "last_season_points": 157,
    "xgi": "18.52",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -3536,7 +3542,7 @@
    "fpl_id": 209,
    "display": "Johnson",
    "position": "FWD",
-   "current_club": "CRY",
+   "current_club": "EVE",
    "status": "a",
    "last_season_points": 65,
    "xgi": "3.76",
@@ -3893,7 +3899,7 @@
    "xgi": "1.20",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2025-26": {
      "price": 2.75,
@@ -4171,7 +4177,7 @@
    "last_season_points": 113,
    "xgi": "8.04",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2025-26": {
@@ -4187,7 +4193,7 @@
    "fpl_id": 241,
    "display": "McNeil",
    "position": "MID",
-   "current_club": "EVE",
+   "current_club": "CRY",
    "status": "a",
    "last_season_points": 53,
    "xgi": "3.28",
@@ -4306,7 +4312,7 @@
    "last_season_points": 79,
    "xgi": "3.79",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2024-25": {
@@ -4684,7 +4690,7 @@
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2024-25": {
@@ -5089,7 +5095,7 @@
    "last_season_points": 103,
    "xgi": "7.11",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -5284,7 +5290,7 @@
    "last_season_points": 135,
    "xgi": "13.14",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2025-26": {
@@ -5326,7 +5332,7 @@
    "last_season_points": 115,
    "xgi": "4.24",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -6070,7 +6076,7 @@
    "last_season_points": 98,
    "xgi": "8.27",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -6193,7 +6199,7 @@
    "last_season_points": 117,
    "xgi": "4.08",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -6595,7 +6601,7 @@
    "last_season_points": 151,
    "xgi": "9.69",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2024-25": {
@@ -7077,7 +7083,7 @@
    "display": "J\u00f6rgensen",
    "position": "GK",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 9,
    "xgi": "0.00",
    "penalties": false,
@@ -8374,8 +8380,8 @@
    "last_season_points": 128,
    "xgi": "5.98",
    "penalties": false,
-   "corners": false,
-   "freekicks": false,
+   "corners": true,
+   "freekicks": true,
    "sales": {
     "2024-25": {
      "price": 0.0,
@@ -8636,27 +8642,6 @@
      "price": 0.0,
      "buyer": "Maccers",
      "club_then": "EVE",
-     "points_that_season": null
-    }
-   }
-  },
-  {
-   "key": "name_mudryk",
-   "fpl_id": null,
-   "display": "Mudryk",
-   "position": "MID",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2024-25": {
-     "price": 0.0,
-     "buyer": "Maccers",
-     "club_then": "CHE",
      "points_that_season": null
     }
    }
@@ -9166,7 +9151,7 @@
    "last_season_points": 124,
    "xgi": "4.74",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2025-26": {

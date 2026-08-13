@@ -624,8 +624,8 @@
     3
    ]
   ],
-  "pts_per_million": 23.9,
-  "total_points_bought": 2294,
+  "pts_per_million": 24.0,
+  "total_points_bought": 2301,
   "max_ever_bid": 19.5,
   "seasons": {
    "2024-25": {
@@ -780,9 +780,9 @@
       "player": "Mudryk",
       "club": "CHE",
       "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
+      "fpl_id": 578,
+      "fpl_name": "Mudryk",
+      "points_that_season": 7
      },
      {
       "season": "2024-25",
@@ -797,8 +797,8 @@
      }
     ],
     "spend": 49.5,
-    "points_bought": 1249,
-    "points_matched_players": 11,
+    "points_bought": 1256,
+    "points_matched_players": 12,
     "best_value": {
      "season": "2024-25",
      "manager": "Maccers",
@@ -6210,8 +6210,8 @@
     6
    ]
   ],
-  "pts_per_million": 18.4,
-  "total_points_bought": 2760,
+  "pts_per_million": 19.1,
+  "total_points_bought": 2854,
   "max_ever_bid": 17.5,
   "seasons": {
    "2023-24": {
@@ -6256,9 +6256,9 @@
       "player": "Mykhailo Mudryk",
       "club": "CHE",
       "cost": 6.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
+      "fpl_id": 578,
+      "fpl_name": "Mudryk",
+      "points_that_season": 94
      },
      {
       "season": "2023-24",
@@ -6383,8 +6383,8 @@
      }
     ],
     "spend": 49.75,
-    "points_bought": 722,
-    "points_matched_players": 9,
+    "points_bought": 816,
+    "points_matched_players": 10,
     "best_value": {
      "season": "2023-24",
      "manager": "Deepesh",
