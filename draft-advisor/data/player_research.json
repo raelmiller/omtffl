@@ -761,6 +761,12 @@
    "web_name": "Wood",
    "club": "NFO",
    "intel": "£6.0m — Chris Wood in a three-way Forest striker battle with Igor Jesus (and Awoniyi/Kalimuendo) under Glasner, so confirm who leads the line before backing him."
+  },
+  {
+   "web_name": "Spence",
+   "club": "TOT",
+   "exit": "Agreed ~£27m move to Inter Milan — De Zerbi told him he can leave after his standout World Cup. Almost certainly out of the Premier League this season; don't bid."
   }
- ]
+ ],
+ "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions."
 }

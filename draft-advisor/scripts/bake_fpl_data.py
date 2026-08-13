@@ -120,6 +120,8 @@ def main():
                     p["champ"] = {k: c.get(k) for k in ("goals", "assists", "starts", "note", "league", "proj")}
                 if c.get("intel"):
                     p["intel"] = c["intel"]
+                if c.get("exit"):
+                    p["exit"] = c["exit"]
 
     out = {
         "baked_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

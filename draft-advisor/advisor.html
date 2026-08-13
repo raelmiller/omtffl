@@ -106,6 +106,7 @@ th:first-child,td:first-child{text-align:left}
 .crow .rm{color:var(--hot);cursor:pointer;border:1px solid var(--border2);border-radius:5px;padding:1px 7px}
 .flag.custom{border-color:var(--blue);color:var(--blue)}
 .intel{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:.4rem 0;font-size:12px;color:var(--text)}
+.exitbanner{background:rgba(255,107,107,.14);border:1px solid var(--hot);border-radius:8px;padding:.55rem .75rem;margin:.4rem 0;font-size:12.5px;color:var(--hot);font-weight:600}
 </style>
 </head>
 <body>
@@ -607,6 +608,7 @@ function factsheet(p,currentBid,leadingTeam){
   return `
   <div class="auctionhead"><span class="name">${esc(p.web_name)}</span>
     <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${currentBid!=null?` · bid £${currentBid}m${leadingTeam?" — "+esc(leadingTeam):""}`:""}</span></div>
+  ${p.exit?`<div class="exitbanner">⚠ Likely leaving the Premier League — ${esc(p.exit)}</div>`:""}
   <div class="verdict ${v.cls}">${v.head}<small>${v.sub}</small></div>
   <div class="rangebar">
     <div class="band" style="left:${pct(est.low)}%;width:${Math.max(2,pct(est.high)-pct(est.low))}%"></div>
@@ -700,7 +702,7 @@ function recommendNomination(){
   for(const pos of needs){
     const open=SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
     const sc=scarcity(pos);
-    const cands=pool.filter(p=>p.pos===pos).map(p=>({p,est:fairRange(p),proj:projection(p).pts}))
+    const cands=pool.filter(p=>p.pos===pos&&!p.exit).map(p=>({p,est:fairRange(p),proj:projection(p).pts}))
       .filter(x=>x.est.low<=myMax).sort((a,b)=>b.proj-a.proj);
     if(!cands.length)continue;
     const urgency=open/Math.max(1,sc.strong);            // need more than are left → urgent
@@ -747,6 +749,7 @@ function recommendDrain(){
   const myOpen=pos=>SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
   let best=null;
   for(const p of poolRemaining()){
+    if(p.exit)continue;                          // don't bait with a player who's leaving the PL
     const est=fairRange(p);
     if(est.mid<4)continue;                       // only pricey players drain meaningfully
     const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
@@ -805,7 +808,7 @@ function renderNomination(){
 }
 function renderGems(){
   if(!FPL)return;
-  const rows=poolRemaining().map(p=>{
+  const rows=poolRemaining().filter(p=>!p.exit).map(p=>{
     const est=fairRange(p);
     return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid),edge:!!blindSpot(p,est)};
   }).filter(r=>r.proj>=60).sort((a,b)=>b.val-a.val).slice(0,60);
