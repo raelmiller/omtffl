@@ -766,6 +766,13 @@
    "web_name": "Spence",
    "club": "TOT",
    "exit": "Agreed ~£27m move to Inter Milan — De Zerbi told him he can leave after his standout World Cup. Almost certainly out of the Premier League this season; don't bid."
+  },
+  {
+   "web_name": "Madjo",
+   "club": "AVL",
+   "league": "limited senior football",
+   "proj": 42,
+   "intel": "17yo Villa forward, €12m from Metz — only cleared to register this month, then became the youngest scorer in a European final with Villa's Super Cup goal vs PSG. Genuine talent and now hot property, but raw and likely an impact sub behind Watkins & Abraham, so minutes are the risk. No PL/senior record to project from — the 42-pt projection is a placeholder with huge variance; don't let the hype inflate the price."
   }
  ],
  "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions."
