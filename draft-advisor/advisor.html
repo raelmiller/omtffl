@@ -435,14 +435,26 @@ function pricingProjection(p,proj){
   if(p.custom||proj<=165)return proj;    // custom players have no FPL price to gate on; trust your projection
   return Math.round(165+(proj-165)*marqueeTier(p));
 }
+// Managers who drop out on the day are marked inactive by the auctioneer.
+// The auction server still broadcasts them (nothing is deleted, so it stays
+// reversible), but they are out of the room: their money can never be spent
+// and their empty slots will never be filled. Every read of the live team
+// list has to skip them, or the room model is wrong — dead money inflates
+// liquidity, phantom slots inflate scarcity, and they show up as rival
+// bidders. Teams with no flag at all (demo mode, older servers) count as in.
+const activeTeams=()=>state.teams.filter(t=>t.active!==false);
+
 function liquidity(){
-  if(!state.teams.length)return {mult:1,label:"no live room data"};
+  const live=activeTeams();
+  if(!live.length)return {mult:1,label:"no live room data"};
   let money=0,slots=0;
-  state.teams.forEach(t=>{money+=t.budget;slots+=15-t.squad.length});
+  live.forEach(t=>{money+=t.budget;slots+=15-t.squad.length});
   if(!slots)return {mult:1,label:"draft complete"};
   const perSlotNow=money/slots, perSlotStart=50/15;
   const mult=Math.min(1.6,Math.max(.6,Math.sqrt(perSlotNow/perSlotStart)));
-  return {mult,money,slots,label:`£${money.toFixed(2)}m over ${slots} slots (×${mult.toFixed(2)})`};
+  const dropped=state.teams.length-live.length;
+  return {mult,money,slots,
+    label:`£${money.toFixed(2)}m over ${slots} slots (×${mult.toFixed(2)})${dropped?` · ${dropped} dropped out`:""}`};
 }
 function fairRange(p){
   const proj=projection(p), liq=liquidity();
@@ -463,7 +475,7 @@ function draftHistoryOf(p){
 function rivalScores(p,est){
   const mine=+$("myTeam").value;
   const out=[];
-  state.teams.forEach(t=>{
+  activeTeams().forEach(t=>{
     if(t.id===mine)return;
     const have=t.squad.filter(x=>x.position===p.pos).length;
     const open=SLOTS[p.pos]-have;
@@ -554,7 +566,7 @@ function scarcity(pos){
   const bar=Math.max(floor,pool[Math.floor(pool.length*0.15)]||0);
   const strong=pool.filter(x=>x>=bar).length;
   let demand=0;
-  state.teams.forEach(t=>demand+=Math.max(0,SLOTS[pos]-t.squad.filter(s=>s.position===pos).length));
+  activeTeams().forEach(t=>demand+=Math.max(0,SLOTS[pos]-t.squad.filter(s=>s.position===pos).length));
   return {strong,demand,bar};
 }
 function myVerdict(p,est,liveBid){
@@ -777,7 +789,7 @@ function recommendNomination(){
   const {p,est}=best.cands[0];
   // rivals who still need this position and can afford a real bid, weighted
   // by how likely they actually are to bid (auction-history spend shape)
-  const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
+  const rivals=activeTeams().filter(t=>t.id!==mine.id).map(t=>{
     const k=rivalKeenness(teamManager(t),p,est);
     return {t, mgr:teamManager(t)||t.name,
       open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
@@ -816,7 +828,7 @@ function recommendDrain(){
     if(p.exit)continue;                          // don't bait with a player who's leaving the PL
     const est=fairRange(p);
     if(est.mid<4)continue;                       // only pricey players drain meaningfully
-    const rivals=state.teams.filter(t=>t.id!==mine.id).map(t=>{
+    const rivals=activeTeams().filter(t=>t.id!==mine.id).map(t=>{
       const mgr=teamManager(t)||t.name, prof=profileOf(mgr), k=rivalKeenness(teamManager(t),p,est);
       return {t,mgr,open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
         max:affordableMax(t),keen:k.mult,tags:k.tags,loyal:((prof.clubs||{})[p.team_short]||0)>0};
@@ -898,8 +910,11 @@ let teamMap=JSON.parse(localStorage.getItem("omtffl_teamMap")||"{}");
 function renderTeams(){
   if(!state.teams.length){$("teamsList").innerHTML="<div class='small'>connect to the auction server to see teams</div>";return}
   const opts=n=>`<option value="">– unmapped –</option>`+DOSSIERS.map(d=>`<option ${teamMap[n]===d.name?"selected":""}>${esc(d.name)}</option>`).join("");
+  // Dropped-out teams stay listed (so the manager mapping is still visible
+  // and obviously intact) but are dimmed and labelled — they're excluded
+  // from liquidity, scarcity and rival predictions everywhere else.
   $("teamsList").innerHTML=state.teams.map(t=>`
-    <div class="teamrow mini"><span>${esc(t.name)} <span class="small">£${t.budget}m · ${t.squad.length}/15</span></span>
+    <div class="teamrow mini"${t.active===false?' style="opacity:.45"':''}><span>${esc(t.name)}${t.active===false?' <span class="small" style="color:var(--hot)">· dropped out</span>':''} <span class="small">£${t.budget}m · ${t.squad.length}/15</span></span>
     <select data-team="${t.id}">${opts(t.id)}</select>
     <span class="small">${["GK","DEF","MID","FWD"].map(pos=>{const h=t.squad.filter(s=>s.position===pos).length;return `<span class="${h>=SLOTS[pos]?"gap-full":"gap-ok"}">${pos} ${h}/${SLOTS[pos]}</span>`}).join(" ")}</span></div>`).join("");
   $("teamsList").querySelectorAll("select").forEach(sel=>{
@@ -907,7 +922,7 @@ function renderTeams(){
       localStorage.setItem("omtffl_teamMap",JSON.stringify(teamMap));renderAuction()});
   });
   const my=$("myTeam");const cur=my.value;
-  my.innerHTML=`<option value="">I am team...</option>`+state.teams.map(t=>`<option value="${t.id}" ${String(t.id)===cur?"selected":""}>${esc(t.name)}</option>`).join("");
+  my.innerHTML=`<option value="">I am team...</option>`+state.teams.map(t=>`<option value="${t.id}" ${String(t.id)===cur?"selected":""}>${esc(t.name)}${t.active===false?" (dropped out)":""}</option>`).join("");
   // auto-map by name where obvious
   state.teams.forEach(t=>{if(!teamMap[t.id]){const m=teamManager(t);if(m)teamMap[t.id]=m}});
 }
