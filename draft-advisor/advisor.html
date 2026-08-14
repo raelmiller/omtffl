@@ -809,37 +809,69 @@ function deriveIntel(p){
 // The moment worth catching is a rival sitting exactly at his ceiling — he can
 // match what's on the table and not a penny more, so one more bid takes him
 // out for good.
-function bidWall(p,currentBid){
+// Two different ceilings, and the difference matters at the sharp end:
+//   hard — their whole remaining budget. They physically cannot bid past it.
+//   safe — budget minus the minimum bid held back for each of their other
+//          empty slots. Past this they're buying a player by leaving a slot
+//          unfunded, which managers do happily on their last one or two picks.
+// "Can he answer?" has to be the hard number: a manager with £15m left who
+// bids £15m has done nothing impossible, he has just gone all-in — and that
+// is exactly the moment worth flagging, because he cannot go a penny higher.
+function bidWall(p,currentBid,leader){
   if(currentBid==null||!state.teams.length)return null;
   const need=currentBid+LEAGUE.minBid, mineId=+$("myTeam").value;
   const needsPos=t=>LEAGUE.slots[p.pos]-t.squad.filter(s=>s.position===p.pos).length>0;
-  const rivals=activeTeams().filter(t=>t.id!==mineId&&needsPos(t));
-  const live=rivals.filter(t=>affordableMax(t)>=need);
-  const maxed=rivals.filter(t=>{const m=affordableMax(t);return m>=currentBid&&m<need})
-    .map(t=>({t,max:affordableMax(t)})).sort((a,b)=>b.max-a.max);
+  const ceil=t=>({t,hard:t.budget,safe:affordableMax(t),
+                  spare:Math.max(0,LEAGUE.squad-t.squad.length-1)});
+  const rivals=activeTeams().filter(t=>t.id!==mineId&&needsPos(t)).map(ceil).sort((a,b)=>b.hard-a.hard);
+  const live=rivals.filter(r=>r.hard>=need);              // can still raise
+  const gone=rivals.filter(r=>r.hard<need);               // cannot answer what's on the table
+  const nextOut=live.filter(r=>r.hard<need+LEAGUE.minBid);// one more raise removes them
   const me=state.teams.find(t=>t.id===mineId);
-  const myMax=me&&needsPos(me)?affordableMax(me):null;
-  return {need,rivals,live,maxed,myMax,iAmMaxed:myMax!=null&&myMax>=currentBid&&myMax<need};
+  const mine=me&&needsPos(me)?ceil(me):null;
+  const ldr=leader?ceil(leader):null;
+  return {need,rivals,live,gone,nextOut,mine,ldr,isMine:!!(ldr&&ldr.t.id===mineId),
+          iCanRaise:mine?mine.hard>=need:null};
 }
-function wallBanner(p,currentBid,leadingTeam){
-  const w=bidWall(p,currentBid);
-  if(!w||!w.rivals.length&&!w.iAmMaxed)return "";
-  const nm=t=>esc(teamManager(t)||t.name);
+// Rendered for the whole auction rather than at the instant a ceiling is hit:
+// bids step in increments and jump, so anything keyed to the exact moment a
+// rival's ceiling equals the bid is invisible in practice. This is a standing
+// readout — who can still answer and what they can reach — so you can watch
+// the field thin out as the bidding climbs.
+function wallBanner(p,currentBid,leader){
+  const w=bidWall(p,currentBid,leader);
+  if(!w||!w.rivals.length&&!w.mine&&!w.ldr)return "";
+  const nm=r=>esc(teamManager(r.t)||r.t.name);
   const out=[];
-  if(w.rivals.length&&!w.live.length)
+  // The leader first — whoever holds the bid is the one whose next move matters
+  if(w.ldr&&!w.isMine){
+    if(w.ldr.hard<w.need)
+      out.push(`<div class="wall win">${nm(w.ldr)} IS AT HIS MAX — £${w.ldr.hard.toFixed(2)}m is his entire remaining budget
+        <small>he cannot answer £${w.need.toFixed(2)}m. One more bid and the player is yours.</small></div>`);
+    else if(currentBid>w.ldr.safe)
+      out.push(`<div class="wall tapped">${nm(w.ldr)} is bidding into his reserve — £${currentBid}m of £${w.ldr.hard.toFixed(2)}m left
+        <small>he can still reach £${w.ldr.hard.toFixed(2)}m, but he's already leaving ${w.ldr.spare} of his remaining slot${w.ldr.spare===1?"":"s"} unfunded to do it. Expect him to stop soon.</small></div>`);
+  }
+  // the leader-at-max banner above already says the player is one bid away,
+  // so only add the general one when it isn't already on screen
+  if(w.rivals.length&&!w.live.length&&!out.length){
     out.push(`<div class="wall win">NOBODY CAN OUTBID £${currentBid}m — one more bid wins him
-      <small>every rival who still needs a ${p.pos} would have to go past their own budget to answer £${w.need.toFixed(2)}m.</small></div>`);
-  else if(w.maxed.length)
-    out.push(`<div class="wall tapped">AT THEIR LIMIT: ${w.maxed.map(x=>`${nm(x.t)} (£${x.max.toFixed(2)}m)`).join(" · ")}
-      <small>can match £${currentBid}m but cannot raise it — a bid of £${w.need.toFixed(2)}m puts him out${w.live.length?`. ${w.live.length} rival${w.live.length>1?"s":""} can still respond.`:"."}</small></div>`);
-  if(w.iAmMaxed)
-    out.push(`<div class="wall mine">⚠ THAT'S YOUR CEILING — £${w.myMax.toFixed(2)}m
-      <small>bidding higher leaves one of your remaining slots unfunded at £${LEAGUE.minBid.toFixed(2)}m.</small></div>`);
-  if(leadingTeam&&w.maxed.some(x=>(teamManager(x.t)||x.t.name)===leadingTeam))
-    out.push(`<div class="wall tapped">${esc(leadingTeam)} is leading at his ceiling — outbid him and he cannot come back.</div>`);
+      <small>all ${w.rivals.length} rival${w.rivals.length>1?"s":""} needing a ${p.pos} would have to spend past their whole budget to answer £${w.need.toFixed(2)}m. Deepest pocket left: ${nm(w.rivals[0])} at £${w.rivals[0].hard.toFixed(2)}m.</small></div>`);
+  }else if(w.live.length){
+    const nxt=w.nextOut.length?` <b>One more bid puts ${w.nextOut.map(nm).join(" and ")} out.</b>`:"";
+    out.push(`<div class="wall tapped">STILL IN: ${w.live.slice(0,6).map(r=>`${nm(r)} £${r.hard.toFixed(2)}m`).join(" · ")}
+      <small>every penny each has left.${nxt}${w.gone.length?` ${w.gone.length} already out of money: ${w.gone.slice(0,4).map(nm).join(", ")}.`:""}</small></div>`);
+  }
+  if(w.mine&&!w.iCanRaise)
+    out.push(`<div class="wall mine">⚠ YOU CAN'T GO HIGHER — £${w.mine.hard.toFixed(2)}m is everything you have left
+      <small>you cannot answer £${w.need.toFixed(2)}m.</small></div>`);
+  else if(w.mine&&currentBid>=w.mine.safe&&w.mine.spare>0)
+    out.push(`<div class="wall mine">⚠ PAST YOUR SAFE LIMIT — £${w.mine.safe.toFixed(2)}m
+      <small>you can still bid up to £${w.mine.hard.toFixed(2)}m, but beyond £${w.mine.safe.toFixed(2)}m you can't fund all ${w.mine.spare} of your other empty slot${w.mine.spare===1?"":"s"} at £${LEAGUE.minBid.toFixed(2)}m.</small></div>`);
   return out.join("");
 }
-function factsheet(p,currentBid,leadingTeam){
+function factsheet(p,currentBid,leader){
+  const leadName=leader?(teamManager(leader)||leader.name):null;
   const est=fairRange(p);
   const v=myVerdict(p,est,currentBid);
   const s1=latestSeasons(p)[0]||{};
@@ -879,10 +911,10 @@ function factsheet(p,currentBid,leadingTeam){
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
   return `
   <div class="auctionhead"><span class="name">${esc(p.web_name)}</span>
-    <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${currentBid!=null?` · bid £${currentBid}m${leadingTeam?" — "+esc(leadingTeam):""}`:""}</span></div>
+    <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${currentBid!=null?` · bid £${currentBid}m${leadName?" — "+esc(leadName):""}`:""}</span></div>
   ${p.exit?`<div class="exitbanner">⚠ Likely leaving the Premier League — ${esc(p.exit)}</div>`:""}
   <div class="verdict ${v.cls}">${v.head}<small>${v.sub}</small></div>
-  ${wallBanner(p,currentBid,leadingTeam)}
+  ${wallBanner(p,currentBid,leader)}
   <div class="rangebar">
     <div class="band" style="left:${pct(est.low)}%;width:${Math.max(2,pct(est.high)-pct(est.low))}%"></div>
     <div class="tick" style="left:${pct(est.mid)}%" title="median £${est.mid}m"></div>
@@ -957,7 +989,7 @@ function renderAuction(){
   const p=resolveAuctionPlayer(a.player);
   const lead=state.teams.find(t=>t.id===a.leadingTeamId);
   $("auctionBody").innerHTML=p
-    ?factsheet(p,a.currentBid,lead?(teamManager(lead)||lead.name):null)
+    ?factsheet(p,a.currentBid,lead||null)
     :`<div class="auctionhead"><span class="name">${esc(a.player.web_name)}</span><span class="meta">custom entry — no FPL match, judge manually</span></div>`;
 }
 // Recommend who to nominate next (fills your biggest need) and a strategic
