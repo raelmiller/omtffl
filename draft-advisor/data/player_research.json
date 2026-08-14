@@ -114,8 +114,9 @@
    "goals": 3,
    "assists": 9,
    "starts": 43,
-   "proj": 80,
-   "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early"
+   "proj": 60,
+   "note": "new Chelsea signing from Strasbourg; LB/CM, 3g 9a in Ligue 1 — assist threat but rotation risk early",
+   "intel": "£5.5m — Valentín Barco, Argentine LB/left-mid (3g 9a in Ligue 1 at Strasbourg); a genuine assist threat with set-piece delivery, but a rotation risk in a deep Chelsea squad under Alonso. Cheap punt with upside if he wins minutes."
   },
   {
    "web_name": "Verbruggen",
@@ -460,7 +461,7 @@
   {
    "web_name": "Butland",
    "club": "HUL",
-   "intel": "£4.5m — new Hull signing and likely No.1 (Tzolakis rumoured to join too), but Hull were leaky in the Championship (66 conceded, 2nd-most xG against), so clean sheets look scarce."
+   "intel": "£4.5m — experienced keeper but now in a genuine battle with new signing Konstantinos Tzolakis for Hull's No.1 spot; Hull were leaky in the Championship, so clean sheets look scarce whoever plays."
   },
   {
    "web_name": "van Ewijk",
@@ -615,7 +616,7 @@
   {
    "web_name": "Morita",
    "club": "HUL",
-   "intel": "£5.0m — experienced Japanese defensive midfielder joining Hull; adds competition in a crowded, still-forming midfield."
+   "intel": "£5.0m — experienced Japan defensive midfielder who brings DefCon and control, and one of Hull's more likely starters; but their heavily reshuffled midfield (Zambrano, Hjertø-Dahl, Stroud, Crooks, Slater) makes any single starter a gamble."
   },
   {
    "web_name": "McAteer",
@@ -670,7 +671,7 @@
   {
    "web_name": "Bamba",
    "club": "NEW",
-   "intel": "£5.0m — Aladji Bamba, a DefCon-friendly midfield shield (11.7 actions/90 in limited minutes), but new to Newcastle and likely eased in slowly."
+   "intel": "£5.0m — Aladji Bamba, a DefCon-friendly midfield shield (11.7 actions/90 in limited minutes), but young and new to Newcastle, so likely eased in behind established mids."
   },
   {
    "web_name": "Lavia",
@@ -773,6 +774,121 @@
    "league": "limited senior football",
    "proj": 42,
    "intel": "17yo Villa forward, €12m from Metz — only cleared to register this month, then became the youngest scorer in a European final with Villa's Super Cup goal vs PSG. Genuine talent and now hot property, but raw and likely an impact sub behind Watkins & Abraham, so minutes are the risk. No PL/senior record to project from — the 42-pt projection is a placeholder with huge variance; don't let the hype inflate the price."
+  },
+  {
+   "web_name": "Tzolis",
+   "club": "ARS",
+   "intel": "£6.5m — £34m signing from Club Brugge (Belgian Player of the Season; 43g 45a in 108 games) as Trossard's replacement. A direct left winger with real end product, but a rotation option behind Saka & Martinelli in his first full PL season (his earlier Norwich spell was quiet). Talent's there; minutes are the question."
+  },
+  {
+   "web_name": "García",
+   "club": "FUL",
+   "intel": "£6.0m — Gonzalo García, 22, €40m club-record buy from Real Madrid after a breakout Club World Cup (4 goals deputising for Mbappé). High-ceiling forward reunited with ex-Madrid coach Arbeloa and set to lead Fulham's line, but unproven in the PL — expect a bedding-in spell, with real upside if he clicks."
+  },
+  {
+   "web_name": "Sangaré",
+   "club": "BRE",
+   "intel": "£5.5m — Mamadou Sangaré, Brentford's club-record signing; a physical box-to-box/holding midfielder with DefCon potential, but he lands in a crowded engine room (Jensen, Yarmoliuk, Janelt) so a nailed role isn't guaranteed yet."
+  },
+  {
+   "web_name": "Mudryk",
+   "club": "CHE",
+   "intel": "£5.5m — blistering pace that's never matched his end product at Chelsea, and an unclear path to minutes under Alonso in a stacked attack. Boom-or-bust and hard to trust for starts — avoid until his role is clear."
+  },
+  {
+   "web_name": "Hamer",
+   "club": "COV",
+   "intel": "£5.5m — Coventry's creative engine and set-piece taker (goals + assists from midfield, team-best key passes in the Championship). A nailed starter and the pick of the promoted-club mids if you want attacking returns rather than pure DefCon."
+  },
+  {
+   "web_name": "Palacios",
+   "club": "FUL",
+   "intel": "£5.5m — César Palacios, 21, €10m from Real Madrid Castilla (15g 4a there) and reunited with Arbeloa, who gave him his senior debut. An attacking midfielder with promise but likely eased in — one to watch for minutes rather than an instant starter."
+  },
+  {
+   "web_name": "Maeda",
+   "club": "IPS",
+   "intel": "£5.5m — Daizen Maeda, relentless Japan forward/winger from Celtic with pace, pressing and a strong scoring record in Scotland; likely a nailed Ipswich starter, though his finishing can be streaky and the step up in quality is real."
+  },
+  {
+   "web_name": "Araujo",
+   "club": "LIV",
+   "intel": "£5.5m — Ronald Araújo, powerful Uruguay centre-back from Barcelona; aerially dominant with set-piece goal threat and a likely starter to firm up a leaky Liverpool back line — but a notable injury history. Strong DefCon + clean-sheet upside when fit."
+  },
+  {
+   "web_name": "Diomande",
+   "club": "NFO",
+   "intel": "£5.5m — Ousmane Diomande, quick ball-playing Ivory Coast centre-back from Sporting; in line to start for Forest (especially with Murillo injured), offering DefCon and aerial threat, though he can be rash."
+  },
+  {
+   "web_name": "Yirenkyi",
+   "club": "COV",
+   "intel": "£5.0m — Caleb Yirenkyi, Coventry's club-record £23m signing from Nordsjælland; a 20-year-old Ghana international deep-lying playmaker (Makélélé comparisons for ball recovery) fresh off a World Cup winner vs Panama. Strong DefCon profile if he starts, but adapting to a new league."
+  },
+  {
+   "web_name": "Charles",
+   "club": "FUL",
+   "intel": "£5.0m — Shea Charles, Northern Ireland defensive midfielder; a tidy, DefCon-friendly deep-lying option, but he faces competition for the holding role at Fulham so minutes aren't nailed."
+  },
+  {
+   "web_name": "Hjertø-Dahl",
+   "club": "HUL",
+   "intel": "£5.0m — Jens Hjertø-Dahl, £8m goalscoring midfielder from Tromsø (7g in 14 starts last season, Norway U21). Real goal threat from midfield, but one of several new Hull mids (Morita, Zambrano, Stroud) scrapping for spots — role unproven at PL level."
+  },
+  {
+   "web_name": "Stroud",
+   "club": "HUL",
+   "intel": "£5.0m — Elliot Stroud, Sweden international left-sided mid from Mjällby (19g 13a over three seasons; a top chance-creator). Goal and assist threat, but new to the PL and competing in a crowded Hull midfield."
+  },
+  {
+   "web_name": "Florentino",
+   "club": "IPS",
+   "intel": "£5.0m — Florentino Luís, Portuguese holding midfielder from Benfica; an excellent ball-winner with strong DefCon numbers, but he competes with Matusiwa for the anchor role — watch who Gary O'Neil trusts."
+  },
+  {
+   "web_name": "Schlager",
+   "club": "NFO",
+   "intel": "£5.0m — Xaver Schlager, high-energy Austrian central midfielder from RB Leipzig; a pressing ball-winner with DefCon appeal, but Forest's engine room is crowded (Sangaré, Domínguez) so his minutes hinge on Glasner's setup."
+  },
+  {
+   "web_name": "Silva",
+   "club": "BOU",
+   "intel": "£5.0m — António Silva, 22, £25m Portugal centre-back from Benfica (235 senior apps, six honours); a composed ball-player and likely Bournemouth starter under Rose, with decent DefCon/clean-sheet profile once settled — though the opening fixtures are brutal."
+  },
+  {
+   "web_name": "Chavarria",
+   "club": "CHE",
+   "intel": "£5.0m — Pep Chavarría, intense attacking Spanish left-back from Rayo Vallecano (44 games last season, a Conference League finalist); physically strong and gets forward, but a 28-year-old late bloomer in a deep Chelsea squad — a starting spot is far from guaranteed."
+  },
+  {
+   "web_name": "Sanchez",
+   "club": "BOU",
+   "intel": "£4.5m — Juanlu Sánchez, attacking Spanish right-back from Sevilla (Olympic gold 2024); expected to be Bournemouth's first-choice RB ahead of Adam Smith, with going-forward threat, though untested in the PL."
+  },
+  {
+   "web_name": "Anselmino",
+   "club": "CHE",
+   "intel": "£4.5m — Aarón Anselmino, highly-rated young Argentine centre-back from Boca, but firmly down Chelsea's pecking order — a squad body with barely any starts likely, not an FPL pick."
+  },
+  {
+   "web_name": "Tomiyasu",
+   "club": "CRY",
+   "intel": "£4.5m — Takehiro Tomiyasu, versatile Japan defender (ex-Arsenal) who covers both full-back slots and centre-back; useful cover for Palace, but a long injury history and a utility role make his minutes unreliable."
+  },
+  {
+   "web_name": "Penders",
+   "club": "CHE",
+   "intel": "£4.5m — Mike Penders, highly-rated young Belgian keeper signed for the future behind Robert Sánchez; essentially no game time expected — bench fodder only."
+  },
+  {
+   "web_name": "Tzolakis",
+   "club": "HUL",
+   "intel": "£4.5m — Konstantinos Tzolakis, Greek keeper from Olympiacos, in a straight fight with Jack Butland for Hull's No.1 shirt; confirm the pecking order before drafting, and Hull look leaky either way."
+  },
+  {
+   "web_name": "Targett",
+   "club": "HUL",
+   "intel": "£4.0m — Matt Targett, experienced English left-back (ex-Newcastle/Villa) on a cheap move to Hull; a steadying starter option if fit, but an injury-hit recent history and a shaky Hull defence cap the appeal."
   }
  ],
  "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions."
