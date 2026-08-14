@@ -1172,15 +1172,20 @@ function renderLeague(){
       <div class="stat"><b>${teams*LEAGUE.squad}</b><span>players drafted</span></div>
     </div>
     <table style="width:100%"><tr><th style="text-align:left">pos</th><th>slots/team</th><th>drafted</th><th>replacement</th><th>elite ×</th><th>mid ×</th></tr>${rows}</table>
-    <div class="small" style="margin-top:.5rem">Replacement = the best player at that position who goes <i>undrafted</i> at this league size — what you get for the minimum bid if you lose the auction. The × columns are what the ${LEAGUE.modelTeams}-team price model gets scaled by at each end of the drafted pool. In a smaller room the mid-tier falls hardest (replacement is close behind them, so they're barely worth bidding up) while elites hold their price. Total spend stays in proportion to the room's money — this moves where the money lands, it isn't a blanket discount.</div>
+    <div class="small" style="margin-top:.5rem">
+      <p><b>Replacement</b> is the best player at that position who nobody drafts — the one still sitting there for £${LEAGUE.minBid.toFixed(2)}m if you lose the auction. He's your fallback, so he's what decides whether anyone better is worth paying for.</p>
+      <p>Fewer teams means fewer players get taken, so your fallback is a <i>better</i> player. That guts the middle of the market: why pay £4m for a 130-point midfielder when a 124-point one is going free? The very best players have no fallback at any league size, so they keep their price.</p>
+      <p>The <b>×</b> columns show how far prices move from the ${LEAGUE.modelTeams}-team drafts this model learned from — one for the best player at the position, one for the middle of the pack. Under 1.00 means cheaper than history, over 1.00 dearer.</p>
+      <p>The room's total money doesn't change when the number of teams does — each team brings its own budget for its own squad. So nothing is getting cheaper overall. The money just moves from the middle of the market to the top.</p>
+    </div>
     <div class="cform" style="margin-top:.7rem">
       <label class="small">budget per team £${num("lg_budget",LEAGUE.budget,.5,1)}</label>
       <label class="small">min bid £${num("lg_minbid",LEAGUE.minBid,.05,.05)}</label>
-      <label class="small">price model trained on ${num("lg_model",LEAGUE.modelTeams,1,2)} teams</label>
+      <label class="small" title="How many teams were in the PAST drafts the price history came from — not how many you have this year. Leave at 16 unless the old drafts were a different size.">past drafts had ${num("lg_model",LEAGUE.modelTeams,1,2)} teams</label>
       <button id="lgSave" class="primary">save</button>
       <button id="lgReset">reset to defaults</button>
     </div>
-    <div class="small">Budget is overwritten whenever the room reports a different one — set it here only for planning before you connect.</div>`;
+    <div class="small">Budget is overwritten whenever the room reports a different one — set it here only for planning before you connect. <b>"Past drafts had N teams"</b> describes the old auctions the prices were learned from (16 for your three years) — it is <i>not</i> this year's team count, which is read live from the auction server and never typed in.${LEAGUE.modelTeams!==LEAGUE_DEFAULTS.modelTeams?` <span style="color:var(--gold)">It's currently set to ${LEAGUE.modelTeams} — set it back to ${LEAGUE_DEFAULTS.modelTeams} if you changed it meaning this season.</span>`:""}</div>`;
   $("lgSave").addEventListener("click",()=>{
     POSITIONS.forEach(pos=>{const v=parseInt($("lg_"+pos).value,10);if(!isNaN(v)&&v>=0)LEAGUE.slots[pos]=v});
     const b=parseFloat($("lg_budget").value), mb=parseFloat($("lg_minbid").value), mt=parseInt($("lg_model").value,10);
