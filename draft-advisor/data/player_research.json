@@ -889,6 +889,146 @@
    "web_name": "Targett",
    "club": "HUL",
    "intel": "£4.0m — Matt Targett, experienced English left-back (ex-Newcastle/Villa) on a cheap move to Hull; a steadying starter option if fit, but an injury-hit recent history and a shaky Hull defence cap the appeal."
+  },
+  {
+   "web_name": "Haaland",
+   "club": "MCI",
+   "intel": "The game's premium pick — 239 pts, 27 goals, on penalties. A relentless points machine and the one forward worth a bidding war, but at £15.5m he must haul almost weekly to justify it."
+  },
+  {
+   "web_name": "Isak",
+   "club": "LIV",
+   "intel": "Elite striker on penalties, but just 8 starts and 41 pts last season in an injury-wrecked year. The £9.0m price banks on a clean campaign — high reward, real risk."
+  },
+  {
+   "web_name": "Watkins",
+   "club": "AVL",
+   "intel": "Villa's durable focal point — 16g 4a in 33 starts, right on his xG. Consistent and nailed, though not on penalties, so more floor than ceiling."
+  },
+  {
+   "web_name": "Thiago",
+   "club": "BRE",
+   "intel": "Brentford's talisman — 22 goals in 37 starts on penalties, matching a big 20.6 xG. Proven, nailed and fairly priced for guaranteed goal volume."
+  },
+  {
+   "web_name": "Gyökeres",
+   "club": "ARS",
+   "intel": "14g in 26 starts, a touch above xG, as Arsenal's main striker; big ceiling but a crowded attack around him and no penalties."
+  },
+  {
+   "web_name": "Havertz",
+   "club": "ARS",
+   "intel": "Only 7 starts last season — an injury-hit year. Versatile and nailed when fit, but £7.5m assumes health and a central role."
+  },
+  {
+   "web_name": "João Pedro",
+   "club": "CHE",
+   "intel": "15g 9a in 31 starts, bang on his xGI — a genuine dual threat and one of the better-value premium forwards. FFScout must-have."
+  },
+  {
+   "web_name": "Ekitiké",
+   "club": "LIV",
+   "intel": "⚠ Achilles injury — monitor his return. 11g 4a in 21 starts shows the class, but don't commit £7.5m until he's fit."
+  },
+  {
+   "web_name": "Bruno G.",
+   "club": "ARS",
+   "intel": "Now at Arsenal — 9g 7a in 27 starts last season but a big xGI overperformer (+6), so expect regression; an all-action mid whose role in a stacked engine room is the question."
+  },
+  {
+   "web_name": "Foden",
+   "club": "MCI",
+   "intel": "7g 5a in 23 starts — a quieter, injury-affected year below his ceiling; the talent and City platform mean big upside if he stays fit and central."
+  },
+  {
+   "web_name": "Šeško",
+   "club": "MUN",
+   "intel": "⚠ 75% shin-injury doubt — 11g in 17 starts (above xG) is promising, but check fitness and note United's crowded front line."
+  },
+  {
+   "web_name": "Eze",
+   "club": "ARS",
+   "intel": "7g 3a in 22 starts, slightly above xG — a match-winner off either flank or the 10; now at Arsenal, so minutes in a deep squad are the swing factor."
+  },
+  {
+   "web_name": "Ødegaard",
+   "club": "ARS",
+   "intel": "Just 1g 7a in 16 starts — a creator whose goals dried up in an injury-hit season; set-piece and assist upside if he rediscovers form and stays fit."
+  },
+  {
+   "web_name": "Mitoma",
+   "club": "BHA",
+   "intel": "⚠ hamstring injury (misses the start) — a dangerous, direct winger when fit, but wait for a return date before backing."
+  },
+  {
+   "web_name": "Maddison",
+   "club": "TOT",
+   "intel": "0 starts last season — a lost, injury-wrecked campaign. Elite set-piece creator when fit, but the price is a pure fitness/role gamble."
+  },
+  {
+   "web_name": "Richarlison",
+   "club": "TOT",
+   "intel": "11g 4a in 20 starts, above xG — a real goal threat when he plays, but injury-prone and rotation-risky; a punt rather than a nailed pick."
+  },
+  {
+   "web_name": "Gravenberch",
+   "club": "LIV",
+   "intel": "144 pts from 34 starts — a nailed, minutes-banking central mid, but only 5g 5a off low xG, so a floor/DefCon pick rather than a returns machine."
+  },
+  {
+   "web_name": "Wilson",
+   "club": "LEE",
+   "intel": "Leeds' standout — 10g 9a in 32 starts but a huge xGI overperformer (+9), so temper expectations; on corners and a nailed creative hub, though regression looms."
+  },
+  {
+   "web_name": "Ndiaye",
+   "club": "EVE",
+   "intel": "6g 3a in 32 starts on penalties — Everton's main attacking threat and nailed; penalty duty gives him a useful floor."
+  },
+  {
+   "web_name": "E.Le Fée",
+   "club": "SUN",
+   "intel": "147 pts from 33 starts, 5g 6a with matching xGI and set-piece duty — a nailed, well-rounded Sunderland creator and strong value at £6.0m."
+  },
+  {
+   "web_name": "Anderson",
+   "club": "MCI",
+   "intel": "180 pts from 37 starts — remarkably nailed and productive (4g 5a), though an assist overperformer; excellent minutes-banking value if the role holds."
+  },
+  {
+   "web_name": "Neto",
+   "club": "CHE",
+   "intel": "5g 7a in 30 starts, an xA overperformer (6.84 xA) — a creative, fairly nailed wide man at Chelsea with assist upside."
+  },
+  {
+   "web_name": "O.Dango",
+   "club": "BRE",
+   "intel": "7g 8a in 25 starts with matching xGI — a well-rounded Brentford attacker and genuine value; strong link play with Thiago."
+  },
+  {
+   "web_name": "Sarr",
+   "club": "CRY",
+   "intel": "9g 2a in 24 starts but a big xG UNDERperformer (10.9 xG) — positive regression due; an attacking mid with real goal threat."
+  },
+  {
+   "web_name": "Tavernier",
+   "club": "BOU",
+   "intel": "7g 4a in 31 starts on corners & free kicks — Bournemouth's set-piece hub and nailed, with a decent floor."
+  },
+  {
+   "web_name": "Garner",
+   "club": "EVE",
+   "intel": "⚠ groin injury — 159 pts from 38 starts and 7 assists off a huge 6.18 xA on set-pieces; a nailed DefCon+assist machine once fit, strong value."
+  },
+  {
+   "web_name": "Stach",
+   "club": "LEE",
+   "intel": "137 pts from 28 starts, 5g 6a on set-pieces — a nailed, well-rounded Leeds mid offering returns and DefCon at £6.0m."
+  },
+  {
+   "web_name": "Gakpo",
+   "club": "LIV",
+   "intel": "7g 5a in 32 starts on corners — a nailed Liverpool attacker with a solid floor, though output can be streaky."
   }
  ],
  "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions."

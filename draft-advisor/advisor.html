@@ -107,6 +107,7 @@ th:first-child,td:first-child{text-align:left}
 .flag.custom{border-color:var(--blue);color:var(--blue)}
 .intel{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem;margin:.4rem 0;font-size:12px;color:var(--text)}
 .exitbanner{background:rgba(255,107,107,.14);border:1px solid var(--hot);border-radius:8px;padding:.55rem .75rem;margin:.4rem 0;font-size:12.5px;color:var(--hot);font-weight:600}
+.intel.auto{border-left-color:var(--muted);color:var(--muted)}
 </style>
 </head>
 <body>
@@ -574,6 +575,39 @@ function myVerdict(p,est,liveBid){
     sub:`${live?`£${liveBid}m is over`:"expected to clear above"} fair value; ${sc.strong} comparable ${p.pos} still available. Let someone else overpay.`};
 }
 // ── render ─────────────────────────────────────────────────────────────
+// Data-derived scouting line for players without a hand-written note —
+// composes role, returns, xG signal, set-pieces and status from fields the
+// tool already holds. Editorial intel (p.intel) always takes precedence.
+function deriveIntel(p){
+  if(p.champ||p.custom)return "New to the Premier League — no top-flight record yet, so the projection is an estimate. Weigh expected minutes and don't overpay on name value.";
+  const s=latestSeasons(p)[0];
+  if(!s||!(s.minutes>0))return "No Premier League minutes last season — unproven or deep squad. Only a punt if you expect him to win a role.";
+  const starts=s.starts||0,mins=s.minutes||0,bits=[];
+  bits.push(starts>=30?`Nailed starter last season (${starts} starts)`
+    :starts>=20?`Regular last season (${starts} starts)`
+    :starts>=10?`Rotation option (${starts} starts, ${mins} mins)`
+    :`Fringe last season (${starts} starts, ${mins} mins)`);
+  const g=s.goals_scored||0,a=s.assists||0,xg=parseFloat(s.expected_goals),xa=parseFloat(s.expected_assists);
+  if(p.pos!=="GK"&&(g||a))bits.push(`${g}g ${a}a`);
+  if(p.pos!=="GK"&&g+a>=6&&!isNaN(xg)&&!isNaN(xa)){
+    const dl=(g+a)-(xg+xa);
+    bits.push(dl>=4?`overperformed his xGI (+${dl.toFixed(0)}) — some regression likely`
+      :dl<=-4?`underperformed his xGI (${dl.toFixed(0)}) — positive regression due`
+      :`returns roughly match his xGI`);
+  }
+  if(p.pos==="DEF"||p.pos==="GK"){
+    if(s.clean_sheets!=null)bits.push(`${s.clean_sheets} clean sheets`);
+    const dc=s.defensive_contribution??p.defensive_contribution;
+    if(dc)bits.push(`${dc} DefCon`);
+  }
+  const sp=[];
+  if(p.penalties_order===1)sp.push("penalties");
+  if((p.corners_and_indirect_freekicks_order||9)<=2)sp.push("corners");
+  if((p.direct_freekicks_order||9)<=2)sp.push("free kicks");
+  if(sp.length)bits.push("on "+sp.join(" & "));
+  if(p.status&&p.status!=="a")bits.push(`⚠ ${p.news||p.status}`);
+  return bits.join(" · ")+".";
+}
 function factsheet(p,currentBid,leadingTeam){
   const est=fairRange(p);
   const v=myVerdict(p,est,currentBid);
@@ -628,7 +662,7 @@ function factsheet(p,currentBid,leadingTeam){
     <div class="stat"><b>${s1.clean_sheets??"–"}</b><span>clean sheets</span></div>`:""}
   </div>
   <div class="flags">${flags.map(f=>typeof f==="string"?`<span class="flag">${f}</span>`:`<span class="flag ${f.edge?"edge":f.custom?"custom":"injury"}">${f.t}</span>`).join("")}</div>
-  ${p.intel?`<div class="intel">🔎 ${esc(p.intel)}</div>`:""}
+  ${p.intel?`<div class="intel">🔎 ${esc(p.intel)}</div>`:`<div class="intel auto">📊 ${esc(deriveIntel(p))}</div>`}
   ${spn?`<div class="small" style="margin:.3rem 0">${esc(spn)}</div>`:""}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
     <div><h2>${p.custom?"Last season ("+esc((p.stats&&p.stats.league)||"outside PL")+")":"Season history"}</h2><table>
