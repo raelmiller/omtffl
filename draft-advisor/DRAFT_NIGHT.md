@@ -93,6 +93,14 @@ instead of standalone.)*
 2. Open the **Teams** tab and map each auction team to its manager (it
    auto-maps by name where it can) so rival predictions use their history.
 3. Set **"I am team…"** in the header to your own team.
+4. Glance at the **League** tab. The team count and the budget per team are
+   read straight off the auction server — if you changed the number of teams
+   in the Railway app, the header pill will say so ("12 teams · …") and every
+   price, max bid, and rival read has already adjusted. The one thing the
+   auction app doesn't broadcast is the roster format, so if it isn't
+   2 GK / 5 DEF / 5 MID / 3 FWD, set the slots there before the first
+   nomination. A red warning appears if a squad in the room grows past what
+   the slots add up to.
 
 ## During the draft
 - A player is nominated → the **factsheet appears automatically** with the

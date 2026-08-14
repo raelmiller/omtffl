@@ -132,6 +132,7 @@ th:first-child,td:first-child{text-align:left}
       <button data-tab="plan">Plan</button>
       <button data-tab="search">Search</button>
       <button data-tab="teams">Teams</button>
+      <button data-tab="league">League</button>
       <button data-tab="managers">Managers</button>
       <button data-tab="log">Log</button>
     </div>
@@ -170,6 +171,10 @@ th:first-child,td:first-child{text-align:left}
       <div class="small" style="margin-bottom:.5rem">Map auction teams to league managers so history informs rival predictions.</div>
       <div id="teamsList"></div>
     </div>
+    <div id="tab-league" class="tabpane" style="display:none">
+      <div class="small" style="margin-bottom:.5rem"><b>The number of teams is not set here</b> — it's read live from the auction server, so changing it in the auction app is all you need to do. Budget is read from the room too. Only the positional slots have to be told, because the auction app doesn't broadcast them. Saved on this device.</div>
+      <div id="leagueBody"></div>
+    </div>
     <div id="tab-managers" class="tabpane" style="display:none">
       <div class="small" style="margin-bottom:.5rem">Tell the tool what you know about each manager — who they support and how they bid. It sharpens the “likely rivals” read. Saved on this device.</div>
       <div class="scroll" id="managersList"></div>
@@ -188,7 +193,54 @@ let state={teams:[],currentAuction:null,soldPlayers:[]};
 let socket=null, demo=null;
 const $=id=>document.getElementById(id);
 const POSN={1:"GK",2:"DEF",3:"MID",4:"FWD"};
-const SLOTS={GK:2,DEF:5,MID:5,FWD:3};
+const POSITIONS=["GK","DEF","MID","FWD"];
+// ── league shape ───────────────────────────────────────────────────────
+// Everything that depends on the size and rules of the league lives here.
+// Team count is deliberately absent: it is never configured, it is read live
+// from the auction server (state.teams.length), so changing the number of
+// teams in the auction app is on its own enough to move every calculation.
+// Budget is read from the room too — a team's starting budget is what it
+// still holds plus what it has already spent. Positional slots aren't in the
+// broadcast, so they stay a setting (League tab); squad size follows them.
+const LEAGUE_DEFAULTS={budget:50,minBid:.25,slots:{GK:2,DEF:5,MID:5,FWD:3},modelTeams:16};
+function loadLeague(){
+  const saved=JSON.parse(localStorage.getItem("omtffl_league")||"{}");
+  const L={...LEAGUE_DEFAULTS,...saved,slots:{...LEAGUE_DEFAULTS.slots,...(saved.slots||{})}};
+  L.squad=POSITIONS.reduce((n,pos)=>n+L.slots[pos],0);
+  return L;
+}
+let LEAGUE=loadLeague(), leagueWarning="", leagueRev=0;
+function saveLeague(){
+  LEAGUE.squad=POSITIONS.reduce((n,pos)=>n+LEAGUE.slots[pos],0);
+  const {budget,minBid,slots,modelTeams}=LEAGUE;
+  localStorage.setItem("omtffl_league",JSON.stringify({budget,minBid,slots,modelTeams}));
+  leagueRev++;                       // invalidates the league-size price adjustment
+}
+// How many teams are actually in the room — dropped-out managers don't bid,
+// so they don't count toward league size any more than they count toward
+// liquidity. Before we're connected, assume the shape the price model was
+// trained on so the numbers stay self-consistent.
+function teamCount(){return activeTeams().length||LEAGUE.modelTeams}
+// Starting budget as the room actually reports it: held + already spent.
+function derivedBudget(){
+  if(!state.teams.length)return null;
+  const totals=state.teams.map(t=>t.budget+t.squad.reduce((a,s)=>a+(s.price||0),0));
+  const b=Math.round(Math.max(...totals)*100)/100;
+  return b>0?b:null;
+}
+// Called on every stateUpdate: take from the room what the room can tell us,
+// and flag the one thing it can't (positional slots) if the squads outgrow it.
+function syncLeagueFromRoom(){
+  const b=derivedBudget();
+  if(b&&Math.abs(b-LEAGUE.budget)>.01){
+    LEAGUE.budget=b;saveLeague();
+    toast(`budget read from the room: £${b}m per team`);
+  }
+  const biggest=state.teams.reduce((n,t)=>Math.max(n,t.squad.length),0);
+  leagueWarning=biggest>LEAGUE.squad
+    ? `A team in the room already holds ${biggest} players but the League tab adds up to ${LEAGUE.squad} slots — set the positional slots to match the auction app.`
+    : "";
+}
 const BANDS=[["0-49",0,49],["50-79",50,79],["80-99",80,99],["100-124",100,124],["125-149",125,149],["150-179",150,179],["180+",180,1e4]];
 // Manager knowledge the buy-history can't see. clubs: +1 loyal (bids up
 // their team's players), -1 fan-but-shuns-own. styles: bidding tendencies
@@ -272,6 +324,7 @@ function applyCustomPlayers(){
   customPlayers=allCustom().filter(c=>!known.has((c.name||"").toLowerCase()));
   FPL.players=basePlayers.concat(customPlayers.map(toPlayerRecord));
   buildCostTables();
+  leagueRev++;                      // pool changed: replacement levels must be recomputed
 }
 function addCustomPlayer(c){
   c.id="cust_"+Date.now()+"_"+Math.floor(Math.random()*1e4);
@@ -291,6 +344,7 @@ let projAdj=JSON.parse(localStorage.getItem("omtffl_projadj")||"{}");
 function setProjAdj(id,val){
   if(val==null||val===""||isNaN(+val))delete projAdj[id];else projAdj[id]=Math.max(0,Math.round(+val));
   localStorage.setItem("omtffl_projadj",JSON.stringify(projAdj));
+  leagueRev++;                      // projections moved: replacement levels must be recomputed
   renderAll();
 }
 // Forward-looking set-piece premium from the 2026/27 taker hierarchy.
@@ -397,7 +451,7 @@ const BAND_MID={"0-49":25,"50-79":65,"80-99":90,"100-124":112,"125-149":137,"150
 function smoothedBand(pos,proj){
   const bands=MODEL.price_bands[pos]||{};
   const pts=BANDS.map(([l])=>[BAND_MID[l],bands[l]]).filter(x=>x[1]);   // populated bands, ascending
-  if(!pts.length)return {p25:0,median:.25,p75:1};
+  if(!pts.length)return {p25:0,median:LEAGUE.minBid,p75:1};
   if(proj<=pts[0][0])return pts[0][1];
   if(proj>=pts[pts.length-1][0])return pts[pts.length-1][1];
   for(let i=0;i<pts.length-1;i++){
@@ -444,13 +498,65 @@ function pricingProjection(p,proj){
 // bidders. Teams with no flag at all (demo mode, older servers) count as in.
 const activeTeams=()=>state.teams.filter(t=>t.active!==false);
 
+// ── league-size adjustment ─────────────────────────────────────────────
+// The price bands were fit on 16-team drafts. Team count can't move the
+// *average* price — every team still brings one budget for one squad, so
+// money per slot is unchanged whatever the size of the room — but it does
+// move the *shape*. With fewer teams fewer players get drafted, so the best
+// player still on the board when you lose an auction is a better player, and
+// what you're really paying for is the gap between your target and that
+// near-free alternative. That gap shrinks most for the players nearest the
+// cut: in a small room the mid-tier collapses toward the minimum bid (why pay
+// £4m for a 130-pt mid when a 124-pt one is free?) while genuine elites keep
+// most of their price, because nothing replaces them at any league size.
+// We measure it through each position's replacement level (the best player who
+// goes undrafted) at the live team count vs at the model's 16, then renormalise
+// so the room's total spend still lands in the same place relative to the money
+// available. It is a redistribution across tiers, not a blanket discount.
+let sizeAdj=null;
+function sizeKey(){return `${teamCount()}|${LEAGUE.modelTeams}|${JSON.stringify(LEAGUE.slots)}|${leagueRev}`}
+function replacementLevel(pos,teams){
+  const pool=FPL.players.filter(p=>p.pos===pos).map(p=>projection(p).pts).sort((a,b)=>b-a);
+  if(!pool.length)return 0;
+  return pool[Math.min(Math.round(teams*LEAGUE.slots[pos]),pool.length-1)];
+}
+// surplus over replacement now vs at 16 teams, damped and clamped like liquidity()
+function rawSizeMult(a,pos,proj){
+  const r=a.pos[pos]; if(!r)return 1;
+  const now=proj-r.now, base=proj-r.base;
+  if(base<=0||now<=0)return 1;     // at or under replacement either way — the floor price applies
+  return Math.min(1.4,Math.max(.6,Math.sqrt(now/base)));
+}
+function buildSizeAdj(){
+  const teams=teamCount(), base=LEAGUE.modelTeams;
+  const a={key:sizeKey(),teams,pos:{},norm:1};
+  POSITIONS.forEach(pos=>{a.pos[pos]={now:replacementLevel(pos,teams),base:replacementLevel(pos,base)}});
+  // Renormalise: the room's money scales linearly with team count, so the
+  // model's implied spend at 16 teams × (teams/16) is what the adjusted
+  // prices must still add up to across the players who actually get drafted.
+  let baseSpend=0,nowSpend=0;
+  POSITIONS.forEach(pos=>{
+    const priced=FPL.players.filter(p=>p.pos===pos)
+      .map(p=>{const pp=pricingProjection(p,projection(p).pts);return {pp,med:smoothedBand(pos,pp).median}})
+      .sort((x,y)=>y.med-x.med);
+    baseSpend+=priced.slice(0,Math.round(base*LEAGUE.slots[pos])).reduce((s,x)=>s+x.med,0);
+    nowSpend +=priced.slice(0,Math.round(teams*LEAGUE.slots[pos])).reduce((s,x)=>s+x.med*rawSizeMult(a,pos,x.pp),0);
+  });
+  a.norm=nowSpend>0?Math.min(1.4,Math.max(.7,baseSpend*teams/base/nowSpend)):1;
+  sizeAdj=a; return a;
+}
+function sizeAdjust(){return (sizeAdj&&sizeAdj.key===sizeKey())?sizeAdj:buildSizeAdj()}
+function sizeMult(pos,proj){
+  const a=sizeAdjust();
+  return Math.min(1.5,Math.max(.6,rawSizeMult(a,pos,proj)*a.norm));
+}
 function liquidity(){
   const live=activeTeams();
   if(!live.length)return {mult:1,label:"no live room data"};
   let money=0,slots=0;
-  live.forEach(t=>{money+=t.budget;slots+=15-t.squad.length});
+  live.forEach(t=>{money+=t.budget;slots+=LEAGUE.squad-t.squad.length});
   if(!slots)return {mult:1,label:"draft complete"};
-  const perSlotNow=money/slots, perSlotStart=50/15;
+  const perSlotNow=money/slots, perSlotStart=LEAGUE.budget/LEAGUE.squad;
   const mult=Math.min(1.6,Math.max(.6,Math.sqrt(perSlotNow/perSlotStart)));
   const dropped=state.teams.length-live.length;
   return {mult,money,slots,
@@ -460,8 +566,9 @@ function fairRange(p){
   const proj=projection(p), liq=liquidity();
   const pp=pricingProjection(p,proj.pts);
   const base=smoothedBand(p.pos,pp);
-  const r=x=>Math.max(.25,Math.round(x*liq.mult*4)/4);
-  return {proj,pp,base,liq,low:r(base.p25),mid:r(base.median),high:r(base.p75)};
+  const sz=sizeMult(p.pos,pp);                 // league bigger/smaller than the model's 16
+  const r=x=>Math.max(LEAGUE.minBid,Math.round(x*liq.mult*sz*4)/4);
+  return {proj,pp,base,liq,sz,low:r(base.p25),mid:r(base.median),high:r(base.p75)};
 }
 function teamManager(t){ // mapped dossier name for an auction team
   const manual=teamMap[t.id];if(manual)return manual;
@@ -478,10 +585,10 @@ function rivalScores(p,est){
   activeTeams().forEach(t=>{
     if(t.id===mine)return;
     const have=t.squad.filter(x=>x.position===p.pos).length;
-    const open=SLOTS[p.pos]-have;
+    const open=LEAGUE.slots[p.pos]-have;
     if(open<=0)return;
-    const slotsLeft=15-t.squad.length;
-    const maxBid=t.budget-(slotsLeft-1)*.25;
+    const slotsLeft=LEAGUE.squad-t.squad.length;
+    const maxBid=t.budget-(slotsLeft-1)*LEAGUE.minBid;
     if(maxBid<est.low)return;
     const mgrName=teamManager(t);
     const prior=mgrName?MODEL.managers[mgrName]:null;
@@ -566,22 +673,22 @@ function scarcity(pos){
   const bar=Math.max(floor,pool[Math.floor(pool.length*0.15)]||0);
   const strong=pool.filter(x=>x>=bar).length;
   let demand=0;
-  activeTeams().forEach(t=>demand+=Math.max(0,SLOTS[pos]-t.squad.filter(s=>s.position===pos).length));
+  activeTeams().forEach(t=>demand+=Math.max(0,LEAGUE.slots[pos]-t.squad.filter(s=>s.position===pos).length));
   return {strong,demand,bar};
 }
 function myVerdict(p,est,liveBid){
   const mine=state.teams.find(t=>t.id===+$("myTeam").value);
   if(!mine)return {cls:"v-fair",head:"SET 'I AM TEAM…' FOR A VERDICT",sub:"pick your team in the header so I know your budget and gaps"};
   const have=mine.squad.filter(x=>x.position===p.pos).length;
-  const open=SLOTS[p.pos]-have;
-  const slotsLeft=15-mine.squad.length;
-  const maxBid=mine.budget-(slotsLeft-1)*.25;   // keep £0.25 for every other empty slot
-  if(open<=0)return {cls:"v-pass",head:"PASS — POSITION FULL",sub:`you already hold ${have}/${SLOTS[p.pos]} ${p.pos}`};
+  const open=LEAGUE.slots[p.pos]-have;
+  const slotsLeft=LEAGUE.squad-mine.squad.length;
+  const maxBid=mine.budget-(slotsLeft-1)*LEAGUE.minBid;   // keep the min bid for every other empty slot
+  if(open<=0)return {cls:"v-pass",head:"PASS — POSITION FULL",sub:`you already hold ${have}/${LEAGUE.slots[p.pos]} ${p.pos}`};
   // assess at the live bid if there's a real one on the block, else expected market price
-  const price=(liveBid&&liveBid>0.25)?liveBid:est.mid;
-  const live=liveBid&&liveBid>0.25;
+  const price=(liveBid&&liveBid>LEAGUE.minBid)?liveBid:est.mid;
+  const live=liveBid&&liveBid>LEAGUE.minBid;
   if(maxBid<Math.min(price,est.low))
-    return {cls:"v-pass",head:"PASS — CAN'T AFFORD",sub:`your max bid is £${maxBid.toFixed(2)}m (must keep £0.25 × ${slotsLeft-1} other slots)`};
+    return {cls:"v-pass",head:"PASS — CAN'T AFFORD",sub:`your max bid is £${maxBid.toFixed(2)}m (must keep £${LEAGUE.minBid.toFixed(2)} × ${slotsLeft-1} other slots)`};
   const sc=scarcity(p.pos);
   const scarce=sc.strong<=open+1;               // barely enough strong options left for your needs
   const ceil=Math.min(maxBid,est.high);
@@ -691,7 +798,7 @@ function factsheet(p,currentBid,leadingTeam){
     <div class="tick" style="left:${pct(est.mid)}%" title="median £${est.mid}m"></div>
     ${currentBid!=null?`<div class="bid" style="left:${pct(currentBid)}%"></div>`:""}
   </div>
-  <div class="rangelabels"><span>fair £${est.low}–£${est.high}m (median £${est.mid}m)</span><span>room ${est.liq.label}</span></div>
+  <div class="rangelabels"><span>fair £${est.low}–£${est.high}m (median £${est.mid}m)</span><span>${Math.abs(est.sz-1)>=.03?`${teamCount()}-team league ×${est.sz.toFixed(2)} · `:""}room ${est.liq.label}</span></div>
   <div class="statgrid">
     <div class="stat ${est.proj.manual?"adj":""}"><b class="g"><input id="projInput" type="number" value="${est.proj.pts}" min="0" step="5" aria-label="adjust projected points"
        onchange="setProjAdj(${p.id},this.value)"><\/b><span>proj pts ${est.proj.manual?'· <a href="#" onclick="setProjAdj('+p.id+',null);return false">reset<\/a>':"· editable (enter)"}</span></div>
@@ -766,17 +873,17 @@ function renderAuction(){
 // Recommend who to nominate next (fills your biggest need) and a strategic
 // opening bid — low early, but late it rules out the cash-strapped rivals
 // who still need that position when you hold the budget edge.
-function affordableMax(t){const sl=15-t.squad.length;return t.budget-Math.max(0,sl-1)*.25;}
+function affordableMax(t){const sl=LEAGUE.squad-t.squad.length;return t.budget-Math.max(0,sl-1)*LEAGUE.minBid;}
 function recommendNomination(){
   const mine=state.teams.find(t=>t.id===+$("myTeam").value);
   if(!mine)return {error:"Set “I am team…” in the header so I know your squad and budget."};
   const myMax=affordableMax(mine);
-  const needs=POS_ORDER.filter(pos=>SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length>0);
+  const needs=POS_ORDER.filter(pos=>LEAGUE.slots[pos]-mine.squad.filter(s=>s.position===pos).length>0);
   if(!needs.length)return {error:"Your squad is already full — nothing to nominate."};
   const pool=poolRemaining();
   let best=null;
   for(const pos of needs){
-    const open=SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
+    const open=LEAGUE.slots[pos]-mine.squad.filter(s=>s.position===pos).length;
     const sc=scarcity(pos);
     const cands=pool.filter(p=>p.pos===pos&&!p.exit).map(p=>({p,est:fairRange(p),proj:projection(p).pts}))
       .filter(x=>x.est.low<=myMax).sort((a,b)=>b.proj-a.proj);
@@ -792,7 +899,7 @@ function recommendNomination(){
   const rivals=activeTeams().filter(t=>t.id!==mine.id).map(t=>{
     const k=rivalKeenness(teamManager(t),p,est);
     return {t, mgr:teamManager(t)||t.name,
-      open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
+      open:LEAGUE.slots[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
       max:affordableMax(t), keen:k.mult, tags:k.tags};
   }).filter(r=>r.open>0&&r.max>=est.low).sort((a,b)=>b.max*b.keen-a.max*a.keen);
   // price out the strongest LIKELY bidder, not a rich rival who never buys here
@@ -804,13 +911,13 @@ function recommendNomination(){
   const hedge=lurker?` Watch ${esc(lurker.mgr)} (can reach £${lurker.max.toFixed(2)}m but ${esc((lurker.tags[0]||"rarely bids here"))}).`:"";
   let openBid,reason,tactic;
   if(!rivals.length){
-    openBid=0.25; tactic="uncontested";
+    openBid=LEAGUE.minBid; tactic="uncontested";
     reason=`No one else needs a ${p.pos} they can afford — open the minimum and you win uncontested.`;
-  }else if(rivalMax<myMax&&rivalMax+0.25<=Math.min(myMax,est.high+0.5)){
-    openBid=Math.round((rivalMax+0.25)*4)/4; tactic="ruleout";
+  }else if(rivalMax<myMax&&rivalMax+LEAGUE.minBid<=Math.min(myMax,est.high+0.5)){
+    openBid=Math.round((rivalMax+LEAGUE.minBid)*4)/4; tactic="ruleout";
     reason=`Open <b>£${openBid}m</b> to rule out the ${likely.length||rivals.length} likely bidder${(likely.length||rivals.length)>1?"s":""} for a ${p.pos} — the keenest (${esc(topRival.mgr)}) can only reach £${rivalMax.toFixed(2)}m. They can't respond, so you win at your opening bid.${hedge}`;
   }else{
-    openBid=0.25; tactic="develop";
+    openBid=LEAGUE.minBid; tactic="develop";
     reason=`Can't cheaply price out the field yet (keenest rival ${esc(topRival.mgr)} can reach £${rivalMax.toFixed(2)}m). Open the minimum, let it develop, and bid up to £${Math.min(myMax,est.high).toFixed(2)}m if you want him.${hedge}`;
   }
   return {p,est,pos:best.pos,open:best.open,sc:best.sc,openBid,reason,tactic,rivals,myMax,
@@ -822,7 +929,7 @@ function recommendNomination(){
 function recommendDrain(){
   const mine=state.teams.find(t=>t.id===+$("myTeam").value);
   if(!mine)return null;
-  const myOpen=pos=>SLOTS[pos]-mine.squad.filter(s=>s.position===pos).length;
+  const myOpen=pos=>LEAGUE.slots[pos]-mine.squad.filter(s=>s.position===pos).length;
   let best=null;
   for(const p of poolRemaining()){
     if(p.exit)continue;                          // don't bait with a player who's leaving the PL
@@ -830,7 +937,7 @@ function recommendDrain(){
     if(est.mid<4)continue;                       // only pricey players drain meaningfully
     const rivals=activeTeams().filter(t=>t.id!==mine.id).map(t=>{
       const mgr=teamManager(t)||t.name, prof=profileOf(mgr), k=rivalKeenness(teamManager(t),p,est);
-      return {t,mgr,open:SLOTS[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
+      return {t,mgr,open:LEAGUE.slots[p.pos]-t.squad.filter(s=>s.position===p.pos).length,
         max:affordableMax(t),keen:k.mult,tags:k.tags,loyal:((prof.clubs||{})[p.team_short]||0)>0};
     }).filter(r=>r.open>0&&r.max>=est.low);
     const keenRivals=rivals.filter(r=>r.keen>=0.8);
@@ -850,7 +957,7 @@ function renderNomination(){
   const s1=latestSeasons(r.p)[0]||{};
   const tcol=r.tactic==="ruleout"?"var(--accent)":r.tactic==="uncontested"?"var(--blue)":"var(--gold)";
   return `
-  <div class="small" style="text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Nominate next — fills your ${r.pos} need (${SLOTS[r.pos]-r.open}/${SLOTS[r.pos]})</div>
+  <div class="small" style="text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Nominate next — fills your ${r.pos} need (${LEAGUE.slots[r.pos]-r.open}/${LEAGUE.slots[r.pos]})</div>
   <div class="auctionhead" style="margin:.3rem 0 .5rem"><span class="name">${esc(r.p.web_name)}</span>
     <span class="meta">${r.p.pos} · ${esc(r.p.team_short||"?")} · projects ${r.est.proj.pts} pts</span></div>
   <div class="verdict" style="border-left:3px solid ${tcol};background:var(--surface2)">
@@ -914,9 +1021,9 @@ function renderTeams(){
   // and obviously intact) but are dimmed and labelled — they're excluded
   // from liquidity, scarcity and rival predictions everywhere else.
   $("teamsList").innerHTML=state.teams.map(t=>`
-    <div class="teamrow mini"${t.active===false?' style="opacity:.45"':''}><span>${esc(t.name)}${t.active===false?' <span class="small" style="color:var(--hot)">· dropped out</span>':''} <span class="small">£${t.budget}m · ${t.squad.length}/15</span></span>
+    <div class="teamrow mini"${t.active===false?' style="opacity:.45"':''}><span>${esc(t.name)}${t.active===false?' <span class="small" style="color:var(--hot)">· dropped out</span>':''} <span class="small">£${t.budget}m · ${t.squad.length}/${LEAGUE.squad}</span></span>
     <select data-team="${t.id}">${opts(t.id)}</select>
-    <span class="small">${["GK","DEF","MID","FWD"].map(pos=>{const h=t.squad.filter(s=>s.position===pos).length;return `<span class="${h>=SLOTS[pos]?"gap-full":"gap-ok"}">${pos} ${h}/${SLOTS[pos]}</span>`}).join(" ")}</span></div>`).join("");
+    <span class="small">${["GK","DEF","MID","FWD"].map(pos=>{const h=t.squad.filter(s=>s.position===pos).length;return `<span class="${h>=LEAGUE.slots[pos]?"gap-full":"gap-ok"}">${pos} ${h}/${LEAGUE.slots[pos]}</span>`}).join(" ")}</span></div>`).join("");
   $("teamsList").querySelectorAll("select").forEach(sel=>{
     sel.addEventListener("change",()=>{teamMap[sel.dataset.team]=sel.value||undefined;
       localStorage.setItem("omtffl_teamMap",JSON.stringify(teamMap));renderAuction()});
@@ -932,7 +1039,56 @@ function renderLog(){
 }
 function renderRoom(){
   const liq=liquidity();
-  $("roomState").textContent=state.teams.length?`room: ${liq.label}`:"room: —";
+  $("roomState").textContent=state.teams.length?`${activeTeams().length} teams · ${liq.label}`:"room: —";
+}
+// ── league tab ─────────────────────────────────────────────────────────
+function renderLeague(){
+  if(!FPL)return;
+  const a=sizeAdjust(), teams=teamCount(), live=state.teams.length>0;
+  const dropped=state.teams.length-activeTeams().length;   // still listed, but out of the room
+  const num=(id,val,step,min)=>`<input id="${id}" type="number" value="${val}" step="${step}" min="${min}" style="width:5em">`;
+  const tint=m=>m>1.02?"var(--hot)":m<.98?"var(--accent)":"var(--muted)";
+  const rows=POSITIONS.map(pos=>{
+    // the effect varies sharply by tier, so show both ends of the drafted pool
+    const ranked=FPL.players.filter(p=>p.pos===pos).map(p=>projection(p).pts).sort((x,y)=>y-x);
+    const drafted=Math.min(Math.round(teams*LEAGUE.slots[pos]),ranked.length-1);
+    const elite=sizeMult(pos,ranked[0]||0), mid=sizeMult(pos,ranked[Math.floor(drafted/2)]||0);
+    return `<tr><td>${pos}</td><td>${num("lg_"+pos,LEAGUE.slots[pos],1,0)}</td>
+      <td>${teams*LEAGUE.slots[pos]}</td>
+      <td>${a.pos[pos].now} pts</td>
+      <td style="color:${tint(elite)}">×${elite.toFixed(2)}</td>
+      <td style="color:${tint(mid)}">×${mid.toFixed(2)}</td></tr>`;
+  }).join("");
+  $("leagueBody").innerHTML=`
+    ${leagueWarning?`<div class="nudge warn">${esc(leagueWarning)}</div>`:""}
+    <div class="plan-tot" style="margin-bottom:.6rem">
+      <div class="stat"><b class="${live?"g":""}">${teams}</b><span>teams ${live?(dropped?`(live — ${dropped} dropped out)`:"(live)"):"(assumed — not connected)"}</span></div>
+      <div class="stat"><b>£${LEAGUE.budget.toFixed(2)}m</b><span>budget ${live&&derivedBudget()?"(from room)":"(default)"}</span></div>
+      <div class="stat"><b>${LEAGUE.squad}</b><span>squad size</span></div>
+      <div class="stat"><b>${teams*LEAGUE.squad}</b><span>players drafted</span></div>
+    </div>
+    <table style="width:100%"><tr><th style="text-align:left">pos</th><th>slots/team</th><th>drafted</th><th>replacement</th><th>elite ×</th><th>mid ×</th></tr>${rows}</table>
+    <div class="small" style="margin-top:.5rem">Replacement = the best player at that position who goes <i>undrafted</i> at this league size — what you get for the minimum bid if you lose the auction. The × columns are what the ${LEAGUE.modelTeams}-team price model gets scaled by at each end of the drafted pool. In a smaller room the mid-tier falls hardest (replacement is close behind them, so they're barely worth bidding up) while elites hold their price. Total spend stays in proportion to the room's money — this moves where the money lands, it isn't a blanket discount.</div>
+    <div class="cform" style="margin-top:.7rem">
+      <label class="small">budget per team £${num("lg_budget",LEAGUE.budget,.5,1)}</label>
+      <label class="small">min bid £${num("lg_minbid",LEAGUE.minBid,.05,.05)}</label>
+      <label class="small">price model trained on ${num("lg_model",LEAGUE.modelTeams,1,2)} teams</label>
+      <button id="lgSave" class="primary">save</button>
+      <button id="lgReset">reset to defaults</button>
+    </div>
+    <div class="small">Budget is overwritten whenever the room reports a different one — set it here only for planning before you connect.</div>`;
+  $("lgSave").addEventListener("click",()=>{
+    POSITIONS.forEach(pos=>{const v=parseInt($("lg_"+pos).value,10);if(!isNaN(v)&&v>=0)LEAGUE.slots[pos]=v});
+    const b=parseFloat($("lg_budget").value), mb=parseFloat($("lg_minbid").value), mt=parseInt($("lg_model").value,10);
+    if(!isNaN(b)&&b>0)LEAGUE.budget=b;
+    if(!isNaN(mb)&&mb>0)LEAGUE.minBid=mb;
+    if(!isNaN(mt)&&mt>1)LEAGUE.modelTeams=mt;
+    saveLeague();toast(`league saved: ${LEAGUE.squad}-man squads, £${LEAGUE.budget}m`);renderAll();renderLeague();
+  });
+  $("lgReset").addEventListener("click",()=>{
+    localStorage.removeItem("omtffl_league");LEAGUE=loadLeague();leagueRev++;
+    toast("league reset to defaults");renderAll();renderLeague();
+  });
 }
 // budget shape vs the league's best-value drafters (their spend share)
 const TARGET={FWD:.37,MID:.38,DEF:.21,GK:.04};
@@ -941,27 +1097,27 @@ function projOf(playerId){const p=FPL.players.find(x=>x.id===playerId);return p?
 function renderPlan(){
   const mine=state.teams.find(t=>t.id===+$("myTeam").value);
   if(!mine){$("planBody").innerHTML="<div class='small'>Set “I am team…” in the header to track your build.</div>";return}
-  const spent=50-mine.budget;
+  const spent=LEAGUE.budget-mine.budget;
   const bud={FWD:0,MID:0,DEF:0,GK:0}, pts={FWD:0,MID:0,DEF:0,GK:0}, cnt={FWD:0,MID:0,DEF:0,GK:0};
   mine.squad.forEach(s=>{bud[s.position]+=s.price;pts[s.position]+=projOf(s.playerId);cnt[s.position]++;});
   const totPts=POS_ORDER.reduce((a,p)=>a+pts[p],0);
   let rows="";
   for(const pos of POS_ORDER){
-    const tgt=50*TARGET[pos], filled=cnt[pos], need=SLOTS[pos];
-    const scale=Math.max(50*TARGET.MID, bud[pos], tgt)*1.15;
+    const tgt=LEAGUE.budget*TARGET[pos], filled=cnt[pos], need=LEAGUE.slots[pos];
+    const scale=Math.max(LEAGUE.budget*TARGET.MID, bud[pos], tgt)*1.15;
     const fillW=Math.min(100,bud[pos]/scale*100), tgtW=Math.min(100,tgt/scale*100);
     rows+=`<div class="prow"><div class="top"><b style="color:var(--${pos==='FWD'?'accent2':pos==='MID'?'accent':pos==='DEF'?'blue':'accent3'})">${pos}</b>
       <span class="r">£${bud[pos].toFixed(2)}m spent · ${filled}/${need} · ${pts[pos]} pts <span class="small">(guide £${tgt.toFixed(1)}m)</span></span></div>
       <div class="ptrack"><div class="fill pf-${pos.toLowerCase()}" style="width:${fillW}%"></div><div class="tgt" style="left:${tgtW}%"></div></div></div>`;
   }
-  const slotsLeft=15-mine.squad.length, maxBid=mine.budget-(slotsLeft-1)*.25;
+  const slotsLeft=LEAGUE.squad-mine.squad.length, maxBid=mine.budget-(slotsLeft-1)*LEAGUE.minBid;
   const ppm=spent>0?(totPts/spent).toFixed(1):"—";
   // nudges from this drafter's known habits + the scarcity analysis
   const nudges=[];
   const midShare=spent>0?bud.MID/spent:0, defShare=spent>0?bud.DEF/spent:0;
   if(spent>=10&&midShare>0.46)nudges.push(["warn",`Midfield is ${Math.round(midShare*100)}% of your spend — your recurring leak. The winners sit ~38%. Ease off premium mids.`]);
   if(spent>=15&&defShare<0.14&&cnt.DEF<4)nudges.push(["",`Defence is only ${Math.round(defShare*100)}% — underweight. The value is in cheap 150+ projecting defenders; grab a couple before you're left with £0 fillers.`]);
-  const fwdOpen=SLOTS.FWD-cnt.FWD;
+  const fwdOpen=LEAGUE.slots.FWD-cnt.FWD;
   if(fwdOpen>0&&maxBid<8&&slotsLeft>fwdOpen)nudges.push(["warn",`${fwdOpen} FWD slot${fwdOpen>1?"s":""} open and only £${maxBid.toFixed(2)}m to bid — attack is a cliff. Don't get priced out of a starting striker.`]);
   if(bud.DEF>12)nudges.push(["warn",`£${bud.DEF.toFixed(2)}m on defence — that market is flat (points cap ~104). Redeploy toward attack.`]);
   if(!nudges.length&&spent>0)nudges.push(["good",`On shape. ${ppm} pts per £m so far — league value benchmark is ~26.`]);
@@ -1018,7 +1174,7 @@ function connect(){
     socket=io(url,{transports:["websocket","polling"]});
     socket.on("connect",()=>{$("connDot").className="dot live";$("connText").textContent="live";toast("connected to auction")});
     socket.on("disconnect",()=>{$("connDot").className="dot err";$("connText").textContent="lost"});
-    socket.on("stateUpdate",st=>{demo=null;state={...state,...st};renderAll()});
+    socket.on("stateUpdate",st=>{demo=null;state={...state,...st};syncLeagueFromRoom();renderAll()});
   };
   s.onerror=()=>{$("connDot").className="dot err";$("connText").textContent="unreachable";toast("could not reach server — check url / wifi")};
   document.head.appendChild(s);
@@ -1029,9 +1185,10 @@ function startDemo(){
     const sold=SALES.filter(s=>s.season==="2025-26"&&s.fpl_id&&s.cost!=null);
     const managers=[...new Set(sold.map(s=>s.manager))];
     demo={queue:[...sold].sort(()=>Math.random()-.5),i:0,
-      teams:managers.map((m,i)=>({id:i+1,name:m,budget:50,squad:[]}))};
+      teams:managers.map((m,i)=>({id:i+1,name:m,budget:LEAGUE.budget,squad:[]}))};
     teamMap={};demo.teams.forEach(t=>teamMap[t.id]=t.name);
     state={teams:demo.teams,currentAuction:null,soldPlayers:[]};
+    syncLeagueFromRoom();
     toast("demo: replaying the 25-26 draft in random order — keep pressing demo");
   }
   // confirm previous sale, nominate next
@@ -1047,7 +1204,7 @@ function startDemo(){
   if(demo.i>=demo.queue.length){state.currentAuction=null;renderAll();return toast("demo draft complete")}
   const sale=demo.queue[demo.i++];
   const p=FPL.players.find(x=>x.id===sale.fpl_id);
-  state.currentAuction={player:{...p,position:p.pos},currentBid:.25,leadingTeamId:null};
+  state.currentAuction={player:{...p,position:p.pos},currentBid:LEAGUE.minBid,leadingTeamId:null};
   renderAll();
 }
 // ── wire up ────────────────────────────────────────────────────────────
@@ -1057,6 +1214,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
   $("tab-"+b.dataset.tab).style.display="";
   if(b.dataset.tab==="gems")renderGems();
   if(b.dataset.tab==="plan")renderPlan();
+  if(b.dataset.tab==="league")renderLeague();
   if(b.dataset.tab==="managers")renderManagerProfiles();
   if(b.dataset.tab==="search")renderCustomList();
 }));

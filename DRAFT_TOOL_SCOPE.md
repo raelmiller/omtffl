@@ -97,6 +97,10 @@ the late-draft "just grab last year's points" problem.
 
 - [ ] 3 years of draft data (any format — spreadsheet, screenshots, etc.)
 - [ ] Confirm rules were the same all 3 years (16 teams, £50m, 2/5/5/3) —
-      the inflation model needs to know if not
+      the inflation model needs to know if not. For *this* year's shape the
+      advisor no longer needs telling: team count and budget come live from
+      the auction server, and a league-size multiplier rescales the
+      16-team price bands. Only the roster format (2/5/5/3) is a manual
+      setting, in the advisor's League tab.
 - [ ] Nomination rules (who puts players up, in what order)
 - [ ] Deployment choice for the auction app on draft night (LAN vs hosted)
