@@ -293,10 +293,27 @@ function setProjAdj(id,val){
   localStorage.setItem("omtffl_projadj",JSON.stringify(projAdj));
   renderAll();
 }
+// Forward-looking set-piece premium from the 2026/27 taker hierarchy.
+// Penalties dominate (a converted pen ≈ a goal); corners/free-kicks add
+// assist value. Position-scaled and capped so it nudges the projection
+// without distorting it. p.sp = {pen,dfk,ck} rank (1 = first-choice).
+function setPieceBonus(p){
+  const sp=p.sp; if(!sp)return {pts:0,parts:[]};
+  const pos=p.pos; let b=0; const parts=[];
+  if(sp.pen===1){b+=pos==="MID"?10:pos==="FWD"?8:pos==="DEF"?6:0; if(b)parts.push("penalties");}
+  else if(sp.pen===2)b+=2;
+  if(sp.ck===1){b+=pos==="FWD"?3:5; parts.push("corners");}
+  else if(sp.ck===2)b+=2; else if(sp.ck===3)b+=1;
+  if(sp.dfk===1){b+=4; parts.push("free kicks");}
+  else if(sp.dfk===2)b+=1;
+  return {pts:Math.min(b,12),parts};
+}
 function projection(p){
   if(p.custom)return {pts:(projAdj[p.id]!=null?projAdj[p.id]:p.manualProj)||0,basis:`your research${p.note?": "+p.note:""}`,isCustom:true,manual:projAdj[p.id]!=null};
   if(projAdj[p.id]!=null)return {pts:projAdj[p.id],basis:"your estimate (data says "+modelProjection(p).pts+")",manual:true};
-  return modelProjection(p);
+  const m=modelProjection(p), sp=setPieceBonus(p);
+  if(sp.pts>0)return {...m,pts:m.pts+sp.pts,spBonus:sp.pts,basis:m.basis+` · +${sp.pts} set-piece premium (${sp.parts.join(", ")})`};
+  return m;
 }
 // new-to-PL players have no history: estimate from FPL's own price, using
 // the median projection of same-position peers priced within £0.5m. FPL
@@ -601,9 +618,15 @@ function deriveIntel(p){
     if(dc)bits.push(`${dc} DefCon`);
   }
   const sp=[];
-  if(p.penalties_order===1)sp.push("penalties");
-  if((p.corners_and_indirect_freekicks_order||9)<=2)sp.push("corners");
-  if((p.direct_freekicks_order||9)<=2)sp.push("free kicks");
+  if(p.sp){
+    if(p.sp.pen)sp.push(p.sp.pen===1?"penalties":`penalties (#${p.sp.pen})`);
+    if(p.sp.ck&&p.sp.ck<=3)sp.push(p.sp.ck===1?"corners":`corners (#${p.sp.ck})`);
+    if(p.sp.dfk&&p.sp.dfk<=2)sp.push(p.sp.dfk===1?"free kicks":`free kicks (#${p.sp.dfk})`);
+  }else{
+    if(p.penalties_order===1)sp.push("penalties");
+    if((p.corners_and_indirect_freekicks_order||9)<=2)sp.push("corners");
+    if((p.direct_freekicks_order||9)<=2)sp.push("free kicks");
+  }
   if(sp.length)bits.push("on "+sp.join(" & "));
   if(p.status&&p.status!=="a")bits.push(`⚠ ${p.news||p.status}`);
   return bits.join(" · ")+".";
@@ -616,9 +639,15 @@ function factsheet(p,currentBid,leadingTeam){
   const rivals=state.teams.length?rivalScores(p,est):[];
   const spn=(FPL.set_piece_notes[p.team]||[]).join(" ");
   const flags=[];
-  if(p.penalties_order===1)flags.push("penalties");
-  if((p.corners_and_indirect_freekicks_order||9)<=2)flags.push("corners");
-  if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
+  if(p.sp){
+    if(p.sp.pen)flags.push(p.sp.pen===1?"penalties":`penalties (#${p.sp.pen})`);
+    if(p.sp.ck&&p.sp.ck<=3)flags.push(p.sp.ck===1?"corners":`corners (#${p.sp.ck})`);
+    if(p.sp.dfk&&p.sp.dfk<=2)flags.push(p.sp.dfk===1?"free kicks":`free kicks (#${p.sp.dfk})`);
+  }else{
+    if(p.penalties_order===1)flags.push("penalties");
+    if((p.corners_and_indirect_freekicks_order||9)<=2)flags.push("corners");
+    if((p.direct_freekicks_order||9)<=2)flags.push("free kicks");
+  }
   if(p.status&&p.status!=="a")flags.push({t:`status: ${esc(p.news||p.status)}`,injury:true});
   if(est.proj.manual)flags.push({t:`manual estimate — data said ${modelProjection(p).pts}`,injury:true});
   if(est.proj.isCustom){
@@ -636,6 +665,7 @@ function factsheet(p,currentBid,leadingTeam){
   if(est.proj.unproven&&!est.proj.manual)flags.push(`reduced minutes, no prior full PL season — taken at face value; override up if you expect him to start`);
   if(est.pp<est.proj.pts-5)flags.push(`priced below a ${est.proj.pts}-pt tier — FPL rates him £${((p.now_cost||0)/10).toFixed(1)}m, not a marquee`);
   const bs=blindSpot(p,est); if(bs)flags.push({t:bs,edge:true});
+  if(est.proj.spBonus)flags.push({t:`+${est.proj.spBonus} proj pts baked in for set-piece duty`,edge:true});
   const scale=Math.max(est.high*1.5,currentBid*1.2,8);
   const pct=x=>Math.min(98,x/scale*100);
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);

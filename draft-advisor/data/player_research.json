@@ -1031,5 +1031,603 @@
    "intel": "7g 5a in 32 starts on corners — a nailed Liverpool attacker with a solid floor, though output can be streaky."
   }
  ],
- "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions."
+ "_exit_note": "'exit' = player still in the FPL dataset but (near-)certain to leave the Premier League this window — surfaced as a red 'don't bid' banner and excluded from your own nominate/gems suggestions.",
+ "set_pieces": [
+  {
+   "web_name": "Saka",
+   "club": "ARS",
+   "pen": 1,
+   "dfk": 2,
+   "ck": 2
+  },
+  {
+   "web_name": "Gyökeres",
+   "club": "ARS",
+   "pen": 2
+  },
+  {
+   "web_name": "Ødegaard",
+   "club": "ARS",
+   "pen": 3
+  },
+  {
+   "web_name": "Rice",
+   "club": "ARS",
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Eze",
+   "club": "ARS",
+   "dfk": 3
+  },
+  {
+   "web_name": "Tzolis",
+   "club": "ARS",
+   "ck": 3
+  },
+  {
+   "web_name": "Madueke",
+   "club": "ARS",
+   "ck": 4
+  },
+  {
+   "web_name": "Buendía",
+   "club": "AVL",
+   "pen": 1,
+   "dfk": 1
+  },
+  {
+   "web_name": "Watkins",
+   "club": "AVL",
+   "pen": 2
+  },
+  {
+   "web_name": "Cash",
+   "club": "AVL",
+   "ck": 1
+  },
+  {
+   "web_name": "Bailey",
+   "club": "AVL",
+   "ck": 2
+  },
+  {
+   "web_name": "Kluivert",
+   "club": "BOU",
+   "pen": 1,
+   "dfk": 2
+  },
+  {
+   "web_name": "Kroupi.Jr",
+   "club": "BOU",
+   "pen": 2
+  },
+  {
+   "web_name": "Tavernier",
+   "club": "BOU",
+   "pen": 3,
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Brooks",
+   "club": "BOU",
+   "dfk": 3,
+   "ck": 4
+  },
+  {
+   "web_name": "Scott",
+   "club": "BOU",
+   "dfk": 4,
+   "ck": 2
+  },
+  {
+   "web_name": "Cook",
+   "club": "BOU",
+   "ck": 3
+  },
+  {
+   "web_name": "Christie",
+   "club": "BOU",
+   "ck": 5
+  },
+  {
+   "web_name": "Thiago",
+   "club": "BRE",
+   "pen": 1
+  },
+  {
+   "web_name": "Schade",
+   "club": "BRE",
+   "pen": 2
+  },
+  {
+   "web_name": "Carvalho",
+   "club": "BRE",
+   "pen": 3
+  },
+  {
+   "web_name": "Jensen",
+   "club": "BRE",
+   "pen": 4,
+   "dfk": 2,
+   "ck": 1
+  },
+  {
+   "web_name": "Lewis-Potter",
+   "club": "BRE",
+   "dfk": 1
+  },
+  {
+   "web_name": "Damsgaard",
+   "club": "BRE",
+   "dfk": 3
+  },
+  {
+   "web_name": "Janelt",
+   "club": "BRE",
+   "ck": 2
+  },
+  {
+   "web_name": "O.Dango",
+   "club": "BRE",
+   "ck": 3
+  },
+  {
+   "web_name": "Groß",
+   "club": "BHA",
+   "pen": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "O'Riley",
+   "club": "BHA",
+   "pen": 2
+  },
+  {
+   "web_name": "De Cuyper",
+   "club": "BHA",
+   "dfk": 1
+  },
+  {
+   "web_name": "Dunk",
+   "club": "BHA",
+   "dfk": 2
+  },
+  {
+   "web_name": "Gomez",
+   "club": "BHA",
+   "dfk": 3
+  },
+  {
+   "web_name": "Boscagli",
+   "club": "BHA",
+   "ck": 2
+  },
+  {
+   "web_name": "Minteh",
+   "club": "BHA",
+   "ck": 3
+  },
+  {
+   "web_name": "Palmer",
+   "club": "CHE",
+   "pen": 1,
+   "dfk": 3
+  },
+  {
+   "web_name": "Enzo",
+   "club": "CHE",
+   "pen": 2,
+   "dfk": 2,
+   "ck": 3
+  },
+  {
+   "web_name": "Estêvão",
+   "club": "CHE",
+   "pen": 3,
+   "ck": 4
+  },
+  {
+   "web_name": "James",
+   "club": "CHE",
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Neto",
+   "club": "CHE",
+   "dfk": 4,
+   "ck": 2
+  },
+  {
+   "web_name": "Wright",
+   "club": "COV",
+   "pen": 1
+  },
+  {
+   "web_name": "Torp",
+   "club": "COV",
+   "pen": 2,
+   "dfk": 1,
+   "ck": 2
+  },
+  {
+   "web_name": "Thomas",
+   "club": "COV",
+   "pen": 3,
+   "dfk": 2
+  },
+  {
+   "web_name": "Grimes",
+   "club": "COV",
+   "pen": 4,
+   "ck": 1
+  },
+  {
+   "web_name": "van Ewijk",
+   "club": "COV",
+   "dfk": 3
+  },
+  {
+   "web_name": "Rudoni",
+   "club": "COV",
+   "ck": 3
+  },
+  {
+   "web_name": "Mateta",
+   "club": "CRY",
+   "pen": 1
+  },
+  {
+   "web_name": "Sarr",
+   "club": "CRY",
+   "pen": 2
+  },
+  {
+   "web_name": "Devenny",
+   "club": "CRY",
+   "pen": 3,
+   "dfk": 1
+  },
+  {
+   "web_name": "Wharton",
+   "club": "CRY",
+   "ck": 1
+  },
+  {
+   "web_name": "Hughes",
+   "club": "CRY",
+   "ck": 2
+  },
+  {
+   "web_name": "Kamada",
+   "club": "CRY",
+   "ck": 3
+  },
+  {
+   "web_name": "Ndiaye",
+   "club": "EVE",
+   "pen": 1
+  },
+  {
+   "web_name": "Garner",
+   "club": "EVE",
+   "pen": 2,
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Barry",
+   "club": "EVE",
+   "pen": 3
+  },
+  {
+   "web_name": "Dewsbury-Hall",
+   "club": "EVE",
+   "ck": 2
+  },
+  {
+   "web_name": "Muniz",
+   "club": "FUL",
+   "pen": 1
+  },
+  {
+   "web_name": "Iwobi",
+   "club": "FUL",
+   "pen": 2,
+   "ck": 1
+  },
+  {
+   "web_name": "Robinson",
+   "club": "FUL",
+   "pen": 3
+  },
+  {
+   "web_name": "McBurnie",
+   "club": "HUL",
+   "pen": 1
+  },
+  {
+   "web_name": "Slater",
+   "club": "HUL",
+   "ck": 1
+  },
+  {
+   "web_name": "Giles",
+   "club": "HUL",
+   "ck": 2
+  },
+  {
+   "web_name": "Clarke",
+   "club": "IPS",
+   "pen": 1,
+   "ck": 3
+  },
+  {
+   "web_name": "Philogene",
+   "club": "IPS",
+   "pen": 2,
+   "ck": 4
+  },
+  {
+   "web_name": "Hirst",
+   "club": "IPS",
+   "pen": 3
+  },
+  {
+   "web_name": "Núñez",
+   "club": "IPS",
+   "dfk": 1,
+   "ck": 2
+  },
+  {
+   "web_name": "Davis",
+   "club": "IPS",
+   "ck": 1
+  },
+  {
+   "web_name": "Calvert-Lewin",
+   "club": "LEE",
+   "pen": 1
+  },
+  {
+   "web_name": "Nmecha",
+   "club": "LEE",
+   "pen": 2
+  },
+  {
+   "web_name": "Piroe",
+   "club": "LEE",
+   "pen": 3
+  },
+  {
+   "web_name": "Stach",
+   "club": "LEE",
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Longstaff",
+   "club": "LEE",
+   "dfk": 2,
+   "ck": 2
+  },
+  {
+   "web_name": "Justin",
+   "club": "LEE",
+   "ck": 3
+  },
+  {
+   "web_name": "Gruev",
+   "club": "LEE",
+   "ck": 4
+  },
+  {
+   "web_name": "Szoboszlai",
+   "club": "LIV",
+   "pen": 1,
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Gakpo",
+   "club": "LIV",
+   "pen": 2,
+   "ck": 2
+  },
+  {
+   "web_name": "Mac Allister",
+   "club": "LIV",
+   "pen": 3
+  },
+  {
+   "web_name": "Wirtz",
+   "club": "LIV",
+   "dfk": 2,
+   "ck": 3
+  },
+  {
+   "web_name": "Haaland",
+   "club": "MCI",
+   "pen": 1
+  },
+  {
+   "web_name": "Marmoush",
+   "club": "MCI",
+   "pen": 2,
+   "dfk": 1,
+   "ck": 3
+  },
+  {
+   "web_name": "Doku",
+   "club": "MCI",
+   "pen": 3
+  },
+  {
+   "web_name": "Matheus N.",
+   "club": "MCI",
+   "pen": 4
+  },
+  {
+   "web_name": "Cherki",
+   "club": "MCI",
+   "dfk": 2,
+   "ck": 1
+  },
+  {
+   "web_name": "Reijnders",
+   "club": "MCI",
+   "dfk": 3,
+   "ck": 2
+  },
+  {
+   "web_name": "Semenyo",
+   "club": "MCI",
+   "dfk": 4
+  },
+  {
+   "web_name": "Foden",
+   "club": "MCI",
+   "ck": 4
+  },
+  {
+   "web_name": "Mbeumo",
+   "club": "MUN",
+   "dfk": 2,
+   "ck": 2
+  },
+  {
+   "web_name": "Amad",
+   "club": "MUN",
+   "ck": 3
+  },
+  {
+   "web_name": "Woltemade",
+   "club": "NEW",
+   "pen": 1
+  },
+  {
+   "web_name": "Hall",
+   "club": "NEW",
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Schär",
+   "club": "NEW",
+   "dfk": 2
+  },
+  {
+   "web_name": "Elanga",
+   "club": "NEW",
+   "ck": 2
+  },
+  {
+   "web_name": "Wood",
+   "club": "NFO",
+   "pen": 1
+  },
+  {
+   "web_name": "Igor Jesus",
+   "club": "NFO",
+   "pen": 2
+  },
+  {
+   "web_name": "McAtee",
+   "club": "NFO",
+   "pen": 3
+  },
+  {
+   "web_name": "Gibbs-White",
+   "club": "NFO",
+   "pen": 4,
+   "dfk": 1
+  },
+  {
+   "web_name": "Murillo",
+   "club": "NFO",
+   "dfk": 2
+  },
+  {
+   "web_name": "Hutchinson",
+   "club": "NFO",
+   "ck": 1
+  },
+  {
+   "web_name": "N.Williams",
+   "club": "NFO",
+   "ck": 2
+  },
+  {
+   "web_name": "Ndoye",
+   "club": "NFO",
+   "ck": 3
+  },
+  {
+   "web_name": "Diarra",
+   "club": "SUN",
+   "pen": 1
+  },
+  {
+   "web_name": "E.Le Fée",
+   "club": "SUN",
+   "pen": 2,
+   "dfk": 2,
+   "ck": 3
+  },
+  {
+   "web_name": "Xhaka",
+   "club": "SUN",
+   "dfk": 1,
+   "ck": 1
+  },
+  {
+   "web_name": "Hume",
+   "club": "SUN",
+   "ck": 2
+  },
+  {
+   "web_name": "Solanke",
+   "club": "TOT",
+   "pen": 1
+  },
+  {
+   "web_name": "Kudus",
+   "club": "TOT",
+   "pen": 2,
+   "dfk": 3
+  },
+  {
+   "web_name": "Xavi",
+   "club": "TOT",
+   "pen": 3,
+   "dfk": 2,
+   "ck": 2
+  },
+  {
+   "web_name": "Richarlison",
+   "club": "TOT",
+   "pen": 4
+  },
+  {
+   "web_name": "Pedro Porro",
+   "club": "TOT",
+   "dfk": 1,
+   "ck": 3
+  },
+  {
+   "web_name": "Tel",
+   "club": "TOT",
+   "ck": 1
+  },
+  {
+   "web_name": "B.Fernandes",
+   "club": "MUN",
+   "pen": 1,
+   "dfk": 1,
+   "ck": 1
+  }
+ ]
 }

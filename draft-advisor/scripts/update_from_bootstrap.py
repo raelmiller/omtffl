@@ -115,7 +115,14 @@ def main():
     champ_file = DATA / "player_research.json"
     champ_hits = 0
     if champ_file.exists():
-        champ = json.loads(champ_file.read_text()).get("players", [])
+        research = json.loads(champ_file.read_text())
+        champ = research.get("players", [])
+        sp_by_key = {(e["web_name"], e.get("club")): {k: e[k] for k in ("pen", "dfk", "ck") if k in e}
+                     for e in research.get("set_pieces", [])}
+        for p in players:
+            e = sp_by_key.get((p["web_name"], p.get("team_short")))
+            if e:
+                p["sp"] = e
         by_key = {(c["web_name"], c.get("club")): c for c in champ}
         for p in players:
             c = by_key.get((p["web_name"], p.get("team_short")))
