@@ -578,9 +578,22 @@ function fairRange(p){
 }
 function teamManager(t){ // mapped dossier name for an auction team
   const manual=teamMap[t.id];if(manual)return manual;
-  const tn=(t.name||"").toLowerCase();
-  const hit=DOSSIERS.find(d=>tn.includes(d.name.toLowerCase()));
+  const tn=nrm(t.name);                       // accent/punctuation-insensitive
+  if(!tn)return null;
+  const words=new Set(tn.split(" "));
+  const hit=DOSSIERS.find(d=>{const dn=nrm(d.name);return words.has(dn)||tn.includes(dn)});
   return hit?hit.name:null;
+}
+// A team nobody has matched to a league manager is a silent hole: their buy
+// history, club affinity, spend shape and anything set in the Managers tab all
+// resolve to nothing, and they show up in the rival list as a name with no
+// read. Worth saying so loudly rather than quietly degrading.
+function unmappedTeams(){return activeTeams().filter(t=>!teamManager(t))}
+function unmappedWarning(where){
+  const u=unmappedTeams();
+  if(!u.length)return "";
+  return `<div class="nudge warn"><b>${u.length} team${u.length>1?"s":""} not matched to a manager:</b> ${u.map(t=>esc(t.name)).join(", ")}.
+    Until ${u.length>1?"they are":"it is"} mapped in the <b>Teams</b> tab, their auction history and anything you set in the Managers tab is ignored${where==="managers"?" — including the profiles below":""}.</div>`;
 }
 function draftHistoryOf(p){
   return SALES.filter(s=>s.fpl_id===p.id).map(s=>({season:s.season,price:s.cost,buyer:s.manager}));
@@ -661,7 +674,8 @@ function rivalScores(p,est){
       const past=SALES.find(s=>s.fpl_id===p.id&&s.manager===mgrName);
       if(past){score+=20;why.push(`bought him in ${past.season}`)}
     }
-    out.push({team:t,mgr:mgrName,score:Math.round(score),why:why.slice(0,3).join(" · ")});
+    if(!mgrName)why.push("\u26a0 not mapped to a manager — no history or profile");
+    out.push({team:t,mgr:mgrName,score:Math.round(score),why:why.slice(0,3).join(" \u00b7 ")});
   });
   // The meter reads as a share of the keenest rival rather than an absolute
   // capped at 99 — with five slots open half the room used to peg at a full
@@ -1152,11 +1166,12 @@ function renderSearch(){
 let teamMap=JSON.parse(localStorage.getItem("omtffl_teamMap")||"{}");
 function renderTeams(){
   if(!state.teams.length){$("teamsList").innerHTML="<div class='small'>connect to the auction server to see teams</div>";return}
+  const warn=unmappedWarning("teams");
   const opts=n=>`<option value="">– unmapped –</option>`+DOSSIERS.map(d=>`<option ${teamMap[n]===d.name?"selected":""}>${esc(d.name)}</option>`).join("");
   // Dropped-out teams stay listed (so the manager mapping is still visible
   // and obviously intact) but are dimmed and labelled — they're excluded
   // from liquidity, scarcity and rival predictions everywhere else.
-  $("teamsList").innerHTML=state.teams.map(t=>`
+  $("teamsList").innerHTML=warn+state.teams.map(t=>`
     <div class="teamrow mini"${t.active===false?' style="opacity:.45"':''}><span>${esc(t.name)}${t.active===false?' <span class="small" style="color:var(--hot)">· dropped out</span>':''} <span class="small">£${t.budget}m · ${t.squad.length}/${LEAGUE.squad}</span></span>
     <select data-team="${t.id}">${opts(t.id)}</select>
     <span class="small">${["GK","DEF","MID","FWD"].map(pos=>{const h=t.squad.filter(s=>s.position===pos).length;return `<span class="${h>=LEAGUE.slots[pos]?"gap-full":"gap-ok"}">${pos} ${h}/${LEAGUE.slots[pos]}</span>`}).join(" ")}</span></div>`).join("");
@@ -1274,7 +1289,7 @@ function renderPlan(){
 const STYLE_TAGS=[["marquee","chases marquees"],["value","value hunter"],["hoarder","hoards, strikes late"],["aggressive","aggressive"]];
 function renderManagerProfiles(){
   const names=[...new Set([...(DOSSIERS||[]).map(d=>d.name),...Object.keys(mgrProfiles)])].sort();
-  $("managersList").innerHTML=names.map(name=>{
+  $("managersList").innerHTML=unmappedWarning("managers")+names.map(name=>{
     const pr=profileOf(name);
     const loyal=Object.entries(pr.clubs||{}).filter(([,v])=>v>0).map(([c])=>c).join(",");
     const averse=Object.entries(pr.clubs||{}).filter(([,v])=>v<0).map(([c])=>c).join(",");
