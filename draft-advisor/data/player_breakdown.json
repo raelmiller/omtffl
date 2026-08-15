@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-14T12:00:08Z",
+  "fpl_baked_at": "2026-08-15T05:27:24Z",
   "sales": 645,
   "unique_players": 389,
   "matched_to_fpl": 253
@@ -3428,7 +3428,7 @@
    "xgi": "1.57",
    "penalties": false,
    "corners": false,
-   "freekicks": false,
+   "freekicks": true,
    "sales": {
     "2023-24": {
      "price": 1.5,
@@ -3513,7 +3513,7 @@
    "status": "a",
    "last_season_points": 65,
    "xgi": "2.65",
-   "penalties": true,
+   "penalties": false,
    "corners": false,
    "freekicks": false,
    "sales": {
@@ -5529,7 +5529,7 @@
    "display": "Minteh",
    "position": "MID",
    "current_club": "BHA",
-   "status": "a",
+   "status": "i",
    "last_season_points": 117,
    "xgi": "8.87",
    "penalties": false,
@@ -7683,7 +7683,7 @@
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
-   "penalties": false,
+   "penalties": true,
    "corners": false,
    "freekicks": false,
    "sales": {
@@ -8275,7 +8275,7 @@
    "last_season_points": 42,
    "xgi": "3.57",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2024-25": {
@@ -9294,7 +9294,7 @@
    "display": "Enes \u00dcnal",
    "position": "FWD",
    "current_club": "BOU",
-   "status": "a",
+   "status": "u",
    "last_season_points": 27,
    "xgi": "2.07",
    "penalties": false,
