@@ -326,6 +326,10 @@ const CUSTOM_SEED=[    // players not in the FPL data that might get nominated (
    aliases:["Valentin Barco","Valentín Barco","Colo Barco"],
    note:"New Chelsea signing (from Strasbourg); LB/CM, rotation risk early. Auto-updates once FPL adds him.",
    stats:{league:"Ligue 1 25/26",apps:43,goals:3,assists:9}},
+  {id:"seed_barcola",name:"Barcola",club:"LIV",pos:"MID",proj:135,
+   aliases:["Bradley Barcola","Brad Barcola"],
+   note:"PSG winger, 23 — agreement in principle with Liverpool (Arsenal, Chelsea, City, Villa also keen); PSG valued him ~£145m. NOT yet in FPL, so club shown as LIV on the assumption the move completes. 11g 1a in 29 Ligue 1 games (0.57 goals/90) plus 2g 4a in the Champions League — a genuine goal threat, but the low assist count, first-season adaptation and an unfinished deal are all real risk. Treat 135 as a wide-error estimate and don't chase the hype price.",
+   stats:{league:"Ligue 1 25/26",apps:29,goals:11,assists:1}},
 ];
 let userCustom=JSON.parse(localStorage.getItem("omtffl_custom")||"[]");
 function allCustom(){return [...CUSTOM_SEED,...userCustom]}
