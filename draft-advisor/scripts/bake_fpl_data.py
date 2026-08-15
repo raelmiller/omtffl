@@ -115,10 +115,15 @@ def main():
         champ = research.get("players", [])
         sp_by_key = {(e["web_name"], e.get("club")): {k: e[k] for k in ("pen", "dfk", "ck") if k in e}
                      for e in research.get("set_pieces", [])}
+        role_by_key = {(e["web_name"], e.get("club")): e["role"]
+                       for e in research.get("roles", []) if e.get("role")}
         for p in players:
             e = sp_by_key.get((p["web_name"], p.get("team_short")))
             if e:
                 p["sp"] = e
+            r = role_by_key.get((p["web_name"], p.get("team_short")))
+            if r:
+                p["role"] = r
         by_key = {(c["web_name"], c.get("club")): c for c in champ}
         for p in players:
             c = by_key.get((p["web_name"], p.get("team_short")))

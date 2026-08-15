@@ -428,6 +428,7 @@ function adjPts(h,proven,maxUp){
 // injury, so cap how aggressively we scale a part-season up.
 function competitionCap(p){
   if(!FPL||!p.team_short)return MAX_UP;
+  if(roleOf(p)==="first")return MAX_UP;   // he wins the shirt; rivals are irrelevant
   const mins=q=>{const h=latestSeasons(q)[0];return h?(h.minutes||0):0};
   const rivals=FPL.players.filter(q=>q.id!==p.id&&!q.custom&&q.team_short===p.team_short
     &&q.pos===p.pos&&mins(q)>=900).length;
@@ -487,7 +488,12 @@ function modelProjection(p){
   // a rotation option for seasons. Only the last two campaigns count as
   // evidence that he still wins a shirt when fit.
   const yr1=startYear(s1.season_name);
-  const proven=hs.slice(1).some(h=>(h.minutes||0)>=PROVEN_MIN&&yr1-startYear(h.season_name)<=2);
+  // An explicit "first choice" role IS the proven-starter signal: it says he
+  // wins the shirt whenever fit, so a part-season was injury, not rotation,
+  // and should be scaled up even when recent minutes can't show it (chronic
+  // injury cases like Reece James, who start every game they're available for).
+  const proven=roleOf(p)==="first"
+    ||hs.slice(1).some(h=>(h.minutes||0)>=PROVEN_MIN&&yr1-startYear(h.season_name)<=2);
   const cap=competitionCap(p);
   const a1=adjPts(s1,proven,cap), a2=s2?adjPts(s2,proven,cap):null;
   const minAdj=a1!==s1.total_points;   // latest season was scaled up (injury/rotation, proven)

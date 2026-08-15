@@ -1629,5 +1629,1368 @@
    "dfk": 1,
    "ck": 1
   }
- ]
+ ],
+ "roles": [
+  {
+   "web_name": "Saka",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Gyökeres",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "J.Timber",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Saliba",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Ødegaard",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Eze",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Raya",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Rice",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Gabriel",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Bruno G.",
+   "club": "ARS",
+   "role": "first"
+  },
+  {
+   "web_name": "Havertz",
+   "club": "ARS",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Madueke",
+   "club": "ARS",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Martinelli",
+   "club": "ARS",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Tzolis",
+   "club": "ARS",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Watkins",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "McGinn",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Onana",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Kamara",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Martinez",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Gomes",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Digne",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Konsa",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Cash",
+   "club": "AVL",
+   "role": "first"
+  },
+  {
+   "web_name": "Buendía",
+   "club": "AVL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Garnacho",
+   "club": "AVL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Bogarde",
+   "club": "AVL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Barkley",
+   "club": "AVL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Bailey",
+   "club": "AVL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Abraham",
+   "club": "AVL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Madjo",
+   "club": "AVL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Manzambi",
+   "club": "AVL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Mitoma",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Minteh",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Baleba",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Verbruggen",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Ayari",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Wieffer",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Gomez",
+   "club": "BHA",
+   "role": "first"
+  },
+  {
+   "web_name": "Groß",
+   "club": "BHA",
+   "role": "rotation"
+  },
+  {
+   "web_name": "O'Riley",
+   "club": "BHA",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Hinshelwood",
+   "club": "BHA",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Georginio",
+   "club": "BHA",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Buonanotte",
+   "club": "BHA",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Tzimas",
+   "club": "BHA",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Kostoulas",
+   "club": "BHA",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Truffert",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Evanilson",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Scott",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Tavernier",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Hill",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Petrović",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Silva",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Sanchez",
+   "club": "BOU",
+   "role": "first"
+  },
+  {
+   "web_name": "Rayan",
+   "club": "BOU",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Kluivert",
+   "club": "BOU",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Cook",
+   "club": "BOU",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Diakité",
+   "club": "BOU",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Kroupi.Jr",
+   "club": "BOU",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Gannon-Doak",
+   "club": "BOU",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Enes Ünal",
+   "club": "BOU",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Milosavljević",
+   "club": "BOU",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Thiago",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Schade",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Anthony",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Collins",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Jensen",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Kelleher",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Van den Berg",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "O.Dango",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Damsgaard",
+   "club": "BRE",
+   "role": "first"
+  },
+  {
+   "web_name": "Lewis-Potter",
+   "club": "BRE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Wilson",
+   "club": "BRE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Janelt",
+   "club": "BRE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Sangaré",
+   "club": "BRE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Milambo",
+   "club": "BRE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Carvalho",
+   "club": "BRE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Palmer",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "James",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "João Pedro",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Enzo",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Neto",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Lacroix",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Caicedo",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Rogers",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Sánchez",
+   "club": "CHE",
+   "role": "first"
+  },
+  {
+   "web_name": "Estêvão",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Welbeck",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Gittens",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Palestra",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Chavarria",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Barco",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Mudryk",
+   "club": "CHE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "N.Jackson",
+   "club": "CHE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Chalobah",
+   "club": "CHE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Anselmino",
+   "club": "CHE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Penders",
+   "club": "CHE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Lavia",
+   "club": "CHE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Sarr",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Mateta",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Muñoz",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Wharton",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Henderson",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Richards",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Yeremy",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Strand Larsen",
+   "club": "CRY",
+   "role": "first"
+  },
+  {
+   "web_name": "Guessand",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "McNeil",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Lerma",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Kamada",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Canvot",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Hughes",
+   "club": "CRY",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Nketiah",
+   "club": "CRY",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Tomiyasu",
+   "club": "CRY",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Branthwaite",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Tarkowski",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Ndiaye",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Garner",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Pickford",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Dewsbury-Hall",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Barry",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Nørgaard",
+   "club": "EVE",
+   "role": "first"
+  },
+  {
+   "web_name": "Johnson",
+   "club": "EVE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Beto",
+   "club": "EVE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "George",
+   "club": "EVE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Dibling",
+   "club": "EVE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Travers",
+   "club": "EVE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Hackney",
+   "club": "EVE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Iwobi",
+   "club": "FUL",
+   "role": "first"
+  },
+  {
+   "web_name": "Andersen",
+   "club": "FUL",
+   "role": "first"
+  },
+  {
+   "web_name": "Berge",
+   "club": "FUL",
+   "role": "first"
+  },
+  {
+   "web_name": "Leno",
+   "club": "FUL",
+   "role": "first"
+  },
+  {
+   "web_name": "Robinson",
+   "club": "FUL",
+   "role": "first"
+  },
+  {
+   "web_name": "Smith Rowe",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Kevin",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Bobb",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "King",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Muniz",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Palacios",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Charles",
+   "club": "FUL",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Cairney",
+   "club": "FUL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Lecomte",
+   "club": "FUL",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Wilson",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Stach",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Calvert-Lewin",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Aaronson",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Ampadu",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Bijol",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Rodon",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Muharemović",
+   "club": "LEE",
+   "role": "first"
+  },
+  {
+   "web_name": "Okafor",
+   "club": "LEE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Nmecha",
+   "club": "LEE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Longstaff",
+   "club": "LEE",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Gnonto",
+   "club": "LEE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "James",
+   "club": "LEE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Harrison",
+   "club": "LEE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Gelhardt",
+   "club": "LEE",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Isak",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Wirtz",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Gakpo",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Szoboszlai",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Virgil",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Gravenberch",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Mac Allister",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "A.Becker",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Kerkez",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Frimpong",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Araujo",
+   "club": "LIV",
+   "role": "first"
+  },
+  {
+   "web_name": "Ekitiké",
+   "club": "LIV",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Jacquet",
+   "club": "LIV",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Ngumoha",
+   "club": "LIV",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Chiesa",
+   "club": "LIV",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Leoni",
+   "club": "LIV",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Haaland",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Semenyo",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Foden",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Anderson",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Guéhi",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Matheus N.",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "O'Reilly",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Rodrigo",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Gvardiol",
+   "club": "MCI",
+   "role": "first"
+  },
+  {
+   "web_name": "Cherki",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Doku",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Marmoush",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Grealish",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Savinho",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Reijnders",
+   "club": "MCI",
+   "role": "rotation"
+  },
+  {
+   "web_name": "B.Fernandes",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Mbeumo",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Cunha",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Šeško",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Amad",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Lammens",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "De Ligt",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Andrey Santos",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Shaw",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Maguire",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Dalot",
+   "club": "MUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Tielemans",
+   "club": "MUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Dorgu",
+   "club": "MUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Mount",
+   "club": "MUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Mainoo",
+   "club": "MUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Rashford",
+   "club": "MUN",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Zirkzee",
+   "club": "MUN",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Woltemade",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Thiaw",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Burn",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Botman",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Pope",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Joelinton",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Hall",
+   "club": "NEW",
+   "role": "first"
+  },
+  {
+   "web_name": "Barnes",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Elanga",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "J.Murphy",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Osula",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Wissa",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Schär",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "L.Miley",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "J.Ramsey",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Bamba",
+   "club": "NEW",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Touré",
+   "club": "NEW",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Gibbs-White",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Milenković",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Murillo",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Igor Jesus",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Sels",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Hudson-Odoi",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Diomande",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Aina",
+   "club": "NFO",
+   "role": "first"
+  },
+  {
+   "web_name": "Wood",
+   "club": "NFO",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Ndoye",
+   "club": "NFO",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Hutchinson",
+   "club": "NFO",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Sangaré",
+   "club": "NFO",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Schlager",
+   "club": "NFO",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Awoniyi",
+   "club": "NFO",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Kalimuendo",
+   "club": "NFO",
+   "role": "fringe"
+  },
+  {
+   "web_name": "McAtee",
+   "club": "NFO",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Bakwa",
+   "club": "NFO",
+   "role": "fringe"
+  },
+  {
+   "web_name": "E.Le Fée",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Brobbey",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Mukiele",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Xhaka",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Roefs",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Ballard",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Alderete",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Sadiki",
+   "club": "SUN",
+   "role": "first"
+  },
+  {
+   "web_name": "Diarra",
+   "club": "SUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Talbi",
+   "club": "SUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Isidor",
+   "club": "SUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Rigg",
+   "club": "SUN",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Adingra",
+   "club": "SUN",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Mundle",
+   "club": "SUN",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Solanke",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Kudus",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Senesi",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Fernandes",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Tonali",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Pedro Porro",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Bentancur",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Van de Ven",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Kinsky",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Maddison",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Richarlison",
+   "club": "TOT",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Tel",
+   "club": "TOT",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Xavi",
+   "club": "TOT",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Gallagher",
+   "club": "TOT",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Odobert",
+   "club": "TOT",
+   "role": "rotation"
+  },
+  {
+   "web_name": "Kulusevski",
+   "club": "TOT",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Dubravka",
+   "club": "TOT",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Spence",
+   "club": "TOT",
+   "role": "fringe"
+  },
+  {
+   "web_name": "Van Hecke",
+   "club": "TOT",
+   "role": "first"
+  },
+  {
+   "web_name": "Gonzalo",
+   "club": "FUL",
+   "role": "first"
+  }
+ ],
+ "_roles_note": "role = does he start when everyone is fit? first|rotation|fringe. 'first' also tells the model a part-season was injury (scale up); rotation/fringe scale the projection down. Editable per player in the tool."
 }
