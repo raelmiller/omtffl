@@ -58,6 +58,14 @@ main{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1rem;pad
   font-family:var(--mono);font-size:12px;line-height:1.2;padding:1px 2px;
   appearance:none;-webkit-appearance:none;text-align:left}
 .rolesel:focus-visible{outline:2px solid var(--accent)}
+.tier{display:inline-block;min-width:15px;text-align:center;border-radius:4px;padding:0 4px;
+  font-size:10px;font-weight:700;line-height:16px;vertical-align:middle;margin-left:.3rem}
+.tS{background:var(--hot);color:#12151c}
+.tA{background:var(--accent);color:#12151c}
+.tB{background:var(--blue);color:#12151c}
+.tC{background:var(--border2);color:var(--text)}
+.tD{background:transparent;color:var(--faint,#4a5160);border:1px solid var(--border2)}
+.tGEM{background:var(--gold);color:#12151c}
 .stat input{background:transparent;border:none;color:var(--accent);font-family:var(--mono);font-size:16px;font-weight:700;width:3.4em;padding:0}
 .stat input:focus{outline:1px solid var(--accent);border-radius:3px}
 .stat span a{color:var(--blue)}
@@ -365,11 +373,11 @@ function applyCustomPlayers(){
 }
 function addCustomPlayer(c){
   c.id="cust_"+Date.now()+"_"+Math.floor(Math.random()*1e4);
-  userCustom.push(c); saveCustom(); applyCustomPlayers(); renderAll();
+  userCustom.push(c); saveCustom(); applyCustomPlayers(); invalidateTiers(); renderAll();
   toast(`added ${c.name}`);
 }
 function removeCustomPlayer(id){
-  userCustom=userCustom.filter(c=>c.id!==id); saveCustom(); applyCustomPlayers(); renderAll();
+  userCustom=userCustom.filter(c=>c.id!==id); saveCustom(); applyCustomPlayers(); invalidateTiers(); renderAll();
 }
 // ── model ──────────────────────────────────────────────────────────────
 function seasonPts(p,name){const h=p.hist.find(h=>h.season_name===name);return h?h.total_points:null}
@@ -382,6 +390,7 @@ function setProjAdj(id,val){
   if(val==null||val===""||isNaN(+val))delete projAdj[id];else projAdj[id]=Math.max(0,Math.round(+val));
   localStorage.setItem("omtffl_projadj",JSON.stringify(projAdj));
   leagueRev++;                      // projections moved: replacement levels must be recomputed
+  invalidateTiers();
   renderAll();
 }
 // Forward-looking set-piece premium from the 2026/27 taker hierarchy.
@@ -457,7 +466,7 @@ function roleOf(p){return roleAdj[p.id]||p.role||null}
 function setRole(id,val){
   if(!val)delete roleAdj[id];else roleAdj[id]=val;
   localStorage.setItem("omtffl_roleadj",JSON.stringify(roleAdj));
-  renderAll();
+  invalidateTiers();renderAll();
 }
 // Regress a season's finishing toward its xG/xA — over-performers (lucky
 // finishing) come down, under-performers come up. xG is more predictive of
@@ -959,6 +968,44 @@ function wallBanner(p,currentBid,leader){
       <small>you can still bid up to £${w.mine.hard.toFixed(2)}m, but beyond £${w.mine.safe.toFixed(2)}m you can't fund all ${w.mine.spare} of your other empty slot${w.mine.spare===1?"":"s"} at £${LEAGUE.minBid.toFixed(2)}m.</small></div>`);
   return out.join("");
 }
+// ── Draft board tiers ──────────────────────────────────────────────────────
+// Every player gets a tier within his own position, so the board reads the
+// same way everywhere. Bands are sized to what the room actually needs at
+// each position (5 DEF x 16 teams = 80), so C is the last draftable body and
+// D is filler nobody should be bidding on.
+//   S = heavy hitter · A = second tier · B = solid starter · C = squad filler
+// GEM is separate and cross-cutting: a value outlier for his tier (top 15%
+// points-per-pound), or a defender this league systematically underpays.
+const TIER_BANDS={GK:[2,6,16,32],DEF:[6,20,45,80],MID:[6,20,45,80],FWD:[4,12,28,48]};
+const TIER_LABEL={S:"heavy hitter",A:"second tier",B:"solid starter",C:"squad filler",D:"bench fodder"};
+let TIERS=null;
+function invalidateTiers(){TIERS=null}
+function buildTiers(){
+  TIERS={};
+  for(const pos of Object.keys(TIER_BANDS)){
+    const list=FPL.players.filter(p=>p.pos===pos&&!p.exit)
+      .map(p=>{const est=fairRange(p);return {p,est,proj:est.proj.pts,val:est.proj.pts/Math.max(.5,est.mid)}})
+      .filter(x=>x.proj>0).sort((a,b)=>b.proj-a.proj);
+    const [s,a,bb,c]=TIER_BANDS[pos];
+    const vals=list.slice(0,c).map(x=>x.val).sort((m,n)=>n-m);
+    const vGate=vals.length?vals[Math.floor(vals.length*.15)]:Infinity;
+    list.forEach((x,i)=>{
+      const tier=i<s?"S":i<a?"A":i<bb?"B":i<c?"C":"D";
+      const gem=tier!=="D"&&(x.val>=vGate||!!blindSpot(x.p,x.est));
+      TIERS[x.p.id]={tier,gem,rank:i+1};
+    });
+  }
+}
+function tierOf(p){
+  if(!FPL)return null;
+  if(!TIERS)buildTiers();
+  return TIERS[p.id]||null;
+}
+function tierChip(p,withGem){
+  const t=tierOf(p); if(!t)return "";
+  return `<span class="tier t${t.tier}" title="${TIER_LABEL[t.tier]} — ${esc(p.pos)} #${t.rank} by projection">${t.tier}<\/span>`
+    +(withGem!==false&&t.gem?`<span class="tier tGEM" title="value outlier — top points-per-pound for his tier">★<\/span>`:"");
+}
 function factsheet(p,currentBid,leader){
   const leadName=leader?(teamManager(leader)||leader.name):null;
   const est=fairRange(p);
@@ -999,8 +1046,8 @@ function factsheet(p,currentBid,leader){
   const pct=x=>Math.min(98,x/scale*100);
   const hist=[...p.hist].sort((a,b)=>a.season_name.localeCompare(b.season_name)).slice(-4);
   return `
-  <div class="auctionhead"><span class="name">${esc(p.web_name)}</span>
-    <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${currentBid!=null?` · bid £${currentBid}m${leadName?" — "+esc(leadName):""}`:""}</span></div>
+  <div class="auctionhead"><span class="name">${esc(p.web_name)}${tierChip(p)}</span>
+    <span class="meta">${p.pos} · ${esc(p.team_short||"?")}${(()=>{const t=tierOf(p);return t?` · ${TIER_LABEL[t.tier]}${t.gem?" ★ gem":""}`:""})()}${currentBid!=null?` · bid £${currentBid}m${leadName?" — "+esc(leadName):""}`:""}</span></div>
   ${p.exit?`<div class="exitbanner">⚠ Likely leaving the Premier League — ${esc(p.exit)}</div>`:""}
   <div class="verdict ${v.cls}">${v.head}<small>${v.sub}</small></div>
   ${wallBanner(p,currentBid,leader)}
@@ -1225,8 +1272,8 @@ function renderGems(){
     const est=fairRange(p);
     return {p,proj:est.proj.pts,mid:est.mid,val:est.proj.pts/Math.max(.5,est.mid),edge:!!blindSpot(p,est)};
   }).filter(r=>r.proj>=60).sort((a,b)=>b.val-a.val).slice(0,60);
-  $("gemsList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
-    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}${r.edge?' <span style="color:var(--accent)" title="market blind-spot — elite projection, defenders sell cheap here">◆</span>':''}</td><td>${r.p.pos}</td><td>${esc(r.p.team_short||"?")}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
+  $("gemsList").innerHTML=`<table><tr><th>player</th><th>tier</th><th>pos</th><th>club</th><th>proj</th><th>~£m</th><th>pts/£</th></tr>
+    ${rows.map(r=>`<tr class="row-click" data-id="${r.p.id}"><td>${esc(r.p.web_name)}${r.edge?' <span style="color:var(--accent)" title="market blind-spot — elite projection, defenders sell cheap here">◆</span>':''}</td><td>${tierChip(r.p)}</td><td>${r.p.pos}</td><td>${esc(r.p.team_short||"?")}</td><td>${r.proj}</td><td>${r.mid}</td><td>${r.val.toFixed(0)}</td></tr>`).join("")}</table>`;
   const nedge=rows.filter(r=>r.edge).length;
   if(nedge)$("gemsList").insertAdjacentHTML("afterbegin",`<div class="small" style="margin-bottom:.5rem;color:var(--accent)">◆ market blind-spot — ${nedge} cheap high-projection defender${nedge>1?"s":""} the room tends to underpay. Grab in a lull, never a war.</div>`);
 }
@@ -1240,8 +1287,8 @@ function renderSearch(){
   if(q.length<2){$("searchList").innerHTML="";return}
   const gone=soldIds();
   const hits=FPL.players.filter(p=>nameKeys(p).some(h=>h.includes(q))).slice(0,20);
-  $("searchList").innerHTML=`<table><tr><th>player</th><th>pos</th><th>club</th><th>pts</th><th></th></tr>
-    ${hits.map(p=>`<tr class="row-click" data-id="${p.id}"><td>${esc(p.web_name)}</td><td>${p.pos}</td><td>${p.team_short}</td><td>${p.total_points}</td><td>${gone.has(p.id)?"sold":""}</td></tr>`).join("")}</table>`;
+  $("searchList").innerHTML=`<table><tr><th>player</th><th>tier</th><th>pos</th><th>club</th><th>pts</th><th></th></tr>
+    ${hits.map(p=>`<tr class="row-click" data-id="${p.id}"><td>${esc(p.web_name)}</td><td>${tierChip(p)}</td><td>${p.pos}</td><td>${p.team_short}</td><td>${p.total_points}</td><td>${gone.has(p.id)?"sold":""}</td></tr>`).join("")}</table>`;
 }
 let teamMap=JSON.parse(localStorage.getItem("omtffl_teamMap")||"{}");
 function renderTeams(){
