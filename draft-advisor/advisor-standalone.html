@@ -1242,9 +1242,16 @@ function renderNomination(){
   <div class="rangelabels"><span>fair £${r.est.low}–£${r.est.high}m</span><span>${r.sc.strong} starter-grade ${r.p.pos} left · ${r.sc.demand} the room still needs</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
     <div><h2>Who else wants a ${r.p.pos}</h2>
-      ${r.rivals.length?`<table><tr><th>rival</th><th>needs</th><th>would go</th><th>could reach</th><th>tendency</th></tr>
-        ${r.rivals.slice(0,6).map(v=>`<tr><td>${esc(v.mgr)}${v.keen>=1.25?' <span style="color:var(--hot)">▲</span>':v.keen<0.7?' <span style="color:var(--muted)">▽</span>':''}</td><td>${v.open}</td><td>${v.would<=r.openBid?'<span style="color:var(--hot)">~£'+v.would.toFixed(2)+'m</span>':'~£'+v.would.toFixed(2)+'m'}</td><td class="small">${v.max<=r.openBid?'<span style="color:var(--hot)">£'+v.max.toFixed(2)+'m ✗</span>':'£'+v.max.toFixed(2)+'m'}</td><td class="small" style="text-align:left">${esc((v.tags&&v.tags[0])||"")}</td></tr>`).join("")}</table>
-        <div class="small" style="margin-top:.3rem"><b>would go</b> = what their auction history says they'd actually pay · <b>could reach</b> = what their budget allows, ✗ if a £${r.openBid}m opening bid puts him out of reach · ▲ keen / ▽ unlikely</div>`
+      ${r.rivals.length?(()=>{
+        // "could reach" is only worth a column once budgets have actually
+        // diverged — until then it is the same number against every name and
+        // reads as noise. Show it when the field differs or when the opening
+        // bid genuinely prices someone out.
+        const shown=r.rivals.slice(0,6), reaches=shown.map(v=>v.max);
+        const showReach=(Math.max(...reaches)-Math.min(...reaches))>0.5||shown.some(v=>v.max<=r.openBid);
+        return `<table><tr><th>rival</th><th>needs</th><th>would go</th>${showReach?"<th>could reach</th>":""}<th>tendency</th></tr>
+        ${shown.map(v=>`<tr><td>${esc(v.mgr)}${v.keen>=1.25?' <span style="color:var(--hot)">▲</span>':v.keen<0.7?' <span style="color:var(--muted)">▽</span>':''}</td><td>${v.open}</td><td>${v.would<=r.openBid?'<span style="color:var(--hot)">~£'+v.would.toFixed(2)+'m</span>':'~£'+v.would.toFixed(2)+'m'}</td>${showReach?`<td class="small">${v.max<=r.openBid?'<span style="color:var(--hot)">£'+v.max.toFixed(2)+'m ✗</span>':'£'+v.max.toFixed(2)+'m'}</td>`:""}<td class="small" style="text-align:left">${esc((v.tags&&v.tags[0])||"")}</td></tr>`).join("")}</table>
+        <div class="small" style="margin-top:.3rem"><b>would go</b> = what their auction history says they'd actually pay${showReach?` · <b>could reach</b> = what their budget allows, ✗ if a £${r.openBid}m opening bid puts him out of reach`:" · everyone can still afford him, so budget isn't separating them yet"} · ▲ keen / ▽ unlikely</div>`;})()
         :`<div class="small">no one else needs this position and can afford it</div>`}
     </div>
     <div><h2>Other options</h2>
