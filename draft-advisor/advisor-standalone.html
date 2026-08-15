@@ -234,6 +234,22 @@ function derivedBudget(){
   const b=Math.round(Math.max(...totals)*100)/100;
   return b>0?b:null;
 }
+// The auction app keeps a dropped-out team in the broadcast list (flagged
+// active:false) so its history survives and the change is reversible. For
+// every calculation here a dropped team must simply not exist: otherwise a
+// phantom rival with a full budget inflates room liquidity, overstates
+// positional demand, and shows up in rival/nomination predictions.
+let droppedTeams=0;
+function pruneDropped(list){
+  if(!Array.isArray(list))return list;
+  const live=list.filter(t=>t.active!==false);
+  const n=list.length-live.length;
+  if(n!==droppedTeams){
+    droppedTeams=n;
+    if(n)toast(`${n} team${n>1?"s":""} marked dropped out — excluded from pricing, scarcity and rival reads`);
+  }
+  return live;
+}
 // Called on every stateUpdate: take from the room what the room can tell us,
 // and flag the one thing it can't (positional slots) if the squads outgrow it.
 function syncLeagueFromRoom(){
@@ -1330,7 +1346,7 @@ function connect(){
     socket=io(url,{transports:["websocket","polling"]});
     socket.on("connect",()=>{$("connDot").className="dot live";$("connText").textContent="live";toast("connected to auction")});
     socket.on("disconnect",()=>{$("connDot").className="dot err";$("connText").textContent="lost"});
-    socket.on("stateUpdate",st=>{demo=null;state={...state,...st};syncLeagueFromRoom();renderAll()});
+    socket.on("stateUpdate",st=>{demo=null;state={...state,...st,teams:pruneDropped(st.teams)||state.teams};syncLeagueFromRoom();renderAll()});
   };
   s.onerror=()=>{$("connDot").className="dot err";$("connText").textContent="unreachable";toast("could not reach server — check url / wifi")};
   document.head.appendChild(s);
