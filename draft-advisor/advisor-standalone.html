@@ -51,6 +51,13 @@ main{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1rem;pad
 .stat span{color:var(--muted);font-size:9px;letter-spacing:.05em;text-transform:uppercase}
 .stat b.g{color:var(--accent)} .stat b.y{color:var(--gold)} .stat b.r{color:var(--hot)} .stat b.b{color:var(--blue)}
 .stat.adj{outline:1px solid var(--gold)}
+/* role picker has to live inside a 90px stat tile, so it sizes to the box
+   rather than to its longest option (which overflowed the tile) */
+.rolesel{width:100%;max-width:100%;box-sizing:border-box;background:var(--surface2);
+  border:1px solid var(--border2);border-radius:5px;color:var(--text);
+  font-family:var(--mono);font-size:12px;line-height:1.2;padding:1px 2px;
+  appearance:none;-webkit-appearance:none;text-align:left}
+.rolesel:focus-visible{outline:2px solid var(--accent)}
 .stat input{background:transparent;border:none;color:var(--accent);font-family:var(--mono);font-size:16px;font-weight:700;width:3.4em;padding:0}
 .stat input:focus{outline:1px solid var(--accent);border-radius:3px}
 .stat span a{color:var(--blue)}
@@ -1002,9 +1009,9 @@ function factsheet(p,currentBid,leader){
   <div class="statgrid">
     <div class="stat ${est.proj.manual?"adj":""}"><b class="g"><input id="projInput" type="number" value="${est.proj.pts}" min="0" step="5" aria-label="adjust projected points"
        onchange="setProjAdj(${p.id},this.value)"><\/b><span>proj pts ${est.proj.manual?'· <a href="#" onclick="setProjAdj('+p.id+',null);return false">reset<\/a>':"· editable (enter)"}</span></div>
-    <div class="stat ${roleOf(p)?"adj":""}"><b><select aria-label="expected role" onchange="setRole(${p.id},this.value)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:13px;padding:1px 3px">
+    <div class="stat ${roleOf(p)?"adj":""}"><b><select class="rolesel" aria-label="expected role" onchange="setRole(${p.id},this.value)">
       <option value=""${roleOf(p)?"":" selected"}>—<\/option>
-      <option value="first"${roleOf(p)==="first"?" selected":""}>1st choice<\/option>
+      <option value="first"${roleOf(p)==="first"?" selected":""}>1st&nbsp;choice<\/option>
       <option value="rotation"${roleOf(p)==="rotation"?" selected":""}>rotation<\/option>
       <option value="fringe"${roleOf(p)==="fringe"?" selected":""}>fringe<\/option>
     <\/select><\/b><span>starts when fit?</span></div>
