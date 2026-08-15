@@ -380,19 +380,25 @@ function setPieceBonus(p){
   const sp=p.sp; if(!sp)return {pts:0,parts:[]};
   const pos=p.pos; let b=0; const parts=[];
   if(sp.pen===1){b+=pos==="MID"?10:pos==="FWD"?8:pos==="DEF"?6:0; if(b)parts.push("penalties");}
-  else if(sp.pen===2)b+=2;
+  else if(sp.pen===2){b+=2;parts.push("backup penalties");}
   if(sp.ck===1){b+=pos==="FWD"?3:5; parts.push("corners");}
-  else if(sp.ck===2)b+=2; else if(sp.ck===3)b+=1;
+  else if(sp.ck===2){b+=2;parts.push("corners #2");} else if(sp.ck===3){b+=1;parts.push("corners #3");}
   if(sp.dfk===1){b+=4; parts.push("free kicks");}
-  else if(sp.dfk===2)b+=1;
+  else if(sp.dfk===2){b+=1;parts.push("free kicks #2");}
   return {pts:Math.min(b,12),parts};
 }
 function projection(p){
   if(p.custom)return {pts:(projAdj[p.id]!=null?projAdj[p.id]:p.manualProj)||0,basis:`your research${p.note?": "+p.note:""}`,isCustom:true,manual:projAdj[p.id]!=null};
   if(projAdj[p.id]!=null)return {pts:projAdj[p.id],basis:"your estimate (data says "+modelProjection(p).pts+")",manual:true};
   const m=modelProjection(p), sp=setPieceBonus(p);
-  if(sp.pts>0)return {...m,pts:m.pts+sp.pts,spBonus:sp.pts,basis:m.basis+` · +${sp.pts} set-piece premium (${sp.parts.join(", ")})`};
-  return m;
+  let pts=m.pts+sp.pts, basis=m.basis;
+  if(sp.pts>0)basis+=` · +${sp.pts} set-piece premium (${sp.parts.join(", ")})`;
+  const role=roleOf(p), rm=ROLE_MULT[role];
+  if(rm&&rm!==1){
+    pts=Math.round(pts*rm);
+    basis+=` · ×${rm} for ${ROLE_LABEL[role]} minutes`;
+  }
+  return {...m,pts,basis,spBonus:sp.pts||0,role};
 }
 // new-to-PL players have no history: estimate from FPL's own price, using
 // the median projection of same-position peers priced within £0.5m. FPL
@@ -411,10 +417,34 @@ function estimateFromPrice(p){
 // Isak's 694-min injury year has a 2758-min prior; Gyokeres's 2217 is his
 // only PL season, so it stands as-is.
 const FULL_MIN=3000, MAX_UP=1.6, MIN_M=900, PROVEN_MIN=2000;
-function adjPts(h,proven){
+function adjPts(h,proven,maxUp){
   const m=h.minutes||0, pts=h.total_points||0;
   if(m>=FULL_MIN||!pts||!proven)return pts;
-  return Math.round(pts*Math.min(MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
+  return Math.round(pts*Math.min(maxUp||MAX_UP,FULL_MIN/Math.max(m,MIN_M)));
+}
+// How contested a player's shirt is, league-wide and straight from the data:
+// same club, same position, teammates who also took real minutes last season.
+// A crowded position means missed minutes are far more likely rotation than
+// injury, so cap how aggressively we scale a part-season up.
+function competitionCap(p){
+  if(!FPL||!p.team_short)return MAX_UP;
+  const mins=q=>{const h=latestSeasons(q)[0];return h?(h.minutes||0):0};
+  const rivals=FPL.players.filter(q=>q.id!==p.id&&!q.custom&&q.team_short===p.team_short
+    &&q.pos===p.pos&&mins(q)>=900).length;
+  return rivals>=3?1.15:rivals===2?1.35:MAX_UP;
+}
+// Expected role — "does he start when everyone is fit?". The data cannot see
+// a pecking order (a first-choice striker coming back from injury looks worse
+// than the deputy who covered for him), so this is settable per player and
+// scales the projection to the minutes the role actually implies.
+const ROLE_MULT={first:1,rotation:.72,fringe:.45};
+const ROLE_LABEL={first:"first choice",rotation:"rotation",fringe:"fringe"};
+let roleAdj=JSON.parse(localStorage.getItem("omtffl_roleadj")||"{}");
+function roleOf(p){return roleAdj[p.id]||p.role||null}
+function setRole(id,val){
+  if(!val)delete roleAdj[id];else roleAdj[id]=val;
+  localStorage.setItem("omtffl_roleadj",JSON.stringify(roleAdj));
+  renderAll();
 }
 // Regress a season's finishing toward its xG/xA — over-performers (lucky
 // finishing) come down, under-performers come up. xG is more predictive of
@@ -450,9 +480,16 @@ function modelProjection(p){
     return {pts:e,basis:`new to PL — est. from £${((p.now_cost||0)/10).toFixed(1)}m FPL price`,isNew:true};
   }
   const s1=hs[0], s2=hs[1];
-  // "proven starter" = some OTHER season with genuine starter minutes
-  const proven=hs.slice(1).some(h=>(h.minutes||0)>=PROVEN_MIN);
-  const a1=adjPts(s1,proven), a2=s2?adjPts(s2,proven):null;
+  // "proven starter" = genuine starter minutes in another RECENT season.
+  // Recency matters: without it, a player whose last big season was years ago
+  // at another club (Richarlison's Everton years) is treated as a starter who
+  // missed time through injury, and gets scaled up — when in fact he has been
+  // a rotation option for seasons. Only the last two campaigns count as
+  // evidence that he still wins a shirt when fit.
+  const yr1=startYear(s1.season_name);
+  const proven=hs.slice(1).some(h=>(h.minutes||0)>=PROVEN_MIN&&yr1-startYear(h.season_name)<=2);
+  const cap=competitionCap(p);
+  const a1=adjPts(s1,proven,cap), a2=s2?adjPts(s2,proven,cap):null;
   const minAdj=a1!==s1.total_points;   // latest season was scaled up (injury/rotation, proven)
   const unproven=!proven&&(s1.minutes||0)<PROVEN_MIN&&(s1.minutes||0)<FULL_MIN;  // reduced minutes, no track record
   const adj1=minAdj?`${a1}* (${s1.season_name}, ${s1.total_points} in ${s1.minutes}m)`:`${a1} (${s1.season_name})`;
@@ -958,6 +995,12 @@ function factsheet(p,currentBid,leader){
   <div class="statgrid">
     <div class="stat ${est.proj.manual?"adj":""}"><b class="g"><input id="projInput" type="number" value="${est.proj.pts}" min="0" step="5" aria-label="adjust projected points"
        onchange="setProjAdj(${p.id},this.value)"><\/b><span>proj pts ${est.proj.manual?'· <a href="#" onclick="setProjAdj('+p.id+',null);return false">reset<\/a>':"· editable (enter)"}</span></div>
+    <div class="stat ${roleOf(p)?"adj":""}"><b><select aria-label="expected role" onchange="setRole(${p.id},this.value)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:13px;padding:1px 3px">
+      <option value=""${roleOf(p)?"":" selected"}>—<\/option>
+      <option value="first"${roleOf(p)==="first"?" selected":""}>1st choice<\/option>
+      <option value="rotation"${roleOf(p)==="rotation"?" selected":""}>rotation<\/option>
+      <option value="fringe"${roleOf(p)==="fringe"?" selected":""}>fringe<\/option>
+    <\/select><\/b><span>starts when fit?</span></div>
     <div class="stat"><b>${s1.total_points??"–"}</b><span>pts ${s1.season_name||"last"}</span></div>
     <div class="stat"><b>${s1.goals_scored??"–"}/${s1.assists??"–"}</b><span>G/A</span></div>
     <div class="stat"><b class="b">${s1.expected_goals??"–"}</b><span>xG</span></div>
