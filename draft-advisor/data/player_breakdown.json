@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-15T05:27:24Z",
+  "fpl_baked_at": "2026-08-16T05:31:24Z",
   "sales": 645,
   "unique_players": 389,
   "matched_to_fpl": 253
@@ -1521,7 +1521,7 @@
    "display": "Mount",
    "position": "MID",
    "current_club": "MUN",
-   "status": "a",
+   "status": "d",
    "last_season_points": 58,
    "xgi": "3.18",
    "penalties": false,
@@ -1627,7 +1627,7 @@
    "last_season_points": 75,
    "xgi": "4.33",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -1720,7 +1720,7 @@
    "last_season_points": 125,
    "xgi": "11.43",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -1967,7 +1967,7 @@
    "xgi": "5.34",
    "penalties": true,
    "corners": true,
-   "freekicks": false,
+   "freekicks": true,
    "sales": {
     "2023-24": {
      "price": 5.5,
@@ -3094,7 +3094,7 @@
    "last_season_points": 157,
    "xgi": "18.52",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -3423,7 +3423,7 @@
    "display": "Sch\u00e4r",
    "position": "DEF",
    "current_club": "NEW",
-   "status": "a",
+   "status": "d",
    "last_season_points": 51,
    "xgi": "1.57",
    "penalties": false,
@@ -4177,7 +4177,7 @@
    "last_season_points": 113,
    "xgi": "8.04",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": false,
    "sales": {
     "2025-26": {
@@ -4899,7 +4899,7 @@
    "display": "Martinez",
    "position": "DEF",
    "current_club": "MUN",
-   "status": "d",
+   "status": "a",
    "last_season_points": 51,
    "xgi": "0.75",
    "penalties": false,
@@ -5398,7 +5398,7 @@
    "last_season_points": 81,
    "xgi": "4.62",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -6697,7 +6697,7 @@
    "last_season_points": 84,
    "xgi": "5.74",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2025-26": {
@@ -6992,7 +6992,7 @@
    "xgi": "2.39",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2023-24": {
      "price": 0.0,
@@ -7485,7 +7485,7 @@
    "display": "Brooks",
    "position": "MID",
    "current_club": "BOU",
-   "status": "a",
+   "status": "d",
    "last_season_points": 59,
    "xgi": "9.21",
    "penalties": false,
@@ -7885,7 +7885,7 @@
    "last_season_points": 74,
    "xgi": "3.09",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -8118,7 +8118,7 @@
    "display": "N\u00f8rgaard",
    "position": "MID",
    "current_club": "EVE",
-   "status": "a",
+   "status": "d",
    "last_season_points": 7,
    "xgi": "0.12",
    "penalties": false,
@@ -9252,7 +9252,7 @@
    "display": "Struijk",
    "position": "DEF",
    "current_club": "BHA",
-   "status": "a",
+   "status": "d",
    "last_season_points": 108,
    "xgi": "3.82",
    "penalties": false,
