@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-16T05:31:24Z",
+  "fpl_baked_at": "2026-08-17T05:37:26Z",
   "sales": 645,
   "unique_players": 389,
   "matched_to_fpl": 253
@@ -454,7 +454,7 @@
    "last_season_points": 131,
    "xgi": "10.79",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -1428,7 +1428,7 @@
    "display": "Grealish",
    "position": "MID",
    "current_club": "MCI",
-   "status": "d",
+   "status": "a",
    "last_season_points": 79,
    "xgi": "5.41",
    "penalties": false,
@@ -3423,7 +3423,7 @@
    "display": "Sch\u00e4r",
    "position": "DEF",
    "current_club": "NEW",
-   "status": "d",
+   "status": "a",
    "last_season_points": 51,
    "xgi": "1.57",
    "penalties": false,
@@ -5128,7 +5128,7 @@
    "last_season_points": 180,
    "xgi": "7.73",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -5679,7 +5679,7 @@
    "display": "Matheus N.",
    "position": "FWD",
    "current_club": "MCI",
-   "status": "a",
+   "status": "d",
    "last_season_points": 154,
    "xgi": "2.57",
    "penalties": false,
@@ -6411,7 +6411,7 @@
    "display": "Joelinton",
    "position": "MID",
    "current_club": "NEW",
-   "status": "a",
+   "status": "i",
    "last_season_points": 73,
    "xgi": "3.71",
    "penalties": false,
