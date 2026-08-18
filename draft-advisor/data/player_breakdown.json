@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-17T05:37:26Z",
+  "fpl_baked_at": "2026-08-18T05:32:59Z",
   "sales": 645,
   "unique_players": 389,
   "matched_to_fpl": 253
@@ -5361,7 +5361,7 @@
    "display": "Romero",
    "position": "DEF",
    "current_club": "TOT",
-   "status": "a",
+   "status": "u",
    "last_season_points": 91,
    "xgi": "2.64",
    "penalties": false,
