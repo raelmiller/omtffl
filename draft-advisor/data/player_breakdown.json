@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-18T05:32:59Z",
+  "fpl_baked_at": "2026-08-19T05:34:23Z",
   "sales": 645,
   "unique_players": 389,
-  "matched_to_fpl": 253
+  "matched_to_fpl": 254
  },
  "players": [
   {
@@ -2502,7 +2502,7 @@
    "display": "Doku",
    "position": "MID",
    "current_club": "MCI",
-   "status": "a",
+   "status": "d",
    "last_season_points": 120,
    "xgi": "8.73",
    "penalties": false,
@@ -4098,7 +4098,7 @@
    "display": "Carvalho",
    "position": "MID",
    "current_club": "BRE",
-   "status": "a",
+   "status": "d",
    "last_season_points": 13,
    "xgi": "0.73",
    "penalties": false,
@@ -4529,7 +4529,7 @@
    "fpl_id": 492,
    "display": "Awoniyi",
    "position": "FWD",
-   "current_club": "NFO",
+   "current_club": "COV",
    "status": "a",
    "last_season_points": 43,
    "xgi": "4.45",
@@ -4852,14 +4852,14 @@
    }
   },
   {
-   "key": "name_julio enciso",
-   "fpl_id": null,
-   "display": "Julio Enciso",
+   "key": "fpl_591",
+   "fpl_id": 591,
+   "display": "Enciso",
    "position": "FWD",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "IPS",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -4868,7 +4868,7 @@
      "price": 1.75,
      "buyer": "Gav",
      "club_then": "BHA",
-     "points_that_season": null
+     "points_that_season": 20
     }
    }
   },
@@ -7839,7 +7839,7 @@
    "display": "Phillips",
    "position": "MID",
    "current_club": "MCI",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -9021,7 +9021,7 @@
    "display": "Spence",
    "position": "DEF",
    "current_club": "TOT",
-   "status": "a",
+   "status": "u",
    "last_season_points": 78,
    "xgi": "2.67",
    "penalties": false,
