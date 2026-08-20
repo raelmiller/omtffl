@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-19T05:34:23Z",
+  "fpl_baked_at": "2026-08-20T05:34:15Z",
   "sales": 645,
   "unique_players": 389,
   "matched_to_fpl": 254
@@ -1920,7 +1920,7 @@
    "display": "Piroe",
    "position": "FWD",
    "current_club": "LEE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 17,
    "xgi": "1.03",
    "penalties": false,
@@ -2229,7 +2229,7 @@
    "display": "Rodrigo",
    "position": "MID",
    "current_club": "MCI",
-   "status": "i",
+   "status": "u",
    "last_season_points": 69,
    "xgi": "3.60",
    "penalties": false,
@@ -4797,7 +4797,7 @@
    "display": "Vicario",
    "position": "GK",
    "current_club": "TOT",
-   "status": "a",
+   "status": "u",
    "last_season_points": 90,
    "xgi": "0.04",
    "penalties": false,
