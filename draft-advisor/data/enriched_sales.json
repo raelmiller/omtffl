@@ -1293,9 +1293,9 @@
   "player": "Matheus Cunha",
   "club": "WOL",
   "cost": null,
-  "fpl_id": 389,
-  "fpl_name": "Matheus N.",
-  "points_that_season": 32
+  "fpl_id": 428,
+  "fpl_name": "Cunha",
+  "points_that_season": 135
  },
  {
   "season": "2023-24",
@@ -1414,9 +1414,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 3.5,
-  "fpl_id": 18,
-  "fpl_name": "Martinelli",
-  "points_that_season": 118
+  "fpl_id": 316,
+  "fpl_name": "Emersonn",
+  "points_that_season": null
  },
  {
   "season": "2023-24",
@@ -2349,9 +2349,9 @@
   "player": "Ak\u00e9",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 178,
-  "fpl_name": "Bidwell",
-  "points_that_season": null
+  "fpl_id": 577,
+  "fpl_name": "Tomiyasu",
+  "points_that_season": 1
  },
  {
   "season": "2024-25",
@@ -3570,9 +3570,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 6.0,
-  "fpl_id": 18,
-  "fpl_name": "Martinelli",
-  "points_that_season": 125
+  "fpl_id": 316,
+  "fpl_name": "Emersonn",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -3955,9 +3955,9 @@
   "player": "Wilson",
   "club": "NEW",
   "cost": 2.0,
-  "fpl_id": 108,
+  "fpl_id": 260,
   "fpl_name": "Wilson",
-  "points_that_season": 19
+  "points_that_season": 78
  },
  {
   "season": "2024-25",
@@ -4428,9 +4428,9 @@
   "player": "Cunha",
   "club": "WOL",
   "cost": 7.0,
-  "fpl_id": 428,
-  "fpl_name": "Cunha",
-  "points_that_season": 178
+  "fpl_id": 474,
+  "fpl_name": "Jair Cunha",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -5275,9 +5275,9 @@
   "player": "Wilson",
   "club": "WHU",
   "cost": 0.75,
-  "fpl_id": 108,
+  "fpl_id": 260,
   "fpl_name": "Wilson",
-  "points_that_season": 80
+  "points_that_season": 168
  },
  {
   "season": "2025-26",
@@ -6551,9 +6551,9 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 18,
-  "fpl_name": "Martinelli",
-  "points_that_season": 57
+  "fpl_id": 316,
+  "fpl_name": "Emersonn",
+  "points_that_season": null
  },
  {
   "season": "2025-26",
