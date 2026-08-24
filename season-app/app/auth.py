@@ -26,6 +26,10 @@ from fastapi import Request
 from . import db
 
 COOKIE = "matchweek"
+# Set separately from the sign-in cookie, and only ever honoured when the
+# sign-in cookie belongs to an admin. Keeping them apart means the real
+# identity is never overwritten, so "view as" can't become "become".
+VIEW_AS = "matchweek_as"
 # A season is long and nobody wants to dig out the link every month.
 COOKIE_MAX_AGE = 400 * 24 * 60 * 60
 
@@ -62,13 +66,37 @@ def admin_source():
     return _admin_setting()[1]
 
 
-def current(request: Request):
-    """The signed-in manager, or None."""
+def real(request: Request):
+    """Whoever actually holds the sign-in cookie."""
     manager = db.manager_by_token(request.cookies.get(COOKIE))
     if manager:
         manager["is_admin"] = (bool(manager.get("is_admin"))
                                or manager["key"].upper() in admin_keys())
     return manager
+
+
+def current(request: Request):
+    """The manager the app should act as.
+
+    Normally whoever signed in. An admin may look at the app as another
+    manager, which is the only way to test anything two-sided — a trade, or
+    two managers chasing the same free agent — before the league exists.
+
+    The borrowed identity never gains admin rights, and the real one is kept
+    alongside so every page can say plainly whose team is on screen.
+    """
+    me = real(request)
+    if not me or not me["is_admin"]:
+        return me
+    borrowed = request.cookies.get(VIEW_AS)
+    if not borrowed or borrowed == me["key"]:
+        return me
+    other = db.manager_by_key(borrowed)
+    if not other:
+        return me
+    other["is_admin"] = False
+    other["viewed_by"] = me["team"]
+    return other
 
 
 def sign_in(response, token):
@@ -86,4 +114,15 @@ def sign_in(response, token):
 
 def sign_out(response):
     response.delete_cookie(COOKIE)
+    response.delete_cookie(VIEW_AS)
+    return response
+
+
+def view_as(response, key):
+    """Look at the app as another manager, or stop."""
+    if key:
+        response.set_cookie(VIEW_AS, key, httponly=True, samesite="lax",
+                            secure=bool(os.environ.get("RAILWAY_ENVIRONMENT")))
+    else:
+        response.delete_cookie(VIEW_AS)
     return response

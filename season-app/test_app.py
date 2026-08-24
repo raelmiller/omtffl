@@ -180,6 +180,50 @@ check("and the old one stops working",
       .headers["location"].endswith("bad_link=1"), True)
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── Viewing as another manager ──────────────────────────")
+
+import os
+os.environ["ADMIN_KEYS"] = "RM"
+boss = TestClient(app)
+boss.get(f"/m/{db.manager_by_key('RM')['token']}")
+other = [m for m in db.managers() if m["key"] != "RM"][0]
+
+r = boss.post(f"/admin/view-as/{other['key']}", follow_redirects=False)
+check("an admin can view as another manager", r.status_code, 303)
+page = boss.get("/declare")
+check_true("their team is the one on screen", other["team"] in page.text, other["team"])
+check_true("and a banner says whose it is", "Viewing as" in page.text)
+
+# A borrowed identity must not carry admin rights with it.
+check("no admin page while viewing as someone else",
+      boss.get("/admin").status_code, 404)
+
+squad = engine.squad_for(other["key"])
+by = {}
+for pl in squad:
+    by.setdefault(pl["position"], []).append(pl["id"])
+xi = by["GK"][:1] + by["DEF"][:4] + by["MID"][:4] + by["FWD"][:2]
+gwn = engine.current_gameweek()["gameweek"]
+saved = boss.post(f"/declare/{gwn}", data={"xi": ",".join(map(str, xi)), "bench": ""})
+check("a team saved while viewing lands on their record", saved.status_code, 200)
+check_true("stored against them, not the admin",
+           db.get_lineup(other["key"], gwn) is not None)
+
+boss.get("/stop-viewing")
+check("stopping restores the admin", boss.get("/admin").status_code, 200)
+check_true("and their own team is back",
+           db.manager_by_key("RM")["team"] in boss.get("/declare").text)
+
+# Nobody else can borrow an identity.
+plain = TestClient(app)
+plain.get(f"/m/{other['token']}")
+check("a normal manager can't view as anyone",
+      plain.post(f"/admin/view-as/RM", follow_redirects=False).status_code, 404)
+plain.cookies.set("matchweek_as", "RM")
+check_true("and setting the cookie by hand achieves nothing",
+           db.manager_by_key("RM")["team"] not in plain.get("/declare").text)
+os.environ.pop("ADMIN_KEYS", None)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

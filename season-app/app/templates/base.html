@@ -12,6 +12,12 @@
 </head>
 <body>
 <div class="wrap">
+  {% if me and me.viewed_by %}
+  <div class="viewing">
+    Viewing as <strong>{{ me.team }}</strong> &mdash; anything you save is saved
+    as them. <a href="/stop-viewing">Back to {{ me.viewed_by }}</a>
+  </div>
+  {% endif %}
   <header>
     <div class="topline">
       <span class="eyebrow">OMTFFL</span>

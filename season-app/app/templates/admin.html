@@ -18,7 +18,10 @@ holding a link is that manager, so they work like a house key.</p>
           <td class="team">{{ m.team }} <span class="pclub">{{ m.key }}</span></td>
           <td><code class="link">{{ base }}/m/{{ m.token }}</code></td>
           <td>{% if has %}<span class="yes">picked</span>{% else %}<span class="no">not yet</span>{% endif %}</td>
-          <td>
+          <td class="acts">
+            <form method="post" action="/admin/view-as/{{ m.key }}">
+              <button class="btn small ghost">View as</button>
+            </form>
             <form method="post" action="/admin/rotate/{{ m.key }}"
                   onsubmit="return confirm('Issue a new link for {{ m.team }}? Their current link stops working immediately.')">
               <button class="btn small">New link</button>
@@ -29,6 +32,10 @@ holding a link is that manager, so they work like a house key.</p>
       </tbody>
     </table>
   </div>
+  <p class="note"><strong>View as</strong> opens the app as that manager, so you
+  can test both sides of a trade or two managers chasing the same player before
+  anyone else has a link. Anything you save is saved as them, and a banner says
+  so on every page.</p>
   <p class="note">&ldquo;Not yet&rdquo; is not a problem. Nobody is chased, and a
   manager who never picks keeps last week&rsquo;s team.</p>
   <p class="sub"><a href="/">&larr; The table</a></p>

@@ -273,6 +273,23 @@ def admin(request: Request):
     return templates.TemplateResponse("admin.html", ctx)
 
 
+@app.post("/admin/view-as/{key}")
+def view_as(request: Request, key: str):
+    """Admin only: see the app as another manager, to test both sides."""
+    me = auth.real(request)
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    target = "" if key == me["key"] else key
+    if target and not db.manager_by_key(target):
+        raise HTTPException(404, "no such manager")
+    return auth.view_as(RedirectResponse("/declare", status_code=303), target)
+
+
+@app.get("/stop-viewing")
+def stop_viewing(request: Request):
+    return auth.view_as(RedirectResponse("/admin", status_code=303), "")
+
+
 @app.post("/admin/rotate/{key}")
 def rotate(request: Request, key: str):
     me = auth.current(request)

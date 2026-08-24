@@ -233,3 +233,13 @@ footer {
 code.link { font-size: .74rem; word-break: break-all; }
 .yes { color: var(--accent); font-family: var(--mono); font-size: .72rem; }
 .no { color: var(--muted); font-family: var(--mono); font-size: .72rem; }
+
+/* ── Viewing as someone else ─────────────────────────── */
+.viewing {
+  background: var(--warn-dim); border: 1px solid var(--warn);
+  border-radius: 8px; padding: .6rem .9rem; font-size: .88rem;
+  display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline;
+}
+.viewing a { color: var(--warn); font-weight: 600; }
+.acts { display: flex; gap: .4rem; flex-wrap: wrap; }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--border-2); }
