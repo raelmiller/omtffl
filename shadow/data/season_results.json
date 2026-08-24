@@ -1,6 +1,6 @@
 {
- "note": "Head-to-head results from a completed season of this league, kept as bare score pairs. No names, team names or entry ids \u2014 this is a public repo, and the analysis only needs the numbers. Each pair is one match: [score, opponent score].",
- "season": "2024/25",
+ "note": "Head-to-head results from a completed season of this league, kept as bare score pairs. No names, team names or entry ids \u2014 this is a public repo, and the analysis only needs the numbers. Each pair is one match: [score, opponent score]. The source file's own metadata labels this 2024/25, but its gameweek 1 deadline is 2025-08-15, so it is the 2025/26 season \u2014 the one before the current live one.",
+ "season": "2025/26",
  "gameweeks": 38,
  "matches": 304,
  "results": [
