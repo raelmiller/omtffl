@@ -265,6 +265,65 @@ check("a normal manager can't reassign clubs",
       plain.post("/admin/assign-clubs", follow_redirects=False).status_code, 404)
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── Manager boost ───────────────────────────────────────")
+
+os.environ["ADMIN_KEYS"] = "RM"
+bc = TestClient(app)
+bc.get(f"/m/{db.manager_by_key('RM')['token']}")
+bc.post("/admin/assign-clubs")
+gwn = engine.current_gameweek()["gameweek"]
+
+st = engine.boost_status("RM", gwn, db.manager_clubs(), used=0)
+check_true("a club is drafted", st["available"], str(st.get("why")))
+check_true("with a band from the table", st["pct"] in (10.0, 20.0, 30.0, 40.0, 50.0),
+           str(st["pct"]))
+check_true("flagged as provisional while no football has been played",
+           st["provisional_position"])
+
+r = bc.post(f"/declare/{gwn}/boost", data={"on": "1"})
+check("playing a boost is accepted", r.json()["ok"], True)
+check("and recorded", bool(db.declaration("RM", gwn, "boost")), True)
+
+# Withdrawable before the deadline: changing your mind costs nothing.
+bc.post(f"/declare/{gwn}/boost", data={"on": "0"})
+check("withdrawing removes it", db.declaration("RM", gwn, "boost"), None)
+bc.post(f"/declare/{gwn}/boost", data={"on": "1"})
+
+# The allowance is a season limit, counted across gameweeks.
+from mechanics import BOOST_USES_PER_SEASON
+# Eight in *other* gameweeks, so the allowance is spent without counting the
+# one already declared for this round.
+for extra in range(1, BOOST_USES_PER_SEASON + 1):
+    db.declare("RM", gwn + extra, "boost")
+used = sum(1 for d in db.declarations("boost", "RM") if d["gameweek"] != gwn)
+st = engine.boost_status("RM", gwn, db.manager_clubs(), used)
+check(f"{BOOST_USES_PER_SEASON} used leaves none", st["left"], 0)
+check_true("and it stops being available", not st["available"])
+check_true("with a reason", "used this season" in st["why"], st["why"])
+
+r = bc.post(f"/declare/{gwn + 40}/boost", data={"on": "1"})
+check("a gameweek that doesn't exist is refused", r.status_code, 404)
+
+# A sacked manager takes the remaining boosts with them.
+club = db.manager_clubs()["RM"]["club"]
+db.set_manager_club("RM", club, sacked_from=gwn)
+st = engine.boost_status("RM", gwn, db.manager_clubs(), used=0)
+check_true("a sacking ends it", not st["available"])
+check_true("and says which club and when",
+           "went with them" in st["why"], st["why"])
+db.set_manager_club("RM", club, sacked_from=None)
+
+# A team with no drafted manager can't boost at all.
+st = engine.boost_status("NOBODY", gwn, db.manager_clubs(), used=0)
+check_true("no drafted manager, no boost", not st["available"])
+check_true("and it says so plainly", "no manager drafted" in st["why"], st["why"])
+
+closed = [g for g in engine.calendar() if not engine.deadline_state(g)["open"]]
+if closed:
+    r = bc.post(f"/declare/{closed[0]['gameweek']}/boost", data={"on": "1"})
+    check("a passed deadline refuses a boost", r.status_code, 409)
+os.environ.pop("ADMIN_KEYS", None)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

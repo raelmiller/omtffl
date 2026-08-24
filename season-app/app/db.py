@@ -62,6 +62,18 @@ CREATE TABLE IF NOT EXISTS manager_club (
     assigned_at TEXT NOT NULL
 );
 
+-- Everything a manager declares that isn't a lineup: boosts now, bank spends
+-- and waiver claims later. One row per manager per gameweek per kind, with
+-- the payload shaped exactly as the rules engine already reads it.
+CREATE TABLE IF NOT EXISTS declaration (
+    manager     TEXT NOT NULL REFERENCES manager(key),
+    gameweek    INTEGER NOT NULL,
+    kind        TEXT NOT NULL,
+    payload     TEXT NOT NULL DEFAULT '{}',
+    declared_at TEXT NOT NULL,
+    PRIMARY KEY (manager, gameweek, kind)
+);
+
 CREATE TABLE IF NOT EXISTS lineup (
     manager     TEXT NOT NULL REFERENCES manager(key),
     gameweek    INTEGER NOT NULL,
@@ -312,3 +324,54 @@ def assign_clubs_randomly(club_ids, seed=None):
     for key, club in zip(teams, pool):
         set_manager_club(key, club)
     return dict(zip(teams, pool))
+
+
+# ── Declarations ───────────────────────────────────────────────────────────
+def declare(manager, gameweek, kind, payload=None):
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO declaration (manager, gameweek, kind, payload, declared_at)"
+            " VALUES (?, ?, ?, ?, ?)"
+            " ON CONFLICT(manager, gameweek, kind) DO UPDATE SET"
+            "   payload = excluded.payload, declared_at = excluded.declared_at",
+            (manager, gameweek, kind, json.dumps(payload or {}), now()))
+
+
+def withdraw(manager, gameweek, kind):
+    with connect() as conn:
+        conn.execute("DELETE FROM declaration"
+                     " WHERE manager = ? AND gameweek = ? AND kind = ?",
+                     (manager, gameweek, kind))
+
+
+def declaration(manager, gameweek, kind):
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT * FROM declaration"
+            " WHERE manager = ? AND gameweek = ? AND kind = ?",
+            (manager, gameweek, kind)).fetchone()
+    return dict(row) if row else None
+
+
+def declarations(kind=None, manager=None):
+    sql = "SELECT * FROM declaration"
+    where, args = [], []
+    if kind:
+        where.append("kind = ?"); args.append(kind)
+    if manager:
+        where.append("manager = ?"); args.append(manager)
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    with connect() as conn:
+        return [dict(r) for r in conn.execute(sql + " ORDER BY gameweek", args)]
+
+
+def transactions():
+    """Every declaration, in the shape the rules engine consumes."""
+    out = []
+    for row in declarations():
+        payload = json.loads(row["payload"])
+        out.append({"type": row["kind"], "gameweek": row["gameweek"],
+                    "team": row["manager"], "declared_at": row["declared_at"],
+                    **payload})
+    return out

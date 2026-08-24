@@ -226,6 +226,12 @@ def _declare_context(request, gameweek=None):
             saved = {"xi": [p["id"] for p in xi], "bench": [p["id"] for p in bench]}
             rolled = "a suggested eleven — change anything you like"
 
+    used = sum(1 for d in db.declarations("boost", me["key"])
+               if d["gameweek"] != target["gameweek"])
+    ctx["boost"] = engine.boost_status(
+        me["key"], target["gameweek"], db.manager_clubs(), used,
+        declared=bool(db.declaration(me["key"], target["gameweek"], "boost")))
+
     ctx.update({
         "squad_json": json.dumps(squad),
         "saved_json": json.dumps(saved or {"xi": [], "bench": []}),
@@ -283,6 +289,40 @@ def save_declaration(request: Request, gameweek: int,
     db.save_lineup(me["key"], gameweek, entry["xi"], entry["bench"])
     return JSONResponse({"ok": True, "warnings": warnings,
                          "saved_at": db.now()})
+
+
+@app.post("/declare/{gameweek}/boost")
+def declare_boost(request: Request, gameweek: int, on: str = Form("")):
+    """Play or withdraw the manager boost for a gameweek.
+
+    Withdrawable right up to the deadline: a boost costs a use, and a manager
+    who changes their mind before kick-off has not used anything.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+
+    target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+    if not engine.deadline_state(target)["open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline for this gameweek has passed."]}, status_code=409)
+
+    if on != "1":
+        db.withdraw(me["key"], gameweek, "boost")
+        return JSONResponse({"ok": True, "declared": False})
+
+    used = sum(1 for d in db.declarations("boost", me["key"])
+               if d["gameweek"] != gameweek)
+    status = engine.boost_status(me["key"], gameweek, db.manager_clubs(), used)
+    if not status["available"]:
+        return JSONResponse({"ok": False, "errors": [status["why"]]},
+                            status_code=409)
+
+    db.declare(me["key"], gameweek, "boost")
+    return JSONResponse({"ok": True, "declared": True,
+                         "club": status["club"], "pct": status["pct"]})
 
 
 # ── Admin ──────────────────────────────────────────────────────────────────

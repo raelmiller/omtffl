@@ -32,7 +32,10 @@ from lineups import (                               # noqa: E402
     load_lineups, minutes_from_gameweek, suggest_lineup,
     validate as validate_lineup,
 )
-from mechanics import apply_transactions            # noqa: E402
+from mechanics import (                             # noqa: E402
+    BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
+    league_table,
+)
 from scoring import score_entry                     # noqa: E402
 
 
@@ -377,3 +380,47 @@ def clubs():
     """Premier League clubs, id -> name, from the fetched player data."""
     meta = _read("players.json") or {}
     return {int(k): v for k, v in (meta.get("clubs") or {}).items()}
+
+
+def boost_status(key, gameweek, drafted, used, declared=False):
+    """What a boost is worth to this manager this week, and whether it's on.
+
+    Everything a manager needs to decide with: which club, where they sit,
+    what that band pays, how many uses are left, and why it might be refused.
+    """
+    entry = (drafted or {}).get(key)
+    if not entry:
+        return {"available": False,
+                "why": "no manager drafted — the league hasn't assigned one yet"}
+
+    club_id = entry["club"]
+    club = clubs().get(club_id, {})
+    sacked = entry.get("sacked_from")
+    if sacked is not None and gameweek >= sacked:
+        return {"available": False, "club": club.get("name", "?"),
+                "why": (f"your manager left {club.get('name', 'the club')} in "
+                        f"gameweek {sacked} — the boost went with them")}
+
+    fixtures = _read("pl_fixtures.json") or []
+    table = league_table(fixtures, gameweek)
+    position = table.get(club_id)
+    settled = position is not None
+    if not settled:
+        from mechanics import NEUTRAL_POSITION
+        position = NEUTRAL_POSITION
+
+    left = BOOST_USES_PER_SEASON - used
+    return {
+        "available": left > 0,
+        "declared": declared,
+        "club": club.get("name", "?"),
+        "short": club.get("short", ""),
+        "position": position,
+        "provisional_position": not settled,
+        "pct": boost_pct(position),
+        "used": used,
+        "left": left,
+        "total": BOOST_USES_PER_SEASON,
+        "why": None if left > 0 else
+               f"all {BOOST_USES_PER_SEASON} boosts used this season",
+    }

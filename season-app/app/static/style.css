@@ -175,8 +175,8 @@ footer {
 
 .player {
   position: relative; display: flex; flex-direction: column; align-items: center;
-  gap: .16rem; padding: .3rem .18rem .34rem; cursor: pointer;
-  width: clamp(3.9rem, 12.5vw, 5.2rem);
+  gap: .16rem; padding: .3rem .1rem .34rem; cursor: pointer;
+  width: clamp(4.7rem, 18vw, 5.9rem);
   background: transparent; border: none; border-radius: 8px;
   font-family: var(--body); color: #fff;
   transition: transform .12s ease, opacity .12s ease;
@@ -193,12 +193,14 @@ footer {
 .player .shirt[data-pos="MID"] { background: #7fffb2; }
 .player .shirt[data-pos="FWD"] { background: #ff9d7f; }
 .player .pn {
-  font-size: clamp(.62rem, 2.1vw, .74rem); font-weight: 600; line-height: 1.12;
+  font-size: clamp(.58rem, 2.1vw, .74rem); font-weight: 600; line-height: 1.12;
   text-align: center; max-width: 100%;
   /* Long names wrap rather than truncate — "Verbrugg…" tells a manager less
      than they need when two keepers are in the squad. Two lines is the cap,
      and the fixed min-height keeps every row on the pitch aligned. */
-  overflow-wrap: anywhere; hyphens: auto;
+  /* Break between words, and only inside one when it genuinely cannot fit —
+     "Verbrugge / n" reads worse than a slightly smaller name. */
+  overflow-wrap: break-word; hyphens: none;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   overflow: hidden; min-height: 2.1em;
   text-shadow: 0 1px 3px rgba(0,0,0,.7);
@@ -249,3 +251,19 @@ select, input[type="text"] {
   border-radius: 5px; background: var(--surface); color: var(--text);
   border: 1px solid var(--border-2);
 }
+
+/* ── Manager boost ───────────────────────────────────── */
+.boostbar {
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  align-items: center; margin-top: 1.1rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); padding: .85rem 1.05rem;
+}
+.boostbar.on { border-color: var(--accent); background: var(--accent-dim); }
+.bmain { display: flex; flex-direction: column; gap: .18rem; }
+.bclub { font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em; }
+.bdetail { font-size: .86rem; color: var(--muted); }
+.bdetail .ord { font-size: .72em; vertical-align: super; }
+.bdetail .dim { opacity: .8; font-size: .95em; }
+.bside { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+.buses { font-family: var(--mono); font-size: .72rem; color: var(--muted); }

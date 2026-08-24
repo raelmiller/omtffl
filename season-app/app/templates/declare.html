@@ -50,6 +50,39 @@
     <div class="benchrow" id="benchrow"></div>
   </div>
 
+  {% if boost %}
+  <div class="boostbar {% if boost.declared %}on{% endif %}">
+    <div class="bmain">
+      <span class="eyebrow">Manager boost</span>
+      {% if boost.available or boost.declared %}
+        <div class="bclub">{{ boost.club }}</div>
+        <div class="bdetail">
+          {{ boost.position }}<span class="ord">{{ 'st' if boost.position == 1 else 'nd' if boost.position == 2 else 'rd' if boost.position == 3 else 'th' }}</span>
+          &middot; <strong>{{ boost.pct|round|int }}%</strong> if they win,
+          half for a draw, nothing if they lose
+          {% if boost.provisional_position %}
+            <br><span class="dim">No league table yet, so this is priced at mid-table until results land.</span>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="bclub">Not available</div>
+        <div class="bdetail">{{ boost.why }}</div>
+      {% endif %}
+    </div>
+    <div class="bside">
+      <div class="buses">{{ boost.left }} of {{ boost.total }} left</div>
+      {% if boost.available or boost.declared %}
+      <button id="boost" class="btn {% if boost.declared %}{% else %}ghost{% endif %}"
+              data-on="{{ 1 if boost.declared else 0 }}"
+              {% if not lock.open %}disabled{% endif %}>
+        {{ 'Boost played' if boost.declared else 'Play boost' }}
+      </button>
+      {% endif %}
+      <span id="bstatus" class="savestate"></span>
+    </div>
+  </div>
+  {% endif %}
+
   <p class="note">A starter who doesn&rsquo;t play at all is replaced by the first
   substitute who did, as long as the formation stays legal. Keepers only ever
   replace keepers.</p>
@@ -198,6 +231,37 @@
       status.className = 'savestate bad';
     }
   });
+
+  const boostBtn = document.getElementById('boost');
+  if (boostBtn) {
+    boostBtn.addEventListener('click', async () => {
+      const status = document.getElementById('bstatus');
+      const turningOn = boostBtn.dataset.on !== '1';
+      status.textContent = turningOn ? 'Playing…' : 'Withdrawing…';
+      status.className = 'savestate';
+      try {
+        const res = await fetch(`/declare/${gw}/boost`, {
+          method: 'POST',
+          body: new URLSearchParams({ on: turningOn ? '1' : '0' }),
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          status.textContent = (data.errors || ['Could not save']).join(' · ');
+          status.className = 'savestate bad';
+          return;
+        }
+        boostBtn.dataset.on = data.declared ? '1' : '0';
+        boostBtn.textContent = data.declared ? 'Boost played' : 'Play boost';
+        boostBtn.classList.toggle('ghost', !data.declared);
+        document.querySelector('.boostbar').classList.toggle('on', data.declared);
+        status.textContent = data.declared ? 'Playing this week' : 'Withdrawn';
+        status.className = 'savestate ' + (data.declared ? 'ok' : '');
+      } catch (e) {
+        status.textContent = 'Could not reach the server.';
+        status.className = 'savestate bad';
+      }
+    });
+  }
 
   const cd = document.getElementById('countdown');
   if (cd) {
