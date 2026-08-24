@@ -391,13 +391,26 @@ def declarations(kind=None, manager=None):
 
 
 def transactions():
-    """Every declaration, in the shape the rules engine consumes."""
-    out = []
+    """Every declaration, in the shape the rules engine consumes.
+
+    Waivers are the exception to one-row-one-transaction: the engine resolves
+    a gameweek's claims as a single run so it can apply the snake priority, so
+    every manager's claims for a round are gathered into one `waiver_run`.
+    Emitting them individually would ask the engine to process each in
+    isolation and lose the ordering the rule is built on.
+    """
+    out, runs = [], {}
     for row in declarations():
         payload = json.loads(row["payload"])
+        if row["kind"] == "waiver":
+            runs.setdefault(row["gameweek"], {})[row["manager"]] = \
+                payload.get("claims", [])
+            continue
         out.append({"type": row["kind"], "gameweek": row["gameweek"],
                     "team": row["manager"], "declared_at": row["declared_at"],
                     **payload})
+    for gameweek, claims in runs.items():
+        out.append({"type": "waiver_run", "gameweek": gameweek, "claims": claims})
     return out
 
 

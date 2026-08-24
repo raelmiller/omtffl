@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fastapi.testclient import TestClient          # noqa: E402
 
 from app import auth, db, engine, fetcher           # noqa: E402
+from app.main import _claims_from_declarations as _claims_for  # noqa: E402
 from app.main import app                           # noqa: E402
 
 FAILS = []
@@ -400,6 +401,75 @@ check("enough objections vote it down",
       engine.trade_outcome(db.trade(pts_trade["id"]))["state"], "vetoed")
 check_true("so it never reaches the engine",
            not [t for t in engine.effective_trades(db.trades()) if t["points"] == 10])
+os.environ.pop("ADMIN_KEYS", None)
+
+print("\n── The bank ────────────────────────────────────────────")
+
+os.environ["ADMIN_KEYS"] = "RM"
+bk = TestClient(app)
+bk.get(f"/m/{db.manager_by_key('RM')['token']}")
+gwb = engine.current_gameweek()["gameweek"]
+
+# A bank only fills from a trade that carried points.
+sqb = engine.squads_for_gameweek(gwb, db.trades())
+give = [p for p in sqb["AF"] if p["position"] == "MID"][0]
+back = [p for p in sqb["RM"] if p["position"] == "MID"][0]
+tid = db.propose_trade(gwb, "AF", "RM", [give], [back], 25)
+db.set_trade_status(tid, "accepted")
+alltx = db.transactions() + engine.effective_trades(db.trades())
+
+st = engine.bank_status("RM", gwb + 1, alltx, db.manager_clubs())
+check("receiving points fills the bank", st["balance"], 25)
+check("the manager who paid has nothing banked",
+      engine.bank_status("AF", gwb + 1, alltx, db.manager_clubs())["balance"], 0)
+
+r = bk.post(f"/declare/{gwb}/bank", data={"points": "10"})
+check("spending within the balance is allowed", r.json()["ok"], True)
+check("and says what's left", r.json()["left"], 15)
+r = bk.post(f"/declare/{gwb}/bank", data={"points": "999"})
+check("spending more than you have is refused", r.status_code, 422)
+r = bk.post(f"/declare/{gwb}/bank", data={"points": "0"})
+check("and it can be withdrawn", r.json()["spending"], 0)
+
+print("\n── Waivers ─────────────────────────────────────────────")
+
+wc = TestClient(app)
+wc.get(f"/m/{db.manager_by_key('RM')['token']}")
+check("the waivers page loads", wc.get("/waivers").status_code, 200)
+
+gww = engine.current_gameweek()["gameweek"]
+sqw = engine.squads_for_gameweek(gww, db.trades())
+freew = engine.free_agents(gww, db.trades())
+check_true("there are free agents to claim", len(freew) > 50, f"{len(freew)}")
+check_true("and none of them is owned",
+           not ({p["id"] for p in freew} &
+                {p["id"] for sq in sqw.values() for p in sq}))
+
+wanted = [p for p in freew if p["position"] == "MID"][0]
+
+def claim(who, drop_pos="MID", add=None):
+    drop = [p for p in sqw[who] if p["position"] == drop_pos][0]
+    target = add or wanted
+    return db.declare(who, gww, "waiver",
+                      {"claims": [{"drop": drop, "add": target}]})
+
+# The two managers at opposite ends of the table both want the same player.
+season_now = engine.season(db.all_lineups() or None, db.transactions(),
+                           db.manager_clubs())
+standings = engine.waiver_order(gww, season_now)
+top, bottom = standings[0], standings[-1]
+claim(top)
+claim(bottom)
+run = engine.run_waivers(gww, _claims_for(gww), db.trades(), season_now)
+landed = [r for r in run["results"] if r["landed"]]
+check("only one of them gets him", len(landed), 1)
+check("and it's the one nearer the bottom", landed[0]["team"], bottom)
+lost = [r for r in run["results"] if not r["landed"]]
+check_true("the other is told they lost the race",
+           lost and lost[0]["why"] == "already claimed", str(run["results"]))
+check("losing a race isn't an error", run["problems"], [])
+db.withdraw(top, gww, "waiver")
+db.withdraw(bottom, gww, "waiver")
 os.environ.pop("ADMIN_KEYS", None)
 
 print()

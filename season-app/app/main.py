@@ -231,6 +231,9 @@ def _declare_context(request, gameweek=None):
 
     used = sum(1 for d in db.declarations("boost", me["key"])
                if d["gameweek"] != target["gameweek"])
+    all_tx = db.transactions() + engine.effective_trades(db.trades())
+    ctx["bank"] = engine.bank_status(
+        me["key"], target["gameweek"], all_tx, db.manager_clubs())
     ctx["boost"] = engine.boost_status(
         me["key"], target["gameweek"], db.manager_clubs(), used,
         declared=bool(db.declaration(me["key"], target["gameweek"], "boost")))
@@ -326,6 +329,39 @@ def declare_boost(request: Request, gameweek: int, on: str = Form("")):
     db.declare(me["key"], gameweek, "boost")
     return JSONResponse({"ok": True, "declared": True,
                          "club": status["club"], "pct": status["pct"]})
+
+
+@app.post("/declare/{gameweek}/bank")
+def declare_bank(request: Request, gameweek: int, points: int = Form(0)):
+    """Spend banked points on a gameweek, or change how many.
+
+    Declared before kick-off like everything else, and adjustable right up to
+    the deadline — the points are only committed when the round starts.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+    if not engine.deadline_state(target)["open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline for this gameweek has passed."]}, status_code=409)
+
+    if points <= 0:
+        db.withdraw(me["key"], gameweek, "bank_use")
+        return JSONResponse({"ok": True, "spending": 0})
+
+    all_tx = db.transactions() + engine.effective_trades(db.trades())
+    status = engine.bank_status(me["key"], gameweek, all_tx, db.manager_clubs())
+    if points > status["balance"]:
+        return JSONResponse({"ok": False, "errors": [
+            f"You have {status['balance']} banked, so you can't spend {points}."]},
+            status_code=422)
+
+    db.declare(me["key"], gameweek, "bank_use", {"points": points})
+    return JSONResponse({"ok": True, "spending": points,
+                         "left": status["balance"] - points})
 
 
 # ── Trades ─────────────────────────────────────────────────────────────────
@@ -456,6 +492,99 @@ def respond(request: Request, trade_id: int, action: str):
     else:
         raise HTTPException(403, "not yours to do that with")
     return RedirectResponse("/trade", status_code=303)
+
+
+# ── Waivers ────────────────────────────────────────────────────────────────
+def _claims_from_declarations(gameweek):
+    """Everyone's claims for a gameweek, in each manager's priority order."""
+    claims = {}
+    for row in db.declarations("waiver"):
+        if row["gameweek"] != gameweek:
+            continue
+        payload = json.loads(row["payload"])
+        if payload.get("claims"):
+            claims[row["manager"]] = payload["claims"]
+    return claims
+
+
+@app.get("/waivers", response_class=HTMLResponse)
+def waivers(request: Request):
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+
+    gw = engine.current_gameweek()
+    trades = db.trades()
+    squads = engine.squads_for_gameweek(gw["gameweek"], trades)
+    claims = _claims_from_declarations(gw["gameweek"])
+    run = engine.run_waivers(gw["gameweek"], claims, trades, ctx["season"])
+    names = {m["key"]: m["team"] for m in db.managers()}
+
+    ctx.update({
+        "gw": gw,
+        "lock": engine.deadline_state(gw),
+        "my_squad": squads.get(me["key"], []),
+        "my_claims": claims.get(me["key"], []),
+        "free_json": json.dumps(engine.free_agents(gw["gameweek"], trades)),
+        "squad_json": json.dumps(squads.get(me["key"], [])),
+        "claims_json": json.dumps(claims.get(me["key"], [])),
+        "order": [{"key": k, "team": names.get(k, k)}
+                  for k in reversed(run["order"] or sorted(squads))],
+        "my_place": (list(reversed(run["order"])).index(me["key"]) + 1
+                     if me["key"] in run["order"] else None),
+        "preview": [{**r, "team": names.get(r["team"], r["team"])}
+                    for r in run["results"]],
+        "claim_counts": {names.get(k, k): len(v) for k, v in claims.items()},
+    })
+    return templates.TemplateResponse("waivers.html", ctx)
+
+
+@app.post("/waivers/{gameweek}")
+def save_claims(request: Request, gameweek: int, claims: str = Form("")):
+    """Save a manager's ranked claims. Each is 'dropId:addId'."""
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+    if not engine.deadline_state(target)["open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline for this gameweek has passed."]}, status_code=409)
+
+    trades = db.trades()
+    squads = engine.squads_for_gameweek(gameweek, trades)
+    mine = {p["id"]: p for p in squads.get(me["key"], [])}
+    free = {p["id"]: p for p in engine.free_agents(gameweek, trades)}
+
+    parsed, errors = [], []
+    for pair in [c for c in claims.split(",") if c.strip()]:
+        try:
+            drop_id, add_id = (int(x) for x in pair.split(":"))
+        except ValueError:
+            errors.append(f"couldn't read the claim '{pair}'")
+            continue
+        if drop_id not in mine:
+            errors.append("you can only drop a player you own")
+        elif add_id not in free:
+            errors.append(f"{free.get(add_id, {}).get('name', 'that player')} "
+                          "is already owned")
+        elif mine[drop_id]["position"] != free[add_id]["position"]:
+            errors.append(f"{free[add_id]['name']} is a "
+                          f"{free[add_id]['position']} and "
+                          f"{mine[drop_id]['name']} is a "
+                          f"{mine[drop_id]['position']} — that breaks the squad")
+        else:
+            parsed.append({"drop": mine[drop_id], "add": free[add_id]})
+
+    if errors:
+        return JSONResponse({"ok": False, "errors": errors}, status_code=422)
+    if parsed:
+        db.declare(me["key"], gameweek, "waiver", {"claims": parsed})
+    else:
+        db.withdraw(me["key"], gameweek, "waiver")
+    return JSONResponse({"ok": True, "claims": len(parsed)})
 
 
 # ── Admin ──────────────────────────────────────────────────────────────────

@@ -34,7 +34,8 @@ from lineups import (                               # noqa: E402
 )
 from mechanics import (                             # noqa: E402
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
-    boost_value, league_table, setting, validate_trade,
+    boost_value, league_table, process_waivers, setting, snake_order,
+    validate_trade,
 )
 from scoring import score_entry                     # noqa: E402
 
@@ -125,21 +126,32 @@ def _season(version, lineup_key, lineups_json, real_keys,
              for t in squads["teams"]}
     rounds = []
 
-    # Run the declarations through the rules engine once. It decides which
-    # boosts actually count — the allowance, one a gameweek, a sacked manager
-    # — so the table can never credit one the rules would have refused.
+    managers_arg = {k: {"name": v.get("name"), "club": v.get("club"),
+                        "sacked_from": v.get("sacked_from")}
+                    for k, v in drafted.items()}
+    # Standings drive waiver priority, and the standings going into a gameweek
+    # are the table after the one before — so this is resolved as the season is
+    # scored, not once up front. Everything is recomputed each round because a
+    # waiver in round three changes who owns whom in round four.
+    standings = {}
     boosts_allowed = set()
-    if transactions:
-        managers_arg = {k: {"name": v.get("name"), "club": v.get("club"),
-                            "sacked_from": v.get("sacked_from")}
-                        for k, v in drafted.items()}
-        _, _, boost_log, _, _, _ = apply_transactions(
-            squads, transactions, 38, managers=managers_arg)
-        boosts_allowed = {(b["gameweek"], b["team"]) for b in boost_log}
+    squads_at = {}
 
     for path in gameweek_files():
         gw = json.loads(path.read_text())
         n = gw["gameweek"]
+
+        if transactions:
+            ranked_now = sorted(
+                table.values(),
+                key=lambda r: (-r["Pts"], -(r["PF"] - r["PA"]), -r["PF"]))
+            standings[n] = [r["key"] for r in ranked_now]
+            moved, _, boost_log, _, _, _ = apply_transactions(
+                squads, transactions, n, managers=managers_arg,
+                standings=standings)
+            boosts_allowed = {(b["gameweek"], b["team"]) for b in boost_log}
+            squads_at = moved
+
         _, hindsight = gameweek_scores(path, squads, positions)
 
         # Where a manager submitted an XI, that's their score. Where nobody
@@ -154,7 +166,8 @@ def _season(version, lineup_key, lineups_json, real_keys,
         scores, sources, boosts = {}, {}, {}
         for team in squads["teams"]:
             key = team["key"]
-            picked, bench, how = effective_lineup(key, n, lineups, team["squad"])
+            roster = squads_at.get(key, team["squad"])
+            picked, bench, how = effective_lineup(key, n, lineups, roster)
             if picked:
                 if (n, key) not in real:
                     # Resolved from the placeholder file, not from anything a
@@ -380,14 +393,36 @@ def deadline_state(gw):
     }
 
 
+def current_club(player_id):
+    """A player's club now, not on draft day.
+
+    Squad entries carry the club a player was at when they were drafted, and
+    that goes stale the moment anyone transfers — a defender listed at their
+    old club is genuinely confusing when you're picking a team. The fetched
+    player data is refreshed every gameweek, so it wins.
+    """
+    meta = _read("players.json") or {}
+    club_id = (meta.get("player_clubs") or {}).get(str(player_id))
+    return clubs().get(club_id, {}).get("short")
+
+
+def refresh_clubs(squad):
+    """Squad entries with their club brought up to date."""
+    out = []
+    for player in squad:
+        now = current_club(player["id"])
+        out.append({**player, "club": now} if now else dict(player))
+    return out
+
+
 def squad_for(key):
-    """A manager's fifteen. Phase two has no trades, so this is the draft."""
+    """A manager's fifteen, as drafted."""
     squads = _read("squads.json")
     if not squads:
         return []
     for team in squads["teams"]:
         if team["key"] == key:
-            return list(team["squad"])
+            return refresh_clubs(team["squad"])
     return []
 
 
@@ -527,9 +562,9 @@ def squads_for_gameweek(gameweek, stored_trades=None, config=None):
         return {}
     txs = effective_trades(stored_trades or [], config)
     if not txs:
-        return {t["key"]: list(t["squad"]) for t in base["teams"]}
+        return {t["key"]: refresh_clubs(t["squad"]) for t in base["teams"]}
     squads, *_ = apply_transactions(base, txs, gameweek)
-    return squads
+    return {k: refresh_clubs(v) for k, v in squads.items()}
 
 
 def accumulated_points(key, gameweek, season_data):
@@ -544,3 +579,90 @@ def accumulated_points(key, gameweek, season_data):
             elif m["away_key"] == key:
                 total += m["away_score"]
     return total
+
+
+# ── The points bank ────────────────────────────────────────────────────────
+def bank_status(key, gameweek, transactions, drafted=None):
+    """What a manager has banked, and what they've already declared to spend.
+
+    The balance comes from the rules engine rather than a running total in a
+    column, so it can never disagree with the trades that produced it — and a
+    trade voted down leaves nothing behind.
+    """
+    base = _read("squads.json")
+    if not base:
+        return {"balance": 0, "spending": 0, "available": False,
+                "why": "no squads yet"}
+
+    # Everything up to but not including this gameweek settles the balance;
+    # a spend declared for this round is what we're deciding about.
+    earlier = [t for t in transactions
+               if not (t.get("type") == "bank_use"
+                       and t.get("gameweek") == gameweek
+                       and t.get("team") == key)]
+    managers_arg = {k: {"club": v.get("club"), "sacked_from": v.get("sacked_from")}
+                    for k, v in (drafted or {}).items()}
+    _, _, _, bank, _, problems = apply_transactions(
+        base, earlier, 38, managers=managers_arg)
+
+    spending = next((t.get("points", 0) for t in transactions
+                     if t.get("type") == "bank_use"
+                     and t.get("gameweek") == gameweek
+                     and t.get("team") == key), 0)
+    balance = bank.get(key, 0)
+    return {
+        "balance": balance,
+        "spending": spending,
+        "available": balance > 0 or spending > 0,
+        "why": None if balance or spending else
+               "nothing banked — points arrive by accepting a trade that "
+               "carries them",
+        "problems": [p for p in problems if key in p],
+    }
+
+
+# ── Waivers ────────────────────────────────────────────────────────────────
+def free_agents(gameweek, stored_trades=None):
+    """Players nobody owns, with their name, position and club."""
+    squads = squads_for_gameweek(gameweek, stored_trades)
+    owned = {p["id"] for squad in squads.values() for p in squad}
+    meta = _read("players.json") or {}
+    positions = {int(k): v for k, v in (meta.get("positions") or {}).items()}
+    names = meta.get("names") or {}
+    player_clubs = {int(k): v for k, v in (meta.get("player_clubs") or {}).items()}
+    club_names = clubs()
+    POS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
+
+    out = []
+    for pid, element_type in positions.items():
+        if pid in owned:
+            continue
+        out.append({
+            "id": pid,
+            "name": names.get(str(pid), f"#{pid}"),
+            "position": POS.get(element_type, "?"),
+            "club": club_names.get(player_clubs.get(pid), {}).get("short", ""),
+        })
+    return out
+
+
+def waiver_order(gameweek, season_data):
+    """Standings going into a gameweek, best first — waivers snake from the
+    bottom of this list upwards."""
+    table = season_data.get("table") or []
+    ranked = [r["key"] for r in table]
+    return ranked
+
+
+def run_waivers(gameweek, claims, stored_trades=None, season_data=None):
+    """Resolve a gameweek's claims exactly as the rules engine would.
+
+    Used to show managers what would happen if the run went now, and by the
+    scoring once the deadline has passed — the same function either way, so
+    the preview cannot promise something the real run won't deliver.
+    """
+    squads = squads_for_gameweek(gameweek, stored_trades)
+    order = waiver_order(gameweek, season_data or {}) or sorted(squads)
+    results, problems = process_waivers(claims, squads, order)
+    return {"results": results, "problems": problems, "order": order,
+            "squads": squads}

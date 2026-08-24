@@ -324,3 +324,33 @@ input[type="number"] {
   border-radius: 5px; background: var(--surface); color: var(--text);
   border: 1px solid var(--border-2);
 }
+
+/* ── Waivers ─────────────────────────────────────────── */
+.snake { display: flex; flex-wrap: wrap; gap: .35rem; padding: .75rem .85rem; }
+.slot {
+  display: inline-flex; align-items: baseline; gap: .35rem;
+  font-size: .82rem; padding: .22rem .5rem; border-radius: 5px;
+  border: 1px solid var(--border); background: var(--surface-2);
+}
+.slot .n { font-family: var(--mono); font-size: .66rem; color: var(--muted); }
+.slot .c {
+  font-family: var(--mono); font-size: .62rem; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 3px; padding: 0 .22rem;
+}
+.slot.mine { border-color: var(--accent); background: var(--accent-dim); font-weight: 600; }
+.wrow {
+  display: grid; grid-template-columns: auto auto 1fr auto auto; gap: .6rem;
+  align-items: center; padding: .45rem .8rem;
+  border-bottom: 1px solid var(--border); font-size: .9rem;
+}
+.wrow:last-child { border-bottom: none; }
+.wrow .mark { font-family: var(--mono); color: var(--accent); width: 1rem; }
+.wrow .rnd, .wrow .wteam { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.wrow .wteam { font-family: var(--body); font-size: .88rem; font-weight: 600; color: var(--text); }
+.wrow .wmove { font-size: .9rem; }
+.moretxt { font-size: .78rem; color: var(--muted); padding: .5rem .55rem; }
+input[type="search"] {
+  width: 100%; font-family: var(--body); font-size: .86rem;
+  padding: .38rem .5rem; margin-top: .35rem; border-radius: 6px;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border-2);
+}

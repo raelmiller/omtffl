@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Waivers — Matchweek{% endblock %}
+{% block heading %}Waivers{% endblock %}
+{% block subheading %}
+<p class="sub">
+  For {{ gw.name }} &middot;
+  {% if lock.open %}claims close at the deadline{% else %}closed{% endif %}
+  {% if my_place %}&middot; you claim {{ my_place }}{{ 'st' if my_place == 1 else 'nd' if my_place == 2 else 'rd' if my_place == 3 else 'th' }} in round one{% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+
+<section>
+  <div class="sechead"><h2>How the run works</h2></div>
+  <p class="sub">Claims are processed together after the deadline, from the
+  bottom of the table upwards. Round two runs the other way, and so on. You get
+  one attempt per round &mdash; if someone beats you to a player, your next
+  choice waits for the snake to come back to you rather than going straight
+  through.</p>
+  <div class="panel snake">
+    {% for m in order %}
+    <span class="slot {% if me and m.key == me.key %}mine{% endif %}">
+      <span class="n">{{ loop.index }}</span>{{ m.team }}
+      {%- if claim_counts.get(m.team) %} <span class="c">{{ claim_counts[m.team] }}</span>{% endif -%}
+    </span>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>Your claims</h2>
+    <span class="eyebrow">in the order you want them</span>
+  </div>
+
+  {% if not lock.open %}
+    <p class="note">Claims for {{ gw.name }} have closed.</p>
+  {% else %}
+  <div id="claimlist" class="panel"></div>
+
+  <div class="twocol" style="margin-top:1rem">
+    <div>
+      <span class="eyebrow">Drop</span>
+      <div id="mine" class="picklist"></div>
+    </div>
+    <div>
+      <span class="eyebrow">Claim</span>
+      <input type="search" id="search" placeholder="search free agents"
+             autocomplete="off">
+      <div id="free" class="picklist"></div>
+    </div>
+  </div>
+
+  <div class="tacts" style="margin-top:.9rem">
+    <span id="cstatus" class="savestate"></span>
+    <button id="addclaim" class="btn ghost">Add claim</button>
+    <button id="savec" class="btn">Save claims</button>
+  </div>
+  {% endif %}
+</section>
+
+{% if preview %}
+<section>
+  <div class="sechead">
+    <h2>If the run happened now</h2>
+    <span class="eyebrow">provisional</span>
+  </div>
+  <div class="panel">
+    {% for r in preview %}
+    <div class="wrow">
+      <span class="mark">{{ '✓' if r.landed else '·' }}</span>
+      <span class="rnd">round {{ r.round }}</span>
+      <span class="wteam">{{ r.team }}</span>
+      <span class="wmove">{{ r.add.name }} for {{ r.drop.name }}</span>
+      {% if not r.landed %}<span class="pclub">{{ r.why }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <p class="note">This is what the rules would do with the claims in right now.
+  It changes as other managers add theirs, and only the run after the deadline
+  counts.</p>
+</section>
+{% endif %}
+
+<p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/declare">Pick your team</a></p>
+
+{% if lock.open %}
+<script id="free-data" type="application/json">{{ free_json|safe }}</script>
+<script id="squad-data" type="application/json">{{ squad_json|safe }}</script>
+<script id="claims-data" type="application/json">{{ claims_json|safe }}</script>
+<script>
+(function () {
+  const free = JSON.parse(document.getElementById('free-data').textContent);
+  const squad = JSON.parse(document.getElementById('squad-data').textContent);
+  const gw = {{ gw.gameweek }};
+  let claims = JSON.parse(document.getElementById('claims-data').textContent);
+
+  const POS = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
+  const order = list => [...list].sort((a, b) =>
+    (POS[a.position] - POS[b.position]) || a.name.localeCompare(b.name));
+
+  let dropId = null, addId = null, filter = '';
+  const el = id => document.getElementById(id);
+
+  function row(p, selected, onClick, extra) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pick' + (selected ? ' on' : '');
+    b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    b.innerHTML = `<span class="tick" aria-hidden="true"></span>` +
+                  `<span class="pn2">${p.name}</span>` +
+                  `<span class="pclub">${extra || p.position}</span>`;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  function render() {
+    const claimed = new Set(claims.map(c => c.add.id));
+
+    el('mine').innerHTML = '';
+    order(squad).forEach(p => el('mine').appendChild(
+      row(p, dropId === p.id, () => { dropId = (dropId === p.id ? null : p.id); render(); })));
+
+    const list = el('free')
+    list.innerHTML = '';
+    const matching = order(free.filter(p =>
+      !claimed.has(p.id) &&
+      (!filter || p.name.toLowerCase().includes(filter) ||
+       (p.club || '').toLowerCase().includes(filter))));
+    // The free-agent list runs to hundreds; showing all of them makes the
+    // page unusable and the search is right there.
+    matching.slice(0, 60).forEach(p => list.appendChild(
+      row(p, addId === p.id, () => { addId = (addId === p.id ? null : p.id); render(); },
+          `${p.position} ${p.club || ''}`)));
+    if (matching.length > 60) {
+      const more = document.createElement('div');
+      more.className = 'moretxt';
+      more.textContent = `${matching.length - 60} more — keep typing to narrow it down`;
+      list.appendChild(more);
+    }
+
+    const cl = el('claimlist');
+    cl.innerHTML = '';
+    if (!claims.length) {
+      cl.innerHTML = '<p class="empty">No claims yet. Pick someone to drop and ' +
+                     'someone to claim, then add it.</p>';
+    }
+    claims.forEach((c, i) => {
+      const r = document.createElement('div');
+      r.className = 'wrow';
+      r.innerHTML = `<span class="border">${i + 1}</span>` +
+        `<span class="wmove"><strong>${c.add.name}</strong> for ${c.drop.name}</span>` +
+        `<span class="pclub">${c.add.position}</span>` +
+        `<span class="moves">
+           <button class="mv" data-d="-1" ${i === 0 ? 'disabled' : ''}>&uarr;</button>
+           <button class="mv" data-d="1" ${i === claims.length - 1 ? 'disabled' : ''}>&darr;</button>
+           <button class="mv" data-x="1">&times;</button>
+         </span>`;
+      r.querySelectorAll('.mv').forEach(btn => btn.addEventListener('click', () => {
+        if (btn.dataset.x) claims.splice(i, 1);
+        else {
+          const j = i + Number(btn.dataset.d);
+          if (j < 0 || j >= claims.length) return;
+          [claims[i], claims[j]] = [claims[j], claims[i]];
+        }
+        render();
+      }));
+      cl.appendChild(r);
+    });
+
+    el('addclaim').disabled = !(dropId && addId);
+  }
+
+  el('search').addEventListener('input', e => {
+    filter = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  el('addclaim').addEventListener('click', () => {
+    const drop = squad.find(p => p.id === dropId);
+    const add = free.find(p => p.id === addId);
+    if (!drop || !add) return;
+    const status = el('cstatus');
+    if (drop.position !== add.position) {
+      status.textContent = `${add.name} is a ${add.position} and ${drop.name} ` +
+                           `is a ${drop.position} — that breaks the squad shape`;
+      status.className = 'savestate bad';
+      return;
+    }
+    claims.push({ drop, add });
+    dropId = addId = null;
+    status.textContent = '';
+    render();
+  });
+
+  el('savec').addEventListener('click', async () => {
+    const status = el('cstatus');
+    status.textContent = 'Saving…';
+    status.className = 'savestate';
+    const res = await fetch(`/waivers/${gw}`, {
+      method: 'POST',
+      body: new URLSearchParams({
+        claims: claims.map(c => `${c.drop.id}:${c.add.id}`).join(','),
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) { location.reload(); return; }
+    status.textContent = (data.errors || ['Could not save']).join(' · ');
+    status.className = 'savestate bad';
+  });
+
+  render();
+})();
+</script>
+{% endif %}
+{% endblock %}

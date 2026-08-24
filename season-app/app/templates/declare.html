@@ -83,6 +83,29 @@
   </div>
   {% endif %}
 
+  {% if bank and bank.available %}
+  <div class="boostbar {% if bank.spending %}on{% endif %}">
+    <div class="bmain">
+      <span class="eyebrow">Points bank</span>
+      <div class="bclub">{{ bank.balance }} banked</div>
+      <div class="bdetail">
+        Spend any of it on this gameweek. It is added to your score for the
+        round, and what you don&rsquo;t spend stays for later.
+      </div>
+    </div>
+    <div class="bside">
+      <input type="number" id="bankamt" min="0" max="{{ bank.balance }}"
+             value="{{ bank.spending }}" step="1"
+             {% if not lock.open %}disabled{% endif %}>
+      <button id="banksave" class="btn ghost"
+              {% if not lock.open %}disabled{% endif %}>Spend</button>
+      <span id="bankstatus" class="savestate">
+        {%- if bank.spending %}Spending {{ bank.spending }} this week{% endif -%}
+      </span>
+    </div>
+  </div>
+  {% endif %}
+
   <p class="note">A starter who doesn&rsquo;t play at all is replaced by the first
   substitute who did, as long as the formation stays legal. Keepers only ever
   replace keepers.</p>
@@ -231,6 +254,38 @@
       status.className = 'savestate bad';
     }
   });
+
+  const bankBtn = document.getElementById('banksave');
+  if (bankBtn) {
+    bankBtn.addEventListener('click', async () => {
+      const amt = document.getElementById('bankamt');
+      const status = document.getElementById('bankstatus');
+      status.textContent = 'Saving…';
+      status.className = 'savestate';
+      try {
+        const res = await fetch(`/declare/${gw}/bank`, {
+          method: 'POST',
+          body: new URLSearchParams({ points: amt.value || '0' }),
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          status.textContent = (data.errors || ['Could not save']).join(' · ');
+          status.className = 'savestate bad';
+          return;
+        }
+        status.textContent = data.spending
+          ? `Spending ${data.spending} this week — ${data.left} left banked`
+          : 'Not spending this week';
+        status.className = 'savestate ' + (data.spending ? 'ok' : '');
+        document.querySelectorAll('.boostbar')[
+          document.querySelectorAll('.boostbar').length - 1
+        ].classList.toggle('on', !!data.spending);
+      } catch (e) {
+        status.textContent = 'Could not reach the server.';
+        status.className = 'savestate bad';
+      }
+    });
+  }
 
   const boostBtn = document.getElementById('boost');
   if (boostBtn) {
