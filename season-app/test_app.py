@@ -224,6 +224,47 @@ check_true("and setting the cookie by hand achieves nothing",
            db.manager_by_key("RM")["team"] not in plain.get("/declare").text)
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── Drafted managers ────────────────────────────────────")
+
+os.environ["ADMIN_KEYS"] = "RM"
+boss2 = TestClient(app)
+boss2.get(f"/m/{db.manager_by_key('RM')['token']}")
+
+clubs = engine.clubs()
+check_true("the club list came through with the player data", len(clubs) >= 20,
+           f"{len(clubs)} clubs")
+
+r = boss2.post("/admin/assign-clubs", follow_redirects=False)
+check("an admin can assign clubs at random", r.status_code, 303)
+drafted = db.manager_clubs()
+check("every team gets one", len(drafted), len(db.managers()))
+check_true("and they're all different",
+           len({d["club"] for d in drafted.values()}) == len(drafted))
+check_true("each is a real club",
+           all(d["club"] in clubs for d in drafted.values()))
+
+r = boss2.post("/admin/club/AF", data={"club": "1", "sacked_from": "12"},
+               follow_redirects=False)
+check("one can be set by hand", r.status_code, 303)
+check("including a sacking", db.manager_clubs()["AF"]["sacked_from"], 12)
+
+r = boss2.post("/admin/club/AF", data={"club": "1", "sacked_from": ""},
+               follow_redirects=False)
+check("and cleared again", db.manager_clubs()["AF"]["sacked_from"], None)
+
+# The engine already refuses a boost once the manager has gone; this is the
+# join between that rule and the data the app stores.
+_, _, boost_log, _, _, problems = engine.apply_transactions(
+    {"teams": [{"key": "AF", "team": "AF", "squad": []}]},
+    [{"type": "boost", "gameweek": 20, "team": "AF"}], 38,
+    managers={"AF": {"name": "test", "sacked_from": 12}})
+check("a boost after the sacking is refused", len(boost_log), 0)
+check_true("and says so", any("sacked" in x for x in problems), str(problems))
+
+check("a normal manager can't reassign clubs",
+      plain.post("/admin/assign-clubs", follow_redirects=False).status_code, 404)
+os.environ.pop("ADMIN_KEYS", None)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

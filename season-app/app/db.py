@@ -52,6 +52,16 @@ CREATE TABLE IF NOT EXISTS manager (
     created_at  TEXT NOT NULL
 );
 
+-- Which Premier League club's manager each team drafted. The boost is tied
+-- to that club: its league position sets the size, its result decides the
+-- payout, and a sacking ends the remaining uses.
+CREATE TABLE IF NOT EXISTS manager_club (
+    manager     TEXT PRIMARY KEY REFERENCES manager(key),
+    club_id     INTEGER NOT NULL,
+    sacked_from INTEGER,                 -- gameweek, or NULL while in the job
+    assigned_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS lineup (
     manager     TEXT NOT NULL REFERENCES manager(key),
     gameweek    INTEGER NOT NULL,
@@ -263,3 +273,42 @@ def stats():
         rows = conn.execute("SELECT COUNT(*) c FROM manager").fetchone()["c"]
         lineups = conn.execute("SELECT COUNT(*) c FROM lineup").fetchone()["c"]
     return {"managers": rows, "lineups": lineups, "storage": storage()}
+
+
+# ── Drafted managers ───────────────────────────────────────────────────────
+def manager_clubs():
+    """{team key: {"club": id, "sacked_from": gw or None}}."""
+    with connect() as conn:
+        return {r["manager"]: {"club": r["club_id"],
+                               "sacked_from": r["sacked_from"]}
+                for r in conn.execute("SELECT * FROM manager_club")}
+
+
+def set_manager_club(key, club_id, sacked_from=None):
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO manager_club (manager, club_id, sacked_from, assigned_at)"
+            " VALUES (?, ?, ?, ?)"
+            " ON CONFLICT(manager) DO UPDATE SET"
+            "   club_id = excluded.club_id,"
+            "   sacked_from = excluded.sacked_from,"
+            "   assigned_at = excluded.assigned_at",
+            (key, club_id, sacked_from, now()))
+
+
+def assign_clubs_randomly(club_ids, seed=None):
+    """Give every team a different club's manager.
+
+    For testing before a real manager draft happens. Distinct clubs, because
+    two teams sharing one would make their boosts move together and hide any
+    bug that depends on them differing.
+    """
+    rng = secrets.SystemRandom() if seed is None else __import__("random").Random(seed)
+    teams = [m["key"] for m in managers()]
+    pool = list(club_ids)
+    if len(pool) < len(teams):
+        raise ValueError(f"{len(pool)} clubs for {len(teams)} teams")
+    rng.shuffle(pool)
+    for key, club in zip(teams, pool):
+        set_manager_club(key, club)
+    return dict(zip(teams, pool))

@@ -38,6 +38,50 @@ holding a link is that manager, so they work like a house key.</p>
   so on every page.</p>
   <p class="note">&ldquo;Not yet&rdquo; is not a problem. Nobody is chased, and a
   manager who never picks keeps last week&rsquo;s team.</p>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>Drafted managers</h2>
+    <form method="post" action="/admin/assign-clubs"
+          onsubmit="return confirm('Give every team a different club at random? This replaces any current assignment.')">
+      <button class="btn small ghost">Assign at random</button>
+    </form>
+  </div>
+  <p class="sub">The boost is tied to the club: its league position sets the
+  size, its result decides the payout, and a sacking ends the remaining uses.</p>
+
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Team</th><th>Club</th><th>Sacked from GW</th><th></th></tr></thead>
+      <tbody>
+      {% for m in managers %}
+        {% set d = drafted.get(m.key) %}
+        <tr>
+          <td class="team">{{ m.team }}</td>
+          <td colspan="3">
+            <form method="post" action="/admin/club/{{ m.key }}" class="acts">
+              <select name="club">
+                {% for cid, c in clubs.items() %}
+                  <option value="{{ cid }}" {% if d and d.club == cid %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+              <input type="text" name="sacked_from" inputmode="numeric"
+                     placeholder="in the job"
+                     value="{{ d.sacked_from if d and d.sacked_from else '' }}"
+                     size="8">
+              <button class="btn small ghost">Save</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Random assignment is for testing. A real manager draft
+  replaces it, and nothing about the boost rules depends on how the clubs got
+  there.</p>
+
   <p class="sub"><a href="/">&larr; The table</a></p>
 </section>
 {% endblock %}

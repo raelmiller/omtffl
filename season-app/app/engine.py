@@ -32,6 +32,7 @@ from lineups import (                               # noqa: E402
     load_lineups, minutes_from_gameweek, suggest_lineup,
     validate as validate_lineup,
 )
+from mechanics import apply_transactions            # noqa: E402
 from scoring import score_entry                     # noqa: E402
 
 
@@ -370,3 +371,9 @@ def suggest_for(key, gameweek, squad=None):
     if not form:
         form = {p["id"]: p.get("price", 0) for p in squad}
     return suggest_lineup(squad, form)
+
+
+def clubs():
+    """Premier League clubs, id -> name, from the fetched player data."""
+    meta = _read("players.json") or {}
+    return {int(k): v for k, v in (meta.get("clubs") or {}).items()}

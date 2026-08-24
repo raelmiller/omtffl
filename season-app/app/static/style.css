@@ -243,3 +243,9 @@ code.link { font-size: .74rem; word-break: break-all; }
 .viewing a { color: var(--warn); font-weight: 600; }
 .acts { display: flex; gap: .4rem; flex-wrap: wrap; }
 .btn.ghost { background: transparent; color: var(--text); border-color: var(--border-2); }
+
+select, input[type="text"] {
+  font-family: var(--body); font-size: .84rem; padding: .3rem .45rem;
+  border-radius: 5px; background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-2);
+}

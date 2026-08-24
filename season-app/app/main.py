@@ -294,6 +294,8 @@ def admin(request: Request):
     if not me or not me["is_admin"]:
         raise HTTPException(404)
     ctx["managers"] = db.managers()
+    ctx["clubs"] = engine.clubs()
+    ctx["drafted"] = db.manager_clubs()
     ctx["base"] = str(request.base_url).rstrip("/")
     ctx["submitted"] = db.all_lineups()
     ctx["current_gw"] = engine.current_gameweek()
@@ -315,6 +317,30 @@ def view_as(request: Request, key: str):
 @app.get("/stop-viewing")
 def stop_viewing(request: Request):
     return auth.view_as(RedirectResponse("/admin", status_code=303), "")
+
+
+@app.post("/admin/assign-clubs")
+def assign_clubs(request: Request):
+    """Hand every team a random club's manager, for testing before a draft."""
+    me = auth.real(request)
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    clubs = engine.clubs()
+    if len(clubs) < len(db.managers()):
+        raise HTTPException(409, "not enough clubs to go round")
+    db.assign_clubs_randomly(sorted(clubs))
+    return RedirectResponse("/admin", status_code=303)
+
+
+@app.post("/admin/club/{key}")
+def set_club(request: Request, key: str, club: int = Form(...),
+             sacked_from: str = Form("")):
+    me = auth.real(request)
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    gw = int(sacked_from) if sacked_from.strip().isdigit() else None
+    db.set_manager_club(key, club, gw)
+    return RedirectResponse("/admin", status_code=303)
 
 
 @app.post("/admin/rotate/{key}")
