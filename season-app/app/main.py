@@ -38,6 +38,7 @@ scheduler = BackgroundScheduler(timezone="UTC")
 @app.on_event("startup")
 def startup():
     db.init()
+    _log_admin_links()
     # Probe once at boot so /health can answer the egress question straight
     # away rather than waiting for the first scheduled run.
     fetcher.probe()
@@ -56,6 +57,32 @@ def startup():
 def shutdown():
     if scheduler.running:
         scheduler.shutdown(wait=False)
+
+
+def _log_admin_links():
+    """Print the admin's own sign-in link to the deploy log.
+
+    Every sign-in link lives on /admin, and /admin needs a signed-in admin —
+    so on a fresh database there is no way in at all. The deploy log is
+    already privileged, which makes it the right place to hand over the first
+    key. Only admins are printed, and only their own link.
+    """
+    keys = auth.admin_keys()
+    if not keys:
+        print("[matchweek] No ADMIN_KEYS set — /admin is unreachable. "
+              "Set it to a manager's initials, e.g. ADMIN_KEYS=RM")
+        return
+    domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN")
+    base = f"https://{domain}" if domain else "<your app url>"
+    for key in sorted(keys):
+        manager = db.manager_by_key(key)
+        if manager:
+            print(f"[matchweek] Admin sign-in for {manager['team']} ({key}): "
+                  f"{base}/m/{manager['token']}")
+        else:
+            print(f"[matchweek] ADMIN_KEYS names {key}, which is not a manager "
+                  f"in this league. Known: "
+                  f"{', '.join(m['key'] for m in db.managers())}")
 
 
 def _context(request):
