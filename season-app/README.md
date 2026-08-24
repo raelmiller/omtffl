@@ -51,6 +51,21 @@ python3 test_app.py          # smoke tests
 `SHADOW_DIR` overrides where the engine and its data are found; it defaults to
 `../shadow` and is set to `/srv/shadow` in the container.
 
+## Storage
+
+The database holds what managers declare, and a container's filesystem is
+wiped on every redeploy — so it has to live on a volume. **Attaching a volume
+in Railway is the only step.** Railway sets `RAILWAY_VOLUME_MOUNT_PATH` itself
+when you do, and the app puts the database there. `DB_PATH` overrides it if you
+ever want the file somewhere specific.
+
+`/health` reports the truth rather than the intent: it reads the kernel's mount
+table, so it can tell "a volume is configured" apart from "a volume is actually
+mounted". Check the `verdict` line before handing sign-in links out.
+
+Set `ADMIN_KEYS` to a manager's initials (e.g. `RM`) to reach `/admin`, where
+the sign-in links live. Without it `/admin` returns 404 and `/health` says so.
+
 ## Deploying
 
 The Dockerfile builds **from the repository root**, not from this directory,

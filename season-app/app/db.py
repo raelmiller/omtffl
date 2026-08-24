@@ -19,11 +19,29 @@ from pathlib import Path
 
 from .engine import DATA
 
-# The container's filesystem is wiped on every redeploy, so the database must
-# live on a mounted volume. Falling back to a local file keeps development
-# working without one; the health page reports which is in use.
-DB_PATH = Path(os.environ.get("DB_PATH")
-               or Path(__file__).resolve().parents[1] / "matchweek.db")
+def _db_path() -> Path:
+    """Where the database file belongs.
+
+    The container's filesystem is wiped on every redeploy, so this must land
+    on a mounted volume. Three ways of finding one, in order of how explicit
+    they are:
+
+    1. DB_PATH, if someone set it deliberately.
+    2. RAILWAY_VOLUME_MOUNT_PATH, which Railway sets by itself the moment a
+       volume is attached. Attaching the volume is then the only step — there
+       is no second variable to forget, and no way to typo it.
+    3. A local file, so development works with no volume at all.
+    """
+    explicit = os.environ.get("DB_PATH")
+    if explicit:
+        return Path(explicit)
+    mounted = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH")
+    if mounted:
+        return Path(mounted) / "matchweek.db"
+    return Path(__file__).resolve().parents[1] / "matchweek.db"
+
+
+DB_PATH = _db_path()
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS manager (
@@ -194,26 +212,33 @@ def storage():
     loses every team the league has picked.
     """
     directory = DB_PATH.parent
-    configured = bool(os.environ.get("DB_PATH"))
+    explicit = os.environ.get("DB_PATH")
+    railway_volume = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH")
     mounted = is_mount(DB_PATH)
     writable = os.access(directory, os.W_OK) if directory.exists() else False
 
     if mounted and writable:
-        verdict = "safe — the database is on a mounted volume"
-    elif configured and not mounted:
-        verdict = ("AT RISK — DB_PATH is set but nothing is mounted there, so "
-                   "every team will be lost on the next deploy")
-    elif not configured:
-        verdict = ("AT RISK — no DB_PATH set, so the database is on the "
-                   "container's own disk and will be wiped on the next deploy")
+        source = "DB_PATH" if explicit else "the attached Railway volume"
+        verdict = f"safe — the database is on a mounted volume, found via {source}"
+    elif not mounted and not explicit and not railway_volume:
+        verdict = ("AT RISK — no volume attached to this service, so the "
+                   "database sits on the container's own disk and every team "
+                   "is lost on the next deploy. Attach one in Railway; nothing "
+                   "else needs configuring.")
+    elif not mounted:
+        where = explicit or railway_volume
+        verdict = (f"AT RISK — a volume is configured at {where} but nothing "
+                   "is mounted there. Check the mount path matches, and that "
+                   "the service has redeployed since it was attached.")
     else:
-        verdict = f"AT RISK — {directory} is not writable"
+        verdict = f"AT RISK — {directory} exists but is not writable"
 
     return {
         "path": str(DB_PATH),
         "directory_exists": directory.exists(),
         "writable": writable,
-        "db_path_set": configured,
+        "db_path_set": bool(explicit),
+        "railway_volume": railway_volume,
         "on_mounted_volume": mounted,
         "survives_redeploy": mounted and writable,
         "verdict": verdict,

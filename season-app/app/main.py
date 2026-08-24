@@ -114,6 +114,11 @@ def health():
         },
         "data": engine.freshness(),
         "database": db.stats(),
+        "admin": {
+            "configured": bool(auth.admin_keys()),
+            "note": ("set ADMIN_KEYS to a manager's initials to reach /admin"
+                     if not auth.admin_keys() else None),
+        },
         "scored": {
             "gameweeks": season.get("played", 0),
             "scheduled": season.get("scheduled", 0),
