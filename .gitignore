@@ -1,9 +1,6 @@
-# League data carries real managers' names and omtffl is a public repo, so
-# it's kept out of git until publishing it is a deliberate choice.
-# Regenerate locally:
-#   python3 shadow/import_squads.py <draft-results.xlsx>
-#   python3 shadow/build_fixtures.py     (needs data/fixtures_source.json)
-shadow/data/squads.json
-shadow/data/fixtures.json
-shadow/data/fixtures_source.json
 __pycache__/
+
+# The only file mapping real people to teams. Everything else uses team names
+# and initials, so it's safe in a public repo — this isn't.
+# Format: {"identities": {"<draft owner name>": {"key": "AB", "team": "..."}}}
+shadow/data/identities.json

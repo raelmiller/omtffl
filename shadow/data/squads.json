@@ -1,0 +1,1559 @@
+{
+  "source": "a0cdea9e-fpldraftresults.xlsx",
+  "teams": [
+    {
+      "key": "AF",
+      "team": "License to Kelleher",
+      "squad": [
+        {
+          "id": 499,
+          "name": "Pedro Porro",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 4.75
+        },
+        {
+          "id": 229,
+          "name": "Tarkowski",
+          "position": "DEF",
+          "club": "EVE",
+          "price": 3.5
+        },
+        {
+          "id": 503,
+          "name": "Van de Ven",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 3.5
+        },
+        {
+          "id": 84,
+          "name": "Collins",
+          "position": "DEF",
+          "club": "BRE",
+          "price": 3.25
+        },
+        {
+          "id": 201,
+          "name": "Mu\u00f1oz",
+          "position": "DEF",
+          "club": "CRY",
+          "price": 3.5
+        },
+        {
+          "id": 401,
+          "name": "Marmoush",
+          "position": "FWD",
+          "club": "MCI",
+          "price": 2.75
+        },
+        {
+          "id": 526,
+          "name": "Solanke",
+          "position": "FWD",
+          "club": "TOT",
+          "price": 5.75
+        },
+        {
+          "id": 380,
+          "name": "Ekitik\u00e9",
+          "position": "FWD",
+          "club": "LIV",
+          "price": 0.5
+        },
+        {
+          "id": 82,
+          "name": "Kelleher",
+          "position": "GK",
+          "club": "BRE",
+          "price": 2.0
+        },
+        {
+          "id": 467,
+          "name": "Sels",
+          "position": "GK",
+          "club": "NFO",
+          "price": 0.75
+        },
+        {
+          "id": 121,
+          "name": "Mitoma",
+          "position": "MID",
+          "club": "BHA",
+          "price": 3.0
+        },
+        {
+          "id": 208,
+          "name": "Sarr",
+          "position": "MID",
+          "club": "CRY",
+          "price": 5.25
+        },
+        {
+          "id": 95,
+          "name": "O.Dango",
+          "position": "MID",
+          "club": "BRE",
+          "price": 4.5
+        },
+        {
+          "id": 429,
+          "name": "Rashford",
+          "position": "MID",
+          "club": "MUN",
+          "price": 2.75
+        },
+        {
+          "id": 367,
+          "name": "Gakpo",
+          "position": "MID",
+          "club": "LIV",
+          "price": 4.25
+        }
+      ]
+    },
+    {
+      "key": "AJ",
+      "team": "Meet me on the Roefs",
+      "squad": [
+        {
+          "id": 203,
+          "name": "Canvot",
+          "position": "DEF",
+          "club": "CRY",
+          "price": 0.5
+        },
+        {
+          "id": 230,
+          "name": "Branthwaite",
+          "position": "DEF",
+          "club": "EVE",
+          "price": 1.5
+        },
+        {
+          "id": 506,
+          "name": "Udogie",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 0.5
+        },
+        {
+          "id": 472,
+          "name": "Murillo",
+          "position": "DEF",
+          "club": "NFO",
+          "price": 2.75
+        },
+        {
+          "id": 8,
+          "name": "Calafiori",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 1.75
+        },
+        {
+          "id": 193,
+          "name": "Wright",
+          "position": "FWD",
+          "club": "COV",
+          "price": 4.5
+        },
+        {
+          "id": 491,
+          "name": "Igor Jesus",
+          "position": "FWD",
+          "club": "NFO",
+          "price": 12.5
+        },
+        {
+          "id": 527,
+          "name": "Richarlison",
+          "position": "FWD",
+          "club": "TOT",
+          "price": 3.5
+        },
+        {
+          "id": 529,
+          "name": "Roefs",
+          "position": "GK",
+          "club": "SUN",
+          "price": 1.5
+        },
+        {
+          "id": 385,
+          "name": "Trafford",
+          "position": "GK",
+          "club": "LEE",
+          "price": 1.5
+        },
+        {
+          "id": 345,
+          "name": "Tanaka",
+          "position": "MID",
+          "club": "LEE",
+          "price": 0.0
+        },
+        {
+          "id": 67,
+          "name": "Rayan",
+          "position": "MID",
+          "club": "BOU",
+          "price": 6.25
+        },
+        {
+          "id": 7,
+          "name": "Lewis-Skelly",
+          "position": "MID",
+          "club": "ARS",
+          "price": 0.0
+        },
+        {
+          "id": 335,
+          "name": "Stach",
+          "position": "MID",
+          "club": "LEE",
+          "price": 3.0
+        },
+        {
+          "id": 452,
+          "name": "Bruno G.",
+          "position": "MID",
+          "club": "ARS",
+          "price": 10.0
+        }
+      ]
+    },
+    {
+      "key": "CCP",
+      "team": "ThunderBijol",
+      "squad": [
+        {
+          "id": 231,
+          "name": "Keane",
+          "position": "DEF",
+          "club": "EVE",
+          "price": 1.0
+        },
+        {
+          "id": 202,
+          "name": "Richards",
+          "position": "DEF",
+          "club": "CRY",
+          "price": 0.75
+        },
+        {
+          "id": 362,
+          "name": "Jacquet",
+          "position": "DEF",
+          "club": "LIV",
+          "price": 0.25
+        },
+        {
+          "id": 327,
+          "name": "Bijol",
+          "position": "DEF",
+          "club": "LEE",
+          "price": 0.0
+        },
+        {
+          "id": 388,
+          "name": "Gu\u00e9hi",
+          "position": "DEF",
+          "club": "MCI",
+          "price": 6.0
+        },
+        {
+          "id": 465,
+          "name": "Osula",
+          "position": "FWD",
+          "club": "NEW",
+          "price": 3.0
+        },
+        {
+          "id": 295,
+          "name": "McBurnie",
+          "position": "FWD",
+          "club": "HUL",
+          "price": 4.0
+        },
+        {
+          "id": 411,
+          "name": "Haaland",
+          "position": "FWD",
+          "club": "MCI",
+          "price": 26.5
+        },
+        {
+          "id": 199,
+          "name": "Benitez",
+          "position": "GK",
+          "club": "CRY",
+          "price": 0.0
+        },
+        {
+          "id": 198,
+          "name": "Henderson",
+          "position": "GK",
+          "club": "CRY",
+          "price": 0.75
+        },
+        {
+          "id": 123,
+          "name": "Hinshelwood",
+          "position": "MID",
+          "club": "BHA",
+          "price": 0.0
+        },
+        {
+          "id": 238,
+          "name": "Grealish",
+          "position": "MID",
+          "club": "MCI",
+          "price": 0.0
+        },
+        {
+          "id": 336,
+          "name": "Okafor",
+          "position": "MID",
+          "club": "LEE",
+          "price": 0.5
+        },
+        {
+          "id": 260,
+          "name": "Wilson",
+          "position": "MID",
+          "club": "LEE",
+          "price": 3.75
+        },
+        {
+          "id": 525,
+          "name": "Fernandes",
+          "position": "MID",
+          "club": "TOT",
+          "price": 3.5
+        }
+      ]
+    },
+    {
+      "key": "CH",
+      "team": "You HallWhite mate?",
+      "squad": [
+        {
+          "id": 504,
+          "name": "Vuskovic",
+          "position": "DEF",
+          "club": "BHA",
+          "price": 0.75
+        },
+        {
+          "id": 357,
+          "name": "Frimpong",
+          "position": "DEF",
+          "club": "LIV",
+          "price": 3.5
+        },
+        {
+          "id": 449,
+          "name": "Hall",
+          "position": "DEF",
+          "club": "NEW",
+          "price": 1.0
+        },
+        {
+          "id": 5,
+          "name": "J.Timber",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 0.75
+        },
+        {
+          "id": 10,
+          "name": "White",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 2.25
+        },
+        {
+          "id": 166,
+          "name": "N.Jackson",
+          "position": "FWD",
+          "club": "CHE",
+          "price": 2.25
+        },
+        {
+          "id": 464,
+          "name": "Wissa",
+          "position": "FWD",
+          "club": "NEW",
+          "price": 6.0
+        },
+        {
+          "id": 26,
+          "name": "Havertz",
+          "position": "FWD",
+          "club": "ARS",
+          "price": 7.75
+        },
+        {
+          "id": 227,
+          "name": "Travers",
+          "position": "GK",
+          "club": "EVE",
+          "price": 0.0
+        },
+        {
+          "id": 226,
+          "name": "Pickford",
+          "position": "GK",
+          "club": "EVE",
+          "price": 2.75
+        },
+        {
+          "id": 237,
+          "name": "Ndiaye",
+          "position": "MID",
+          "club": "EVE",
+          "price": 4.75
+        },
+        {
+          "id": 15,
+          "name": "\u00d8degaard",
+          "position": "MID",
+          "club": "ARS",
+          "price": 2.25
+        },
+        {
+          "id": 428,
+          "name": "Cunha",
+          "position": "MID",
+          "club": "MUN",
+          "price": 6.0
+        },
+        {
+          "id": 400,
+          "name": "Doku",
+          "position": "MID",
+          "club": "MCI",
+          "price": 7.25
+        },
+        {
+          "id": 512,
+          "name": "Kudus",
+          "position": "MID",
+          "club": "TOT",
+          "price": 2.75
+        }
+      ]
+    },
+    {
+      "key": "DP",
+      "team": "Palmer Sutra",
+      "squad": [
+        {
+          "id": 149,
+          "name": "Colwill",
+          "position": "DEF",
+          "club": "CHE",
+          "price": 0.0
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "position": "DEF",
+          "club": "COV",
+          "price": 0.5
+        },
+        {
+          "id": 447,
+          "name": "Botman",
+          "position": "DEF",
+          "club": "NEW",
+          "price": 0.75
+        },
+        {
+          "id": 88,
+          "name": "Kayode",
+          "position": "DEF",
+          "club": "BRE",
+          "price": 2.0
+        },
+        {
+          "id": 450,
+          "name": "Livramento",
+          "position": "DEF",
+          "club": "NEW",
+          "price": 0.5
+        },
+        {
+          "id": 553,
+          "name": "Isidor",
+          "position": "FWD",
+          "club": "SUN",
+          "price": 2.75
+        },
+        {
+          "id": 138,
+          "name": "Kostoulas",
+          "position": "FWD",
+          "club": "BHA",
+          "price": 2.5
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "position": "FWD",
+          "club": "AVL",
+          "price": 18.5
+        },
+        {
+          "id": 496,
+          "name": "Kinsky",
+          "position": "GK",
+          "club": "TOT",
+          "price": 1.5
+        },
+        {
+          "id": 140,
+          "name": "S\u00e1nchez",
+          "position": "GK",
+          "club": "CHE",
+          "price": 1.0
+        },
+        {
+          "id": 162,
+          "name": "Andrey Santos",
+          "position": "MID",
+          "club": "MUN",
+          "price": 0.0
+        },
+        {
+          "id": 369,
+          "name": "Ngumoha",
+          "position": "MID",
+          "club": "LIV",
+          "price": 1.0
+        },
+        {
+          "id": 461,
+          "name": "Tour\u00e9",
+          "position": "MID",
+          "club": "NEW",
+          "price": 1.0
+        },
+        {
+          "id": 70,
+          "name": "Kluivert",
+          "position": "MID",
+          "club": "BOU",
+          "price": 3.75
+        },
+        {
+          "id": 154,
+          "name": "Palmer",
+          "position": "MID",
+          "club": "CHE",
+          "price": 14.0
+        }
+      ]
+    },
+    {
+      "key": "EE",
+      "team": "The Gyokfather",
+      "squad": [
+        {
+          "id": 390,
+          "name": "R\u00faben",
+          "position": "DEF",
+          "club": "MCI",
+          "price": 1.25
+        },
+        {
+          "id": 112,
+          "name": "Van Hecke",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 1.75
+        },
+        {
+          "id": 269,
+          "name": "Sessegnon",
+          "position": "DEF",
+          "club": "FUL",
+          "price": 1.25
+        },
+        {
+          "id": 418,
+          "name": "Maguire",
+          "position": "DEF",
+          "club": "MUN",
+          "price": 2.25
+        },
+        {
+          "id": 356,
+          "name": "Virgil",
+          "position": "DEF",
+          "club": "LIV",
+          "price": 6.75
+        },
+        {
+          "id": 81,
+          "name": "Rodr\u00edguez",
+          "position": "FWD",
+          "club": "BOU",
+          "price": 0.0
+        },
+        {
+          "id": 463,
+          "name": "Woltemade",
+          "position": "FWD",
+          "club": "NEW",
+          "price": 5.5
+        },
+        {
+          "id": 25,
+          "name": "Gy\u00f6keres",
+          "position": "FWD",
+          "club": "ARS",
+          "price": 11.5
+        },
+        {
+          "id": 2,
+          "name": "Arrizabalaga",
+          "position": "GK",
+          "club": "ARS",
+          "price": 0.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "position": "GK",
+          "club": "ARS",
+          "price": 3.5
+        },
+        {
+          "id": 68,
+          "name": "Tavernier",
+          "position": "MID",
+          "club": "BOU",
+          "price": 1.75
+        },
+        {
+          "id": 156,
+          "name": "Neto",
+          "position": "MID",
+          "club": "CHE",
+          "price": 1.0
+        },
+        {
+          "id": 160,
+          "name": "Garnacho",
+          "position": "MID",
+          "club": "AVL",
+          "price": 0.25
+        },
+        {
+          "id": 155,
+          "name": "Enzo",
+          "position": "MID",
+          "club": "CHE",
+          "price": 5.75
+        },
+        {
+          "id": 236,
+          "name": "Dewsbury-Hall",
+          "position": "MID",
+          "club": "EVE",
+          "price": 6.5
+        }
+      ]
+    },
+    {
+      "key": "LG",
+      "team": "Becker Call Saul",
+      "squad": [
+        {
+          "id": 535,
+          "name": "Alderete",
+          "position": "DEF",
+          "club": "SUN",
+          "price": 0.5
+        },
+        {
+          "id": 423,
+          "name": "Shaw",
+          "position": "DEF",
+          "club": "MUN",
+          "price": 1.25
+        },
+        {
+          "id": 204,
+          "name": "Mitchell",
+          "position": "DEF",
+          "club": "CRY",
+          "price": 2.0
+        },
+        {
+          "id": 32,
+          "name": "Cash",
+          "position": "DEF",
+          "club": "AVL",
+          "price": 2.0
+        },
+        {
+          "id": 471,
+          "name": "Milenkovi\u0107",
+          "position": "DEF",
+          "club": "NFO",
+          "price": 1.5
+        },
+        {
+          "id": 347,
+          "name": "Nmecha",
+          "position": "FWD",
+          "club": "LEE",
+          "price": 0.0
+        },
+        {
+          "id": 136,
+          "name": "Welbeck",
+          "position": "FWD",
+          "club": "CHE",
+          "price": 1.25
+        },
+        {
+          "id": 106,
+          "name": "Thiago",
+          "position": "FWD",
+          "club": "BRE",
+          "price": 17.0
+        },
+        {
+          "id": 250,
+          "name": "Leno",
+          "position": "GK",
+          "club": "FUL",
+          "price": 0.5
+        },
+        {
+          "id": 350,
+          "name": "A.Becker",
+          "position": "GK",
+          "club": "LIV",
+          "price": 1.75
+        },
+        {
+          "id": 372,
+          "name": "Mac Allister",
+          "position": "MID",
+          "club": "LIV",
+          "price": 0.5
+        },
+        {
+          "id": 338,
+          "name": "Ampadu",
+          "position": "MID",
+          "club": "LEE",
+          "price": 0.5
+        },
+        {
+          "id": 544,
+          "name": "Xhaka",
+          "position": "MID",
+          "club": "SUN",
+          "price": 2.75
+        },
+        {
+          "id": 481,
+          "name": "Anderson",
+          "position": "MID",
+          "club": "MCI",
+          "price": 7.0
+        },
+        {
+          "id": 427,
+          "name": "Mbeumo",
+          "position": "MID",
+          "club": "MUN",
+          "price": 10.25
+        }
+      ]
+    },
+    {
+      "key": "LRC",
+      "team": "La Prima Dimwit",
+      "squad": [
+        {
+          "id": 60,
+          "name": "Hill",
+          "position": "DEF",
+          "club": "BOU",
+          "price": 0.5
+        },
+        {
+          "id": 533,
+          "name": "Mukiele",
+          "position": "DEF",
+          "club": "SUN",
+          "price": 1.25
+        },
+        {
+          "id": 152,
+          "name": "Palestra",
+          "position": "DEF",
+          "club": "CHE",
+          "price": 2.0
+        },
+        {
+          "id": 498,
+          "name": "Senesi",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 1.75
+        },
+        {
+          "id": 200,
+          "name": "Lacroix",
+          "position": "DEF",
+          "club": "CHE",
+          "price": 3.0
+        },
+        {
+          "id": 490,
+          "name": "Wood",
+          "position": "FWD",
+          "club": "NFO",
+          "price": 0.5
+        },
+        {
+          "id": 316,
+          "name": "Emersonn",
+          "position": "FWD",
+          "club": "IPS",
+          "price": 3.5
+        },
+        {
+          "id": 125,
+          "name": "Georginio",
+          "position": "FWD",
+          "club": "BHA",
+          "price": 3.75
+        },
+        {
+          "id": 442,
+          "name": "Pope",
+          "position": "GK",
+          "club": "NEW",
+          "price": 0.0
+        },
+        {
+          "id": 28,
+          "name": "Martinez",
+          "position": "GK",
+          "club": "AVL",
+          "price": 0.5
+        },
+        {
+          "id": 210,
+          "name": "Wharton",
+          "position": "MID",
+          "club": "CRY",
+          "price": 0.5
+        },
+        {
+          "id": 45,
+          "name": "McGinn",
+          "position": "MID",
+          "club": "AVL",
+          "price": 0.0
+        },
+        {
+          "id": 371,
+          "name": "Gravenberch",
+          "position": "MID",
+          "club": "LIV",
+          "price": 3.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "position": "MID",
+          "club": "NFO",
+          "price": 10.75
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "position": "MID",
+          "club": "MUN",
+          "price": 19.0
+        }
+      ]
+    },
+    {
+      "key": "OD",
+      "team": "Brobbey'sGonnaGetYa!",
+      "squad": [
+        {
+          "id": 116,
+          "name": "Dunk",
+          "position": "DEF",
+          "club": "BHA",
+          "price": 0.5
+        },
+        {
+          "id": 417,
+          "name": "Dalot",
+          "position": "DEF",
+          "club": "MUN",
+          "price": 2.75
+        },
+        {
+          "id": 113,
+          "name": "F.Kad\u0131o\u011flu",
+          "position": "DEF",
+          "club": "BHA",
+          "price": 2.0
+        },
+        {
+          "id": 391,
+          "name": "Gvardiol",
+          "position": "DEF",
+          "club": "MCI",
+          "price": 3.25
+        },
+        {
+          "id": 65,
+          "name": "J.Araujo",
+          "position": "DEF",
+          "club": "BOU",
+          "price": 2.75
+        },
+        {
+          "id": 56,
+          "name": "Abraham",
+          "position": "FWD",
+          "club": "AVL",
+          "price": 0.75
+        },
+        {
+          "id": 552,
+          "name": "Brobbey",
+          "position": "FWD",
+          "club": "SUN",
+          "price": 5.25
+        },
+        {
+          "id": 439,
+          "name": "\u0160e\u0161ko",
+          "position": "FWD",
+          "club": "MUN",
+          "price": 14.0
+        },
+        {
+          "id": 110,
+          "name": "Rushworth",
+          "position": "GK",
+          "club": "COV",
+          "price": 0.5
+        },
+        {
+          "id": 567,
+          "name": "Horn\u00ed\u010dek",
+          "position": "GK",
+          "club": "NEW",
+          "price": 1.5
+        },
+        {
+          "id": 515,
+          "name": "Maddison",
+          "position": "MID",
+          "club": "TOT",
+          "price": 1.25
+        },
+        {
+          "id": 69,
+          "name": "Scott",
+          "position": "MID",
+          "club": "BOU",
+          "price": 3.0
+        },
+        {
+          "id": 542,
+          "name": "E.Le F\u00e9e",
+          "position": "MID",
+          "club": "SUN",
+          "price": 3.75
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "position": "MID",
+          "club": "MCI",
+          "price": 5.0
+        },
+        {
+          "id": 157,
+          "name": "Est\u00eav\u00e3o",
+          "position": "MID",
+          "club": "CHE",
+          "price": 3.75
+        }
+      ]
+    },
+    {
+      "key": "RF",
+      "team": "Quantum of Tzolis",
+      "squad": [
+        {
+          "id": 445,
+          "name": "Thiaw",
+          "position": "DEF",
+          "club": "NEW",
+          "price": 1.5
+        },
+        {
+          "id": 389,
+          "name": "Matheus N.",
+          "position": "DEF",
+          "club": "MCI",
+          "price": 4.5
+        },
+        {
+          "id": 469,
+          "name": "N.Williams",
+          "position": "DEF",
+          "club": "NFO",
+          "price": 2.75
+        },
+        {
+          "id": 142,
+          "name": "James",
+          "position": "DEF",
+          "club": "CHE",
+          "price": 1.5
+        },
+        {
+          "id": 9,
+          "name": "Hincapie",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 1.5
+        },
+        {
+          "id": 271,
+          "name": "Muniz",
+          "position": "FWD",
+          "club": "FUL",
+          "price": 1.25
+        },
+        {
+          "id": 223,
+          "name": "Mateta",
+          "position": "FWD",
+          "club": "CRY",
+          "price": 8.0
+        },
+        {
+          "id": 346,
+          "name": "Calvert-Lewin",
+          "position": "FWD",
+          "club": "LEE",
+          "price": 14.5
+        },
+        {
+          "id": 325,
+          "name": "Darlow",
+          "position": "GK",
+          "club": "MUN",
+          "price": 0.0
+        },
+        {
+          "id": 412,
+          "name": "Lammens",
+          "position": "GK",
+          "club": "MUN",
+          "price": 2.5
+        },
+        {
+          "id": 211,
+          "name": "Yeremy",
+          "position": "MID",
+          "club": "CRY",
+          "price": 1.0
+        },
+        {
+          "id": 94,
+          "name": "Schade",
+          "position": "MID",
+          "club": "BRE",
+          "price": 2.75
+        },
+        {
+          "id": 53,
+          "name": "Manzambi",
+          "position": "MID",
+          "club": "AVL",
+          "price": 1.5
+        },
+        {
+          "id": 557,
+          "name": "Tzolis",
+          "position": "MID",
+          "club": "ARS",
+          "price": 2.5
+        },
+        {
+          "id": 14,
+          "name": "Eze",
+          "position": "MID",
+          "club": "ARS",
+          "price": 3.5
+        }
+      ]
+    },
+    {
+      "key": "RM",
+      "team": "Quantum of Szobos",
+      "squad": [
+        {
+          "id": 332,
+          "name": "Justin",
+          "position": "DEF",
+          "club": "LEE",
+          "price": 0.0
+        },
+        {
+          "id": 532,
+          "name": "Ballard",
+          "position": "DEF",
+          "club": "SUN",
+          "price": 1.75
+        },
+        {
+          "id": 31,
+          "name": "Konsa",
+          "position": "DEF",
+          "club": "AVL",
+          "price": 1.75
+        },
+        {
+          "id": 387,
+          "name": "O'Reilly",
+          "position": "DEF",
+          "club": "MCI",
+          "price": 3.75
+        },
+        {
+          "id": 61,
+          "name": "Truffert",
+          "position": "DEF",
+          "club": "BOU",
+          "price": 3.25
+        },
+        {
+          "id": 167,
+          "name": "Delap",
+          "position": "FWD",
+          "club": "CHE",
+          "price": 0.0
+        },
+        {
+          "id": 249,
+          "name": "Barry",
+          "position": "FWD",
+          "club": "EVE",
+          "price": 2.75
+        },
+        {
+          "id": 79,
+          "name": "Evanilson",
+          "position": "FWD",
+          "club": "BOU",
+          "price": 10.0
+        },
+        {
+          "id": 111,
+          "name": "Steele",
+          "position": "GK",
+          "club": "BHA",
+          "price": 0.25
+        },
+        {
+          "id": 109,
+          "name": "Verbruggen",
+          "position": "GK",
+          "club": "BHA",
+          "price": 1.5
+        },
+        {
+          "id": 17,
+          "name": "Merino",
+          "position": "MID",
+          "club": "ARS",
+          "price": 0.5
+        },
+        {
+          "id": 453,
+          "name": "Barnes",
+          "position": "MID",
+          "club": "NEW",
+          "price": 2.25
+        },
+        {
+          "id": 239,
+          "name": "Garner",
+          "position": "MID",
+          "club": "EVE",
+          "price": 1.25
+        },
+        {
+          "id": 368,
+          "name": "Szoboszlai",
+          "position": "MID",
+          "club": "LIV",
+          "price": 9.5
+        },
+        {
+          "id": 13,
+          "name": "Rice",
+          "position": "MID",
+          "club": "ARS",
+          "price": 11.5
+        }
+      ]
+    },
+    {
+      "key": "SG",
+      "team": "For Beto o For Wirtz",
+      "squad": [
+        {
+          "id": 448,
+          "name": "Burn",
+          "position": "DEF",
+          "club": "NEW",
+          "price": 0.0
+        },
+        {
+          "id": 329,
+          "name": "Rodon",
+          "position": "DEF",
+          "club": "LEE",
+          "price": 0.0
+        },
+        {
+          "id": 233,
+          "name": "Mykolenko",
+          "position": "DEF",
+          "club": "EVE",
+          "price": 0.25
+        },
+        {
+          "id": 420,
+          "name": "Yoro",
+          "position": "DEF",
+          "club": "MUN",
+          "price": 0.0
+        },
+        {
+          "id": 363,
+          "name": "Leoni",
+          "position": "DEF",
+          "club": "LIV",
+          "price": 0.0
+        },
+        {
+          "id": 224,
+          "name": "Nketiah",
+          "position": "FWD",
+          "club": "CRY",
+          "price": 0.0
+        },
+        {
+          "id": 248,
+          "name": "Beto",
+          "position": "FWD",
+          "club": "EVE",
+          "price": 4.0
+        },
+        {
+          "id": 569,
+          "name": "Gonzalo",
+          "position": "FWD",
+          "club": "FUL",
+          "price": 5.75
+        },
+        {
+          "id": 57,
+          "name": "Petrovi\u0107",
+          "position": "GK",
+          "club": "BOU",
+          "price": 0.5
+        },
+        {
+          "id": 351,
+          "name": "Mamardashvili",
+          "position": "GK",
+          "club": "LIV",
+          "price": 0.0
+        },
+        {
+          "id": 455,
+          "name": "Tonali",
+          "position": "MID",
+          "club": "TOT",
+          "price": 0.0
+        },
+        {
+          "id": 96,
+          "name": "Damsgaard",
+          "position": "MID",
+          "club": "BRE",
+          "price": 0.25
+        },
+        {
+          "id": 366,
+          "name": "Wirtz",
+          "position": "MID",
+          "club": "LIV",
+          "price": 10.0
+        },
+        {
+          "id": 40,
+          "name": "Rogers",
+          "position": "MID",
+          "club": "CHE",
+          "price": 13.5
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "position": "MID",
+          "club": "ARS",
+          "price": 15.75
+        }
+      ]
+    },
+    {
+      "key": "TM",
+      "team": "Joao and Silent Bobb",
+      "squad": [
+        {
+          "id": 115,
+          "name": "De Cuyper",
+          "position": "DEF",
+          "club": "BHA",
+          "price": 0.0
+        },
+        {
+          "id": 328,
+          "name": "Struijk",
+          "position": "DEF",
+          "club": "BHA",
+          "price": 0.0
+        },
+        {
+          "id": 175,
+          "name": "van Ewijk",
+          "position": "DEF",
+          "club": "COV",
+          "price": 0.0
+        },
+        {
+          "id": 581,
+          "name": "Diomande",
+          "position": "DEF",
+          "club": "NFO",
+          "price": 0.0
+        },
+        {
+          "id": 358,
+          "name": "Kerkez",
+          "position": "DEF",
+          "club": "LIV",
+          "price": 4.75
+        },
+        {
+          "id": 195,
+          "name": "Simms",
+          "position": "FWD",
+          "club": "COV",
+          "price": 0.0
+        },
+        {
+          "id": 440,
+          "name": "Zirkzee",
+          "position": "FWD",
+          "club": "MUN",
+          "price": 0.0
+        },
+        {
+          "id": 165,
+          "name": "Jo\u00e3o Pedro",
+          "position": "FWD",
+          "club": "CHE",
+          "price": 23.5
+        },
+        {
+          "id": 587,
+          "name": "Rulli",
+          "position": "GK",
+          "club": "MCI",
+          "price": 0.0
+        },
+        {
+          "id": 384,
+          "name": "Donnarumma",
+          "position": "GK",
+          "club": "MCI",
+          "price": 3.0
+        },
+        {
+          "id": 241,
+          "name": "McNeil",
+          "position": "MID",
+          "club": "CRY",
+          "price": 0.0
+        },
+        {
+          "id": 246,
+          "name": "R\u00f6hl",
+          "position": "MID",
+          "club": "EVE",
+          "price": 0.0
+        },
+        {
+          "id": 264,
+          "name": "Bobb",
+          "position": "MID",
+          "club": "FUL",
+          "price": 0.0
+        },
+        {
+          "id": 43,
+          "name": "Tielemans",
+          "position": "MID",
+          "club": "MUN",
+          "price": 2.25
+        },
+        {
+          "id": 397,
+          "name": "Semenyo",
+          "position": "MID",
+          "club": "MCI",
+          "price": 16.5
+        }
+      ]
+    },
+    {
+      "key": "YG",
+      "team": "Isakly",
+      "squad": [
+        {
+          "id": 473,
+          "name": "Aina",
+          "position": "DEF",
+          "club": "NFO",
+          "price": 0.5
+        },
+        {
+          "id": 11,
+          "name": "Mosquera",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 0.5
+        },
+        {
+          "id": 254,
+          "name": "Robinson",
+          "position": "DEF",
+          "club": "FUL",
+          "price": 1.0
+        },
+        {
+          "id": 502,
+          "name": "Robertson",
+          "position": "DEF",
+          "club": "TOT",
+          "price": 0.25
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "position": "DEF",
+          "club": "ARS",
+          "price": 10.0
+        },
+        {
+          "id": 582,
+          "name": "Madjo",
+          "position": "FWD",
+          "club": "AVL",
+          "price": 2.5
+        },
+        {
+          "id": 222,
+          "name": "Strand Larsen",
+          "position": "FWD",
+          "club": "CRY",
+          "price": 3.25
+        },
+        {
+          "id": 379,
+          "name": "Isak",
+          "position": "FWD",
+          "club": "LIV",
+          "price": 21.0
+        },
+        {
+          "id": 572,
+          "name": "Tzolakis",
+          "position": "GK",
+          "club": "HUL",
+          "price": 1.25
+        },
+        {
+          "id": 564,
+          "name": "Scherpen",
+          "position": "GK",
+          "club": "IPS",
+          "price": 0.75
+        },
+        {
+          "id": 41,
+          "name": "Buend\u00eda",
+          "position": "MID",
+          "club": "AVL",
+          "price": 1.0
+        },
+        {
+          "id": 415,
+          "name": "Dorgu",
+          "position": "MID",
+          "club": "MUN",
+          "price": 0.25
+        },
+        {
+          "id": 159,
+          "name": "Caicedo",
+          "position": "MID",
+          "club": "CHE",
+          "price": 0.25
+        },
+        {
+          "id": 124,
+          "name": "Gro\u00df",
+          "position": "MID",
+          "club": "BHA",
+          "price": 0.75
+        },
+        {
+          "id": 398,
+          "name": "Foden",
+          "position": "MID",
+          "club": "MCI",
+          "price": 6.75
+        }
+      ]
+    }
+  ]
+}

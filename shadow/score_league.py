@@ -89,7 +89,8 @@ def score_one_gameweek(path, squads, positions):
         total, formation, xi = best_xi(team["squad"], pts)
         bench = [p for p in team["squad"] if p not in xi]
         results.append({
-            "manager": team["manager"],
+            "key": team["key"],
+            "team": team.get("team", team["key"]),
             "points": total,
             "formation": "-".join(str(x) for x in formation),
             "xi": [(p["name"], p["position"], pts.get(p["id"], 0)) for p in xi],
@@ -116,7 +117,8 @@ def main():
     if not files:
         sys.exit("No gameweek files — run the fetch workflow first.")
 
-    cumulative = {t["manager"]: 0 for t in squads["teams"]}
+    cumulative = {t["key"]: 0 for t in squads["teams"]}
+    names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
 
     for f in files:
         gw, results = score_one_gameweek(f, squads, positions)
@@ -125,17 +127,17 @@ def main():
                  else "IN PROGRESS — round not complete")
         print(f"\n{'='*58}\nGameweek {gw['gameweek']} ({state})\n{'='*58}")
         for i, r in enumerate(results, 1):
-            print(f"{i:>2}. {r['manager']:<12} {r['points']:>4}  ({r['formation']}"
-                  f", bench {r['bench_points']})")
-            cumulative[r["manager"]] += r["points"]
+            print(f"{i:>2}. {r['key']:<4} {r['team']:<24} {r['points']:>4}  "
+                  f"({r['formation']}, bench {r['bench_points']})")
+            cumulative[r["key"]] += r["points"]
             if show_xi:
                 for name, pos, p in sorted(r["xi"], key=lambda x: -x[2]):
                     print(f"        {pos:<4} {name:<18} {p:>3}")
 
     if len(files) > 1:
         print(f"\n{'='*58}\nSeason table ({len(files)} gameweeks)\n{'='*58}")
-        for i, (mgr, pts) in enumerate(sorted(cumulative.items(), key=lambda x: -x[1]), 1):
-            print(f"{i:>2}. {mgr:<12} {pts:>5}")
+        for i, (k, pts) in enumerate(sorted(cumulative.items(), key=lambda x: -x[1]), 1):
+            print(f"{i:>2}. {k:<4} {names[k]:<24} {pts:>5}")
 
     print("\nNote: XI chosen in hindsight, so totals run slightly hot for "
           "everyone. Comparative, not 'what I would have scored'.")

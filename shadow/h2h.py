@@ -33,7 +33,7 @@ def gameweek_scores(path, squads, positions):
     scores = {}
     for team in squads["teams"]:
         total, _, _ = best_xi(team["squad"], pts)
-        scores[team["manager"]] = total
+        scores[team["key"]] = total
     return gw, scores
 
 
@@ -47,7 +47,8 @@ def main():
     fixtures = json.loads((DATA / "fixtures.json").read_text())
     positions = load_positions()
 
-    managers = sorted(t["manager"] for t in squads["teams"])
+    managers = sorted(t["key"] for t in squads["teams"])
+    names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
     table = {m: dict(P=0, W=0, D=0, L=0, PF=0, PA=0, Pts=0) for m in managers}
 
     by_gw = {}
@@ -83,7 +84,7 @@ def main():
                 else:
                     table[t]["L"] += 1
 
-            line = f"  {h:<9} {hs:>3} - {as_:<3} {a}"
+            line = f"  {names[h]:<22} {hs:>3} - {as_:<3} {names[a]:<22}"
             if compare and "actual" in fx:
                 ah, aa = fx["actual"]["home"], fx["actual"]["away"]
                 deltas += [hs - ah, as_ - aa]
@@ -94,10 +95,10 @@ def main():
             print(line)
 
     print(f"\n{'='*66}\nH2H table\n{'='*66}")
-    print(f"{'':>3} {'Manager':<10} {'P':>2} {'W':>2} {'D':>2} {'L':>2} {'PF':>5} {'PA':>5} {'Pts':>4}")
+    print(f"{'':>3} {'':<4} {'Team':<24} {'P':>2} {'W':>2} {'D':>2} {'L':>2} {'PF':>5} {'PA':>5} {'Pts':>4}")
     ranked = sorted(table.items(), key=lambda kv: (-kv[1]["Pts"], -(kv[1]["PF"] - kv[1]["PA"]), -kv[1]["PF"]))
     for i, (m, r) in enumerate(ranked, 1):
-        print(f"{i:>3} {m:<10} {r['P']:>2} {r['W']:>2} {r['D']:>2} {r['L']:>2} "
+        print(f"{i:>3} {m:<4} {names[m]:<24} {r['P']:>2} {r['W']:>2} {r['D']:>2} {r['L']:>2} "
               f"{r['PF']:>5} {r['PA']:>5} {r['Pts']:>4}")
 
     if compare and deltas:

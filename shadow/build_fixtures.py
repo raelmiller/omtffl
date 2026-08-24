@@ -73,7 +73,7 @@ def main():
     squads_path = DATA / "squads.json"
     if not squads_path.exists():
         sys.exit("No data/squads.json — run import_squads.py first.")
-    managers = {t["manager"] for t in json.loads(squads_path.read_text())["teams"]}
+    managers = {t["key"] for t in json.loads(squads_path.read_text())["teams"]}
     CYCLE, TOTAL_GAMEWEEKS, ROUNDS, KNOWN_RESULTS = load_source()
 
     problems = verify(managers, ROUNDS)

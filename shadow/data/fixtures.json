@@ -1,0 +1,1380 @@
+{
+  "teams": [
+    "AF",
+    "AJ",
+    "CCP",
+    "CH",
+    "DP",
+    "EE",
+    "LG",
+    "LRC",
+    "OD",
+    "RF",
+    "RM",
+    "SG",
+    "TM",
+    "YG"
+  ],
+  "cycle_length": 13,
+  "gameweeks": 38,
+  "fixtures": [
+    {
+      "gameweek": 1,
+      "home": "TM",
+      "away": "RM",
+      "actual": {
+        "home": 12,
+        "away": 35
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "CH",
+      "away": "LRC",
+      "actual": {
+        "home": 59,
+        "away": 25
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "SG",
+      "away": "LG",
+      "actual": {
+        "home": 24,
+        "away": 24
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "YG",
+      "away": "RF",
+      "actual": {
+        "home": 26,
+        "away": 21
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "EE",
+      "away": "DP",
+      "actual": {
+        "home": 34,
+        "away": 24
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "AJ",
+      "away": "AF",
+      "actual": {
+        "home": 43,
+        "away": 29
+      }
+    },
+    {
+      "gameweek": 1,
+      "home": "CCP",
+      "away": "OD",
+      "actual": {
+        "home": 51,
+        "away": 27
+      }
+    },
+    {
+      "gameweek": 2,
+      "home": "RM",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 2,
+      "home": "OD",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 2,
+      "home": "AF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 2,
+      "home": "DP",
+      "away": "YG"
+    },
+    {
+      "gameweek": 2,
+      "home": "RF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 2,
+      "home": "LG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 2,
+      "home": "LRC",
+      "away": "TM"
+    },
+    {
+      "gameweek": 3,
+      "home": "CH",
+      "away": "RM"
+    },
+    {
+      "gameweek": 3,
+      "home": "SG",
+      "away": "TM"
+    },
+    {
+      "gameweek": 3,
+      "home": "YG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 3,
+      "home": "EE",
+      "away": "LG"
+    },
+    {
+      "gameweek": 3,
+      "home": "AJ",
+      "away": "RF"
+    },
+    {
+      "gameweek": 3,
+      "home": "CCP",
+      "away": "DP"
+    },
+    {
+      "gameweek": 3,
+      "home": "OD",
+      "away": "AF"
+    },
+    {
+      "gameweek": 4,
+      "home": "RM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 4,
+      "home": "AF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 4,
+      "home": "DP",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 4,
+      "home": "RF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 4,
+      "home": "LG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 4,
+      "home": "LRC",
+      "away": "SG"
+    },
+    {
+      "gameweek": 4,
+      "home": "TM",
+      "away": "CH"
+    },
+    {
+      "gameweek": 5,
+      "home": "SG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 5,
+      "home": "YG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 5,
+      "home": "EE",
+      "away": "TM"
+    },
+    {
+      "gameweek": 5,
+      "home": "AJ",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 5,
+      "home": "CCP",
+      "away": "LG"
+    },
+    {
+      "gameweek": 5,
+      "home": "OD",
+      "away": "RF"
+    },
+    {
+      "gameweek": 5,
+      "home": "AF",
+      "away": "DP"
+    },
+    {
+      "gameweek": 6,
+      "home": "RM",
+      "away": "AF"
+    },
+    {
+      "gameweek": 6,
+      "home": "DP",
+      "away": "OD"
+    },
+    {
+      "gameweek": 6,
+      "home": "RF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 6,
+      "home": "LG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 6,
+      "home": "LRC",
+      "away": "EE"
+    },
+    {
+      "gameweek": 6,
+      "home": "TM",
+      "away": "YG"
+    },
+    {
+      "gameweek": 6,
+      "home": "CH",
+      "away": "SG"
+    },
+    {
+      "gameweek": 7,
+      "home": "YG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 7,
+      "home": "EE",
+      "away": "SG"
+    },
+    {
+      "gameweek": 7,
+      "home": "AJ",
+      "away": "CH"
+    },
+    {
+      "gameweek": 7,
+      "home": "CCP",
+      "away": "TM"
+    },
+    {
+      "gameweek": 7,
+      "home": "OD",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 7,
+      "home": "AF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 7,
+      "home": "DP",
+      "away": "RF"
+    },
+    {
+      "gameweek": 8,
+      "home": "RM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 8,
+      "home": "RF",
+      "away": "AF"
+    },
+    {
+      "gameweek": 8,
+      "home": "LG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 8,
+      "home": "LRC",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 8,
+      "home": "TM",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 8,
+      "home": "CH",
+      "away": "EE"
+    },
+    {
+      "gameweek": 8,
+      "home": "SG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 9,
+      "home": "EE",
+      "away": "RM"
+    },
+    {
+      "gameweek": 9,
+      "home": "AJ",
+      "away": "YG"
+    },
+    {
+      "gameweek": 9,
+      "home": "CCP",
+      "away": "SG"
+    },
+    {
+      "gameweek": 9,
+      "home": "OD",
+      "away": "CH"
+    },
+    {
+      "gameweek": 9,
+      "home": "AF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 9,
+      "home": "DP",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 9,
+      "home": "RF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 10,
+      "home": "RM",
+      "away": "RF"
+    },
+    {
+      "gameweek": 10,
+      "home": "LG",
+      "away": "DP"
+    },
+    {
+      "gameweek": 10,
+      "home": "LRC",
+      "away": "AF"
+    },
+    {
+      "gameweek": 10,
+      "home": "TM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 10,
+      "home": "CH",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 10,
+      "home": "SG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 10,
+      "home": "YG",
+      "away": "EE"
+    },
+    {
+      "gameweek": 11,
+      "home": "AJ",
+      "away": "RM"
+    },
+    {
+      "gameweek": 11,
+      "home": "CCP",
+      "away": "EE"
+    },
+    {
+      "gameweek": 11,
+      "home": "OD",
+      "away": "YG"
+    },
+    {
+      "gameweek": 11,
+      "home": "AF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 11,
+      "home": "DP",
+      "away": "CH"
+    },
+    {
+      "gameweek": 11,
+      "home": "RF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 11,
+      "home": "LG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 12,
+      "home": "RM",
+      "away": "LG"
+    },
+    {
+      "gameweek": 12,
+      "home": "LRC",
+      "away": "RF"
+    },
+    {
+      "gameweek": 12,
+      "home": "TM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 12,
+      "home": "CH",
+      "away": "AF"
+    },
+    {
+      "gameweek": 12,
+      "home": "SG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 12,
+      "home": "YG",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 12,
+      "home": "EE",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 13,
+      "home": "LRC",
+      "away": "RM"
+    },
+    {
+      "gameweek": 13,
+      "home": "TM",
+      "away": "LG"
+    },
+    {
+      "gameweek": 13,
+      "home": "CH",
+      "away": "RF"
+    },
+    {
+      "gameweek": 13,
+      "home": "SG",
+      "away": "DP"
+    },
+    {
+      "gameweek": 13,
+      "home": "YG",
+      "away": "AF"
+    },
+    {
+      "gameweek": 13,
+      "home": "EE",
+      "away": "OD"
+    },
+    {
+      "gameweek": 13,
+      "home": "AJ",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 14,
+      "home": "TM",
+      "away": "RM"
+    },
+    {
+      "gameweek": 14,
+      "home": "CH",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 14,
+      "home": "SG",
+      "away": "LG"
+    },
+    {
+      "gameweek": 14,
+      "home": "YG",
+      "away": "RF"
+    },
+    {
+      "gameweek": 14,
+      "home": "EE",
+      "away": "DP"
+    },
+    {
+      "gameweek": 14,
+      "home": "AJ",
+      "away": "AF"
+    },
+    {
+      "gameweek": 14,
+      "home": "CCP",
+      "away": "OD"
+    },
+    {
+      "gameweek": 15,
+      "home": "RM",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 15,
+      "home": "OD",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 15,
+      "home": "AF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 15,
+      "home": "DP",
+      "away": "YG"
+    },
+    {
+      "gameweek": 15,
+      "home": "RF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 15,
+      "home": "LG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 15,
+      "home": "LRC",
+      "away": "TM"
+    },
+    {
+      "gameweek": 16,
+      "home": "CH",
+      "away": "RM"
+    },
+    {
+      "gameweek": 16,
+      "home": "SG",
+      "away": "TM"
+    },
+    {
+      "gameweek": 16,
+      "home": "YG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 16,
+      "home": "EE",
+      "away": "LG"
+    },
+    {
+      "gameweek": 16,
+      "home": "AJ",
+      "away": "RF"
+    },
+    {
+      "gameweek": 16,
+      "home": "CCP",
+      "away": "DP"
+    },
+    {
+      "gameweek": 16,
+      "home": "OD",
+      "away": "AF"
+    },
+    {
+      "gameweek": 17,
+      "home": "RM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 17,
+      "home": "AF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 17,
+      "home": "DP",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 17,
+      "home": "RF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 17,
+      "home": "LG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 17,
+      "home": "LRC",
+      "away": "SG"
+    },
+    {
+      "gameweek": 17,
+      "home": "TM",
+      "away": "CH"
+    },
+    {
+      "gameweek": 18,
+      "home": "SG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 18,
+      "home": "YG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 18,
+      "home": "EE",
+      "away": "TM"
+    },
+    {
+      "gameweek": 18,
+      "home": "AJ",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 18,
+      "home": "CCP",
+      "away": "LG"
+    },
+    {
+      "gameweek": 18,
+      "home": "OD",
+      "away": "RF"
+    },
+    {
+      "gameweek": 18,
+      "home": "AF",
+      "away": "DP"
+    },
+    {
+      "gameweek": 19,
+      "home": "RM",
+      "away": "AF"
+    },
+    {
+      "gameweek": 19,
+      "home": "DP",
+      "away": "OD"
+    },
+    {
+      "gameweek": 19,
+      "home": "RF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 19,
+      "home": "LG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 19,
+      "home": "LRC",
+      "away": "EE"
+    },
+    {
+      "gameweek": 19,
+      "home": "TM",
+      "away": "YG"
+    },
+    {
+      "gameweek": 19,
+      "home": "CH",
+      "away": "SG"
+    },
+    {
+      "gameweek": 20,
+      "home": "YG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 20,
+      "home": "EE",
+      "away": "SG"
+    },
+    {
+      "gameweek": 20,
+      "home": "AJ",
+      "away": "CH"
+    },
+    {
+      "gameweek": 20,
+      "home": "CCP",
+      "away": "TM"
+    },
+    {
+      "gameweek": 20,
+      "home": "OD",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 20,
+      "home": "AF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 20,
+      "home": "DP",
+      "away": "RF"
+    },
+    {
+      "gameweek": 21,
+      "home": "RM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 21,
+      "home": "RF",
+      "away": "AF"
+    },
+    {
+      "gameweek": 21,
+      "home": "LG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 21,
+      "home": "LRC",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 21,
+      "home": "TM",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 21,
+      "home": "CH",
+      "away": "EE"
+    },
+    {
+      "gameweek": 21,
+      "home": "SG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 22,
+      "home": "EE",
+      "away": "RM"
+    },
+    {
+      "gameweek": 22,
+      "home": "AJ",
+      "away": "YG"
+    },
+    {
+      "gameweek": 22,
+      "home": "CCP",
+      "away": "SG"
+    },
+    {
+      "gameweek": 22,
+      "home": "OD",
+      "away": "CH"
+    },
+    {
+      "gameweek": 22,
+      "home": "AF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 22,
+      "home": "DP",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 22,
+      "home": "RF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 23,
+      "home": "RM",
+      "away": "RF"
+    },
+    {
+      "gameweek": 23,
+      "home": "LG",
+      "away": "DP"
+    },
+    {
+      "gameweek": 23,
+      "home": "LRC",
+      "away": "AF"
+    },
+    {
+      "gameweek": 23,
+      "home": "TM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 23,
+      "home": "CH",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 23,
+      "home": "SG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 23,
+      "home": "YG",
+      "away": "EE"
+    },
+    {
+      "gameweek": 24,
+      "home": "AJ",
+      "away": "RM"
+    },
+    {
+      "gameweek": 24,
+      "home": "CCP",
+      "away": "EE"
+    },
+    {
+      "gameweek": 24,
+      "home": "OD",
+      "away": "YG"
+    },
+    {
+      "gameweek": 24,
+      "home": "AF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 24,
+      "home": "DP",
+      "away": "CH"
+    },
+    {
+      "gameweek": 24,
+      "home": "RF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 24,
+      "home": "LG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 25,
+      "home": "RM",
+      "away": "LG"
+    },
+    {
+      "gameweek": 25,
+      "home": "LRC",
+      "away": "RF"
+    },
+    {
+      "gameweek": 25,
+      "home": "TM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 25,
+      "home": "CH",
+      "away": "AF"
+    },
+    {
+      "gameweek": 25,
+      "home": "SG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 25,
+      "home": "YG",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 25,
+      "home": "EE",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 26,
+      "home": "LRC",
+      "away": "RM"
+    },
+    {
+      "gameweek": 26,
+      "home": "TM",
+      "away": "LG"
+    },
+    {
+      "gameweek": 26,
+      "home": "CH",
+      "away": "RF"
+    },
+    {
+      "gameweek": 26,
+      "home": "SG",
+      "away": "DP"
+    },
+    {
+      "gameweek": 26,
+      "home": "YG",
+      "away": "AF"
+    },
+    {
+      "gameweek": 26,
+      "home": "EE",
+      "away": "OD"
+    },
+    {
+      "gameweek": 26,
+      "home": "AJ",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 27,
+      "home": "TM",
+      "away": "RM"
+    },
+    {
+      "gameweek": 27,
+      "home": "CH",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 27,
+      "home": "SG",
+      "away": "LG"
+    },
+    {
+      "gameweek": 27,
+      "home": "YG",
+      "away": "RF"
+    },
+    {
+      "gameweek": 27,
+      "home": "EE",
+      "away": "DP"
+    },
+    {
+      "gameweek": 27,
+      "home": "AJ",
+      "away": "AF"
+    },
+    {
+      "gameweek": 27,
+      "home": "CCP",
+      "away": "OD"
+    },
+    {
+      "gameweek": 28,
+      "home": "RM",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 28,
+      "home": "OD",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 28,
+      "home": "AF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 28,
+      "home": "DP",
+      "away": "YG"
+    },
+    {
+      "gameweek": 28,
+      "home": "RF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 28,
+      "home": "LG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 28,
+      "home": "LRC",
+      "away": "TM"
+    },
+    {
+      "gameweek": 29,
+      "home": "CH",
+      "away": "RM"
+    },
+    {
+      "gameweek": 29,
+      "home": "SG",
+      "away": "TM"
+    },
+    {
+      "gameweek": 29,
+      "home": "YG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 29,
+      "home": "EE",
+      "away": "LG"
+    },
+    {
+      "gameweek": 29,
+      "home": "AJ",
+      "away": "RF"
+    },
+    {
+      "gameweek": 29,
+      "home": "CCP",
+      "away": "DP"
+    },
+    {
+      "gameweek": 29,
+      "home": "OD",
+      "away": "AF"
+    },
+    {
+      "gameweek": 30,
+      "home": "RM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 30,
+      "home": "AF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 30,
+      "home": "DP",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 30,
+      "home": "RF",
+      "away": "EE"
+    },
+    {
+      "gameweek": 30,
+      "home": "LG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 30,
+      "home": "LRC",
+      "away": "SG"
+    },
+    {
+      "gameweek": 30,
+      "home": "TM",
+      "away": "CH"
+    },
+    {
+      "gameweek": 31,
+      "home": "SG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 31,
+      "home": "YG",
+      "away": "CH"
+    },
+    {
+      "gameweek": 31,
+      "home": "EE",
+      "away": "TM"
+    },
+    {
+      "gameweek": 31,
+      "home": "AJ",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 31,
+      "home": "CCP",
+      "away": "LG"
+    },
+    {
+      "gameweek": 31,
+      "home": "OD",
+      "away": "RF"
+    },
+    {
+      "gameweek": 31,
+      "home": "AF",
+      "away": "DP"
+    },
+    {
+      "gameweek": 32,
+      "home": "RM",
+      "away": "AF"
+    },
+    {
+      "gameweek": 32,
+      "home": "DP",
+      "away": "OD"
+    },
+    {
+      "gameweek": 32,
+      "home": "RF",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 32,
+      "home": "LG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 32,
+      "home": "LRC",
+      "away": "EE"
+    },
+    {
+      "gameweek": 32,
+      "home": "TM",
+      "away": "YG"
+    },
+    {
+      "gameweek": 32,
+      "home": "CH",
+      "away": "SG"
+    },
+    {
+      "gameweek": 33,
+      "home": "YG",
+      "away": "RM"
+    },
+    {
+      "gameweek": 33,
+      "home": "EE",
+      "away": "SG"
+    },
+    {
+      "gameweek": 33,
+      "home": "AJ",
+      "away": "CH"
+    },
+    {
+      "gameweek": 33,
+      "home": "CCP",
+      "away": "TM"
+    },
+    {
+      "gameweek": 33,
+      "home": "OD",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 33,
+      "home": "AF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 33,
+      "home": "DP",
+      "away": "RF"
+    },
+    {
+      "gameweek": 34,
+      "home": "RM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 34,
+      "home": "RF",
+      "away": "AF"
+    },
+    {
+      "gameweek": 34,
+      "home": "LG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 34,
+      "home": "LRC",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 34,
+      "home": "TM",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 34,
+      "home": "CH",
+      "away": "EE"
+    },
+    {
+      "gameweek": 34,
+      "home": "SG",
+      "away": "YG"
+    },
+    {
+      "gameweek": 35,
+      "home": "EE",
+      "away": "RM"
+    },
+    {
+      "gameweek": 35,
+      "home": "AJ",
+      "away": "YG"
+    },
+    {
+      "gameweek": 35,
+      "home": "CCP",
+      "away": "SG"
+    },
+    {
+      "gameweek": 35,
+      "home": "OD",
+      "away": "CH"
+    },
+    {
+      "gameweek": 35,
+      "home": "AF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 35,
+      "home": "DP",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 35,
+      "home": "RF",
+      "away": "LG"
+    },
+    {
+      "gameweek": 36,
+      "home": "RM",
+      "away": "RF"
+    },
+    {
+      "gameweek": 36,
+      "home": "LG",
+      "away": "DP"
+    },
+    {
+      "gameweek": 36,
+      "home": "LRC",
+      "away": "AF"
+    },
+    {
+      "gameweek": 36,
+      "home": "TM",
+      "away": "OD"
+    },
+    {
+      "gameweek": 36,
+      "home": "CH",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 36,
+      "home": "SG",
+      "away": "AJ"
+    },
+    {
+      "gameweek": 36,
+      "home": "YG",
+      "away": "EE"
+    },
+    {
+      "gameweek": 37,
+      "home": "AJ",
+      "away": "RM"
+    },
+    {
+      "gameweek": 37,
+      "home": "CCP",
+      "away": "EE"
+    },
+    {
+      "gameweek": 37,
+      "home": "OD",
+      "away": "YG"
+    },
+    {
+      "gameweek": 37,
+      "home": "AF",
+      "away": "SG"
+    },
+    {
+      "gameweek": 37,
+      "home": "DP",
+      "away": "CH"
+    },
+    {
+      "gameweek": 37,
+      "home": "RF",
+      "away": "TM"
+    },
+    {
+      "gameweek": 37,
+      "home": "LG",
+      "away": "LRC"
+    },
+    {
+      "gameweek": 38,
+      "home": "RM",
+      "away": "LG"
+    },
+    {
+      "gameweek": 38,
+      "home": "LRC",
+      "away": "RF"
+    },
+    {
+      "gameweek": 38,
+      "home": "TM",
+      "away": "DP"
+    },
+    {
+      "gameweek": 38,
+      "home": "CH",
+      "away": "AF"
+    },
+    {
+      "gameweek": 38,
+      "home": "SG",
+      "away": "OD"
+    },
+    {
+      "gameweek": 38,
+      "home": "YG",
+      "away": "CCP"
+    },
+    {
+      "gameweek": 38,
+      "home": "EE",
+      "away": "AJ"
+    }
+  ]
+}
