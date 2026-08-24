@@ -124,8 +124,13 @@ to spend your three uses. That makes the scale a fairness question, and
 `boost_scale.py` answers it: what each band is worth once you account for how
 often a club at that position actually wins.
 
-The short version is that the very bottom is a genuine risk rather than a free
-win. A 17th-place manager is the best hand at about 38 points a season; a 20th
+`boost_scale.py` also prices the number of uses, which is what decides
+whether a manager is worth bidding on at all. Three uses is worth well under
+£1 of a £50 budget and flips half a head-to-head result a season — bench-player
+territory. Around eight uses is where a manager becomes a real auction item.
+
+The short version on the scale is that the very bottom is a genuine risk
+rather than a free win. A 17th-place manager is the best hand at about 38 points a season; a 20th
 -place one is worth 27, because they blank more than half the time. A top-four
 manager is worth 14 but pays out almost every time. That spread is what the
 auction has to price.

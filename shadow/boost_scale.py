@@ -3,7 +3,9 @@
 
 Managers are drafted at the auction and you keep yours all season, so this is
 not a menu you pick from each week — it's the hand you were dealt. The only
-choice you have is *when* to spend your three uses.
+choice you have is *when* to spend your uses — and how many uses there are
+decides whether a manager is worth real money at the auction or an
+afterthought. The last section prices that.
 
 That makes the question a fairness one rather than a strategy one. The boost
 multiplies your XI by a percentage set by your manager's club position, and
@@ -21,7 +23,7 @@ table more than the numbers suggest:
 - **Variance.** A top-four manager pays out four times in five. A relegation
   manager pays nothing more often than not. In a head-to-head league a
   reliable small boost wins more weeks than a volatile large one.
-- **Fixture choice.** Three uses across 38 gameweeks are never spent on an
+- **Fixture choice.** A handful of uses across 38 gameweeks are never spent on an
   average fixture, which lifts the bottom of the table far more than the top
   (a title club is already near its ceiling). `--good-fixture` models it as
   a fixture that cuts your chance of *not* winning: p -> 1 - (1-p)**k. That
@@ -55,8 +57,65 @@ WIN_RATES = {
 }
 
 
-# A typical gameweek XI in this league scores around this, from GW1 real data.
-XI_POINTS = 50
+# A typical gameweek XI in this league, and how much team scores vary, both
+# measured from real gameweek data where it exists (see league_shape()).
+XI_POINTS = 38
+XI_SPREAD = 11
+
+BUDGET = 50.0        # auction budget per team
+SQUAD_SIZE = 15
+SEASON_WEEKS = 38
+
+
+def league_shape():
+    """Mean and spread of a real gameweek's team scores, if we have any.
+
+    Falls back to the constants above when there's no data yet. Everything
+    downstream is sensitive to these two numbers, so they're measured rather
+    than assumed wherever possible.
+    """
+    try:
+        import json
+        from pathlib import Path
+
+        from h2h import gameweek_scores
+        from score_league import load_positions
+
+        data = Path(__file__).resolve().parent / "data"
+        squads = json.loads((data / "squads.json").read_text())
+        positions = load_positions()
+        totals = []
+        for f in sorted(data.glob("gw*.json")):
+            _, scores = gameweek_scores(f, squads, positions)
+            totals.extend(scores.values())
+        if len(totals) < 5:
+            return XI_POINTS, XI_SPREAD, 0
+        mean = sum(totals) / len(totals)
+        var = sum((t - mean) ** 2 for t in totals) / (len(totals) - 1)
+        return mean, var ** 0.5, len(totals)
+    except Exception:
+        return XI_POINTS, XI_SPREAD, 0
+
+
+def _phi(z):
+    """Standard normal CDF, via the error function."""
+    import math
+    return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+
+
+def flip_chance(boost_points, spread):
+    """Chance one boost turns a head-to-head defeat into a win.
+
+    Two things have to be true: you have to be behind, and behind by less
+    than the boost is worth. Team scores are near enough normal, so the
+    margin between two of them is a half-normal with spread sqrt(2) times
+    a single team's.
+    """
+    if spread <= 0:
+        return 0.0
+    margin_spread = spread * (2 ** 0.5)
+    within_reach = 2 * _phi(boost_points / margin_spread) - 1
+    return 0.5 * within_reach  # you're the one losing about half the time
 
 
 def outcome(position, quality=1.0):
@@ -101,10 +160,9 @@ def main():
     if "--ceiling" in argv:
         ceiling = float(argv[argv.index("--ceiling") + 1])
     use_linear = "--linear" in argv
-    # You get three boosts across 38 gameweeks, so you never spend one on an
-    # average fixture — you wait for a good one. This models that: the club
-    # keeps its own band, but plays with the outcome rates of a side N places
-    # higher. It's a proxy for a favourable draw, not a fixture model.
+    # Boosts are scarce, so you never spend one on an average fixture — you
+    # wait for a good one. Quality above 1 shrinks the chance of not winning.
+    # It's a proxy for a favourable draw, not a fixture model.
     quality = 1.0
     if "--good-fixture" in argv:
         i = argv.index("--good-fixture")
@@ -159,6 +217,63 @@ def main():
         print("Wide enough to be worth bidding on, narrow enough that a "
               "reliable manager still has\na buyer — especially in H2H, where "
               "blanking loses you the week outright.")
+
+    how_many_uses(evs, quality)
+
+
+def how_many_uses(evs, quality):
+    """What a manager is worth at different numbers of boosts a season.
+
+    The raw points understate it, because in a head-to-head league points
+    only matter when they change a result. So this also prices the boost in
+    the currency that decides the title: matches turned from a defeat into
+    a win.
+    """
+    mean, spread, sample = league_shape()
+    source = (f"measured from {sample} real team-gameweeks"
+              if sample else "assumed — no gameweek data yet")
+    print(f"\n{'=' * 62}")
+    print(f"How many boosts make a manager worth drafting?")
+    print(f"{'=' * 62}")
+    print(f"Typical XI {mean:.0f} pts, spread {spread:.0f} ({source}).")
+
+    # Price the median hand rather than the best or worst one.
+    median_ev = sorted(e for _, e, _ in evs)[len(evs) // 2]
+    per_use = mean * median_ev / 100
+    # A squad's whole season, which is what the whole budget buys.
+    season_squad = mean * SEASON_WEEKS
+    flip = flip_chance(per_use, spread)
+
+    print(f"A median manager's boost is worth {per_use:.1f} pts when spent, "
+          f"and turns a\ndefeat into a win {flip:.0%} of the time it's used.\n")
+    print(f"{'Uses':>5}  {'Points/season':>14}  {'Results flipped':>16}  "
+          f"{'Worth':>7}")
+    print("-" * 52)
+    for uses in (1, 2, 3, 5, 8, 12, 19, 38):
+        pts = uses * per_use
+        flips = uses * flip
+        # What that's worth out of a 50-budget that buys a whole season's
+        # points: the same share of the budget as it is of the points.
+        worth = BUDGET * pts / season_squad
+        gap = SEASON_WEEKS / uses
+        every = ("once" if uses == 1
+                 else "every week" if gap < 1.5
+                 else f"every {gap:.0f} weeks")
+        print(f"{uses:>5}  {pts:>10.0f} pts  {flips:>13.1f}    "
+              f"£{worth:>5.2f}   ({every})")
+
+    print("\nA manager is worth bidding on when they cost less than they "
+          "return. At three\nuses that's about £1 — the price of a bench "
+          "player, so they'd go for scraps.")
+    target = next((u for u in range(1, 39)
+                   if BUDGET * u * per_use / season_squad >= 3.0), None)
+    if target:
+        print(f"To make one worth around £3 — a real squad slot, something "
+              f"people fight over —\ntakes {target} uses, roughly one every "
+              f"{SEASON_WEEKS / target:.0f} gameweeks.")
+    one_flip = next((u for u in range(1, 39) if u * flip >= 1.0), None)
+    if one_flip:
+        print(f"To expect one flipped result a season takes {one_flip} uses.")
 
 
 if __name__ == "__main__":
