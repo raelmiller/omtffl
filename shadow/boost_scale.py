@@ -30,10 +30,17 @@ table more than the numbers suggest:
   saturates near the top instead of pretending a title club can improve
   without limit, which a "treat them as N places higher" fudge does not.
 
-The win rates are league-position averages, not this season's clubs, and they
-are assumptions rather than measured data — edit `WIN_RATES` if you'd rather
-use different ones. The shape of the conclusion is not sensitive to small
-changes in them.
+What's measured and what's assumed
+----------------------------------
+Head-to-head margins are **measured**, from a completed season of this league
+in `data/season_results.json` — 304 real matches. That matters more than it
+sounds: margins are bunched far tighter than a normal distribution predicts,
+with nearly half of all matches decided by ten points or fewer, and that
+bunching is precisely what decides whether a boost ever changes a result.
+
+Club win rates by league position are **assumed** — league-position averages
+rather than this season's clubs. Edit `WIN_RATES` to change them; the shape
+of the conclusion isn't sensitive to small differences.
 
 Usage
 -----
@@ -97,25 +104,60 @@ def league_shape():
         return XI_POINTS, XI_SPREAD, 0
 
 
-def _phi(z):
-    """Standard normal CDF, via the error function."""
-    import math
-    return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+def season_results():
+    """Every team-gameweek from a completed season, as (mine, theirs).
 
-
-def flip_chance(boost_points, spread):
-    """Chance one boost turns a head-to-head defeat into a win.
-
-    Two things have to be true: you have to be behind, and behind by less
-    than the boost is worth. Team scores are near enough normal, so the
-    margin between two of them is a half-normal with spread sqrt(2) times
-    a single team's.
+    A real season beats a model here. Head-to-head margins turn out to be
+    more tightly bunched than a normal distribution predicts — nearly half of
+    all matches are decided by ten points or fewer — which matters, because
+    that bunching is exactly what decides whether a boost is ever the
+    difference between winning and losing a week.
     """
-    if spread <= 0:
-        return 0.0
-    margin_spread = spread * (2 ** 0.5)
-    within_reach = 2 * _phi(boost_points / margin_spread) - 1
-    return 0.5 * within_reach  # you're the one losing about half the time
+    import json
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parent / "data" / "season_results.json"
+    if not path.exists():
+        return []
+    raw = json.loads(path.read_text())
+    out = []
+    for a, b in raw.get("results", []):
+        out.append((a, b))
+        out.append((b, a))
+    return out
+
+
+def league_points(mine, theirs):
+    return 3 if mine > theirs else 1 if mine == theirs else 0
+
+
+def value_of_use(pct, position, quality, results):
+    """League points a single boost is worth, measured against a real season.
+
+    Replays every team-gameweek that actually happened: add what the boost
+    would have paid, and see whether the result changes. Weighted by how
+    often the club actually delivers a win, a draw or nothing — a boost that
+    doesn't pay changes no results at all.
+    """
+    if not results:
+        return 0.0, 0.0
+    win, draw = outcome(position, quality)
+    payouts = [(win, 1.0), (draw, 0.5)]  # a defeat pays nothing, so changes nothing
+
+    gained = 0.0
+    flips = 0.0
+    for chance, multiplier in payouts:
+        if chance <= 0:
+            continue
+        for mine, theirs in results:
+            boost = round(mine * (pct / 100.0) * multiplier)
+            before = league_points(mine, theirs)
+            after = league_points(mine + boost, theirs)
+            gained += chance * (after - before)
+            if before == 0 and after == 3:
+                flips += chance
+    n = len(results)
+    return gained / n, flips / n
 
 
 def outcome(position, quality=1.0):
@@ -218,62 +260,65 @@ def main():
               "reliable manager still has\na buyer — especially in H2H, where "
               "blanking loses you the week outright.")
 
-    how_many_uses(evs, quality)
+    how_many_uses(evs, quality, pct_of)
 
 
-def how_many_uses(evs, quality):
+def how_many_uses(evs, quality, pct_of):
     """What a manager is worth at different numbers of boosts a season.
 
-    The raw points understate it, because in a head-to-head league points
-    only matter when they change a result. So this also prices the boost in
-    the currency that decides the title: matches turned from a defeat into
-    a win.
+    Raw points understate it in a head-to-head league, where points only
+    matter when they change a result. So this prices a boost in league
+    points, replayed against a real season's margins.
     """
     mean, spread, sample = league_shape()
-    source = (f"measured from {sample} real team-gameweeks"
-              if sample else "assumed — no gameweek data yet")
-    print(f"\n{'=' * 62}")
-    print(f"How many boosts make a manager worth drafting?")
-    print(f"{'=' * 62}")
-    print(f"Typical XI {mean:.0f} pts, spread {spread:.0f} ({source}).")
+    results = season_results()
+    print(f"\n{'=' * 66}")
+    print("How many boosts make a manager worth drafting?")
+    print(f"{'=' * 66}")
+    if not results:
+        print("No completed season in data/season_results.json — "
+              "can't price this without one.")
+        return
+    print(f"Measured against {len(results) // 2} real head-to-head matches. "
+          f"Typical XI {mean:.0f} pts.")
 
-    # Price the median hand rather than the best or worst one.
-    median_ev = sorted(e for _, e, _ in evs)[len(evs) // 2]
-    per_use = mean * median_ev / 100
-    # A squad's whole season, which is what the whole budget buys.
+    # Price the median hand: the manager an average drafter ends up with.
+    med_pos = 10
+    per_use_pts = mean * sorted(e for _, e, _ in evs)[len(evs) // 2] / 100
+    lg_per_use, flip_per_use = value_of_use(pct_of(med_pos), med_pos, quality, results)
+
+    print(f"A mid-table manager's boost is worth {per_use_pts:.1f} pts when it "
+          f"pays, turns a defeat\ninto a win {flip_per_use:.0%} of the time it's "
+          f"used, and is worth {lg_per_use:.2f} league points a use.\n")
+
     season_squad = mean * SEASON_WEEKS
-    flip = flip_chance(per_use, spread)
-
-    print(f"A median manager's boost is worth {per_use:.1f} pts when spent, "
-          f"and turns a\ndefeat into a win {flip:.0%} of the time it's used.\n")
-    print(f"{'Uses':>5}  {'Points/season':>14}  {'Results flipped':>16}  "
-          f"{'Worth':>7}")
-    print("-" * 52)
-    for uses in (1, 2, 3, 5, 8, 12, 19, 38):
-        pts = uses * per_use
-        flips = uses * flip
-        # What that's worth out of a 50-budget that buys a whole season's
-        # points: the same share of the budget as it is of the points.
-        worth = BUDGET * pts / season_squad
+    print(f"{'Uses':>5}  {'Points':>8}  {'Wins gained':>12}  {'League pts':>11}  "
+          f"{'Worth':>7}  {'Cadence':>16}")
+    print("-" * 66)
+    for uses in (1, 2, 3, 5, 8, 12, 19):
+        pts = uses * per_use_pts
         gap = SEASON_WEEKS / uses
-        every = ("once" if uses == 1
-                 else "every week" if gap < 1.5
-                 else f"every {gap:.0f} weeks")
-        print(f"{uses:>5}  {pts:>10.0f} pts  {flips:>13.1f}    "
-              f"£{worth:>5.2f}   ({every})")
+        cadence = ("once" if uses == 1 else "every week" if gap < 1.5
+                   else f"every {gap:.0f} weeks")
+        print(f"{uses:>5}  {pts:>5.0f} pts  {uses * flip_per_use:>12.1f}  "
+              f"{uses * lg_per_use:>11.1f}  £{BUDGET * pts / season_squad:>5.2f}  "
+              f"{cadence:>16}")
 
-    print("\nA manager is worth bidding on when they cost less than they "
-          "return. At three\nuses that's about £1 — the price of a bench "
-          "player, so they'd go for scraps.")
-    target = next((u for u in range(1, 39)
-                   if BUDGET * u * per_use / season_squad >= 3.0), None)
-    if target:
-        print(f"To make one worth around £3 — a real squad slot, something "
-              f"people fight over —\ntakes {target} uses, roughly one every "
-              f"{SEASON_WEEKS / target:.0f} gameweeks.")
-    one_flip = next((u for u in range(1, 39) if u * flip >= 1.0), None)
+    # A season's title is usually decided by a handful of league points, so
+    # that's the yardstick: how many uses before the boost is worth one win.
+    one_win = next((u for u in range(1, 39) if u * lg_per_use >= 3.0), None)
+    one_flip = next((u for u in range(1, 39) if u * flip_per_use >= 1.0), None)
+    print()
     if one_flip:
-        print(f"To expect one flipped result a season takes {one_flip} uses.")
+        print(f"One flipped result a season takes {one_flip} uses.")
+    if one_win:
+        print(f"A full win's worth of league points takes {one_win} uses.")
+    print("\nSpread across the whole scale, at that number of uses:")
+    for pos, label in ((2, "top-four"), (10, "mid-table"), (18, "relegation")):
+        lg, fl = value_of_use(pct_of(pos), pos, quality, results)
+        n = one_flip or 3
+        print(f"  {label:<11} {pct_of(pos):>4.0f}%  {n * lg:>5.1f} league pts, "
+              f"{n * fl:>4.1f} results flipped over {n} uses")
 
 
 if __name__ == "__main__":

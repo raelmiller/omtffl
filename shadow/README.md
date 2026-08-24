@@ -125,9 +125,14 @@ to spend your three uses. That makes the scale a fairness question, and
 often a club at that position actually wins.
 
 `boost_scale.py` also prices the number of uses, which is what decides
-whether a manager is worth bidding on at all. Three uses is worth well under
-£1 of a £50 budget and flips half a head-to-head result a season — bench-player
-territory. Around eight uses is where a manager becomes a real auction item.
+whether a manager is worth bidding on at all. That's measured against 304
+real head-to-head matches from a completed season, kept as bare score pairs
+in `data/season_results.json` — margins are bunched much tighter than a model
+predicts, and that's what decides whether a boost ever changes a result.
+
+Three uses is worth 1.3 league points across a season and about 74p of a £50
+budget: bench-player territory. Eight uses is worth a full win, which is where
+a manager becomes a real auction item.
 
 The short version on the scale is that the very bottom is a genuine risk
 rather than a free win. A 17th-place manager is the best hand at about 38 points a season; a 20th
