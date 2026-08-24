@@ -1,0 +1,55 @@
+{
+  "name": "Trades, bank and manager boosts \u2014 worked example",
+  "description": "AF trades Solanke + 40 pts to CCP for Haaland; CCP later spends the bank. Two boosts contrast a title club with a struggling one.",
+  "manager_clubs": {
+    "RM": 15,
+    "YG": 13
+  },
+  "transactions": [
+    {
+      "type": "trade",
+      "gameweek": 1,
+      "from": "AF",
+      "to": "CCP",
+      "players_out": [
+        {
+          "id": 526,
+          "name": "Solanke",
+          "position": "FWD",
+          "club": "TOT",
+          "price": 5.75
+        }
+      ],
+      "players_in": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "position": "FWD",
+          "club": "MCI",
+          "price": 26.5
+        }
+      ],
+      "points": 40,
+      "note": "AF gambles that Haaland outscores Solanke + 40 over the season"
+    },
+    {
+      "type": "bank_use",
+      "gameweek": 1,
+      "team": "CCP",
+      "points": 15,
+      "note": "CCP cashes part of the bank straight away"
+    },
+    {
+      "type": "boost",
+      "gameweek": 1,
+      "team": "RM",
+      "note": "manager of a title club \u2014 small boost"
+    },
+    {
+      "type": "boost",
+      "gameweek": 1,
+      "team": "YG",
+      "note": "manager of a struggling club \u2014 big boost"
+    }
+  ]
+}
