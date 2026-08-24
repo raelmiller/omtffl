@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 
@@ -65,15 +65,22 @@ def state(gw: dict) -> str:
 
 
 @lru_cache(maxsize=8)
-def _season(version):
-    """Score the whole season. Cached on the data fingerprint, not on time."""
+def _season(version, lineup_key, lineups_json):
+    """Score the whole season. Cached on the data fingerprint, not on time.
+
+    `lineups_json` is passed in rather than read here so the app can serve
+    submissions from the database while the shadow scripts keep using the
+    file. Both arrive in the same shape, so the engine can't tell them apart.
+    """
+    lineups_in = json.loads(lineups_json) if lineups_json else None
     squads = _read("squads.json")
     fixtures = _read("fixtures.json")
     if not squads or not fixtures:
         return {"ready": False, "reason": "no squads or fixture list yet"}
 
     positions = load_positions()
-    lineups = load_lineups() or {}
+    lineups = ({int(k): v for k, v in lineups_in.items()} if lineups_in is not None
+               else load_lineups() or {})
     names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
 
     by_gw = {}
@@ -167,8 +174,17 @@ def _season(version):
     }
 
 
-def season():
-    return _season(data_version())
+def season(lineups=None):
+    """Score the season, optionally against a supplied set of lineups.
+
+    The cache key includes the lineups themselves, so a manager saving a team
+    is reflected on the next page load without a restart or a manual flush.
+    """
+    if lineups is None:
+        return _season(data_version(), 0, None)
+    payload = json.dumps({str(k): v for k, v in sorted(lineups.items())},
+                         sort_keys=True)
+    return _season(data_version(), len(payload), payload)
 
 
 def freshness():
@@ -191,3 +207,99 @@ def freshness():
         "shadow_dir": str(SHADOW),
         "checked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
+
+
+# FPL locks a gameweek 90 minutes before its first kick-off. Deriving the
+# deadline that way lets the app know about rounds that haven't happened yet,
+# where no gameweek file exists — which is exactly the round a manager wants
+# to pick a team for.
+DEADLINE_BEFORE_KICKOFF = timedelta(minutes=90)
+
+
+def calendar():
+    """Every gameweek of the season, newest first.
+
+    Built from the Premier League fixture list, which covers all 38 rounds
+    from day one, and overlaid with real data wherever a round has been
+    downloaded. A season app that only knew about finished rounds could never
+    show you the team sheet you actually need.
+    """
+    rounds = {}
+    for fx in _read("pl_fixtures.json") or []:
+        event, kickoff = fx.get("event"), fx.get("kickoff_time")
+        if not event or not kickoff:
+            continue
+        first = rounds.setdefault(event, {"gameweek": event, "kickoff": kickoff})
+        if kickoff < first["kickoff"]:
+            first["kickoff"] = kickoff
+
+    for entry in rounds.values():
+        entry["name"] = f"Gameweek {entry['gameweek']}"
+        entry["deadline"] = (_parse(entry["kickoff"]) - DEADLINE_BEFORE_KICKOFF
+                             ).isoformat().replace("+00:00", "Z")
+        entry["state"] = "upcoming"
+
+    # A downloaded round knows better than the fixture list: it carries FPL's
+    # own deadline and how settled the stats are.
+    for path in gameweek_files():
+        gw = json.loads(path.read_text())
+        entry = rounds.setdefault(gw["gameweek"], {"gameweek": gw["gameweek"]})
+        entry.update(name=gw.get("name") or f"Gameweek {gw['gameweek']}",
+                     deadline=gw.get("deadline_time") or entry.get("deadline"),
+                     state=state(gw), has_data=True)
+
+    return sorted(rounds.values(), key=lambda g: -g["gameweek"])
+
+
+def gameweeks():
+    """Only the rounds we hold data for, newest first."""
+    return [g for g in calendar() if g.get("has_data")]
+
+
+def current_gameweek():
+    """The round managers should be picking a team for.
+
+    The next one still open, or failing that the most recent — a manager
+    arriving mid-week wants this week's team sheet, not last week's result.
+    """
+    rounds = calendar()
+    if not rounds:
+        return None
+    now = datetime.now(timezone.utc)
+    upcoming = [g for g in rounds
+                if g.get("deadline") and _parse(g["deadline"]) > now]
+    return min(upcoming, key=lambda g: g["gameweek"]) if upcoming else rounds[0]
+
+
+def _parse(stamp):
+    return datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+
+
+def deadline_state(gw):
+    """Whether a gameweek is still open, and how long is left.
+
+    The lock is the deadline itself — the same instant FPL uses — so there is
+    never a question of whose clock is right.
+    """
+    if not gw or not gw.get("deadline"):
+        return {"open": False, "reason": "no deadline on record", "seconds": 0}
+    now = datetime.now(timezone.utc)
+    closes = _parse(gw["deadline"])
+    left = int((closes - now).total_seconds())
+    return {
+        "open": left > 0,
+        "deadline": gw["deadline"],
+        "seconds": max(0, left),
+        "reason": None if left > 0 else "the deadline has passed",
+    }
+
+
+def squad_for(key):
+    """A manager's fifteen. Phase two has no trades, so this is the draft."""
+    squads = _read("squads.json")
+    if not squads:
+        return []
+    for team in squads["teams"]:
+        if team["key"] == key:
+            return list(team["squad"])
+    return []
