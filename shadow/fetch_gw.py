@@ -97,6 +97,33 @@ def fetch_gameweek(gw, meta):
     }
 
 
+def fetch_pl_fixtures():
+    """Every Premier League match, with gameweek and score.
+
+    Needed for the manager-boost mechanic: the result decides whether a boost
+    pays out in full, half or not at all, and the running league table decides
+    how big it is. One call returns the whole season.
+    """
+    print("Fetching Premier League fixtures...")
+    raw = get_json(f"{BASE}/fixtures/")
+    out = []
+    for f in raw:
+        out.append({
+            "id": f.get("id"),
+            "event": f.get("event"),
+            "finished": bool(f.get("finished")),
+            "kickoff_time": f.get("kickoff_time"),
+            "team_h": f.get("team_h"),
+            "team_a": f.get("team_a"),
+            "team_h_score": f.get("team_h_score"),
+            "team_a_score": f.get("team_a_score"),
+        })
+    played = sum(1 for f in out if f["finished"])
+    print(f"  {len(out)} fixtures, {played} played")
+    (DATA / "pl_fixtures.json").write_text(json.dumps(out, separators=(",", ":")))
+    return out
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     refetch = "--refetch" in sys.argv
@@ -109,10 +136,19 @@ def main():
     positions = {str(el["id"]): el["element_type"] for el in bs["elements"]}
     names = {str(el["id"]): el["web_name"] for el in bs["elements"]}
     DATA.mkdir(parents=True, exist_ok=True)
+    clubs = {
+        str(t["id"]): {"name": t["name"], "short": t["short_name"]}
+        for t in bs["teams"]
+    }
+    player_clubs = {str(el["id"]): el["team"] for el in bs["elements"]}
     (DATA / "players.json").write_text(
-        json.dumps({"positions": positions, "names": names}, separators=(",", ":"))
+        json.dumps({"positions": positions, "names": names,
+                    "clubs": clubs, "player_clubs": player_clubs},
+                   separators=(",", ":"))
     )
     print(f"  saved positions for {len(positions)} players")
+
+    fetch_pl_fixtures()
 
     by_id = gameweek_states(bs)
     finished = sorted(g for g, m in by_id.items() if m["finished"])
