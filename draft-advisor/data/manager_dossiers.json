@@ -1265,8 +1265,8 @@
       "player": "Bernardo Silva",
       "club": "MCI",
       "cost": 6.0,
-      "fpl_id": 316,
-      "fpl_name": "Emersonn",
+      "fpl_id": 566,
+      "fpl_name": "Silva",
       "points_that_season": null
      },
      {
@@ -2316,8 +2316,8 @@
       "player": "Bernardo Silva",
       "club": "MCI",
       "cost": 3.5,
-      "fpl_id": 316,
-      "fpl_name": "Emersonn",
+      "fpl_id": 566,
+      "fpl_name": "Silva",
       "points_that_season": null
      },
      {
@@ -4721,6 +4721,428 @@
   }
  },
  {
+  "name": "Efe",
+  "years": [
+   "2023-24",
+   "2025-26"
+  ],
+  "avg_spend": 49.88,
+  "top3_share": 58.1,
+  "pos_split": {
+   "GK": 2.8,
+   "DEF": 15.8,
+   "MID": 17.3,
+   "FWD": 64.2
+  },
+  "fav_clubs": [
+   [
+    "MUN",
+    5
+   ],
+   [
+    "LIV",
+    4
+   ],
+   [
+    "MCI",
+    3
+   ]
+  ],
+  "pts_per_million": 21.1,
+  "total_points_bought": 2103,
+  "max_ever_bid": 29.75,
+  "seasons": {
+   "2023-24": {
+    "squad": [
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Erling Haaland",
+      "club": "MCI",
+      "cost": 29.75,
+      "fpl_id": 411,
+      "fpl_name": "Haaland",
+      "points_that_season": 217
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Son Heung-Min",
+      "club": "TOT",
+      "cost": 14.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Antony",
+      "club": "MUN",
+      "cost": 3.5,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "GK",
+      "player": "Alisson",
+      "club": "LIV",
+      "cost": 2.25,
+      "fpl_id": 350,
+      "fpl_name": "A.Becker",
+      "points_that_season": 107
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Kyle Walker",
+      "club": "MCI",
+      "cost": 0.25,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Marc Guehi",
+      "club": "CRY",
+      "cost": 0.25,
+      "fpl_id": 388,
+      "fpl_name": "Gu\u00e9hi",
+      "points_that_season": 66
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "GK",
+      "player": "Adrian",
+      "club": "LIV",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Levi Colwill",
+      "club": "CHE",
+      "cost": 0.0,
+      "fpl_id": 149,
+      "fpl_name": "Colwill",
+      "points_that_season": 65
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Micky van de Ven",
+      "club": "TOT",
+      "cost": 0.0,
+      "fpl_id": 503,
+      "fpl_name": "Van de Ven",
+      "points_that_season": 81
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Auston Trusty",
+      "club": "ARS",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Christain Norgaard",
+      "club": "BRE",
+      "cost": 0.0,
+      "fpl_id": 21,
+      "fpl_name": "N\u00f8rgaard",
+      "points_that_season": 74
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Mois\u00e9s Caicedo",
+      "club": "BHA",
+      "cost": 0.0,
+      "fpl_id": 159,
+      "fpl_name": "Caicedo",
+      "points_that_season": 84
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Anthony Gordon",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": 105,
+      "fpl_name": "Anthony",
+      "points_that_season": 3
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Amadou Onana",
+      "club": "EVE",
+      "cost": 0.0,
+      "fpl_id": 48,
+      "fpl_name": "Onana",
+      "points_that_season": 66
+     },
+     {
+      "season": "2023-24",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Ryan Christie",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 75,
+      "fpl_name": "Christie",
+      "points_that_season": 90
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 853,
+    "points_matched_players": 10,
+    "best_value": {
+     "season": "2023-24",
+     "manager": "Efe",
+     "position": "DEF",
+     "player": "Levi Colwill",
+     "club": "CHE",
+     "cost": 0.0,
+     "fpl_id": 149,
+     "fpl_name": "Colwill",
+     "points_that_season": 65
+    },
+    "biggest_bust": {
+     "season": "2023-24",
+     "manager": "Efe",
+     "position": "FWD",
+     "player": "Erling Haaland",
+     "club": "MCI",
+     "cost": 29.75,
+     "fpl_id": 411,
+     "fpl_name": "Haaland",
+     "points_that_season": 217
+    }
+   },
+   "2025-26": {
+    "squad": [
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Sesko",
+      "club": "MUN",
+      "cost": 14.25,
+      "fpl_id": 439,
+      "fpl_name": "\u0160e\u0161ko",
+      "points_that_season": 111
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Foden",
+      "club": "MCI",
+      "cost": 10.75,
+      "fpl_id": 398,
+      "fpl_name": "Foden",
+      "points_that_season": 131
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Saliba",
+      "club": "ARS",
+      "cost": 5.5,
+      "fpl_id": 6,
+      "fpl_name": "Saliba",
+      "points_that_season": 137
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Frimpong",
+      "club": "LIV",
+      "cost": 5.5,
+      "fpl_id": 357,
+      "fpl_name": "Frimpong",
+      "points_that_season": 63
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Lewis-Skelly",
+      "club": "ARS",
+      "cost": 4.25,
+      "fpl_id": 7,
+      "fpl_name": "Lewis-Skelly",
+      "points_that_season": 29
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Kluivert",
+      "club": "BOU",
+      "cost": 3.75,
+      "fpl_id": 70,
+      "fpl_name": "Kluivert",
+      "points_that_season": 41
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Richarlison",
+      "club": "TOT",
+      "cost": 2.5,
+      "fpl_id": 527,
+      "fpl_name": "Richarlison",
+      "points_that_season": 119
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Rutter",
+      "club": "BRI",
+      "cost": 1.75,
+      "fpl_id": 125,
+      "fpl_name": "Georginio",
+      "points_that_season": 87
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "GK",
+      "player": "Dubravka",
+      "club": "BUR",
+      "cost": 0.5,
+      "fpl_id": 497,
+      "fpl_name": "Dubravka",
+      "points_that_season": 96
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Hudson-Odoi",
+      "club": "NFO",
+      "cost": 0.5,
+      "fpl_id": 482,
+      "fpl_name": "Hudson-Odoi",
+      "points_that_season": 88
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "MID",
+      "player": "Gravenberch",
+      "club": "LIV",
+      "cost": 0.5,
+      "fpl_id": 371,
+      "fpl_name": "Gravenberch",
+      "points_that_season": 144
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "GK",
+      "player": "Bayindir",
+      "club": "MUN",
+      "cost": 0.0,
+      "fpl_id": 413,
+      "fpl_name": "Bayindir",
+      "points_that_season": 11
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Bassey",
+      "club": "FUL",
+      "cost": 0.0,
+      "fpl_id": 257,
+      "fpl_name": "Bassey",
+      "points_that_season": 103
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "DEF",
+      "player": "Maguire",
+      "club": "MUN",
+      "cost": 0.0,
+      "fpl_id": 418,
+      "fpl_name": "Maguire",
+      "points_that_season": 90
+     },
+     {
+      "season": "2025-26",
+      "manager": "Efe",
+      "position": "FWD",
+      "player": "Obi",
+      "club": "MUN",
+      "cost": 0.0,
+      "fpl_id": 441,
+      "fpl_name": "Obi",
+      "points_that_season": 0
+     }
+    ],
+    "spend": 49.75,
+    "points_bought": 1250,
+    "points_matched_players": 15,
+    "best_value": {
+     "season": "2025-26",
+     "manager": "Efe",
+     "position": "DEF",
+     "player": "Bassey",
+     "club": "FUL",
+     "cost": 0.0,
+     "fpl_id": 257,
+     "fpl_name": "Bassey",
+     "points_that_season": 103
+    },
+    "biggest_bust": {
+     "season": "2025-26",
+     "manager": "Efe",
+     "position": "DEF",
+     "player": "Lewis-Skelly",
+     "club": "ARS",
+     "cost": 4.25,
+     "fpl_id": 7,
+     "fpl_name": "Lewis-Skelly",
+     "points_that_season": 29
+    }
+   }
+  }
+ },
+ {
   "name": "Gav",
   "years": [
    "2023-24",
@@ -5333,428 +5755,6 @@
      "fpl_id": 464,
      "fpl_name": "Wissa",
      "points_that_season": 27
-    }
-   }
-  }
- },
- {
-  "name": "Efe",
-  "years": [
-   "2023-24",
-   "2025-26"
-  ],
-  "avg_spend": 49.88,
-  "top3_share": 58.1,
-  "pos_split": {
-   "GK": 2.8,
-   "DEF": 15.8,
-   "MID": 17.3,
-   "FWD": 64.2
-  },
-  "fav_clubs": [
-   [
-    "MUN",
-    5
-   ],
-   [
-    "LIV",
-    4
-   ],
-   [
-    "MCI",
-    3
-   ]
-  ],
-  "pts_per_million": 20.4,
-  "total_points_bought": 2037,
-  "max_ever_bid": 29.75,
-  "seasons": {
-   "2023-24": {
-    "squad": [
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Erling Haaland",
-      "club": "MCI",
-      "cost": 29.75,
-      "fpl_id": 411,
-      "fpl_name": "Haaland",
-      "points_that_season": 217
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Son Heung-Min",
-      "club": "TOT",
-      "cost": 14.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Antony",
-      "club": "MUN",
-      "cost": 3.5,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "GK",
-      "player": "Alisson",
-      "club": "LIV",
-      "cost": 2.25,
-      "fpl_id": 350,
-      "fpl_name": "A.Becker",
-      "points_that_season": 107
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Kyle Walker",
-      "club": "MCI",
-      "cost": 0.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Marc Guehi",
-      "club": "CRY",
-      "cost": 0.25,
-      "fpl_id": 168,
-      "fpl_name": "Marc Guiu",
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "GK",
-      "player": "Adrian",
-      "club": "LIV",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Levi Colwill",
-      "club": "CHE",
-      "cost": 0.0,
-      "fpl_id": 149,
-      "fpl_name": "Colwill",
-      "points_that_season": 65
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Micky van de Ven",
-      "club": "TOT",
-      "cost": 0.0,
-      "fpl_id": 503,
-      "fpl_name": "Van de Ven",
-      "points_that_season": 81
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Auston Trusty",
-      "club": "ARS",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Christain Norgaard",
-      "club": "BRE",
-      "cost": 0.0,
-      "fpl_id": 21,
-      "fpl_name": "N\u00f8rgaard",
-      "points_that_season": 74
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Mois\u00e9s Caicedo",
-      "club": "BHA",
-      "cost": 0.0,
-      "fpl_id": 159,
-      "fpl_name": "Caicedo",
-      "points_that_season": 84
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Anthony Gordon",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": 105,
-      "fpl_name": "Anthony",
-      "points_that_season": 3
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Amadou Onana",
-      "club": "EVE",
-      "cost": 0.0,
-      "fpl_id": 48,
-      "fpl_name": "Onana",
-      "points_that_season": 66
-     },
-     {
-      "season": "2023-24",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Ryan Christie",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 75,
-      "fpl_name": "Christie",
-      "points_that_season": 90
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 787,
-    "points_matched_players": 9,
-    "best_value": {
-     "season": "2023-24",
-     "manager": "Efe",
-     "position": "DEF",
-     "player": "Levi Colwill",
-     "club": "CHE",
-     "cost": 0.0,
-     "fpl_id": 149,
-     "fpl_name": "Colwill",
-     "points_that_season": 65
-    },
-    "biggest_bust": {
-     "season": "2023-24",
-     "manager": "Efe",
-     "position": "FWD",
-     "player": "Erling Haaland",
-     "club": "MCI",
-     "cost": 29.75,
-     "fpl_id": 411,
-     "fpl_name": "Haaland",
-     "points_that_season": 217
-    }
-   },
-   "2025-26": {
-    "squad": [
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Sesko",
-      "club": "MUN",
-      "cost": 14.25,
-      "fpl_id": 439,
-      "fpl_name": "\u0160e\u0161ko",
-      "points_that_season": 111
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Foden",
-      "club": "MCI",
-      "cost": 10.75,
-      "fpl_id": 398,
-      "fpl_name": "Foden",
-      "points_that_season": 131
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Saliba",
-      "club": "ARS",
-      "cost": 5.5,
-      "fpl_id": 6,
-      "fpl_name": "Saliba",
-      "points_that_season": 137
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Frimpong",
-      "club": "LIV",
-      "cost": 5.5,
-      "fpl_id": 357,
-      "fpl_name": "Frimpong",
-      "points_that_season": 63
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Lewis-Skelly",
-      "club": "ARS",
-      "cost": 4.25,
-      "fpl_id": 7,
-      "fpl_name": "Lewis-Skelly",
-      "points_that_season": 29
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Kluivert",
-      "club": "BOU",
-      "cost": 3.75,
-      "fpl_id": 70,
-      "fpl_name": "Kluivert",
-      "points_that_season": 41
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Richarlison",
-      "club": "TOT",
-      "cost": 2.5,
-      "fpl_id": 527,
-      "fpl_name": "Richarlison",
-      "points_that_season": 119
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Rutter",
-      "club": "BRI",
-      "cost": 1.75,
-      "fpl_id": 125,
-      "fpl_name": "Georginio",
-      "points_that_season": 87
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "GK",
-      "player": "Dubravka",
-      "club": "BUR",
-      "cost": 0.5,
-      "fpl_id": 497,
-      "fpl_name": "Dubravka",
-      "points_that_season": 96
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Hudson-Odoi",
-      "club": "NFO",
-      "cost": 0.5,
-      "fpl_id": 482,
-      "fpl_name": "Hudson-Odoi",
-      "points_that_season": 88
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "MID",
-      "player": "Gravenberch",
-      "club": "LIV",
-      "cost": 0.5,
-      "fpl_id": 371,
-      "fpl_name": "Gravenberch",
-      "points_that_season": 144
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "GK",
-      "player": "Bayindir",
-      "club": "MUN",
-      "cost": 0.0,
-      "fpl_id": 413,
-      "fpl_name": "Bayindir",
-      "points_that_season": 11
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Bassey",
-      "club": "FUL",
-      "cost": 0.0,
-      "fpl_id": 257,
-      "fpl_name": "Bassey",
-      "points_that_season": 103
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "DEF",
-      "player": "Maguire",
-      "club": "MUN",
-      "cost": 0.0,
-      "fpl_id": 418,
-      "fpl_name": "Maguire",
-      "points_that_season": 90
-     },
-     {
-      "season": "2025-26",
-      "manager": "Efe",
-      "position": "FWD",
-      "player": "Obi",
-      "club": "MUN",
-      "cost": 0.0,
-      "fpl_id": 441,
-      "fpl_name": "Obi",
-      "points_that_season": 0
-     }
-    ],
-    "spend": 49.75,
-    "points_bought": 1250,
-    "points_matched_players": 15,
-    "best_value": {
-     "season": "2025-26",
-     "manager": "Efe",
-     "position": "DEF",
-     "player": "Bassey",
-     "club": "FUL",
-     "cost": 0.0,
-     "fpl_id": 257,
-     "fpl_name": "Bassey",
-     "points_that_season": 103
-    },
-    "biggest_bust": {
-     "season": "2025-26",
-     "manager": "Efe",
-     "position": "DEF",
-     "player": "Lewis-Skelly",
-     "club": "ARS",
-     "cost": 4.25,
-     "fpl_id": 7,
-     "fpl_name": "Lewis-Skelly",
-     "points_that_season": 29
     }
    }
   }
@@ -6939,8 +6939,8 @@
       "player": "Thiago Silva",
       "club": "CHE",
       "cost": 0.75,
-      "fpl_id": 106,
-      "fpl_name": "Thiago",
+      "fpl_id": 566,
+      "fpl_name": "Silva",
       "points_that_season": null
      },
      {
@@ -8182,8 +8182,8 @@
       "player": "Bernardo Silva",
       "club": "MCI",
       "cost": 0.5,
-      "fpl_id": 316,
-      "fpl_name": "Emersonn",
+      "fpl_id": 566,
+      "fpl_name": "Silva",
       "points_that_season": null
      },
      {
@@ -8288,8 +8288,8 @@
     3
    ]
   ],
-  "pts_per_million": 12.7,
-  "total_points_bought": 1909,
+  "pts_per_million": 12.9,
+  "total_points_bought": 1929,
   "max_ever_bid": 29.0,
   "seasons": {
    "2023-24": {
@@ -8649,14 +8649,14 @@
       "player": "Jebbison",
       "club": "BOU",
       "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
+      "fpl_id": 608,
+      "fpl_name": "Jebbison",
+      "points_that_season": 20
      }
     ],
     "spend": 50.0,
-    "points_bought": 597,
-    "points_matched_players": 9,
+    "points_bought": 617,
+    "points_matched_players": 10,
     "best_value": {
      "season": "2024-25",
      "manager": "Ciaran",

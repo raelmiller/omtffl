@@ -1414,8 +1414,8 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 3.5,
-  "fpl_id": 316,
-  "fpl_name": "Emersonn",
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -1700,8 +1700,8 @@
   "player": "Thiago Silva",
   "club": "CHE",
   "cost": 0.75,
-  "fpl_id": 106,
-  "fpl_name": "Thiago",
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -1854,9 +1854,9 @@
   "player": "Marc Guehi",
   "club": "CRY",
   "cost": 0.25,
-  "fpl_id": 168,
-  "fpl_name": "Marc Guiu",
-  "points_that_season": null
+  "fpl_id": 388,
+  "fpl_name": "Gu\u00e9hi",
+  "points_that_season": 66
  },
  {
   "season": "2023-24",
@@ -2635,9 +2635,9 @@
   "player": "Jebbison",
   "club": "BOU",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 608,
+  "fpl_name": "Jebbison",
+  "points_that_season": 20
  },
  {
   "season": "2024-25",
@@ -3570,8 +3570,8 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 6.0,
-  "fpl_id": 316,
-  "fpl_name": "Emersonn",
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -6551,8 +6551,8 @@
   "player": "Bernardo Silva",
   "club": "MCI",
   "cost": 0.5,
-  "fpl_id": 316,
-  "fpl_name": "Emersonn",
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
