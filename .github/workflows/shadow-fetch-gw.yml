@@ -1,0 +1,82 @@
+name: Shadow league — fetch gameweeks
+
+# Pulls finished gameweeks from the FPL API and commits them under
+# shadow/data/, then validates our scoring engine against FPL's own totals.
+#
+# Runs in Actions because the dev sandbox has no egress to
+# fantasy.premierleague.com (same reason as the players feed).
+#
+# Re-fetching matters: FPL revises stats for a day or two after matches
+# (assists reassigned, bonus finalised), so gameweeks that aren't yet
+# `data_checked` are pulled again on every run until they settle.
+
+on:
+  workflow_dispatch:
+    inputs:
+      gameweeks:
+        description: "Specific gameweeks, space separated (blank = all finished)"
+        required: false
+        default: ""
+      refetch:
+        description: "Re-fetch even gameweeks already marked final"
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    # Monday and Tuesday mornings — after a weekend's matches and after FPL
+    # has usually finalised bonus and stat corrections.
+    - cron: "30 7 * * 1,2"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch gameweek data
+        env:
+          GAMEWEEKS: ${{ inputs.gameweeks }}
+          REFETCH: ${{ inputs.refetch }}
+        run: |
+          FLAGS=""
+          if [ "$REFETCH" = "true" ]; then FLAGS="--refetch"; fi
+          python3 shadow/fetch_gw.py $GAMEWEEKS $FLAGS
+
+      - name: Validate scoring engine against FPL totals
+        id: validate
+        run: |
+          cd shadow
+          # Report but don't fail the run — a mismatch is a finding to look
+          # at, not a reason to throw away the data we just fetched.
+          set +e
+          python3 validate.py | tee /tmp/validation.txt
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Commit gameweek data
+        run: |
+          git config user.name "fpl-data-bot"
+          git config user.email "actions@github.com"
+          git add shadow/data
+          if git diff --cached --quiet; then
+            echo "No new gameweek data."
+          else
+            git commit -m "Shadow: refresh gameweek data ($(date -u +%Y-%m-%d))"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      - name: Validation summary
+        run: |
+          {
+            echo '## Scoring engine validation'
+            echo '```'
+            cat /tmp/validation.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
