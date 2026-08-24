@@ -69,7 +69,12 @@ def validate_gameweek(path, positions, names, verbose=False):
                 "stats": stats,
             })
 
-    final = "final" if data.get("data_checked") else "PROVISIONAL"
+    if data.get("data_checked"):
+        final = "final"
+    elif data.get("finished"):
+        final = "PROVISIONAL — FPL still revising"
+    else:
+        final = "IN PROGRESS — round not complete"
     print(f"\nGameweek {gw} ({final}) — {checked} players with minutes")
     if not mismatches:
         print(f"  ✓ all {checked} match FPL exactly")

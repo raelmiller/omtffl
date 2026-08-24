@@ -50,19 +50,27 @@ def get_json(url, retries=3):
             time.sleep(2 * (attempt + 1))
 
 
-def finished_gameweeks(bootstrap):
-    """Gameweeks with results in. `data_checked` means FPL considers the
-    gameweek's stats final; `finished` alone can still be mid-revision."""
-    out = []
+def gameweek_states(bootstrap):
+    """Every gameweek that has at least kicked off, with its state.
+
+    `finished` means all matches are played; `data_checked` means FPL
+    considers the stats final. A gameweek that has started but is neither is
+    still worth fetching when asked for explicitly — the live endpoint's
+    numbers are real, just not yet settled — which is how you can sanity-check
+    the engine mid-round instead of waiting for Tuesday.
+    """
+    out = {}
     for e in bootstrap.get("events", []):
-        if e.get("finished"):
-            out.append({
-                "id": e["id"],
-                "name": e.get("name"),
-                "finished": True,
-                "data_checked": bool(e.get("data_checked")),
-                "deadline_time": e.get("deadline_time"),
-            })
+        started = bool(e.get("finished") or e.get("is_current") or e.get("is_previous"))
+        if not started:
+            continue
+        out[e["id"]] = {
+            "id": e["id"],
+            "name": e.get("name"),
+            "finished": bool(e.get("finished")),
+            "data_checked": bool(e.get("data_checked")),
+            "deadline_time": e.get("deadline_time"),
+        }
     return out
 
 
@@ -82,6 +90,7 @@ def fetch_gameweek(gw, meta):
         "gameweek": gw,
         "name": meta.get("name"),
         "deadline_time": meta.get("deadline_time"),
+        "finished": meta.get("finished"),
         "data_checked": meta.get("data_checked"),
         "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "elements": elements,
@@ -105,20 +114,21 @@ def main():
     )
     print(f"  saved positions for {len(positions)} players")
 
-    finished = finished_gameweeks(bs)
-    by_id = {g["id"]: g for g in finished}
-    print(f"  {len(finished)} finished gameweek(s): {sorted(by_id)}")
+    by_id = gameweek_states(bs)
+    finished = sorted(g for g, m in by_id.items() if m["finished"])
+    print(f"  started: {sorted(by_id)} | finished: {finished}")
 
-    if args:
-        wanted = [int(a) for a in args]
-    else:
-        wanted = sorted(by_id)
+    # Unattended runs only take finished gameweeks, so the repo doesn't churn
+    # with half-played rounds. Ask for one by number to pull it in progress.
+    wanted = [int(a) for a in args] if args else finished
 
     written = 0
     for gw in wanted:
         if gw not in by_id:
-            print(f"Gameweek {gw} is not finished — skipping.")
+            print(f"Gameweek {gw} hasn't started — skipping.")
             continue
+        if not by_id[gw]["finished"]:
+            print(f"Gameweek {gw} is still in progress — fetching provisional data.")
         out = DATA / f"gw{gw:02d}.json"
         if out.exists() and not refetch:
             # Re-pull anything FPL hasn't finalised, since those stats move.
