@@ -238,10 +238,46 @@ check_true("a cross-position claim is refused",
 
 print("\n── Boost limits ────────────────────────────────────────")
 
-many = [{"type": "boost", "gameweek": g, "team": "A"} for g in (2, 3, 4, 5)]
+many = [{"type": "boost", "gameweek": g, "team": "A"}
+        for g in range(2, 2 + BOOST_USES_PER_SEASON + 1)]
 _, _, boost_log, _, _, problems = apply_transactions(base(A, B), many, 38)
 check(f"only {BOOST_USES_PER_SEASON} boosts allowed", len(boost_log), BOOST_USES_PER_SEASON)
-check_true("the fourth is rejected", any("already used all" in x for x in problems), str(problems))
+check_true("one more than the allowance is rejected",
+           any("already used all" in x for x in problems), str(problems))
+
+# One a gameweek: you can't stack two on the same week to double up.
+stack = [{"type": "boost", "gameweek": 4, "team": "A"},
+         {"type": "boost", "gameweek": 4, "team": "A"}]
+_, _, boost_log, _, _, problems = apply_transactions(base(A, B), stack, 38)
+check("only one boost lands in a gameweek", len(boost_log), 1)
+check_true("the second is refused", any("one a week" in x for x in problems), str(problems))
+
+# Declared after kick-off is too late.
+late = [{"type": "boost", "gameweek": 4, "team": "A",
+         "declared_at": "2025-09-20T13:00:00Z"}]
+_, _, boost_log, _, _, problems = apply_transactions(
+    base(A, B), late, 38, deadlines={4: "2025-09-20T11:30:00Z"})
+check("a late declaration doesn't count", len(boost_log), 0)
+check_true("and says why", any("in advance" in x for x in problems), str(problems))
+
+intime = [{"type": "boost", "gameweek": 4, "team": "A",
+           "declared_at": "2025-09-20T10:00:00Z"}]
+_, _, boost_log, _, _, problems = apply_transactions(
+    base(A, B), intime, 38, deadlines={4: "2025-09-20T11:30:00Z"})
+check("declared in time it counts", len(boost_log), 1)
+
+# Timing is otherwise free: all eight in consecutive weeks is legal.
+early = [{"type": "boost", "gameweek": g, "team": "A"}
+         for g in range(1, BOOST_USES_PER_SEASON + 1)]
+_, _, boost_log, _, _, problems = apply_transactions(base(A, B), early, 38)
+check("all eight can go in the opening weeks", len(boost_log), BOOST_USES_PER_SEASON)
+check("with no complaint", problems, [])
+
+# Or all saved for the run-in.
+late_run = [{"type": "boost", "gameweek": g, "team": "A"}
+            for g in range(39 - BOOST_USES_PER_SEASON, 39)]
+_, _, boost_log, _, _, problems = apply_transactions(base(A, B), late_run, 38)
+check("or all held back for the run-in", len(boost_log), BOOST_USES_PER_SEASON)
 
 print("\n── Sacked managers ─────────────────────────────────────")
 

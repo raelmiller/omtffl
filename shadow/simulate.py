@@ -156,6 +156,11 @@ def main():
 
     points_to_date, standings = season_context(
         files, squads_base, transactions, positions, lineups)
+    # A boost has to be called before kick-off, so the checker needs each
+    # gameweek's deadline.
+    deadlines = {}
+    for f in files:
+        deadlines[int(f.stem[2:])] = json.loads(f.read_text()).get("deadline_time")
 
     for f in files:
         gw_num = int(f.stem[2:])
@@ -163,7 +168,7 @@ def main():
 
         squads, adjustments, boost_log, bank, waiver_log, problems = apply_transactions(
             squads_base, transactions, gw_num, points_to_date=points_to_date,
-            standings=standings, managers=managers)
+            standings=standings, managers=managers, deadlines=deadlines)
 
         if problems:
             print("Rule violations in this scenario:")

@@ -23,8 +23,8 @@ table more than the numbers suggest:
 - **Variance.** A top-four manager pays out four times in five. A relegation
   manager pays nothing more often than not. In a head-to-head league a
   reliable small boost wins more weeks than a volatile large one.
-- **Fixture choice.** A handful of uses across 38 gameweeks are never spent on an
-  average fixture, which lifts the bottom of the table far more than the top
+- **Fixture choice.** A handful of uses across 38 gameweeks are never spent
+  on an average fixture, which lifts the bottom of the table far more than the top
   (a title club is already near its ceiling). `--good-fixture` models it as
   a fixture that cuts your chance of *not* winning: p -> 1 - (1-p)**k. That
   saturates near the top instead of pretending a title club can improve

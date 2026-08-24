@@ -110,7 +110,12 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
   costs you the round: your next choice waits for the snake to come back to
   you rather than coming off the rank immediately, which is what stops the
   bottom club sweeping the free-agent list in a single pass.
-- **Manager boosts.** Three a season. Size is stepped in five bands by the
+- **Manager boosts.** Eight a season, at most one per gameweek, declared
+  before kick-off. When you spend them is yours — all eight in the opening
+  weeks, spread out, or held back for the run-in. That timing is a small
+  lever rather than a big one (backing them against your strongest opponents
+  beats spreading them by about a quarter of a league point over a season),
+  but it's a nuance worth having. Size is stepped in five bands by the
   drafted manager's club position going into that gameweek — top four 10%,
   then 20/30/40%, relegation places 50% — and the
   club's real result decides the payout: a win pays in full, a draw half, a
@@ -120,7 +125,7 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
 
 The manager is drafted at the auction and kept all season, so the band isn't
 a weekly choice — it's the hand you were dealt, and the only decision is when
-to spend your three uses. That makes the scale a fairness question, and
+to spend your uses. That makes the scale a fairness question, and
 `boost_scale.py` answers it: what each band is worth once you account for how
 often a club at that position actually wins.
 
@@ -130,9 +135,9 @@ real head-to-head matches from a completed season, kept as bare score pairs
 in `data/season_results.json` — margins are bunched much tighter than a model
 predicts, and that's what decides whether a boost ever changes a result.
 
-Three uses is worth 1.3 league points across a season and about 74p of a £50
-budget: bench-player territory. Eight uses is worth a full win, which is where
-a manager becomes a real auction item.
+Three uses would have been worth 1.3 league points across a season and about
+74p of a £50 budget: bench-player territory, and nobody would bid. Eight is
+worth a full win, which is why that's the allowance.
 
 The short version on the scale is that the very bottom is a genuine risk
 rather than a free win. A 17th-place manager is the best hand at about 38 points a season; a 20th

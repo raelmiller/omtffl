@@ -41,7 +41,9 @@ WAIVER
 
 MANAGER BOOST
   Each team drafts one real Premier League manager and may use the boost
-  THREE times a season, declared before a gameweek.
+  EIGHT times a season, at most once per gameweek, declared before kick-off.
+  When you spend them is entirely yours — all eight in the opening weeks,
+  spread across the season, or held back for the run-in.
   - Size scales with the manager's club's league position going into that
     gameweek: 1st gets the smallest boost, 20th the largest. Backing a
     struggling side is the high-variance play. The table used is the live one
@@ -62,8 +64,9 @@ from pathlib import Path
 DATA = Path(__file__).resolve().parent / "data"
 
 # ── Tunables ───────────────────────────────────────────────────────────────
-# Boost size runs linearly from BOOST_MIN at 1st to BOOST_MAX at 20th. The
-# league wanted "about 10% for Arteta, about 50% for a struggling side".
+# Boost size runs from BOOST_MIN at the top of the table to BOOST_MAX at the
+# bottom. The league wanted "about 10% for Arteta, about 50% for a struggling
+# side"; the bands below are how that's stepped.
 BOOST_MIN_PCT = 10.0
 BOOST_MAX_PCT = 50.0
 # Five bands of four places. Round numbers beat a smooth ramp here: "Leeds are
@@ -77,7 +80,10 @@ BOOST_BANDS = [
     (13, 16, 40.0),
     (17, 20, 50.0),
 ]
-BOOST_USES_PER_SEASON = 3
+# Eight, because three is worth about 1.3 league points across a season — too
+# little for anyone to bid on a manager at the auction. Eight is worth a full
+# win. See boost_scale.py.
+BOOST_USES_PER_SEASON = 8
 # Result multiplier: win pays in full, draw half, defeat nothing.
 BOOST_RESULT = {"W": 1.0, "D": 0.5, "L": 0.0}
 # Before any football has been played there is no table, so a first-gameweek
@@ -233,14 +239,17 @@ def process_waivers(claims, squads, table_order):
 
 
 def apply_transactions(base_squads, transactions, upto_gameweek,
-                       points_to_date=None, standings=None, managers=None):
+                       points_to_date=None, standings=None, managers=None,
+                       deadlines=None):
     """Squad state and per-gameweek adjustments up to and including a gameweek.
 
     `points_to_date[gw][team]` is what a team had scored going into that
     gameweek; supply it to enforce the trade offer cap. `standings[gw]` is the
     table going into that gameweek, best first, which sets waiver priority.
     `managers[team]` describes the drafted manager, and a `sacked_from`
-    gameweek there kills that team's remaining boosts. All three are optional
+    gameweek there kills that team's remaining boosts. `deadlines[gw]` is that
+    gameweek's kick-off deadline, used to check a boost was declared in
+    advance. All of them are optional
     — without them those rules can't be checked, and the caller is told so
     rather than the rule being silently skipped.
 
@@ -345,6 +354,21 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
 
         elif kind == "boost":
             team = tx["team"]
+            # One a gameweek. You declare before kick-off, so the timing is
+            # yours — all eight early, spread out, or saved for the run-in —
+            # but you can't stack two on the same week to double up.
+            if any(b["team"] == team and b["gameweek"] == gw for b in boost_log):
+                problems.append(
+                    f"GW{gw} boost by {team}: already boosted that gameweek "
+                    "— one a week, declared before kick-off")
+                continue
+            deadline = (deadlines or {}).get(gw)
+            declared = tx.get("declared_at")
+            if deadline and declared and declared > deadline:
+                problems.append(
+                    f"GW{gw} boost by {team}: declared {declared}, after the "
+                    f"{deadline} deadline — a boost has to be called in advance")
+                continue
             manager = (managers or {}).get(team) or {}
             sacked_from = manager.get("sacked_from")
             if sacked_from is not None and gw >= sacked_from:
