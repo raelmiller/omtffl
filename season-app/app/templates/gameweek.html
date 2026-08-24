@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ round.name }} — Matchweek{% endblock %}
+{% block heading %}{{ round.name }}{% endblock %}
+{% block subheading %}
+  <p class="sub">
+    <span class="pill">{{ round.state }}</span>
+    &nbsp;average {{ round.average }} &middot; high {{ round.high }} &middot; low {{ round.low }}
+  </p>
+{% endblock %}
+
+{% block content %}
+<section>
+  <div class="panel">
+    {% for m in round.matches %}
+    <div class="match">
+      <div class="home">
+        <span class="name {% if m.home_score > m.away_score %}won{% endif %}">{{ m.home }}</span>
+      </div>
+      <div class="score">{{ m.home_score }} &ndash; {{ m.away_score }}</div>
+      <div class="away">
+        <span class="name {% if m.away_score > m.home_score %}won{% endif %}">{{ m.away }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% set sources = [] %}
+  {% for m in round.matches %}
+    {% if m.home_source and m.home_source != "submitted" %}{% set _ = sources.append(m.home_source) %}{% endif %}
+  {% endfor %}
+  {% if sources %}
+  <p class="note">Where no XI was submitted, the best available eleven is used
+  instead. That is not what a manager would have scored &mdash; nobody picks
+  perfectly &mdash; so those totals run a little hot.</p>
+  {% endif %}
+
+  <p class="sub"><a href="/">&larr; Back to the table</a></p>
+</section>
+{% endblock %}
