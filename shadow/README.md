@@ -28,6 +28,7 @@ The engine computes points from **raw match stats**, not from FPL's
 | `lineups.py` | weekly XI submission: validation, deadlines, rollover, autosubs |
 | `mechanics.py` | trades-with-points, the points bank, waivers, manager boosts |
 | `simulate.py` | runs a scenario of those mechanics against real data |
+| `boost_scale.py` | what the boost is worth at each league position, and why |
 | `data/` | fetched stats, PL fixtures, squads, league fixtures, lineups |
 
 ## Running it
@@ -109,16 +110,18 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
   costs you the round: your next choice waits for the snake to come back to
   you rather than coming off the rank immediately, which is what stops the
   bottom club sweeping the free-agent list in a single pass.
-- **Manager boosts.** Three a season. Size scales with the drafted manager's
-  club position going into that gameweek (1st smallest, 20th largest), and the
+- **Manager boosts.** Three a season. Size is stepped in five bands by the
+  drafted manager's club position going into that gameweek — top four 10%,
+  then 20/30/40%, relegation places 50% — and the
   club's real result decides the payout: a win pays in full, a draw half, a
   defeat nothing. No fixture means no payout and the use isn't consumed. Sack
   risk is part of the draft: if your manager loses their job, the remaining
   boosts go with them — no replacement, no re-draft.
 
-The numbers — the 10–50% boost range and the three uses — are tunables at the
-top of `mechanics.py`. Finding out whether they're balanced is the point of
-running a shadow season.
+The numbers — the bands and the three uses — are tunables at the top of
+`mechanics.py`. `boost_scale.py` prints what each band is actually worth once
+you account for how often a club at that position wins, which is the thing
+that decides whether the scale is interesting or decorative.
 
 Three of these rules depend on the season having a history: the offer cap
 needs your accumulated points, waiver priority needs a table, and the boost

@@ -66,6 +66,17 @@ DATA = Path(__file__).resolve().parent / "data"
 # league wanted "about 10% for Arteta, about 50% for a struggling side".
 BOOST_MIN_PCT = 10.0
 BOOST_MAX_PCT = 50.0
+# Five bands of four places. Round numbers beat a smooth ramp here: "Leeds are
+# 15th so that's 40%" is a thing you can work out in the pub, where 34.7% is
+# not. See boost_scale.py for what each band is actually worth once you
+# account for how often the club wins.
+BOOST_BANDS = [
+    (1, 4, 10.0),
+    (5, 8, 20.0),
+    (9, 12, 30.0),
+    (13, 16, 40.0),
+    (17, 20, 50.0),
+]
 BOOST_USES_PER_SEASON = 3
 # Result multiplier: win pays in full, draw half, defeat nothing.
 BOOST_RESULT = {"W": 1.0, "D": 0.5, "L": 0.0}
@@ -395,10 +406,17 @@ def league_table(pl_fixtures, upto_gameweek):
 
 
 def boost_pct(position):
-    """Boost size for a club sitting in `position`. 1st smallest, 20th largest."""
+    """Boost size for a club sitting in `position`. 1st smallest, 20th largest.
+
+    Stepped in bands rather than a smooth ramp, so the numbers are round
+    enough to hold in your head — and so crossing a band boundary is a real
+    event during the week rather than a rounding difference.
+    """
     pos = max(1, min(20, position))
-    span = BOOST_MAX_PCT - BOOST_MIN_PCT
-    return BOOST_MIN_PCT + (pos - 1) * span / 19.0
+    for lo, hi, pct in BOOST_BANDS:
+        if lo <= pos <= hi:
+            return pct
+    return BOOST_MAX_PCT
 
 
 def club_result(pl_fixtures, club_id, gameweek):

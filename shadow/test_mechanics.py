@@ -267,7 +267,16 @@ check("top of the table gets the smallest boost", boost_pct(1), BOOST_MIN_PCT)
 check("bottom gets the largest", boost_pct(20), BOOST_MAX_PCT)
 check_true("mid-table sits in between", BOOST_MIN_PCT < boost_pct(10) < BOOST_MAX_PCT,
            f"10th = {boost_pct(10):.1f}%")
-check_true("scale is monotonic", all(boost_pct(i) < boost_pct(i + 1) for i in range(1, 20)))
+check_true("the scale never goes backwards",
+           all(boost_pct(i) <= boost_pct(i + 1) for i in range(1, 20)))
+check_true("it steps rather than ramping — places share a band",
+           any(boost_pct(i) == boost_pct(i + 1) for i in range(1, 20)))
+check("five bands across the table", len({boost_pct(i) for i in range(1, 21)}), 5)
+check("every band is a round number",
+      sorted({boost_pct(i) for i in range(1, 21)}), [10.0, 20.0, 30.0, 40.0, 50.0])
+check("a club just inside the top four gets the floor", boost_pct(4), 10.0)
+check("dropping to 5th doubles it", boost_pct(5), 20.0)
+check("the relegation zone gets the ceiling", boost_pct(18), 50.0)
 
 print("\n── Boost payout ────────────────────────────────────────")
 
