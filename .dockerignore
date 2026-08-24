@@ -1,0 +1,11 @@
+# Keep the image to what the app actually needs at runtime.
+.git
+**/__pycache__
+**/*.pyc
+
+# A full past season, kept in the repo as the engine's regression corpus.
+# It's 11MB and only the test suite reads it.
+shadow/data/season2025-26/
+
+# Personal data never leaves the working copy anyway, but be explicit.
+shadow/data/identities.json
