@@ -55,7 +55,21 @@ python3 test_app.py          # smoke tests
 
 The Dockerfile builds **from the repository root**, not from this directory,
 because it copies `shadow/` in alongside the app — one image, one source of
-truth for scoring. `railway.json` points at it and health-checks `/health`.
+truth for scoring.
+
+That is why `railway.json` lives at the repository root rather than here.
+Railway reads its config from the service's root directory, and setting the
+service root to `season-app/` would put `shadow/` outside the build context
+where `COPY` cannot reach it. **Leave the service root unset.**
+
+A `.dockerignore` keeps the image to what actually runs: the 11MB season
+archive and every `__pycache__` stay out, leaving a payload under a megabyte.
+
+In *live* mode the container writes fetched gameweek data into its own
+filesystem, which Railway discards on redeploy. That is fine here, because the
+Actions workflow commits the same data and the next build picks it up — but it
+does mean the container's copy and the repository's can drift by a few hours.
+Phase two, which stores things people typed, will need a volume.
 
 ## What phase one deliberately leaves out
 
