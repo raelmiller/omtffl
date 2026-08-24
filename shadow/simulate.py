@@ -16,11 +16,15 @@ Usage
     python3 shadow/simulate.py                        # run data/scenario.json
     python3 shadow/simulate.py path/to/scenario.json
     python3 shadow/simulate.py --assume-results W     # price boosts as if won
+    python3 shadow/simulate.py --best-xi              # ignore submitted lineups
 """
 import json
 import sys
 from pathlib import Path
 
+from lineups import (
+    apply_autosubs, effective_lineup, load_lineups, minutes_from_gameweek,
+)
 from mechanics import (
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
     boost_value, league_table,
@@ -61,7 +65,12 @@ def main():
         # Drop the flag and the value it consumed, so neither is mistaken for
         # a scenario path.
         argv = argv[:i] + argv[i + 2:]
+    # By default the simulation scores the XI managers submitted, because a
+    # boost is a percentage of that XI — pricing it off a hindsight team would
+    # overstate every boost in the league.
+    use_best = "--best-xi" in argv
     args = [a for a in argv if not a.startswith("-")]
+    lineups = {} if use_best else load_lineups()
 
     scenario_path = Path(args[0]) if args else DATA / "scenario.json"
     if not scenario_path.exists():
@@ -105,11 +114,19 @@ def main():
         print(f"{'='*76}\nGameweek {gw_num} ({state})\n{'='*76}")
 
         boosts_this_gw = {b["team"]: b for b in boost_log if b["gameweek"] == gw_num}
+        minutes = minutes_from_gameweek(gw)
 
         rows = []
+        xi_source = "best available (hindsight)"
         for team in squads_base["teams"]:
             key = team["key"]
             xi_total, _, _ = best_xi(squads[key], pts)
+            if lineups:
+                picked, bench, how = effective_lineup(key, gw_num, lineups, squads[key])
+                if picked:
+                    final_xi, _ = apply_autosubs(picked, bench, minutes)
+                    xi_total = sum(pts.get(p["id"], 0) for p in final_xi)
+                    xi_source = "submitted lineups"
 
             boost_pts, boost_detail = 0, None
             if key in boosts_this_gw:
@@ -138,6 +155,7 @@ def main():
         rows.sort(key=lambda r: -r["total"])
         changed = [r for r in rows if r["boost"] or r["adj"] or r["bank"]]
 
+        print(f"XI scored from: {xi_source}")
         print(f"{'':>3} {'Team':<24} {'XI':>4} {'Boost':>6} {'Trade/Bank':>11} {'Total':>6}")
         for i, r in enumerate(rows, 1):
             b = f"{r['boost']:+d}" if r["boost"] else ""
