@@ -1,17 +1,32 @@
 #!/usr/bin/env python3
-"""Work out what the manager boost should pay at each league position.
+"""Work out what the manager boost is worth to whoever drafted that manager.
 
-The boost multiplies your XI by a percentage set by your manager's club
-position, and only pays if their club gets a result. Those two things pull in
-opposite directions: backing a struggling club pays a bigger percentage, but
-struggling clubs lose more often. Whether the mechanic is interesting depends
-entirely on whether the second effect cancels the first.
+Managers are drafted at the auction and you keep yours all season, so this is
+not a menu you pick from each week — it's the hand you were dealt. The only
+choice you have is *when* to spend your three uses.
 
-This prints the scale and, more usefully, the **expected** value at each
-position — percentage times the chance of actually getting paid. A flat
-expected-value curve means every choice is equally good, which is boring. A
-curve that falls away at the bottom means nobody ever backs a relegation
-club, which wastes half the scale.
+That makes the question a fairness one rather than a strategy one. The boost
+multiplies your XI by a percentage set by your manager's club position, and
+only pays if their club gets a result. Those two pull against each other: a
+struggling club pays a bigger percentage but wins less often. If they cancel
+exactly, the scale is decorative. If they don't cancel at all, the auction
+just becomes a race for relegation-threatened managers.
+
+So the table below is read down, not across: each row is a different drafter's
+season, and the spread between the rows is what the auction has to price.
+
+Two things the raw expectation misses, both of which favour the top of the
+table more than the numbers suggest:
+
+- **Variance.** A top-four manager pays out four times in five. A relegation
+  manager pays nothing more often than not. In a head-to-head league a
+  reliable small boost wins more weeks than a volatile large one.
+- **Fixture choice.** Three uses across 38 gameweeks are never spent on an
+  average fixture, which lifts the bottom of the table far more than the top
+  (a title club is already near its ceiling). `--good-fixture` models it as
+  a fixture that cuts your chance of *not* winning: p -> 1 - (1-p)**k. That
+  saturates near the top instead of pretending a title club can improve
+  without limit, which a "treat them as N places higher" fudge does not.
 
 The win rates are league-position averages, not this season's clubs, and they
 are assumptions rather than measured data — edit `WIN_RATES` if you'd rather
@@ -20,9 +35,10 @@ changes in them.
 
 Usage
 -----
-    python3 shadow/boost_scale.py              # the agreed stepped scale
-    python3 shadow/boost_scale.py --ceiling 70 # try a higher top band
-    python3 shadow/boost_scale.py --linear     # compare against a smooth ramp
+    python3 shadow/boost_scale.py                 # the agreed stepped scale
+    python3 shadow/boost_scale.py --good-fixture 1.6  # spent on a good week
+    python3 shadow/boost_scale.py --ceiling 70    # try a higher top band
+    python3 shadow/boost_scale.py --linear        # compare against a ramp
 """
 import sys
 
@@ -39,9 +55,31 @@ WIN_RATES = {
 }
 
 
-def payout_chance(position):
-    """Expected share of the headline percentage that actually gets paid."""
+# A typical gameweek XI in this league scores around this, from GW1 real data.
+XI_POINTS = 50
+
+
+def outcome(position, quality=1.0):
+    """(win, draw) rates for a club, optionally in a favourable fixture.
+
+    `quality` above 1 shrinks the chance of not winning, which is what a good
+    draw actually does. It saturates: a club already winning 76% of the time
+    has far less room to improve than one winning 17%.
+    """
     win, draw = WIN_RATES[position]
+    if quality == 1.0:
+        return win, draw
+    better = 1 - (1 - win) ** quality
+    spare = 1 - better
+    loss = 1 - win - draw
+    # Split what's left between draw and defeat in their original proportion.
+    share = draw / (draw + loss) if (draw + loss) else 0
+    return better, spare * share
+
+
+def payout_chance(position, quality=1.0):
+    """Expected share of the headline percentage that actually gets paid."""
+    win, draw = outcome(position, quality)
     return win * BOOST_RESULT["W"] + draw * BOOST_RESULT["D"]
 
 
@@ -67,46 +105,60 @@ def main():
     # average fixture — you wait for a good one. This models that: the club
     # keeps its own band, but plays with the outcome rates of a side N places
     # higher. It's a proxy for a favourable draw, not a fixture model.
-    lift = 0
+    quality = 1.0
     if "--good-fixture" in argv:
         i = argv.index("--good-fixture")
-        lift = int(argv[i + 1]) if i + 1 < len(argv) else 6
+        quality = float(argv[i + 1]) if i + 1 < len(argv) else 1.6
 
     pct_of = ((lambda p: linear_pct(p, ceiling=ceiling)) if use_linear
               else (lambda p: scaled(p, ceiling)))
 
     label = "linear ramp" if use_linear else "stepped bands"
-    note = f", used in a fixture worth {lift} places" if lift else ""
+    note = f", spent in a fixture of quality {quality}" if quality != 1.0 else ""
     print(f"Manager boost — {label}, 10% floor to {ceiling:.0f}% ceiling{note}\n")
-    print(f"{'Pos':>3}  {'Boost':>6}  {'W':>5} {'D':>5}  {'Pays':>6}  "
-          f"{'Expected':>9}   {'On a 50-pt XI':>14}")
+    print(f"{'Pos':>3}  {'Boost':>6}  {'Wins':>5}  {'Pays':>6} {'Blanks':>7}  "
+          f"{'Per use':>8}  {'Season':>7}")
     print("-" * 62)
 
     evs = []
     for pos in range(1, 21):
         pct = pct_of(pos)
-        form_pos = max(1, pos - lift)
-        win, draw = WIN_RATES[form_pos]
-        chance = payout_chance(form_pos)
+        win, draw = outcome(pos, quality)
+        chance = payout_chance(pos, quality)
         ev = pct * chance
-        evs.append((pos, ev))
-        print(f"{pos:>3}  {pct:>5.1f}%  {win:>5.0%} {draw:>5.0%}  {chance:>5.0%}   "
-              f"{ev:>8.1f}%   {50 * ev / 100:>13.1f} pts")
+        blank = 1 - win - draw
+        evs.append((pos, ev, blank))
+        # A season's worth: three uses on a typical 50-point XI.
+        season = 3 * XI_POINTS * ev / 100
+        print(f"{pos:>3}  {pct:>5.1f}%  {win:>5.0%}  {chance:>5.0%}  {blank:>6.0%}   "
+              f"{XI_POINTS * ev / 100:>5.1f} pts  {season:>4.0f} pts")
 
     best = max(evs, key=lambda x: x[1])
-    worst_half = min(evs[10:], key=lambda x: x[1])
-    top = evs[0][1]
+    top, bottom = evs[0], evs[19]
     print()
-    print(f"Best position to back:   {best[0]}th, worth {best[1]:.1f}% of your XI")
-    print(f"Backing the leaders:     {top:.1f}%")
-    print(f"Worst in the bottom half: {worst_half[0]}th, worth {worst_half[1]:.1f}%")
-    spread = max(e for _, e in evs) - min(e for _, e in evs)
-    print(f"Spread across the table: {spread:.1f} percentage points")
-    if evs[19][1] < evs[9][1]:
-        need = evs[9][1] / payout_chance(max(1, 20 - lift))
-        print(f"\n20th is worth less than 10th, so nobody would ever back the "
-              f"bottom club.\nIt would need a {need:.0f}% band to match "
-              f"mid-table.")
+    print("Read down, not across — each row is a different drafter's season.")
+    print(f"  Top-four manager:   {top[1]:.1f}% a use, "
+          f"{3 * XI_POINTS * top[1] / 100:.0f} pts a season, "
+          f"blanks {top[2]:.0%} of the time")
+    print(f"  Relegation manager: {bottom[1]:.1f}% a use, "
+          f"{3 * XI_POINTS * bottom[1] / 100:.0f} pts a season, "
+          f"blanks {bottom[2]:.0%} of the time")
+    print(f"  Best hand to draw:  {best[0]}th, worth "
+          f"{3 * XI_POINTS * best[1] / 100:.0f} pts a season")
+
+    ratio = best[1] / top[1] if top[1] else float("inf")
+    print(f"\nSpread the auction has to price: {ratio:.1f}x between the best and "
+          f"worst hand.")
+    if ratio > 3.0:
+        print("That's wide enough that top-four managers go unsold — worth "
+              "narrowing the bands.")
+    elif ratio < 1.5:
+        print("That's narrow enough that the scale barely matters — the "
+              "mechanic is decorative.")
+    else:
+        print("Wide enough to be worth bidding on, narrow enough that a "
+              "reliable manager still has\na buyer — especially in H2H, where "
+              "blanking loses you the week outright.")
 
 
 if __name__ == "__main__":

@@ -118,10 +118,17 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
   risk is part of the draft: if your manager loses their job, the remaining
   boosts go with them — no replacement, no re-draft.
 
-The numbers — the bands and the three uses — are tunables at the top of
-`mechanics.py`. `boost_scale.py` prints what each band is actually worth once
-you account for how often a club at that position wins, which is the thing
-that decides whether the scale is interesting or decorative.
+The manager is drafted at the auction and kept all season, so the band isn't
+a weekly choice — it's the hand you were dealt, and the only decision is when
+to spend your three uses. That makes the scale a fairness question, and
+`boost_scale.py` answers it: what each band is worth once you account for how
+often a club at that position actually wins.
+
+The short version is that the very bottom is a genuine risk rather than a free
+win. A 17th-place manager is the best hand at about 38 points a season; a 20th
+-place one is worth 27, because they blank more than half the time. A top-four
+manager is worth 14 but pays out almost every time. That spread is what the
+auction has to price.
 
 Three of these rules depend on the season having a history: the offer cap
 needs your accumulated points, waiver priority needs a table, and the boost
