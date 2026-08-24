@@ -28,7 +28,8 @@ if str(SHADOW) not in sys.path:
 from h2h import WIN, DRAW, gameweek_scores          # noqa: E402
 from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
-    apply_autosubs, effective_lineup, load_lineups, minutes_from_gameweek,
+    apply_autosubs, effective_lineup, legal_formation, load_lineups,
+    minutes_from_gameweek, validate as validate_lineup,
 )
 from scoring import score_entry                     # noqa: E402
 
@@ -64,8 +65,25 @@ def state(gw: dict) -> str:
     return "in progress"
 
 
+def merge_lineups(stored):
+    """Real submissions laid over the committed placeholder file.
+
+    Replacing the file outright would let a team picked for one gameweek
+    silently rewrite an earlier, already-played round: the placeholder would
+    vanish from gameweek 1 and its scores would change under everyone. Merging
+    per manager per gameweek means a submission only ever affects its own
+    round, and the placeholder retires quietly as real teams replace it.
+    """
+    merged = {}
+    for gw, teams in (load_lineups() or {}).items():
+        merged[int(gw)] = dict(teams)
+    for gw, teams in (stored or {}).items():
+        merged.setdefault(int(gw), {}).update(teams)
+    return merged
+
+
 @lru_cache(maxsize=8)
-def _season(version, lineup_key, lineups_json):
+def _season(version, lineup_key, lineups_json, real_keys):
     """Score the whole season. Cached on the data fingerprint, not on time.
 
     `lineups_json` is passed in rather than read here so the app can serve
@@ -73,6 +91,7 @@ def _season(version, lineup_key, lineups_json):
     file. Both arrive in the same shape, so the engine can't tell them apart.
     """
     lineups_in = json.loads(lineups_json) if lineups_json else None
+    real = set(real_keys or ())
     squads = _read("squads.json")
     fixtures = _read("fixtures.json")
     if not squads or not fixtures:
@@ -85,7 +104,7 @@ def _season(version, lineup_key, lineups_json):
     # The committed lineups file is a worked example — teams filled in from
     # draft price so the engine had something to score. Nobody picked those
     # elevens, and the page must not imply anyone did.
-    seeded = from_file and _lineups_are_seeded()
+    placeholder_file = _lineups_are_seeded()
     names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
 
     by_gw = {}
@@ -116,6 +135,10 @@ def _season(version, lineup_key, lineups_json):
             key = team["key"]
             picked, bench, how = effective_lineup(key, n, lineups, team["squad"])
             if picked:
+                if (n, key) not in real:
+                    # Resolved from the placeholder file, not from anything a
+                    # manager actually chose.
+                    how = "placeholder"
                 final_xi, _ = apply_autosubs(picked, bench, minutes)
                 scores[key] = sum(pts.get(p["id"], 0) for p in final_xi)
                 sources[key] = how
@@ -165,10 +188,12 @@ def _season(version, lineup_key, lineups_json):
         row["diff"] = row["PF"] - row["PA"]
 
     submitted = sum(1 for r in rounds for m in r["matches"]
-                    for s in (m["home_source"], m["away_source"])
-                    if s and s != "best available")
-    if seeded:
-        submitted = 0
+                    for k in (m["home_key"], m["away_key"])
+                    if (r["gameweek"], k) in real)
+    # The placeholder label belongs on the page for as long as the rounds on
+    # show are still standing on it — a team saved for a future gameweek
+    # doesn't change what gameweek 1 was scored from.
+    seeded = placeholder_file and submitted == 0
     total_slots = sum(len(r["matches"]) * 2 for r in rounds)
 
     return {
@@ -195,17 +220,21 @@ def _lineups_are_seeded():
     return "worked example" in (raw.get("note") or "").lower()
 
 
-def season(lineups=None):
-    """Score the season, optionally against a supplied set of lineups.
+def season(stored=None):
+    """Score the season, with any real submissions laid over the placeholder.
 
-    The cache key includes the lineups themselves, so a manager saving a team
-    is reflected on the next page load without a restart or a manual flush.
+    `stored` is what managers have actually saved. The cache key includes it,
+    so a team saved a moment ago shows on the next page load without a restart
+    or a manual flush.
     """
-    if lineups is None:
-        return _season(data_version(), 0, None)
-    payload = json.dumps({str(k): v for k, v in sorted(lineups.items())},
+    if not stored:
+        return _season(data_version(), 0, None, ())
+    merged = merge_lineups(stored)
+    real = tuple(sorted((int(gw), key)
+                        for gw, teams in stored.items() for key in teams))
+    payload = json.dumps({str(k): v for k, v in sorted(merged.items())},
                          sort_keys=True)
-    return _season(data_version(), len(payload), payload)
+    return _season(data_version(), len(payload), payload, real)
 
 
 def freshness():

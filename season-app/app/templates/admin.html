@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Admin — Matchweek{% endblock %}
+{% block heading %}Sign-in links{% endblock %}
+{% block subheading %}
+<p class="sub">One link per manager. Send each person their own &mdash; anyone
+holding a link is that manager, so they work like a house key.</p>
+{% endblock %}
+
+{% block content %}
+<section>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Team</th><th>Link</th><th>{{ current_gw.name if current_gw }}</th><th></th></tr></thead>
+      <tbody>
+      {% for m in managers %}
+        {% set has = submitted.get(current_gw.gameweek, {}).get(m.key) if current_gw else None %}
+        <tr>
+          <td class="team">{{ m.team }} <span class="pclub">{{ m.key }}</span></td>
+          <td><code class="link">{{ base }}/m/{{ m.token }}</code></td>
+          <td>{% if has %}<span class="yes">picked</span>{% else %}<span class="no">not yet</span>{% endif %}</td>
+          <td>
+            <form method="post" action="/admin/rotate/{{ m.key }}"
+                  onsubmit="return confirm('Issue a new link for {{ m.team }}? Their current link stops working immediately.')">
+              <button class="btn small">New link</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">&ldquo;Not yet&rdquo; is not a problem. Nobody is chased, and a
+  manager who never picks keeps last week&rsquo;s team.</p>
+  <p class="sub"><a href="/">&larr; The table</a></p>
+</section>
+{% endblock %}

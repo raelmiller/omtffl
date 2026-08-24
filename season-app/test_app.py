@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from fastapi.testclient import TestClient          # noqa: E402
 
-from app import engine, fetcher                    # noqa: E402
+from app import auth, db, engine, fetcher           # noqa: E402
 from app.main import app                           # noqa: E402
 
 FAILS = []
@@ -86,6 +86,99 @@ check_true("and explains itself",
            str(fetcher.STATUS["last_refresh_detail"]))
 check("the table still renders without a live API", client.get("/").status_code, 200)
 check("and health still reports ok", client.get("/health").json()["ok"], True)
+
+print("\n── Signing in ──────────────────────────────────────────")
+
+db.init()
+me = [m for m in db.managers() if m["key"] == "RM"][0]
+
+check("a stranger can read the table", client.get("/").status_code, 200)
+check("but can't reach the picker", client.get("/declare").status_code, 401)
+check("and admin doesn't announce itself", client.get("/admin").status_code, 404)
+
+bad = client.get("/m/not-a-real-token", follow_redirects=False)
+check("a dead link redirects rather than erroring", bad.status_code, 303)
+check_true("and doesn't say which part was wrong",
+           "bad_link" in bad.headers["location"], bad.headers["location"])
+
+signed = TestClient(app)
+r = signed.get(f"/m/{me['token']}", follow_redirects=False)
+check("a good link signs you in", r.status_code, 303)
+check("and lands on the picker", r.headers["location"], "/declare")
+check("which now loads", signed.get("/declare").status_code, 200)
+
+print("\n── Picking a team ──────────────────────────────────────")
+
+gw = engine.current_gameweek()
+check_true("the round on offer is still open", engine.deadline_state(gw)["open"],
+           f"GW{gw['gameweek']} closes {gw['deadline']}")
+
+squad = engine.squad_for("RM")
+by = {}
+for pl in squad:
+    by.setdefault(pl["position"], []).append(pl["id"])
+legal = by["GK"][:1] + by["DEF"][:4] + by["MID"][:4] + by["FWD"][:2]
+bench = [pl["id"] for pl in squad if pl["id"] not in legal]
+
+def post(gameweek, xi, bench_ids):
+    return signed.post(f"/declare/{gameweek}",
+                       data={"xi": ",".join(map(str, xi)),
+                             "bench": ",".join(map(str, bench_ids))})
+
+ok = post(gw["gameweek"], legal, bench)
+check("a legal 4-4-2 saves", ok.status_code, 200)
+check("and says so", ok.json()["ok"], True)
+
+stored = db.get_lineup("RM", gw["gameweek"])
+check("eleven are stored", len(stored["xi"]), 11)
+check("and four on the bench", len(stored["bench"]), 4)
+
+two_keepers = by["GK"][:2] + by["DEF"][:3] + by["MID"][:4] + by["FWD"][:2]
+r = post(gw["gameweek"], two_keepers, [])
+check("two keepers is refused", r.status_code, 422)
+check_true("with a reason a manager can act on",
+           "GK" in r.json()["errors"][0], str(r.json()["errors"]))
+
+thin = by["GK"][:1] + by["DEF"][:2] + by["MID"][:5] + by["FWD"][:3]
+r = post(gw["gameweek"], thin, [])
+check("so is a back three that isn't", r.status_code, 422)
+
+closed = [g for g in engine.calendar()
+          if not engine.deadline_state(g)["open"]]
+if closed:
+    r = post(closed[0]["gameweek"], legal, bench)
+    check("a passed deadline refuses the save", r.status_code, 409)
+    check_true("and says why", "deadline" in r.json()["errors"][0].lower())
+    check_true("leaving the old team alone",
+               db.get_lineup("RM", closed[0]["gameweek"]) is None)
+
+print("\n── A save can't rewrite a played round ─────────────────")
+
+# Saving for a future gameweek must not disturb one already scored: the
+# placeholder file has to keep standing behind the rounds it was scoring.
+before = engine.season()["rounds"][-1]["matches"][0]
+after = engine.season(db.all_lineups())["rounds"][-1]["matches"][0]
+check("gameweek 1 scores the same either way",
+      (after["home_score"], after["away_score"]),
+      (before["home_score"], before["away_score"]))
+check_true("and is still labelled a placeholder",
+           engine.season(db.all_lineups())["seeded_lineups"])
+
+print("\n── Admin ───────────────────────────────────────────────")
+
+check("a normal manager gets no admin page", signed.get("/admin").status_code, 404)
+import os
+os.environ["ADMIN_KEYS"] = "RM"
+check("naming them in the environment grants it",
+      signed.get("/admin").status_code, 200)
+old = me["token"]
+db.rotate_token("RM")
+check_true("rotating issues a different link",
+           db.manager_by_key("RM")["token"] != old)
+check("and the old one stops working",
+      TestClient(app).get(f"/m/{old}", follow_redirects=False)
+      .headers["location"].endswith("bad_link=1"), True)
+os.environ.pop("ADMIN_KEYS", None)
 
 print()
 if FAILS:

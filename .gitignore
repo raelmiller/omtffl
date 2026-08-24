@@ -4,3 +4,6 @@ __pycache__/
 # and initials, so it's safe in a public repo — this isn't.
 # Format: {"identities": {"<draft owner name>": {"key": "AB", "team": "..."}}}
 shadow/data/identities.json
+
+# Local development database. Real state lives on the Railway volume.
+season-app/matchweek.db*

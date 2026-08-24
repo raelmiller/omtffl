@@ -22,6 +22,14 @@
       {% endif %}
     </div>
     <h1>{% block heading %}Matchweek{% endblock %}</h1>
+    {% if me %}
+    <nav class="nav">
+      <a href="/">Table</a>
+      <a href="/declare">Pick your team</a>
+      {% if me.is_admin %}<a href="/admin">Admin</a>{% endif %}
+      <span class="who">{{ me.team }}</span>
+    </nav>
+    {% endif %}
     {% block subheading %}{% endblock %}
   </header>
 

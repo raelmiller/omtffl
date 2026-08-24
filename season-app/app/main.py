@@ -13,17 +13,18 @@ Routes
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import engine, fetcher
+from . import auth, db, engine, fetcher
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
@@ -36,6 +37,7 @@ scheduler = BackgroundScheduler(timezone="UTC")
 
 @app.on_event("startup")
 def startup():
+    db.init()
     # Probe once at boot so /health can answer the egress question straight
     # away rather than waiting for the first scheduled run.
     fetcher.probe()
@@ -57,10 +59,15 @@ def shutdown():
 
 
 def _context(request):
+    me = auth.current(request)
+    # Real submissions live in the database; the committed file is only a
+    # placeholder, so once anyone has picked a team the database wins.
+    stored = db.all_lineups()
     return {
         "request": request,
         "mode": fetcher.mode(),
-        "season": engine.season(),
+        "me": me,
+        "season": engine.season(stored if stored else None),
     }
 
 
@@ -129,3 +136,130 @@ def manual_refresh():
         "mode": fetcher.mode(),
         "detail": fetcher.STATUS["last_refresh_detail"],
     })
+
+
+# ── Signing in ─────────────────────────────────────────────────────────────
+@app.get("/m/{token}")
+def sign_in(token: str):
+    """A manager's personal link. Sets the cookie and gets out of the way."""
+    manager = db.manager_by_token(token)
+    if not manager:
+        # Deliberately vague: a wrong token shouldn't confirm which part was
+        # wrong, and a rotated link should read as expired rather than broken.
+        return RedirectResponse("/?bad_link=1", status_code=303)
+    return auth.sign_in(RedirectResponse("/declare", status_code=303), token)
+
+
+@app.get("/signout")
+def signout():
+    return auth.sign_out(RedirectResponse("/", status_code=303))
+
+
+# ── Declaring a team ───────────────────────────────────────────────────────
+def _declare_context(request, gameweek=None):
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me:
+        return ctx, None
+
+    rounds = engine.calendar()
+    target = (next((g for g in rounds if g["gameweek"] == gameweek), None)
+              if gameweek else engine.current_gameweek())
+    if target is None:
+        return ctx, None
+
+    squad = engine.squad_for(me["key"])
+    saved = db.get_lineup(me["key"], target["gameweek"])
+    rolled = None
+    if not saved:
+        # Nothing submitted for this round, so show what would actually play:
+        # last week's team, which is what rollover will use.
+        stored = db.all_lineups()
+        picked, bench, how = engine.effective_lineup(
+            me["key"], target["gameweek"], stored, squad)
+        if picked:
+            saved = {"xi": [p["id"] for p in picked],
+                     "bench": [p["id"] for p in bench]}
+            rolled = how
+
+    ctx.update({
+        "squad_json": json.dumps(squad),
+        "saved_json": json.dumps(saved or {"xi": [], "bench": []}),
+        "gw": target,
+        "lock": engine.deadline_state(target),
+        "squad": squad,
+        "saved": saved,
+        "rolled_from": rolled,
+        "calendar": [g for g in rounds if g["gameweek"] <= target["gameweek"] + 3],
+    })
+    return ctx, target
+
+
+@app.get("/declare", response_class=HTMLResponse)
+@app.get("/declare/{gameweek}", response_class=HTMLResponse)
+def declare(request: Request, gameweek: int = None):
+    ctx, target = _declare_context(request, gameweek)
+    if not ctx["me"]:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+    return templates.TemplateResponse("declare.html", ctx)
+
+
+@app.post("/declare/{gameweek}")
+def save_declaration(request: Request, gameweek: int,
+                     xi: str = Form(""), bench: str = Form("")):
+    """Save an XI. The deadline and the rules are both enforced here.
+
+    Client-side validation is a convenience; this is the check that counts,
+    and it calls the same engine the scoring does so the two can't disagree.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+
+    target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+
+    lock = engine.deadline_state(target)
+    if not lock["open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline for this gameweek has passed."]}, status_code=409)
+
+    def ids(raw):
+        return [int(x) for x in raw.split(",") if x.strip().isdigit()]
+
+    squad = engine.squad_for(me["key"])
+    entry = {"xi": ids(xi), "bench": ids(bench)}
+    errors, warnings = engine.validate_lineup(entry, squad)
+    if errors:
+        return JSONResponse({"ok": False, "errors": errors}, status_code=422)
+
+    db.save_lineup(me["key"], gameweek, entry["xi"], entry["bench"])
+    return JSONResponse({"ok": True, "warnings": warnings,
+                         "saved_at": db.now()})
+
+
+# ── Admin ──────────────────────────────────────────────────────────────────
+@app.get("/admin", response_class=HTMLResponse)
+def admin(request: Request):
+    """The sign-in links, so they can be handed out."""
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    ctx["managers"] = db.managers()
+    ctx["base"] = str(request.base_url).rstrip("/")
+    ctx["submitted"] = db.all_lineups()
+    ctx["current_gw"] = engine.current_gameweek()
+    return templates.TemplateResponse("admin.html", ctx)
+
+
+@app.post("/admin/rotate/{key}")
+def rotate(request: Request, key: str):
+    me = auth.current(request)
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    db.rotate_token(key)
+    return RedirectResponse("/admin", status_code=303)

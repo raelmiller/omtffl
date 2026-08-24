@@ -1,4 +1,6 @@
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 jinja2==3.1.5
+# Required by FastAPI to read posted form fields (the Declare page).
+python-multipart==0.0.20
 apscheduler==3.11.0
