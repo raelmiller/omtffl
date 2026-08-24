@@ -93,10 +93,11 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
 
 - **Trades with points.** A manager can sweeten a swap with points, deducted
   from their score that gameweek and credited to the other manager's bank.
-  Position counts must balance so both squads stay a legal 2/5/5/3. The
-  deduction can take a gameweek below zero — that's the gamble. You can't
-  offer more than you've scored this season, so no points change hands in
-  gameweek 1. Trades are bilateral and final.
+  Position counts must balance so both squads stay a legal 2/5/5/3. A single
+  gameweek can go below zero — that's the gamble — but a season total can't:
+  you can't offer more than you've scored, counting what you've already
+  promised away. So no points change hands in gameweek 1. Trades are
+  bilateral and final.
 - **The points bank.** Spendable in any later gameweek, declared beforehand,
   in whole or in part. It doesn't fund trade offers and doesn't raise your
   offer cap — trade points are always mortgaged against your score.
@@ -104,12 +105,16 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
   Unlimited, but claims run in one batch before the gameweek and priority
   snakes from the bottom of the table upwards: last place claims first in
   round one, first place leads round two, and so on. Each manager submits
-  claims in their own priority order and lands at most one per round, falling
-  through to their next choice when someone beats them to a player.
+  claims in their own priority order and attempts one per round. Losing a race
+  costs you the round: your next choice waits for the snake to come back to
+  you rather than coming off the rank immediately, which is what stops the
+  bottom club sweeping the free-agent list in a single pass.
 - **Manager boosts.** Three a season. Size scales with the drafted manager's
   club position going into that gameweek (1st smallest, 20th largest), and the
   club's real result decides the payout: a win pays in full, a draw half, a
-  defeat nothing. No fixture means no payout and the use isn't consumed.
+  defeat nothing. No fixture means no payout and the use isn't consumed. Sack
+  risk is part of the draft: if your manager loses their job, the remaining
+  boosts go with them — no replacement, no re-draft.
 
 The numbers — the 10–50% boost range and the three uses — are tunables at the
 top of `mechanics.py`. Finding out whether they're balanced is the point of
@@ -126,5 +131,5 @@ unit tests are where the multi-gameweek behaviour is pinned down.
 
 - **Submission UI.** Lineups and waiver claims are hand-edited JSON. A form
   belongs with the draft app, not here.
-- **Sacked managers.** A boost is tied to a drafted manager; nothing currently
-  happens when one leaves the job mid-season.
+- **Sacking feed.** The rule is implemented, but a scenario has to state the
+  gameweek a manager was sacked in by hand — the FPL API doesn't carry it.

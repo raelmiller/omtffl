@@ -131,7 +131,12 @@ def main():
         sys.exit(f"No scenario at {scenario_path}")
     scenario = json.loads(scenario_path.read_text())
     transactions = scenario.get("transactions", [])
-    manager_clubs = scenario.get("manager_clubs", {})  # team key -> PL club id
+    # A manager entry is either a bare club id or a record that can also carry
+    # a name and the gameweek they were sacked in.
+    managers = {}
+    for key, val in scenario.get("manager_clubs", {}).items():
+        managers[key] = {"club": val} if isinstance(val, int) else dict(val)
+    manager_clubs = {k: v["club"] for k, v in managers.items()}
 
     squads_base = load("squads.json")
     positions = load_positions()
@@ -157,8 +162,8 @@ def main():
         gw, pts = player_points(f, positions)
 
         squads, adjustments, boost_log, bank, waiver_log, problems = apply_transactions(
-            squads_base, transactions, gw_num,
-            points_to_date=points_to_date, standings=standings)
+            squads_base, transactions, gw_num, points_to_date=points_to_date,
+            standings=standings, managers=managers)
 
         if problems:
             print("Rule violations in this scenario:")

@@ -143,6 +143,17 @@ check_true("an uncovered offer is blocked", len(problems) == 1, str(problems))
 check("no points move", bank["B"], 0)
 check_true("and the players stay put", 5 not in adj)
 
+# A gameweek can go negative, but a season can't: two offers in one week
+# that jointly exceed the season total must not both go through.
+two = [dict(trade, points=30),
+       dict(trade, gameweek=5, points=30, players_out=[p(2, "MID")],
+            players_in=[p(11, "MID")])]
+_, _, _, bank, _, problems = apply_transactions(
+    base(A, B), two, 10, points_to_date={5: {"A": 50}})
+check_true("a second offer can't take the season below zero",
+           len(problems) == 1, str(problems))
+check("only the affordable offer lands", bank["B"], 30)
+
 print("\n── Waiver priority ─────────────────────────────────────")
 
 # Standings best-first; round one runs bottom-up, round two back down.
@@ -179,7 +190,8 @@ check("losing a race isn't an error", problems, [])
 check_true("the winner's squad actually changes",
            FREE_1["id"] in {x["id"] for x in squads4["D"]})
 
-# Falling through to a second choice when the first has gone.
+# Losing a race costs you the round. Your second choice waits for the snake
+# to come back to you — it is not taken off the rank immediately.
 squads4 = four_teams()
 claims = {
     "D": [{"drop": squads4["D"][0], "add": FREE_1}],
@@ -187,9 +199,25 @@ claims = {
           {"drop": squads4["A"][0], "add": FREE_2}],
 }
 results, problems = process_waivers(claims, squads4, TABLE)
-landed = {r["team"]: r["add"]["name"] for r in results if r["landed"]}
-check("a beaten manager falls through to their next choice", landed.get("A"), "Backup")
+a_landed = [r for r in results if r["team"] == "A" and r["landed"]]
+check_true("a beaten manager gets nothing in the round they lost",
+           not any(r["round"] == 1 for r in a_landed), str(results))
+check("their next choice waits for the snake to come back", a_landed[0]["round"], 2)
+check("and then it lands", a_landed[0]["add"]["name"], "Backup")
 check("still no error", problems, [])
+
+# The bottom club can't sweep the list in one pass: one claim per round each.
+squads4 = four_teams()
+FREE_3 = p(73, "MID", "Third")
+claims = {"D": [{"drop": squads4["D"][0], "add": FREE_1},
+                {"drop": squads4["D"][1], "add": FREE_3}],
+          "A": [{"drop": squads4["A"][0], "add": FREE_3}]}
+results, _ = process_waivers(claims, squads4, TABLE)
+round_one = [r for r in results if r["round"] == 1 and r["landed"]]
+check("only one claim lands per team per round", len(round_one), 2)
+check_true("and the top club gets the round-two turn first",
+           {x["id"] for x in squads4["A"]} & {FREE_3["id"]} != set(),
+           "A should have taken Third in round one")
 
 # Naming the same drop against several claims is normal, not illegal.
 squads4 = four_teams()
@@ -214,6 +242,24 @@ many = [{"type": "boost", "gameweek": g, "team": "A"} for g in (2, 3, 4, 5)]
 _, _, boost_log, _, _, problems = apply_transactions(base(A, B), many, 38)
 check(f"only {BOOST_USES_PER_SEASON} boosts allowed", len(boost_log), BOOST_USES_PER_SEASON)
 check_true("the fourth is rejected", any("already used all" in x for x in problems), str(problems))
+
+print("\n── Sacked managers ─────────────────────────────────────")
+
+# Drafting a manager under pressure is the gamble: if they go, the remaining
+# boosts go with them.
+MANAGERS = {"A": {"name": "Fictional Boss", "club": 1, "sacked_from": 6}}
+uses = [{"type": "boost", "gameweek": g, "team": "A"} for g in (3, 6, 9)]
+_, _, boost_log, _, _, problems = apply_transactions(
+    base(A, B), uses, 38, managers=MANAGERS)
+check("boosts before the sacking still count", len(boost_log), 1)
+check("the surviving one is the early one", boost_log[0]["gameweek"], 3)
+check_true("boosts from the sacking gameweek on are refused",
+           sum(1 for x in problems if "sacked" in x) == 2, str(problems))
+check_true("and the manager is named", any("Fictional Boss" in x for x in problems))
+
+# Without a sacking on record nothing changes.
+_, _, boost_log, _, _, problems = apply_transactions(base(A, B), uses, 38)
+check("an unsacked manager keeps all three", len(boost_log), 3)
 
 print("\n── Boost scale ─────────────────────────────────────────")
 

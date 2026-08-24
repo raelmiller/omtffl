@@ -19,10 +19,10 @@ TRADE
     being a legal 2/5/5/3. A FWD-for-FWD swap is fine; FWD-for-MID isn't.
   - The N points are deducted from A's score in the gameweek the trade takes
     effect, and credited to B's bank.
-  - N cannot exceed what A has actually scored this season so far. You can
-    mortgage your season, but you can't play with house money.
-  - A doesn't need the points banked, and the deduction can drive a gameweek
-    score below zero. That's the gamble, and it's allowed to look ugly.
+  - N cannot exceed what A has actually scored this season so far, counting
+    debts already promised away. A single gameweek can go negative — that's
+    the gamble, and it's allowed to look ugly — but a **season total** can't.
+    You can mortgage what you've earned; you can't play with house money.
   - Trades are bilateral and final. No veto, no commissioner.
 
 BANK
@@ -148,9 +148,17 @@ def process_waivers(claims, squads, table_order):
     """Run a week's waiver claims and report what happened.
 
     `claims` maps a team to its claims in the manager's own priority order,
-    each `{"drop": player, "add": player}`. A manager lands at most one claim
-    per round; if their top choice has gone, the run falls through to their
-    next one. Returns (results, problems) and mutates `squads` in place.
+    each `{"drop": player, "add": player}`. A manager attempts exactly one
+    claim per round. **Losing a race costs you the round** — your next choice
+    waits until the snake comes back to you, rather than being taken off the
+    rank immediately. That's what stops the bottom club hoovering up the whole
+    free-agent list in one pass.
+
+    A claim that was never contested — a malformed one, or one whose drop has
+    already been used — is discarded without costing the round, since nobody
+    beat you to anything.
+
+    Returns (results, problems) and mutates `squads` in place.
     """
     results, problems = [], []
     pending = {t: list(cs) for t, cs in claims.items() if cs}
@@ -173,8 +181,8 @@ def process_waivers(claims, squads, table_order):
                 continue
 
             owned = {p["id"] for s in squads.values() for p in s}
-            landed = None
-            while queue and landed is None:
+            spent_round = False
+            while queue and not spent_round:
                 claim = queue.pop(0)
                 drop_id = claim["drop"]["id"]
                 add = claim["add"]
@@ -191,10 +199,13 @@ def process_waivers(claims, squads, table_order):
                     continue
                 if add["id"] in owned:
                     # Not an error — someone earlier in the snake got there
-                    # first, which is exactly what priority is for.
+                    # first, which is exactly what priority is for. It costs
+                    # the round: the next choice waits for the snake to come
+                    # back round.
                     results.append({"round": round_no, "team": team, "add": add,
                                     "drop": claim["drop"], "landed": False,
                                     "why": "already claimed"})
+                    spent_round = True
                     continue
                 dropped = next(p for p in squads[team] if p["id"] == drop_id)
                 if dropped["position"] != add["position"]:
@@ -204,21 +215,23 @@ def process_waivers(claims, squads, table_order):
                     continue
                 squads[team] = [p for p in squads[team] if p["id"] != drop_id] + [add]
                 dropped_already.add(drop_id)
-                landed = claim
+                spent_round = True
                 results.append({"round": round_no, "team": team, "add": add,
                                 "drop": claim["drop"], "landed": True, "why": None})
     return results, problems
 
 
 def apply_transactions(base_squads, transactions, upto_gameweek,
-                       points_to_date=None, standings=None):
+                       points_to_date=None, standings=None, managers=None):
     """Squad state and per-gameweek adjustments up to and including a gameweek.
 
     `points_to_date[gw][team]` is what a team had scored going into that
     gameweek; supply it to enforce the trade offer cap. `standings[gw]` is the
     table going into that gameweek, best first, which sets waiver priority.
-    Both are optional — without them those rules can't be checked, and the
-    caller is told so rather than the rule being silently skipped.
+    `managers[team]` describes the drafted manager, and a `sacked_from`
+    gameweek there kills that team's remaining boosts. All three are optional
+    — without them those rules can't be checked, and the caller is told so
+    rather than the rule being silently skipped.
 
     Returns (squads, adjustments, boosts_used, bank, problems) where
     `adjustments[gw][team]` is the net points change for that gameweek.
@@ -240,6 +253,7 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
     # wrongly reject spending points received the same week.
     ORDER = {"trade": 0, "waiver": 1, "waiver_run": 1, "bank_use": 2, "boost": 3}
     waiver_log = []
+    committed = {}  # (gameweek, team) -> points already promised away that week
     for tx in sorted(transactions,
                      key=lambda t: (t.get("gameweek", 0), ORDER.get(t.get("type"), 9))):
         gw = tx.get("gameweek")
@@ -250,10 +264,12 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
         if kind == "trade":
             a = tx.get("from")
             accumulated = (points_to_date or {}).get(gw, {}).get(a)
-            if accumulated is None and tx.get("points", 0) and points_to_date is not None:
-                problems.append(
-                    f"GW{gw} trade {a}→{tx.get('to')}: no score on record for {a} "
-                    "going into that gameweek, so the offer cap can't be checked")
+            if accumulated is not None:
+                # Earlier gameweeks' debts are already netted into the running
+                # total; this gameweek's aren't yet, so subtract them here.
+                # Two 40-point offers in one week off a 50-point season would
+                # otherwise both pass and leave the season total at -30.
+                accumulated -= committed.get((gw, a), 0)
             problem = validate_trade(tx, squads, accumulated)
             if problem:
                 problems.append(f"GW{gw} trade {a}→{tx.get('to')}: {problem}")
@@ -270,6 +286,7 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
             if pts:
                 adjust(gw, a, -pts)   # mortgaged against this gameweek
                 bank[b] += pts        # spendable whenever B likes
+                committed[(gw, a)] = committed.get((gw, a), 0) + pts
 
         elif kind == "bank_use":
             team, pts = tx["team"], tx["points"]
@@ -317,6 +334,17 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
 
         elif kind == "boost":
             team = tx["team"]
+            manager = (managers or {}).get(team) or {}
+            sacked_from = manager.get("sacked_from")
+            if sacked_from is not None and gw >= sacked_from:
+                # Drafting a manager under pressure is the gamble. If they go,
+                # the remaining boosts go with them — no replacement, no
+                # re-draft. The use isn't consumed because it can't be used.
+                who = manager.get("name", "their manager")
+                problems.append(
+                    f"GW{gw} boost by {team}: {who} was sacked in GW{sacked_from} "
+                    "— the boost goes with them")
+                continue
             if boosts_used[team] >= BOOST_USES_PER_SEASON:
                 problems.append(
                     f"GW{gw} boost by {team}: already used all "

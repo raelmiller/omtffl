@@ -2,8 +2,17 @@
   "name": "Trades, bank and manager boosts — worked example",
   "description": "AF offers Solanke + 40 pts to CCP for Haaland — rejected in GW1 by the offer cap, since nobody has accumulated any points yet. Three managers chase the same two free agents on waivers. Two boosts on contrasting clubs.",
   "manager_clubs": {
-    "RM": 15,
-    "YG": 13
+    "RM": {
+      "club": 15,
+      "name": "Man City manager",
+      "note": "title club — small boost, high hit rate"
+    },
+    "YG": {
+      "club": 13,
+      "name": "Leeds manager",
+      "sacked_from": null,
+      "note": "struggling club — big boost, and real sack risk. Set sacked_from to a gameweek to see the remaining boosts die."
+    }
   },
   "transactions": [
     {
