@@ -30,14 +30,36 @@ COOKIE = "matchweek"
 COOKIE_MAX_AGE = 400 * 24 * 60 * 60
 
 
+ADMIN_VAR = "ADMIN_KEYS"
+
+
+def _admin_setting():
+    """The raw ADMIN_KEYS value, and which variable name it was found under.
+
+    Environment variable names are case-sensitive on Linux, so a variable
+    typed as `admin_keys` in a hosting dashboard is simply a different
+    variable and the admin page 404s with nothing to explain why. Accepting
+    either spelling costs nothing and removes a failure that looks like a bug.
+    """
+    for name, value in os.environ.items():
+        if name.upper() == ADMIN_VAR and value.strip():
+            return value, name
+    return "", None
+
+
 def admin_keys():
     """Managers with admin rights, from the environment.
 
     Kept out of the database so it can't be granted by anything the app
     itself writes — changing who is admin means changing a deploy setting.
     """
-    raw = os.environ.get("ADMIN_KEYS", "")
+    raw, _ = _admin_setting()
     return {k.strip().upper() for k in raw.split(",") if k.strip()}
+
+
+def admin_source():
+    """Which variable name the admin setting came from, for the health page."""
+    return _admin_setting()[1]
 
 
 def current(request: Request):

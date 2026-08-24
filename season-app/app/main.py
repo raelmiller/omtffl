@@ -116,6 +116,8 @@ def health():
         "database": db.stats(),
         "admin": {
             "configured": bool(auth.admin_keys()),
+            "found_as": auth.admin_source(),
+            "managers": sorted(auth.admin_keys()),
             "note": ("set ADMIN_KEYS to a manager's initials to reach /admin"
                      if not auth.admin_keys() else None),
         },
