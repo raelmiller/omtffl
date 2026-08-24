@@ -80,10 +80,23 @@ def fetch_gameweek(gw, meta):
     elements = []
     for el in live.get("elements", []):
         stats = el.get("stats", {}) or {}
-        elements.append({
+        row = {
             "id": el["id"],
             "stats": {k: stats.get(k) for k in KEEP if k in stats},
-        })
+        }
+        # In a double gameweek the aggregate stats quietly break anything
+        # counted per match — two 90-minute games look like one 180-minute
+        # one and score appearance points once. FPL's own breakdown carries
+        # the raw values per fixture, so keep those and let the engine score
+        # each match separately. We take `value`, never `points`.
+        per_fixture = []
+        for block in el.get("explain") or []:
+            lines = block[0] if isinstance(block, (list, tuple)) and block else []
+            per_fixture.append({ln["stat"]: ln.get("value", 0)
+                                for ln in lines if "stat" in ln})
+        if len(per_fixture) > 1:
+            row["fixtures"] = per_fixture
+        elements.append(row)
     played = sum(1 for e in elements if (e["stats"].get("minutes") or 0) > 0)
     print(f"  {len(elements)} players, {played} with minutes")
     return {

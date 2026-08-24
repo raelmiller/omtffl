@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 from score_league import best_xi, load_positions
-from scoring import score_player
+from scoring import score_entry
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -30,7 +30,7 @@ def gameweek_scores(path, squads, positions):
     for el in gw["elements"]:
         pos = positions.get(el["id"])
         if pos is not None:
-            pts[el["id"]] = score_player(el.get("stats", {}), pos)
+            pts[el["id"]] = score_entry(el, pos)
     scores = {}
     for team in squads["teams"]:
         total, _, _ = best_xi(team["squad"], pts)

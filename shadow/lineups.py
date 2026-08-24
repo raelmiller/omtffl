@@ -256,7 +256,7 @@ def suggest_lineup(squad, form):
 
 def form_before(gameweek, positions):
     """Points each player scored in gameweeks before this one."""
-    from scoring import score_player
+    from scoring import score_entry
 
     form = {}
     for f in sorted(DATA.glob("gw*.json")):
@@ -267,7 +267,7 @@ def form_before(gameweek, positions):
         for el in gw["elements"]:
             pos = positions.get(el["id"])
             if pos is not None:
-                form[el["id"]] = form.get(el["id"], 0) + score_player(el.get("stats", {}), pos)
+                form[el["id"]] = form.get(el["id"], 0) + score_entry(el, pos)
     return form
 
 

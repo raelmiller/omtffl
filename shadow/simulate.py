@@ -31,7 +31,7 @@ from mechanics import (
 )
 from h2h import standings_before
 from score_league import best_xi, load_positions
-from scoring import score_player
+from scoring import score_entry
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -104,7 +104,7 @@ def player_points(gw_file, positions):
     for el in gw["elements"]:
         pos = positions.get(el["id"])
         if pos is not None:
-            pts[el["id"]] = score_player(el.get("stats", {}), pos)
+            pts[el["id"]] = score_entry(el, pos)
     return gw, pts
 
 

@@ -27,7 +27,7 @@ import sys
 from itertools import combinations
 from pathlib import Path
 
-from scoring import score_player
+from scoring import score_entry
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -92,7 +92,7 @@ def score_one_gameweek(path, squads, positions, lineups=None):
     for el in gw["elements"]:
         pos = positions.get(el["id"])
         if pos is not None:
-            pts[el["id"]] = score_player(el.get("stats", {}), pos)
+            pts[el["id"]] = score_entry(el, pos)
 
     n = gw["gameweek"]
     minutes = None
