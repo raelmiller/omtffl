@@ -67,8 +67,20 @@ def now():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+_schema_ready = False
+
+
 @contextmanager
 def connect():
+    """A connection, with the schema guaranteed to exist.
+
+    Creating the tables here rather than only in init() means the app can
+    never serve a request against a database that has not been set up. That
+    was not theoretical: a fresh volume plus any code path that reaches the
+    database before startup has run produces "no such table", and on a first
+    deploy those are the same moment.
+    """
+    global _schema_ready
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
@@ -76,6 +88,9 @@ def connect():
     # A season app is overwhelmingly reads; WAL keeps the table page fast
     # while somebody is saving a lineup.
     conn.execute("PRAGMA journal_mode = WAL")
+    if not _schema_ready:
+        conn.executescript(SCHEMA)
+        _schema_ready = True
     try:
         yield conn
         conn.commit()
@@ -91,8 +106,6 @@ def init():
     which means re-running this is safe and never breaks a bookmarked link.
     """
     with connect() as conn:
-        conn.executescript(SCHEMA)
-
         squads_file = DATA / "squads.json"
         if not squads_file.exists():
             return
