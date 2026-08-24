@@ -1,0 +1,5 @@
+# The draft squads carry real managers' names. omtffl is a public repo, so
+# they're kept out of git until that's a deliberate choice — see
+# shadow/README.md. Regenerate locally with:
+#   python3 shadow/import_squads.py <draft-results.xlsx>
+shadow/data/squads.json
