@@ -60,15 +60,25 @@ jobs:
           echo "exit=$?" >> "$GITHUB_OUTPUT"
           set -e
 
+      - name: Score the league
+        run: |
+          cd shadow
+          # Squads and fixtures are committed, and identities.json (the only
+          # file with real names) isn't needed to score — so the table can be
+          # built here without any personal data on the runner.
+          set +e
+          python3 h2h.py --compare --markdown | tee /tmp/standings.txt
+          set -e
+
       - name: Commit gameweek data
         run: |
           git config user.name "fpl-data-bot"
           git config user.email "actions@github.com"
-          git add shadow/data
+          git add shadow/data shadow/STANDINGS.md
           if git diff --cached --quiet; then
             echo "No new gameweek data."
           else
-            git commit -m "Shadow: refresh gameweek data ($(date -u +%Y-%m-%d))"
+            git commit -m "Shadow: refresh gameweek data + standings ($(date -u +%Y-%m-%d))"
             git push origin HEAD:${{ github.ref_name }}
           fi
 
@@ -78,5 +88,9 @@ jobs:
             echo '## Scoring engine validation'
             echo '```'
             cat /tmp/validation.txt
+            echo '```'
+            echo '## League'
+            echo '```'
+            cat /tmp/standings.txt 2>/dev/null || echo '(not scored)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

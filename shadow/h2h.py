@@ -10,6 +10,7 @@ Usage
 -----
     python3 shadow/h2h.py              # table + per-gameweek results
     python3 shadow/h2h.py --compare    # our scores vs the league's actuals
+    python3 shadow/h2h.py --markdown   # write STANDINGS.md for the repo
 """
 import json
 import sys
@@ -39,6 +40,8 @@ def gameweek_scores(path, squads, positions):
 
 def main():
     compare = "--compare" in sys.argv
+    markdown = "--markdown" in sys.argv
+    md = []
 
     for name in ("squads.json", "fixtures.json"):
         if not (DATA / name).exists():
@@ -67,6 +70,9 @@ def main():
                  else "PROVISIONAL" if gw.get("finished")
                  else "IN PROGRESS — round not complete")
         print(f"\n{'='*66}\nGameweek {n} ({state})\n{'='*66}")
+        md.append(f"\n### Gameweek {n}\n\n*{state}*\n")
+        md.append("| Home | | Away |")
+        md.append("|---|:--:|---|")
 
         for fx in by_gw.get(n, []):
             h, a = fx["home"], fx["away"]
@@ -93,6 +99,7 @@ def main():
                 theirs = "W" if ah > aa else "D" if ah == aa else "L"
                 line += "  ✓" if ours == theirs else f"  ✗ outcome differs ({ours} vs {theirs})"
             print(line)
+            md.append(f"| {names[h]} | **{hs} - {as_}** | {names[a]} |")
 
     print(f"\n{'='*66}\nH2H table\n{'='*66}")
     print(f"{'':>3} {'':<4} {'Team':<24} {'P':>2} {'W':>2} {'D':>2} {'L':>2} {'PF':>5} {'PA':>5} {'Pts':>4}")
@@ -100,6 +107,25 @@ def main():
     for i, (m, r) in enumerate(ranked, 1):
         print(f"{i:>3} {m:<4} {names[m]:<24} {r['P']:>2} {r['W']:>2} {r['D']:>2} {r['L']:>2} "
               f"{r['PF']:>5} {r['PA']:>5} {r['Pts']:>4}")
+
+    if markdown:
+        rows = ["", "## H2H table", "",
+                "| # | Team | P | W | D | L | PF | PA | Pts |",
+                "|--:|---|--:|--:|--:|--:|--:|--:|--:|"]
+        for i, (m, r) in enumerate(ranked, 1):
+            rows.append(f"| {i} | {names[m]} | {r['P']} | {r['W']} | {r['D']} | {r['L']} "
+                        f"| {r['PF']} | {r['PA']} | **{r['Pts']}** |")
+        header = [
+            "# Shadow league standings", "",
+            "Scored by our own engine from raw FPL match stats, not copied from",
+            "FPL's totals. The XI is chosen in hindsight — the best legal 11 from",
+            "each squad — so totals run hot for everyone. Comparative, not a replay",
+            "of the real season.", "",
+            f"*Updated automatically. {len(files)} gameweek(s) scored.*",
+        ]
+        out = Path(__file__).resolve().parent / "STANDINGS.md"
+        out.write_text("\n".join(header + rows + md) + "\n")
+        print(f"\nWrote {out.name}")
 
     if compare and deltas:
         avg = sum(deltas) / len(deltas)
