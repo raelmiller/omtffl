@@ -1,0 +1,623 @@
+{
+  "lineups": {
+    "1": {
+      "AF": {
+        "team": "License to Kelleher",
+        "xi": [
+          526,
+          208,
+          499,
+          95,
+          367,
+          229,
+          503,
+          201,
+          84,
+          121,
+          82
+        ],
+        "bench": [
+          401,
+          429,
+          380,
+          467
+        ],
+        "_names": {
+          "xi": [
+            "FWD Solanke",
+            "MID Sarr",
+            "DEF Pedro Porro",
+            "MID O.Dango",
+            "MID Gakpo",
+            "DEF Tarkowski",
+            "DEF Van de Ven",
+            "DEF Mu\u00f1oz",
+            "DEF Collins",
+            "MID Mitoma",
+            "GK Kelleher"
+          ],
+          "bench": [
+            "FWD Marmoush",
+            "MID Rashford",
+            "FWD Ekitik\u00e9",
+            "GK Sels"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "AJ": {
+        "team": "Meet me on the Roefs",
+        "xi": [
+          491,
+          452,
+          67,
+          193,
+          527,
+          335,
+          472,
+          8,
+          230,
+          529,
+          203
+        ],
+        "bench": [
+          506,
+          345,
+          7,
+          385
+        ],
+        "_names": {
+          "xi": [
+            "FWD Igor Jesus",
+            "MID Bruno G.",
+            "MID Rayan",
+            "FWD Wright",
+            "FWD Richarlison",
+            "MID Stach",
+            "DEF Murillo",
+            "DEF Calafiori",
+            "DEF Branthwaite",
+            "GK Roefs",
+            "DEF Canvot"
+          ],
+          "bench": [
+            "DEF Udogie",
+            "MID Tanaka",
+            "MID Lewis-Skelly",
+            "GK Trafford"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "CCP": {
+        "team": "ThunderBijol",
+        "xi": [
+          411,
+          388,
+          295,
+          260,
+          525,
+          465,
+          231,
+          202,
+          198,
+          336,
+          362
+        ],
+        "bench": [
+          327,
+          123,
+          238,
+          199
+        ],
+        "_names": {
+          "xi": [
+            "FWD Haaland",
+            "DEF Gu\u00e9hi",
+            "FWD McBurnie",
+            "MID Wilson",
+            "MID Fernandes",
+            "FWD Osula",
+            "DEF Keane",
+            "DEF Richards",
+            "GK Henderson",
+            "MID Okafor",
+            "DEF Jacquet"
+          ],
+          "bench": [
+            "DEF Bijol",
+            "MID Hinshelwood",
+            "MID Grealish",
+            "GK Benitez"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "CH": {
+        "team": "You HallWhite mate?",
+        "xi": [
+          26,
+          400,
+          464,
+          428,
+          237,
+          357,
+          226,
+          512,
+          10,
+          166,
+          449
+        ],
+        "bench": [
+          15,
+          504,
+          5,
+          227
+        ],
+        "_names": {
+          "xi": [
+            "FWD Havertz",
+            "MID Doku",
+            "FWD Wissa",
+            "MID Cunha",
+            "MID Ndiaye",
+            "DEF Frimpong",
+            "GK Pickford",
+            "MID Kudus",
+            "DEF White",
+            "FWD N.Jackson",
+            "DEF Hall"
+          ],
+          "bench": [
+            "MID \u00d8degaard",
+            "DEF Vuskovic",
+            "DEF J.Timber",
+            "GK Travers"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "DP": {
+        "team": "Palmer Sutra",
+        "xi": [
+          55,
+          154,
+          70,
+          553,
+          138,
+          88,
+          496,
+          369,
+          461,
+          447,
+          173
+        ],
+        "bench": [
+          450,
+          149,
+          162,
+          140
+        ],
+        "_names": {
+          "xi": [
+            "FWD Watkins",
+            "MID Palmer",
+            "MID Kluivert",
+            "FWD Isidor",
+            "FWD Kostoulas",
+            "DEF Kayode",
+            "GK Kinsky",
+            "MID Ngumoha",
+            "MID Tour\u00e9",
+            "DEF Botman",
+            "DEF Thomas"
+          ],
+          "bench": [
+            "DEF Livramento",
+            "DEF Colwill",
+            "MID Andrey Santos",
+            "GK S\u00e1nchez"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "EE": {
+        "team": "The Gyokfather",
+        "xi": [
+          25,
+          356,
+          236,
+          155,
+          463,
+          1,
+          418,
+          112,
+          68,
+          390,
+          269
+        ],
+        "bench": [
+          156,
+          160,
+          81,
+          2
+        ],
+        "_names": {
+          "xi": [
+            "FWD Gy\u00f6keres",
+            "DEF Virgil",
+            "MID Dewsbury-Hall",
+            "MID Enzo",
+            "FWD Woltemade",
+            "GK Raya",
+            "DEF Maguire",
+            "DEF Van Hecke",
+            "MID Tavernier",
+            "DEF R\u00faben",
+            "DEF Sessegnon"
+          ],
+          "bench": [
+            "MID Neto",
+            "MID Garnacho",
+            "FWD Rodr\u00edguez",
+            "GK Arrizabalaga"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "LG": {
+        "team": "Becker Call Saul",
+        "xi": [
+          106,
+          427,
+          481,
+          544,
+          204,
+          32,
+          350,
+          471,
+          423,
+          136,
+          535
+        ],
+        "bench": [
+          372,
+          338,
+          347,
+          250
+        ],
+        "_names": {
+          "xi": [
+            "FWD Thiago",
+            "MID Mbeumo",
+            "MID Anderson",
+            "MID Xhaka",
+            "DEF Mitchell",
+            "DEF Cash",
+            "GK A.Becker",
+            "DEF Milenkovi\u0107",
+            "DEF Shaw",
+            "FWD Welbeck",
+            "DEF Alderete"
+          ],
+          "bench": [
+            "MID Mac Allister",
+            "MID Ampadu",
+            "FWD Nmecha",
+            "GK Leno"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "LRC": {
+        "team": "La Prima Dimwit",
+        "xi": [
+          426,
+          480,
+          125,
+          316,
+          200,
+          371,
+          152,
+          498,
+          533,
+          60,
+          28
+        ],
+        "bench": [
+          490,
+          210,
+          45,
+          442
+        ],
+        "_names": {
+          "xi": [
+            "MID B.Fernandes",
+            "MID Gibbs-White",
+            "FWD Georginio",
+            "FWD Emersonn",
+            "DEF Lacroix",
+            "MID Gravenberch",
+            "DEF Palestra",
+            "DEF Senesi",
+            "DEF Mukiele",
+            "DEF Hill",
+            "GK Martinez"
+          ],
+          "bench": [
+            "FWD Wood",
+            "MID Wharton",
+            "MID McGinn",
+            "GK Pope"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "OD": {
+        "team": "Brobbey'sGonnaGetYa!",
+        "xi": [
+          439,
+          552,
+          399,
+          542,
+          157,
+          391,
+          69,
+          417,
+          65,
+          113,
+          567
+        ],
+        "bench": [
+          515,
+          56,
+          116,
+          110
+        ],
+        "_names": {
+          "xi": [
+            "FWD \u0160e\u0161ko",
+            "FWD Brobbey",
+            "MID Cherki",
+            "MID E.Le F\u00e9e",
+            "MID Est\u00eav\u00e3o",
+            "DEF Gvardiol",
+            "MID Scott",
+            "DEF Dalot",
+            "DEF J.Araujo",
+            "DEF F.Kad\u0131o\u011flu",
+            "GK Horn\u00ed\u010dek"
+          ],
+          "bench": [
+            "MID Maddison",
+            "FWD Abraham",
+            "DEF Dunk",
+            "GK Rushworth"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "RF": {
+        "team": "Quantum of Tzolis",
+        "xi": [
+          346,
+          223,
+          389,
+          14,
+          469,
+          94,
+          412,
+          557,
+          445,
+          142,
+          9
+        ],
+        "bench": [
+          53,
+          271,
+          211,
+          325
+        ],
+        "_names": {
+          "xi": [
+            "FWD Calvert-Lewin",
+            "FWD Mateta",
+            "DEF Matheus N.",
+            "MID Eze",
+            "DEF N.Williams",
+            "MID Schade",
+            "GK Lammens",
+            "MID Tzolis",
+            "DEF Thiaw",
+            "DEF James",
+            "DEF Hincapie"
+          ],
+          "bench": [
+            "MID Manzambi",
+            "FWD Muniz",
+            "MID Yeremy",
+            "GK Darlow"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "RM": {
+        "team": "Quantum of Szobos",
+        "xi": [
+          13,
+          79,
+          368,
+          387,
+          61,
+          249,
+          453,
+          532,
+          31,
+          109,
+          239
+        ],
+        "bench": [
+          17,
+          332,
+          167,
+          111
+        ],
+        "_names": {
+          "xi": [
+            "MID Rice",
+            "FWD Evanilson",
+            "MID Szoboszlai",
+            "DEF O'Reilly",
+            "DEF Truffert",
+            "FWD Barry",
+            "MID Barnes",
+            "DEF Ballard",
+            "DEF Konsa",
+            "GK Verbruggen",
+            "MID Garner"
+          ],
+          "bench": [
+            "MID Merino",
+            "DEF Justin",
+            "FWD Delap",
+            "GK Steele"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "SG": {
+        "team": "For Beto o For Wirtz",
+        "xi": [
+          12,
+          40,
+          366,
+          569,
+          248,
+          57,
+          233,
+          96,
+          448,
+          329,
+          420
+        ],
+        "bench": [
+          363,
+          224,
+          455,
+          351
+        ],
+        "_names": {
+          "xi": [
+            "MID Saka",
+            "MID Rogers",
+            "MID Wirtz",
+            "FWD Gonzalo",
+            "FWD Beto",
+            "GK Petrovi\u0107",
+            "DEF Mykolenko",
+            "MID Damsgaard",
+            "DEF Burn",
+            "DEF Rodon",
+            "DEF Yoro"
+          ],
+          "bench": [
+            "DEF Leoni",
+            "FWD Nketiah",
+            "MID Tonali",
+            "GK Mamardashvili"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "TM": {
+        "team": "Joao and Silent Bobb",
+        "xi": [
+          165,
+          397,
+          358,
+          384,
+          43,
+          115,
+          328,
+          175,
+          581,
+          195,
+          440
+        ],
+        "bench": [
+          241,
+          246,
+          264,
+          587
+        ],
+        "_names": {
+          "xi": [
+            "FWD Jo\u00e3o Pedro",
+            "MID Semenyo",
+            "DEF Kerkez",
+            "GK Donnarumma",
+            "MID Tielemans",
+            "DEF De Cuyper",
+            "DEF Struijk",
+            "DEF van Ewijk",
+            "DEF Diomande",
+            "FWD Simms",
+            "FWD Zirkzee"
+          ],
+          "bench": [
+            "MID McNeil",
+            "MID R\u00f6hl",
+            "MID Bobb",
+            "GK Rulli"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      },
+      "YG": {
+        "team": "Isakly",
+        "xi": [
+          379,
+          4,
+          398,
+          222,
+          582,
+          572,
+          254,
+          41,
+          124,
+          473,
+          11
+        ],
+        "bench": [
+          502,
+          415,
+          159,
+          564
+        ],
+        "_names": {
+          "xi": [
+            "FWD Isak",
+            "DEF Gabriel",
+            "MID Foden",
+            "FWD Strand Larsen",
+            "FWD Madjo",
+            "GK Tzolakis",
+            "DEF Robinson",
+            "MID Buend\u00eda",
+            "MID Gro\u00df",
+            "DEF Aina",
+            "DEF Mosquera"
+          ],
+          "bench": [
+            "DEF Robertson",
+            "MID Dorgu",
+            "MID Caicedo",
+            "GK Scherpen"
+          ]
+        },
+        "submitted_at": "2026-08-21T16:00:00Z"
+      }
+    }
+  },
+  "note": "Worked example. These XIs were filled in from draft price only \u2014 no gameweek had been played, so there was no form to go on and nothing here uses hindsight. Replace with real submissions."
+}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block heading %}The table{% endblock %}
+{% block subheading %}
+  {% if season.ready %}
+    <p class="sub">
+      {{ season.played }} of {{ season.scheduled }} gameweeks scored.
+      {% set sub, total = season.submitted_share %}
+      {% if sub == 0 %}
+        No lineups submitted yet, so every score is the best available XI &mdash;
+        which flatters everyone equally.
+      {% elif sub < total %}
+        {{ sub }} of {{ total }} scores are from a submitted XI; the rest use the
+        best available.
+      {% else %}
+        Every score is the XI its manager actually picked.
+      {% endif %}
+    </p>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if not season.ready %}
+  <div class="panel"><p class="empty">{{ season.reason }}</p></div>
+{% else %}
+
+<section>
+  <div class="panel scroll">
+    <table>
+      <thead>
+        <tr>
+          <th></th><th>Team</th>
+          <th class="num">P</th><th class="num">W</th><th class="num">D</th><th class="num">L</th>
+          <th class="num">For</th><th class="num">Against</th><th class="num">Diff</th>
+          <th class="num">Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in season.table %}
+        <tr {% if loop.index == 1 %}class="top"{% endif %}>
+          <td class="rank">{{ row.rank }}</td>
+          <td class="team">{{ row.team }}</td>
+          <td class="num">{{ row.P }}</td>
+          <td class="num">{{ row.W }}</td>
+          <td class="num">{{ row.D }}</td>
+          <td class="num">{{ row.L }}</td>
+          <td class="num">{{ row.PF }}</td>
+          <td class="num">{{ row.PA }}</td>
+          <td class="num">{{ "%+d"|format(row.diff) }}</td>
+          <td class="pts">{{ row.Pts }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>Results</h2>
+    <span class="eyebrow">most recent first</span>
+  </div>
+
+  <div class="rounds">
+    {% for round in season.rounds %}
+    <div>
+      <div class="roundhead">
+        <h2><a href="/gameweek/{{ round.gameweek }}">{{ round.name }}</a></h2>
+        <span class="pill">{{ round.state }}</span>
+        <span class="stats">avg {{ round.average }} &middot; high {{ round.high }} &middot; low {{ round.low }}</span>
+      </div>
+      <div class="panel" style="margin-top:.55rem">
+        {% for m in round.matches %}
+        <div class="match">
+          <div class="home">
+            <span class="name {% if m.home_score > m.away_score %}won{% endif %}">{{ m.home }}</span>
+          </div>
+          <div class="score">{{ m.home_score }} &ndash; {{ m.away_score }}</div>
+          <div class="away">
+            <span class="name {% if m.away_score > m.home_score %}won{% endif %}">{{ m.away }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if season.rounds and season.rounds[0].state != "final" %}
+  <p class="note">The latest round isn&rsquo;t settled yet. FPL revises stats for a
+  day or two after the final whistle &mdash; assists get reassigned and bonus is
+  confirmed &mdash; so these numbers can still move.</p>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

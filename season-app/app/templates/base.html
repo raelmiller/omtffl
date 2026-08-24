@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Matchweek{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f12'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='19' font-weight='700' fill='%237fffb2' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <span class="eyebrow">OMTFFL</span>
+      {% if mode == "live" %}
+        <span class="pill live">live data</span>
+      {% elif mode == "archive" %}
+        <span class="pill archive">archive data</span>
+      {% endif %}
+    </div>
+    <h1>{% block heading %}Matchweek{% endblock %}</h1>
+    {% block subheading %}{% endblock %}
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    Scored from raw match stats by our own engine, not copied from FPL.<br>
+    Running alongside FPL Draft this season &middot; <a href="/health">status</a>
+  </footer>
+</div>
+</body>
+</html>

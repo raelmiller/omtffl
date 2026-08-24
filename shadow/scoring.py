@@ -92,10 +92,17 @@ def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
     r = rules or RULES
     minutes = int(_stat(stats, "minutes"))
 
-    # No minutes, no points. FPL awards nothing at all to an unused player,
-    # including no bonus and no card deductions (they can't be booked).
+    # No minutes, almost no points — but discipline still counts. A player
+    # can be booked without the clock recording a minute: shown a card on the
+    # bench, or in stoppage time after coming on. A full season of real data
+    # turned up exactly that (a forward on 0 minutes, one yellow, -1), which
+    # a single gameweek never would have.
     if minutes <= 0:
-        return 0
+        return (
+            int(_stat(stats, "yellow_cards")) * r["yellow_card"]
+            + int(_stat(stats, "red_cards")) * r["red_card"]
+            + int(_stat(stats, "own_goals")) * r["own_goal"]
+        )
 
     pts = 0
 
@@ -146,10 +153,29 @@ def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
     return pts
 
 
+def score_entry(entry: dict, position: int, rules: dict | None = None) -> int:
+    """Points for one player, handling double gameweeks correctly.
+
+    A gameweek's `stats` are aggregated across every match the player's club
+    played, which quietly breaks anything counted per match. Appearance points
+    are the obvious one: two 90-minute games is 4 points, not 2, but the
+    aggregate says 180 minutes and scores it once. Clean sheets and goals
+    conceded have the same problem.
+
+    So when per-fixture stats are present, each match is scored on its own and
+    the results added. Ordinary single gameweeks are unaffected.
+    """
+    per_fixture = entry.get("fixtures")
+    if per_fixture and len(per_fixture) > 1:
+        return sum(score_player(f, position, rules) for f in per_fixture)
+    return score_player(entry.get("stats", {}), position, rules)
+
+
 def score_gameweek(elements: list[dict], positions: dict[int, int]) -> dict[int, int]:
     """Score every player in a gameweek.
 
-    `elements` is the list from event/{gw}/live (each {id, stats}).
+    `elements` is the list from event/{gw}/live (each {id, stats}), optionally
+    carrying per-fixture stats under "fixtures" for double gameweeks.
     `positions` maps player id -> element_type.
     """
     out = {}
@@ -158,5 +184,5 @@ def score_gameweek(elements: list[dict], positions: dict[int, int]) -> dict[int,
         pos = positions.get(pid)
         if pos is None:
             continue
-        out[pid] = score_player(el.get("stats", {}), pos)
+        out[pid] = score_entry(el, pos)
     return out

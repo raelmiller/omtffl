@@ -20,7 +20,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from scoring import score_player, POSITION_NAMES
+from scoring import score_entry, POSITION_NAMES
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -50,12 +50,14 @@ def validate_gameweek(path, positions, names, verbose=False):
         pos = positions.get(pid)
         if pos is None:
             continue
-        # Players with no minutes are trivially zero on both sides; counting
-        # them would flatter the result, so only check players who featured.
-        if (stats.get("minutes") or 0) <= 0:
+        # Players who neither featured nor scored are trivially zero on both
+        # sides; counting them would flatter the result. A no-minutes player
+        # with points is a real case though — a booking on the bench — so
+        # those stay in.
+        if (stats.get("minutes") or 0) <= 0 and not stats.get("total_points"):
             continue
 
-        ours = score_player(stats, pos)
+        ours = score_entry(el, pos)
         theirs = int(stats["total_points"])
         checked += 1
         if ours != theirs:

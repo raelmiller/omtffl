@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 from score_league import best_xi, load_positions
-from scoring import score_player
+from scoring import score_entry
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -30,12 +30,46 @@ def gameweek_scores(path, squads, positions):
     for el in gw["elements"]:
         pos = positions.get(el["id"])
         if pos is not None:
-            pts[el["id"]] = score_player(el.get("stats", {}), pos)
+            pts[el["id"]] = score_entry(el, pos)
     scores = {}
     for team in squads["teams"]:
         total, _, _ = best_xi(team["squad"], pts)
         scores[team["key"]] = total
     return gw, scores
+
+
+def standings_before(gameweek, squads=None, fixtures=None, positions=None):
+    """The H2H table as it stood going into `gameweek`, best team first.
+
+    Used by the waiver run, which orders claims from the bottom of the table
+    upwards — so it has to be the table at the moment claims are processed,
+    not the final one.
+    """
+    squads = squads or json.loads((DATA / "squads.json").read_text())
+    if fixtures is None:
+        fixtures = json.loads((DATA / "fixtures.json").read_text())
+    positions = positions or load_positions()
+
+    table = {t["key"]: dict(Pts=0, PF=0, PA=0) for t in squads["teams"]}
+    by_gw = {}
+    for fx in fixtures["fixtures"]:
+        by_gw.setdefault(fx["gameweek"], []).append(fx)
+
+    for f in sorted(DATA.glob("gw*.json")):
+        n = int(f.stem[2:])
+        if n >= gameweek:
+            continue
+        _, scores = gameweek_scores(f, squads, positions)
+        for fx in by_gw.get(n, []):
+            h, a = fx["home"], fx["away"]
+            hs, as_ = scores.get(h, 0), scores.get(a, 0)
+            for t, sf, sa in ((h, hs, as_), (a, as_, hs)):
+                table[t]["PF"] += sf
+                table[t]["PA"] += sa
+                table[t]["Pts"] += WIN if sf > sa else DRAW if sf == sa else 0
+
+    return [k for k, _ in sorted(
+        table.items(), key=lambda kv: (-kv[1]["Pts"], -(kv[1]["PF"] - kv[1]["PA"]), -kv[1]["PF"]))]
 
 
 def main():

@@ -8,7 +8,7 @@ across every real player in a gameweek, which is the harder test.
 Run: python3 shadow/test_scoring.py
 """
 import sys
-from scoring import score_player, GK, DEF, MID, FWD
+from scoring import score_entry, score_player, GK, DEF, MID, FWD
 
 FAILS = []
 
@@ -138,6 +138,54 @@ check(
     score_player(s(minutes=90, clean_sheets=1, saves=6, penalties_saved=1, bonus=3), GK),
     2 + 4 + 2 + 5 + 3,
 )
+
+
+
+print("\n── Found by a full season of real data ────────────────")
+
+# A player can be booked without the clock recording a minute — on the bench,
+# or in stoppage time after coming on. The engine used to return a flat 0 for
+# anyone on no minutes, which cost this exact case a point.
+check("a booking on zero minutes still costs a point",
+      score_player({"minutes": 0, "yellow_cards": 1}, FWD), -1)
+check("a red card on zero minutes too",
+      score_player({"minutes": 0, "red_cards": 1}, MID), -3)
+check("but an unused player still scores nothing",
+      score_player({"minutes": 0}, DEF), 0)
+check("and no appearance point sneaks in",
+      score_player({"minutes": 0, "yellow_cards": 1, "bonus": 3}, DEF), -1)
+
+# Double gameweeks: a gameweek's stats are aggregated across both matches,
+# so anything counted per match has to be scored per match.
+two_nineties = {
+    "id": 1,
+    "stats": {"minutes": 180, "clean_sheets": 2, "goals_conceded": 0},
+    "fixtures": [
+        {"minutes": 90, "clean_sheets": 1, "goals_conceded": 0},
+        {"minutes": 90, "clean_sheets": 1, "goals_conceded": 0},
+    ],
+}
+check("two clean sheets in a double gameweek score twice",
+      score_entry(two_nineties, DEF), 12)          # (2 + 4) x 2
+check("scoring the aggregate instead undercounts it — 6 not 12",
+      score_player(two_nineties["stats"], DEF), 6)
+
+# A double where the player only featured in one of the two matches.
+one_of_two = {
+    "id": 2,
+    "stats": {"minutes": 90, "goals_scored": 1},
+    "fixtures": [
+        {"minutes": 90, "goals_scored": 1},
+        {"minutes": 0},
+    ],
+}
+check("a blank in the second match adds nothing",
+      score_entry(one_of_two, FWD), 6)             # 2 appearance + 4 goal
+
+# Single gameweeks must be untouched by any of this.
+single = {"id": 3, "stats": {"minutes": 90, "goals_scored": 1}}
+check("an ordinary gameweek is unaffected",
+      score_entry(single, FWD), score_player(single["stats"], FWD))
 
 print()
 if FAILS:
