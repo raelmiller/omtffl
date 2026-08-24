@@ -12,7 +12,7 @@ import sys
 from mechanics import (
     BOOST_MAX_PCT, BOOST_MIN_PCT, BOOST_USES_PER_SEASON,
     apply_transactions, boost_pct, boost_value, club_result, league_table,
-    validate_trade,
+    process_waivers, snake_order, validate_trade,
 )
 
 FAILS = []
@@ -47,7 +47,7 @@ print("── Trades ───────────────────�
 
 trade = {"type": "trade", "gameweek": 5, "from": "A", "to": "B",
          "players_out": [p(1, "FWD")], "players_in": [p(10, "FWD")], "points": 40}
-squads, adj, boosts, bank, problems = apply_transactions(base(A, B), [trade], 10)
+squads, adj, boosts, bank, _, problems = apply_transactions(base(A, B), [trade], 10)
 
 check("A receives Haaland", sorted(x["id"] for x in squads["A"]), [2, 3, 10])
 check("B receives Solanke", sorted(x["id"] for x in squads["B"]), [1, 11, 12])
@@ -75,13 +75,13 @@ check_true("points can be offered without a bank balance", bank["A"] == 0 and ad
 print("\n── Points bank ─────────────────────────────────────────")
 
 spend = [trade, {"type": "bank_use", "gameweek": 9, "team": "B", "points": 25}]
-_, adj, _, bank, problems = apply_transactions(base(A, B), spend, 10)
+_, adj, _, bank, _, problems = apply_transactions(base(A, B), spend, 10)
 check("bank credit is spendable later", adj[9]["B"], 25)
 check("bank reduces by what was spent", bank["B"], 15)
 check("spending within balance is fine", problems, [])
 
 over = [trade, {"type": "bank_use", "gameweek": 9, "team": "B", "points": 100}]
-_, adj, _, bank, problems = apply_transactions(base(A, B), over, 10)
+_, adj, _, bank, _, problems = apply_transactions(base(A, B), over, 10)
 check_true("can't spend more than is banked", any("only 40 banked" in x for x in problems), str(problems))
 check("bank untouched by a rejected spend", bank["B"], 40)
 check_true("no points credited by a rejected spend", 9 not in adj)
@@ -90,7 +90,7 @@ check_true("no points credited by a rejected spend", 9 not in adj)
 split = [trade,
          {"type": "bank_use", "gameweek": 7, "team": "B", "points": 10},
          {"type": "bank_use", "gameweek": 12, "team": "B", "points": 30}]
-_, adj, _, bank, problems = apply_transactions(base(A, B), split, 20)
+_, adj, _, bank, _, problems = apply_transactions(base(A, B), split, 20)
 check("bank can be spent in pieces", (adj[7]["B"], adj[12]["B"]), (10, 30))
 check("bank empties exactly", bank["B"], 0)
 
@@ -98,26 +98,120 @@ print("\n── Waivers ──────────────────�
 
 wv = [{"type": "waiver", "gameweek": 4, "team": "A",
        "drop": p(2, "MID"), "add": p(50, "MID", "NewMid")}]
-squads, _, _, _, problems = apply_transactions(base(A, B), wv, 10)
+squads, _, _, _, _, problems = apply_transactions(base(A, B), wv, 10)
 check("waiver swaps the player in", sorted(x["id"] for x in squads["A"]), [1, 3, 50])
 check("waiver accepted", problems, [])
 
 wv_bad = [{"type": "waiver", "gameweek": 4, "team": "A",
            "drop": p(2, "MID"), "add": p(51, "FWD", "NewFwd")}]
-_, _, _, _, problems = apply_transactions(base(A, B), wv_bad, 10)
+_, _, _, _, _, problems = apply_transactions(base(A, B), wv_bad, 10)
 check_true("waiver across positions rejected",
            any("break the squad shape" in x for x in problems), str(problems))
 
 wv_owned = [{"type": "waiver", "gameweek": 4, "team": "A",
              "drop": p(2, "MID"), "add": p(11, "MID")}]
-_, _, _, _, problems = apply_transactions(base(A, B), wv_owned, 10)
+_, _, _, _, _, problems = apply_transactions(base(A, B), wv_owned, 10)
 check_true("can't waiver in a player someone owns",
            any("already owned" in x for x in problems), str(problems))
+
+print("\n── Offer cap ───────────────────────────────────────────")
+
+# You can mortgage your season, but not more than you've actually scored.
+cap_trade = dict(trade)
+check_true("offering more than you've scored is rejected",
+           "can't offer more than you've accumulated"
+           in (validate_trade(cap_trade, {"A": A, "B": B}, accumulated=39) or ""),
+           str(validate_trade(cap_trade, {"A": A, "B": B}, accumulated=39)))
+check("offering exactly what you've scored is allowed",
+      validate_trade(cap_trade, {"A": A, "B": B}, accumulated=40), None)
+check("offering less is allowed",
+      validate_trade(cap_trade, {"A": A, "B": B}, accumulated=200), None)
+check_true("with nothing scored, no points can be offered at all",
+           validate_trade(cap_trade, {"A": A, "B": B}, accumulated=0) is not None)
+check("without a season total the cap isn't guessed at",
+      validate_trade(cap_trade, {"A": A, "B": B}), None)
+
+# End to end: the same trade passes or fails on the season total alone.
+_, adj, _, bank, _, problems = apply_transactions(
+    base(A, B), [trade], 10, points_to_date={5: {"A": 100}})
+check("a covered offer goes through", problems, [])
+check("and the points move", bank["B"], 40)
+
+_, adj, _, bank, _, problems = apply_transactions(
+    base(A, B), [trade], 10, points_to_date={5: {"A": 10}})
+check_true("an uncovered offer is blocked", len(problems) == 1, str(problems))
+check("no points move", bank["B"], 0)
+check_true("and the players stay put", 5 not in adj)
+
+print("\n── Waiver priority ─────────────────────────────────────")
+
+# Standings best-first; round one runs bottom-up, round two back down.
+TABLE = ["A", "B", "C", "D"]
+rounds = snake_order(TABLE, 3)
+check("round one starts with the bottom club", rounds[0], ["D", "C", "B", "A"])
+check("round two turns around", rounds[1], ["A", "B", "C", "D"])
+check("round three turns back", rounds[2], ["D", "C", "B", "A"])
+
+FREE_1 = p(70, "MID", "Wanted")
+FREE_2 = p(71, "MID", "Backup")
+
+
+def four_teams():
+    return {k: [p(100 + i, "MID", f"{k}mid{i}") for i in range(2)]
+            for k in ("A", "B", "C", "D")}
+
+
+squads4 = four_teams()
+claims = {
+    "A": [{"drop": squads4["A"][0], "add": FREE_1}],
+    "D": [{"drop": squads4["D"][0], "add": FREE_1},
+          {"drop": squads4["D"][1], "add": FREE_2}],
+}
+results, problems = process_waivers(claims, squads4, TABLE)
+first_round = {r["team"]: r["add"]["name"]
+               for r in results if r["landed"] and r["round"] == 1}
+check("the bottom club wins the contested claim", first_round.get("D"), "Wanted")
+check_true("and the top club doesn't get him", "A" not in first_round, str(first_round))
+check_true("the top club is told it lost the race",
+           any(r["team"] == "A" and not r["landed"] and r["why"] == "already claimed"
+               for r in results), str(results))
+check("losing a race isn't an error", problems, [])
+check_true("the winner's squad actually changes",
+           FREE_1["id"] in {x["id"] for x in squads4["D"]})
+
+# Falling through to a second choice when the first has gone.
+squads4 = four_teams()
+claims = {
+    "D": [{"drop": squads4["D"][0], "add": FREE_1}],
+    "A": [{"drop": squads4["A"][0], "add": FREE_1},
+          {"drop": squads4["A"][0], "add": FREE_2}],
+}
+results, problems = process_waivers(claims, squads4, TABLE)
+landed = {r["team"]: r["add"]["name"] for r in results if r["landed"]}
+check("a beaten manager falls through to their next choice", landed.get("A"), "Backup")
+check("still no error", problems, [])
+
+# Naming the same drop against several claims is normal, not illegal.
+squads4 = four_teams()
+claims = {"D": [{"drop": squads4["D"][0], "add": FREE_1},
+                {"drop": squads4["D"][0], "add": FREE_2}]}
+results, problems = process_waivers(claims, squads4, TABLE)
+check("only one claim lands per drop", sum(1 for r in results if r["landed"]), 1)
+check("reusing a spent drop is not an error", problems, [])
+check_true("it's reported as spent",
+           any(r["why"] == "already used that drop" for r in results), str(results))
+
+# A claim that would break the squad shape is refused.
+squads4 = four_teams()
+claims = {"D": [{"drop": squads4["D"][0], "add": p(72, "FWD", "WrongPos")}]}
+results, problems = process_waivers(claims, squads4, TABLE)
+check_true("a cross-position claim is refused",
+           any("break the squad shape" in x for x in problems), str(problems))
 
 print("\n── Boost limits ────────────────────────────────────────")
 
 many = [{"type": "boost", "gameweek": g, "team": "A"} for g in (2, 3, 4, 5)]
-_, _, boost_log, _, problems = apply_transactions(base(A, B), many, 38)
+_, _, boost_log, _, _, problems = apply_transactions(base(A, B), many, 38)
 check(f"only {BOOST_USES_PER_SEASON} boosts allowed", len(boost_log), BOOST_USES_PER_SEASON)
 check_true("the fourth is rejected", any("already used all" in x for x in problems), str(problems))
 

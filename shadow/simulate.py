@@ -29,6 +29,7 @@ from mechanics import (
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
     boost_value, league_table,
 )
+from h2h import standings_before
 from score_league import best_xi, load_positions
 from scoring import score_player
 
@@ -42,6 +43,59 @@ def load(name, required=True):
             sys.exit(f"No data/{name}")
         return None
     return json.loads(p.read_text())
+
+
+def team_total(key, squad, pts, lineups, gw_num, minutes):
+    """One team's XI score, from their submitted lineup where there is one."""
+    if lineups:
+        picked, bench, _ = effective_lineup(key, gw_num, lineups, squad)
+        if picked:
+            final_xi, _ = apply_autosubs(picked, bench, minutes)
+            return sum(pts.get(p["id"], 0) for p in final_xi), "submitted lineups"
+    total, _, _ = best_xi(squad, pts)
+    return total, "best available (hindsight)"
+
+
+def season_context(files, squads_base, transactions, positions, lineups):
+    """What each team had scored, and where they sat, going into each gameweek.
+
+    Both are inputs to rules — the trade offer cap is capped by what you've
+    accumulated, and waiver priority snakes from the bottom of the table. They
+    can only be known by scoring the season up to that point, so this is a
+    first pass with those two rules switched off. Running the cap check
+    against a total that the cap itself helped produce would be circular.
+    """
+    points_to_date = {}
+    # Everyone starts on nothing, which is a real number rather than a gap —
+    # it's what makes a points offer in gameweek 1 illegal rather than
+    # unknowable.
+    running = {t["key"]: 0 for t in squads_base["teams"]}
+    for f in files:
+        gw_num = int(f.stem[2:])
+        gw, pts = player_points(f, positions)
+        points_to_date[gw_num] = dict(running)
+        squads, adjustments, _, _, _, _ = apply_transactions(
+            squads_base, transactions, gw_num)
+        minutes = minutes_from_gameweek(gw)
+        for team in squads_base["teams"]:
+            key = team["key"]
+            total, _ = team_total(key, squads[key], pts, lineups, gw_num, minutes)
+            total += adjustments.get(gw_num, {}).get(key, 0)
+            running[key] = running.get(key, 0) + total
+
+    standings = {}
+    played = sorted(int(f.stem[2:]) for f in files)
+    for gw_num in played:
+        if not any(g < gw_num for g in played):
+            # Nothing has been played, so there is no table to snake from.
+            # Left out deliberately, so the run says so rather than dressing
+            # up an all-square table as priority.
+            continue
+        try:
+            standings[gw_num] = standings_before(gw_num)
+        except Exception:
+            pass  # no fixture list yet; the caller reports the fallback
+    return points_to_date, standings
 
 
 def player_points(gw_file, positions):
@@ -95,12 +149,16 @@ def main():
         print(f"  {scenario['description']}")
     print()
 
+    points_to_date, standings = season_context(
+        files, squads_base, transactions, positions, lineups)
+
     for f in files:
         gw_num = int(f.stem[2:])
         gw, pts = player_points(f, positions)
 
-        squads, adjustments, boost_log, bank, problems = apply_transactions(
-            squads_base, transactions, gw_num)
+        squads, adjustments, boost_log, bank, waiver_log, problems = apply_transactions(
+            squads_base, transactions, gw_num,
+            points_to_date=points_to_date, standings=standings)
 
         if problems:
             print("Rule violations in this scenario:")
@@ -116,17 +174,22 @@ def main():
         boosts_this_gw = {b["team"]: b for b in boost_log if b["gameweek"] == gw_num}
         minutes = minutes_from_gameweek(gw)
 
+        claims = [w for w in waiver_log if w["gameweek"] == gw_num]
+        if claims:
+            print("Waiver run (priority snakes from the bottom of the table):")
+            for w in claims:
+                mark = "✓" if w["landed"] else "·"
+                why = "" if w["landed"] else f"  — {w['why']}"
+                print(f"  {mark} round {w['round']}  {names[w['team']]:<24} "
+                      f"{w['add']['name']} for {w['drop']['name']}{why}")
+            print()
+
         rows = []
         xi_source = "best available (hindsight)"
         for team in squads_base["teams"]:
             key = team["key"]
-            xi_total, _, _ = best_xi(squads[key], pts)
-            if lineups:
-                picked, bench, how = effective_lineup(key, gw_num, lineups, squads[key])
-                if picked:
-                    final_xi, _ = apply_autosubs(picked, bench, minutes)
-                    xi_total = sum(pts.get(p["id"], 0) for p in final_xi)
-                    xi_source = "submitted lineups"
+            xi_total, xi_source = team_total(
+                key, squads[key], pts, lineups, gw_num, minutes)
 
             boost_pts, boost_detail = 0, None
             if key in boosts_this_gw:

@@ -19,23 +19,33 @@ TRADE
     being a legal 2/5/5/3. A FWD-for-FWD swap is fine; FWD-for-MID isn't.
   - The N points are deducted from A's score in the gameweek the trade takes
     effect, and credited to B's bank.
-  - A does not need the points banked — they're mortgaging future score,
-    which is what makes the gamble interesting.
+  - N cannot exceed what A has actually scored this season so far. You can
+    mortgage your season, but you can't play with house money.
+  - A doesn't need the points banked, and the deduction can drive a gameweek
+    score below zero. That's the gamble, and it's allowed to look ugly.
+  - Trades are bilateral and final. No veto, no commissioner.
 
 BANK
   Credited by receiving points in a trade. Spendable in any later gameweek,
-  declared before it starts, in whole or in part. Can also fund the points
-  side of a later trade. Cannot go negative.
+  declared before it starts, in whole or in part. Cannot go negative.
+  Bank balances do NOT fund the points side of a trade — trade points are
+  always mortgaged against your score — and don't count towards the offer
+  cap above.
 
 WAIVER
-  A free transfer: drop one player, add an unowned one of the same position.
+  Drop one player, add an unowned one of the same position. Unlimited, but
+  claims are processed in a single run before the gameweek, and priority is
+  a snake from the bottom of the table upwards: last place claims first in
+  round one, first place claims first in round two, and so on. Each manager
+  submits claims in their own priority order and lands at most one per round.
 
 MANAGER BOOST
   Each team drafts one real Premier League manager and may use the boost
   THREE times a season, declared before a gameweek.
   - Size scales with the manager's club's league position going into that
     gameweek: 1st gets the smallest boost, 20th the largest. Backing a
-    struggling side is the high-variance play.
+    struggling side is the high-variance play. The table used is the live one
+    — early-season volatility is part of the tactics, not a flaw to smooth.
   - Payout is decided by the club's real result that gameweek: a win pays in
     full, a draw pays half, a defeat pays nothing.
   - If the club doesn't play, nothing is paid and the use is NOT consumed.
@@ -81,8 +91,13 @@ def position_counts(squad):
     return counts
 
 
-def validate_trade(tx, squads_now):
-    """Why a trade is illegal, or None if it's fine."""
+def validate_trade(tx, squads_now, accumulated=None):
+    """Why a trade is illegal, or None if it's fine.
+
+    `accumulated` is what the offering manager has scored so far this season.
+    Pass it to enforce the offer cap; without it the cap can't be checked and
+    isn't guessed at.
+    """
     a, b = tx["from"], tx["to"]
     for t in (a, b):
         if t not in squads_now:
@@ -107,13 +122,103 @@ def validate_trade(tx, squads_now):
         return (f"positions don't balance: {a} sends {out_pos}, receives {in_pos} "
                 "— a trade must preserve each squad's shape")
 
-    if tx.get("points", 0) < 0:
+    pts = tx.get("points", 0)
+    if pts < 0:
         return "points offered cannot be negative"
+    if accumulated is not None and pts > accumulated:
+        return (f"offers {pts} points but has only scored {accumulated} this season "
+                "— you can't offer more than you've accumulated")
     return None
 
 
-def apply_transactions(base_squads, transactions, upto_gameweek):
+# ── Waivers ────────────────────────────────────────────────────────────────
+def snake_order(table_order, rounds):
+    """Claim order for each round, snaking from the bottom of the table up.
+
+    `table_order` is the standings, best team first. Round one runs bottom to
+    top, round two top to bottom, and so on — so the team propping up the
+    table gets first pick of the week, but doesn't get first pick of every
+    round as well.
+    """
+    bottom_up = list(reversed(table_order))
+    return [bottom_up if r % 2 == 0 else list(table_order) for r in range(rounds)]
+
+
+def process_waivers(claims, squads, table_order):
+    """Run a week's waiver claims and report what happened.
+
+    `claims` maps a team to its claims in the manager's own priority order,
+    each `{"drop": player, "add": player}`. A manager lands at most one claim
+    per round; if their top choice has gone, the run falls through to their
+    next one. Returns (results, problems) and mutates `squads` in place.
+    """
+    results, problems = [], []
+    pending = {t: list(cs) for t, cs in claims.items() if cs}
+    if not pending:
+        return results, problems
+    # Managers usually name the same player to drop against several claims —
+    # "whoever I land, this is the one going". Once that player is gone the
+    # later claims are spent, not illegal.
+    dropped_already = set()
+
+    rounds = max(len(cs) for cs in pending.values())
+    for round_no, order in enumerate(snake_order(table_order, rounds), start=1):
+        for team in order:
+            queue = pending.get(team)
+            if not queue:
+                continue
+            if team not in squads:
+                problems.append(f"waiver claim by unknown team {team}")
+                pending[team] = []
+                continue
+
+            owned = {p["id"] for s in squads.values() for p in s}
+            landed = None
+            while queue and landed is None:
+                claim = queue.pop(0)
+                drop_id = claim["drop"]["id"]
+                add = claim["add"]
+                mine = {p["id"] for p in squads[team]}
+                if drop_id not in mine:
+                    if drop_id in dropped_already:
+                        results.append({"round": round_no, "team": team, "add": add,
+                                        "drop": claim["drop"], "landed": False,
+                                        "why": "already used that drop"})
+                    else:
+                        problems.append(
+                            f"waiver by {team}: doesn't own "
+                            f"{claim['drop'].get('name', drop_id)}")
+                    continue
+                if add["id"] in owned:
+                    # Not an error — someone earlier in the snake got there
+                    # first, which is exactly what priority is for.
+                    results.append({"round": round_no, "team": team, "add": add,
+                                    "drop": claim["drop"], "landed": False,
+                                    "why": "already claimed"})
+                    continue
+                dropped = next(p for p in squads[team] if p["id"] == drop_id)
+                if dropped["position"] != add["position"]:
+                    problems.append(
+                        f"waiver by {team}: {add['position']} for {dropped['position']} "
+                        "would break the squad shape")
+                    continue
+                squads[team] = [p for p in squads[team] if p["id"] != drop_id] + [add]
+                dropped_already.add(drop_id)
+                landed = claim
+                results.append({"round": round_no, "team": team, "add": add,
+                                "drop": claim["drop"], "landed": True, "why": None})
+    return results, problems
+
+
+def apply_transactions(base_squads, transactions, upto_gameweek,
+                       points_to_date=None, standings=None):
     """Squad state and per-gameweek adjustments up to and including a gameweek.
+
+    `points_to_date[gw][team]` is what a team had scored going into that
+    gameweek; supply it to enforce the trade offer cap. `standings[gw]` is the
+    table going into that gameweek, best first, which sets waiver priority.
+    Both are optional — without them those rules can't be checked, and the
+    caller is told so rather than the rule being silently skipped.
 
     Returns (squads, adjustments, boosts_used, bank, problems) where
     `adjustments[gw][team]` is the net points change for that gameweek.
@@ -133,7 +238,8 @@ def apply_transactions(base_squads, transactions, upto_gameweek):
     # pre-deadline window, so a trade must credit the bank before a spend can
     # draw on it. Sorting alphabetically would put "bank_use" first and
     # wrongly reject spending points received the same week.
-    ORDER = {"trade": 0, "waiver": 1, "bank_use": 2, "boost": 3}
+    ORDER = {"trade": 0, "waiver": 1, "waiver_run": 1, "bank_use": 2, "boost": 3}
+    waiver_log = []
     for tx in sorted(transactions,
                      key=lambda t: (t.get("gameweek", 0), ORDER.get(t.get("type"), 9))):
         gw = tx.get("gameweek")
@@ -142,11 +248,17 @@ def apply_transactions(base_squads, transactions, upto_gameweek):
         kind = tx.get("type")
 
         if kind == "trade":
-            problem = validate_trade(tx, squads)
+            a = tx.get("from")
+            accumulated = (points_to_date or {}).get(gw, {}).get(a)
+            if accumulated is None and tx.get("points", 0) and points_to_date is not None:
+                problems.append(
+                    f"GW{gw} trade {a}→{tx.get('to')}: no score on record for {a} "
+                    "going into that gameweek, so the offer cap can't be checked")
+            problem = validate_trade(tx, squads, accumulated)
             if problem:
-                problems.append(f"GW{gw} trade {tx.get('from')}→{tx.get('to')}: {problem}")
+                problems.append(f"GW{gw} trade {a}→{tx.get('to')}: {problem}")
                 continue
-            a, b = tx["from"], tx["to"]
+            b = tx["to"]
             out_ids = {p["id"] for p in tx["players_out"]}
             in_ids = {p["id"] for p in tx["players_in"]}
             moving_out = [p for p in squads[a] if p["id"] in out_ids]
@@ -170,6 +282,19 @@ def apply_transactions(base_squads, transactions, upto_gameweek):
                 continue
             bank[team] -= pts
             adjust(gw, team, pts)
+
+        elif kind == "waiver_run":
+            order = (standings or {}).get(gw)
+            if order is None:
+                order = sorted(squads)
+                problems.append(
+                    f"GW{gw} waiver run: no standings for that gameweek, so priority "
+                    "fell back to alphabetical instead of snaking from the bottom")
+            res, probs = process_waivers(tx.get("claims", {}), squads, order)
+            for r in res:
+                r["gameweek"] = gw
+            waiver_log.extend(res)
+            problems.extend(f"GW{gw} {p}" for p in probs)
 
         elif kind == "waiver":
             team = tx["team"]
@@ -202,7 +327,7 @@ def apply_transactions(base_squads, transactions, upto_gameweek):
             boost_log.append({"gameweek": gw, "team": team})
             boosts_used[team] += 1
 
-    return squads, adjustments, boost_log, bank, problems
+    return squads, adjustments, boost_log, bank, waiver_log, problems
 
 
 def squads_at(base_squads, transactions, gameweek):

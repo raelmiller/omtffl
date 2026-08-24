@@ -1,11 +1,96 @@
 {
-  "name": "Trades, bank and manager boosts \u2014 worked example",
-  "description": "AF trades Solanke + 40 pts to CCP for Haaland; CCP later spends the bank. Two boosts contrast a title club with a struggling one.",
+  "name": "Trades, bank and manager boosts — worked example",
+  "description": "AF offers Solanke + 40 pts to CCP for Haaland — rejected in GW1 by the offer cap, since nobody has accumulated any points yet. Three managers chase the same two free agents on waivers. Two boosts on contrasting clubs.",
   "manager_clubs": {
     "RM": 15,
     "YG": 13
   },
   "transactions": [
+    {
+      "type": "waiver_run",
+      "gameweek": 1,
+      "note": "Claims run in one batch before the deadline. RF, LG and SG all want M.Sangaré first; priority decides who gets him and the others fall through to their next choice.",
+      "claims": {
+        "RF": [
+          {
+            "drop": {
+              "id": 211,
+              "name": "Yeremy",
+              "position": "MID"
+            },
+            "add": {
+              "id": 565,
+              "name": "M.Sangaré",
+              "position": "MID"
+            }
+          },
+          {
+            "drop": {
+              "id": 211,
+              "name": "Yeremy",
+              "position": "MID"
+            },
+            "add": {
+              "id": 86,
+              "name": "Lewis-Potter",
+              "position": "MID"
+            }
+          }
+        ],
+        "LG": [
+          {
+            "drop": {
+              "id": 338,
+              "name": "Ampadu",
+              "position": "MID"
+            },
+            "add": {
+              "id": 565,
+              "name": "M.Sangaré",
+              "position": "MID"
+            }
+          },
+          {
+            "drop": {
+              "id": 338,
+              "name": "Ampadu",
+              "position": "MID"
+            },
+            "add": {
+              "id": 454,
+              "name": "Elanga",
+              "position": "MID"
+            }
+          }
+        ],
+        "SG": [
+          {
+            "drop": {
+              "id": 96,
+              "name": "Damsgaard",
+              "position": "MID"
+            },
+            "add": {
+              "id": 565,
+              "name": "M.Sangaré",
+              "position": "MID"
+            }
+          },
+          {
+            "drop": {
+              "id": 96,
+              "name": "Damsgaard",
+              "position": "MID"
+            },
+            "add": {
+              "id": 86,
+              "name": "Lewis-Potter",
+              "position": "MID"
+            }
+          }
+        ]
+      }
+    },
     {
       "type": "trade",
       "gameweek": 1,
@@ -43,13 +128,13 @@
       "type": "boost",
       "gameweek": 1,
       "team": "RM",
-      "note": "manager of a title club \u2014 small boost"
+      "note": "manager of a title club — small boost"
     },
     {
       "type": "boost",
       "gameweek": 1,
       "team": "YG",
-      "note": "manager of a struggling club \u2014 big boost"
+      "note": "manager of a struggling club — big boost"
     }
   ]
 }

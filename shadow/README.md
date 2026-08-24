@@ -93,23 +93,38 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
 
 - **Trades with points.** A manager can sweeten a swap with points, deducted
   from their score that gameweek and credited to the other manager's bank.
-  Position counts must balance so both squads stay a legal 2/5/5/3.
+  Position counts must balance so both squads stay a legal 2/5/5/3. The
+  deduction can take a gameweek below zero — that's the gamble. You can't
+  offer more than you've scored this season, so no points change hands in
+  gameweek 1. Trades are bilateral and final.
 - **The points bank.** Spendable in any later gameweek, declared beforehand,
-  in whole or in part, including to fund a later trade.
-- **Waivers.** A free transfer: drop one player, add an unowned one of the
-  same position.
+  in whole or in part. It doesn't fund trade offers and doesn't raise your
+  offer cap — trade points are always mortgaged against your score.
+- **Waivers.** Drop one player, add an unowned one of the same position.
+  Unlimited, but claims run in one batch before the gameweek and priority
+  snakes from the bottom of the table upwards: last place claims first in
+  round one, first place leads round two, and so on. Each manager submits
+  claims in their own priority order and lands at most one per round, falling
+  through to their next choice when someone beats them to a player.
 - **Manager boosts.** Three a season. Size scales with the drafted manager's
   club position going into that gameweek (1st smallest, 20th largest), and the
   club's real result decides the payout: a win pays in full, a draw half, a
   defeat nothing. No fixture means no payout and the use isn't consumed.
 
-The numbers — the 10–50% boost range, three uses, whether trade debt can push
-a gameweek score below zero — are all tunables at the top of `mechanics.py`.
-Finding out whether they're balanced is the point of running a shadow season.
+The numbers — the 10–50% boost range and the three uses — are tunables at the
+top of `mechanics.py`. Finding out whether they're balanced is the point of
+running a shadow season.
+
+Three of these rules depend on the season having a history: the offer cap
+needs your accumulated points, waiver priority needs a table, and the boost
+needs league positions. In gameweek 1 none of those exist, so no points can be
+traded, waiver priority falls back to alphabetical, and every boost prices at
+mid-table. The simulation says so out loud rather than inventing a table. The
+unit tests are where the multi-gameweek behaviour is pinned down.
 
 ## Not yet built
 
-- **Submission UI.** Lineups are hand-edited JSON. A form would come with the
-  draft app, not here.
-- **Waiver priority.** Right now a waiver is first-come; a real league needs an
-  order (reverse standings, or a rolling priority list).
+- **Submission UI.** Lineups and waiver claims are hand-edited JSON. A form
+  belongs with the draft app, not here.
+- **Sacked managers.** A boost is tied to a drafted manager; nothing currently
+  happens when one leaves the job mid-season.
