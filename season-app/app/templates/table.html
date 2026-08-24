@@ -5,7 +5,11 @@
     <p class="sub">
       {{ season.played }} of {{ season.scheduled }} gameweeks scored.
       {% set sub, total = season.submitted_share %}
-      {% if sub == 0 %}
+      {% if season.seeded_lineups %}
+        Nobody has picked a team yet. These elevens were filled in from draft
+        price so there was something to score &mdash; they are a placeholder,
+        not anyone&rsquo;s selection.
+      {% elif sub == 0 %}
         No lineups submitted yet, so every score is the best available XI &mdash;
         which flatters everyone equally.
       {% elif sub < total %}

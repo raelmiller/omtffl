@@ -79,8 +79,13 @@ def _season(version, lineup_key, lineups_json):
         return {"ready": False, "reason": "no squads or fixture list yet"}
 
     positions = load_positions()
-    lineups = ({int(k): v for k, v in lineups_in.items()} if lineups_in is not None
+    from_file = lineups_in is None
+    lineups = ({int(k): v for k, v in lineups_in.items()} if not from_file
                else load_lineups() or {})
+    # The committed lineups file is a worked example — teams filled in from
+    # draft price so the engine had something to score. Nobody picked those
+    # elevens, and the page must not imply anyone did.
+    seeded = from_file and _lineups_are_seeded()
     names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
 
     by_gw = {}
@@ -162,6 +167,8 @@ def _season(version, lineup_key, lineups_json):
     submitted = sum(1 for r in rounds for m in r["matches"]
                     for s in (m["home_source"], m["away_source"])
                     if s and s != "best available")
+    if seeded:
+        submitted = 0
     total_slots = sum(len(r["matches"]) * 2 for r in rounds)
 
     return {
@@ -171,7 +178,21 @@ def _season(version, lineup_key, lineups_json):
         "played": len(rounds),
         "scheduled": len(by_gw),
         "submitted_share": (submitted, total_slots),
+        "seeded_lineups": seeded,
     }
+
+
+def _lineups_are_seeded():
+    """Whether the lineups on disk are the worked example rather than real.
+
+    The file says so itself. Trusting its own note beats guessing from the
+    shape of the data, and it stops being true the moment real submissions
+    replace it.
+    """
+    raw = _read("lineups.json")
+    if not raw:
+        return False
+    return "worked example" in (raw.get("note") or "").lower()
 
 
 def season(lineups=None):
