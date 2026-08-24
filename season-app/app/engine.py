@@ -34,7 +34,7 @@ from lineups import (                               # noqa: E402
 )
 from mechanics import (                             # noqa: E402
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
-    boost_value, league_table,
+    boost_value, league_table, setting, validate_trade,
 )
 from scoring import score_entry                     # noqa: E402
 
@@ -455,3 +455,92 @@ def boost_status(key, gameweek, drafted, used, declared=False):
         "why": None if left > 0 else
                f"all {BOOST_USES_PER_SEASON} boosts used this season",
     }
+
+
+# ── Trades ─────────────────────────────────────────────────────────────────
+def trade_outcome(record, config=None):
+    """What a trade's stored status actually means right now.
+
+    A published points trade is neither done nor dead while its window is
+    open: the league can still object. Rather than a scheduled job flipping
+    rows at the deadline, the outcome is derived whenever anyone looks, so a
+    trade is never in one state in the database and another on the page.
+    """
+    status = record["status"]
+    if status != "published":
+        return {"state": status, "open": False,
+                "vetoes": len(record["vetoes"]), "needed": None}
+
+    threshold = setting(config, "veto_threshold")
+    target = next((g for g in calendar()
+                   if g["gameweek"] == record["gameweek"]), None)
+    window = deadline_state(target) if target else {"open": False}
+    count = len(record["vetoes"])
+
+    if count >= threshold:
+        return {"state": "vetoed", "open": False,
+                "vetoes": count, "needed": threshold}
+    if window["open"]:
+        return {"state": "published", "open": True, "vetoes": count,
+                "needed": threshold, "deadline": window.get("deadline")}
+    # The window closed without enough objections, so it stands.
+    return {"state": "accepted", "open": False, "vetoes": count,
+            "needed": threshold}
+
+
+def effective_trades(records, config=None):
+    """Only the trades that actually happened, as engine transactions."""
+    out = []
+    for record in records:
+        outcome = trade_outcome(record, config)
+        if outcome["state"] != "accepted":
+            continue
+        out.append({
+            "type": "trade", "gameweek": record["gameweek"],
+            "from": record["proposer"], "to": record["receiver"],
+            "players_out": record["players_out"],
+            "players_in": record["players_in"],
+            "points": record["points"],
+        })
+    return out
+
+
+def check_trade(record, squads_at_gw, accumulated=None, received=0, config=None):
+    """Why a proposed trade couldn't happen, or None.
+
+    Calls the same validator the scoring uses, so a trade the app accepts can
+    never be one the engine later refuses.
+    """
+    return validate_trade({
+        "from": record["proposer"], "to": record["receiver"],
+        "players_out": record["players_out"],
+        "players_in": record["players_in"],
+        "points": record["points"],
+        "vetoes": record.get("vetoes", []),
+    }, squads_at_gw, accumulated=accumulated, received=received, config=config)
+
+
+def squads_for_gameweek(gameweek, stored_trades=None, config=None):
+    """Everyone's fifteen as they stand for a gameweek, trades applied."""
+    base = _read("squads.json")
+    if not base:
+        return {}
+    txs = effective_trades(stored_trades or [], config)
+    if not txs:
+        return {t["key"]: list(t["squad"]) for t in base["teams"]}
+    squads, *_ = apply_transactions(base, txs, gameweek)
+    return squads
+
+
+def accumulated_points(key, gameweek, season_data):
+    """What a manager had scored going into a gameweek — the offer cap."""
+    total = 0
+    for rnd in season_data.get("rounds", []):
+        if rnd["gameweek"] >= gameweek:
+            continue
+        for m in rnd["matches"]:
+            if m["home_key"] == key:
+                total += m["home_score"]
+            elif m["away_key"] == key:
+                total += m["away_score"]
+    return total

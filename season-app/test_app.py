@@ -324,6 +324,84 @@ if closed:
     check("a passed deadline refuses a boost", r.status_code, 409)
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── Trades ──────────────────────────────────────────────")
+
+os.environ["ADMIN_KEYS"] = "RM"
+a = TestClient(app)
+a.get(f"/m/{db.manager_by_key('RM')['token']}")
+gwt = engine.current_gameweek()["gameweek"]
+sq = engine.squads_for_gameweek(gwt, [])
+mine = [p for p in sq["RM"] if p["position"] == "FWD"][0]
+hers = [p for p in sq["AF"] if p["position"] == "FWD"][0]
+
+def offer(points=0, give=None, take=None, to="AF"):
+    return a.post("/trade/propose", data={
+        "receiver": to, "give": str((give or mine)["id"]),
+        "take": str((take or hers)["id"]), "points": str(points)})
+
+check("the trade page loads", a.get("/trade").status_code, 200)
+check("a straight swap can be proposed", offer().status_code, 200)
+
+wrong_pos = [p for p in sq["AF"] if p["position"] == "MID"][0]
+r = offer(take=wrong_pos)
+check("positions must balance", r.status_code, 422)
+check_true("and it says why", "balance" in r.json()["errors"][0], str(r.json()["errors"]))
+
+r = offer(points=99999)
+check("you can't offer more than you've scored", r.status_code, 422)
+check("trading with yourself is refused", offer(to="RM").status_code, 422)
+
+# The receiver decides, and nobody else can decide for them.
+pending = [t for t in db.trades("proposed") if t["receiver"] == "AF"][0]
+b = TestClient(app)
+b.get(f"/m/{db.manager_by_key('AF')['token']}")
+outsider = TestClient(app)
+outsider.get(f"/m/{db.manager_by_key('CH')['token']}")
+check("an outsider can't accept someone else's trade",
+      outsider.post(f"/trade/{pending['id']}/accept", follow_redirects=False).status_code, 403)
+check("nor can the proposer accept their own",
+      a.post(f"/trade/{pending['id']}/accept", follow_redirects=False).status_code, 403)
+
+b.post(f"/trade/{pending['id']}/accept")
+check("a straight swap takes effect at once",
+      db.trade(pending["id"])["status"], "accepted")
+check_true("and moves the players",
+           mine["id"] in {p["id"] for p in
+                          engine.squads_for_gameweek(gwt, db.trades())["AF"]})
+
+# A points trade goes to the league instead.
+mine2 = [p for p in sq["RM"] if p["position"] == "DEF"][0]
+hers2 = [p for p in sq["AF"] if p["position"] == "DEF"][0]
+check("a points offer within the cap is allowed",
+      offer(points=10, give=mine2, take=hers2).status_code, 200)
+pts_trade = [t for t in db.trades("proposed") if t["points"] == 10][0]
+b.post(f"/trade/{pts_trade['id']}/accept")
+check("accepting publishes it rather than settling it",
+      db.trade(pts_trade["id"])["status"], "published")
+out = engine.trade_outcome(db.trade(pts_trade["id"]))
+check("the objection window is open", out["open"], True)
+check_true("and it is not yet a transaction",
+           pts_trade["id"] not in
+           {t.get("id") for t in engine.effective_trades(db.trades())})
+
+check("the two sides can't object to their own trade",
+      a.post(f"/trade/{pts_trade['id']}/veto", follow_redirects=False).status_code, 403)
+check("but anyone else can",
+      outsider.post(f"/trade/{pts_trade['id']}/veto", follow_redirects=False).status_code, 303)
+check("objecting twice counts once", len(db.trade(pts_trade["id"])["vetoes"]), 1)
+outsider.post(f"/trade/{pts_trade['id']}/unveto")
+check("and can be withdrawn", len(db.trade(pts_trade["id"])["vetoes"]), 0)
+
+from mechanics import DEFAULTS
+for key in [m["key"] for m in db.managers()
+            if m["key"] not in ("RM", "AF")][:DEFAULTS["veto_threshold"]]:
+    db.veto_trade(pts_trade["id"], key)
+check("enough objections vote it down",
+      engine.trade_outcome(db.trade(pts_trade["id"]))["state"], "vetoed")
+check_true("so it never reaches the engine",
+           not [t for t in engine.effective_trades(db.trades()) if t["points"] == 10])
+os.environ.pop("ADMIN_KEYS", None)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

@@ -74,6 +74,30 @@ CREATE TABLE IF NOT EXISTS declaration (
     PRIMARY KEY (manager, gameweek, kind)
 );
 
+-- Trades are the one thing here with two sides and a life of its own, so
+-- they get a table rather than a declaration row: proposed, then accepted or
+-- declined, and when points are attached, published for the league to object.
+CREATE TABLE IF NOT EXISTS trade (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    gameweek    INTEGER NOT NULL,
+    proposer    TEXT NOT NULL REFERENCES manager(key),
+    receiver    TEXT NOT NULL REFERENCES manager(key),
+    players_out TEXT NOT NULL,           -- JSON: what the proposer gives up
+    players_in  TEXT NOT NULL,           -- JSON: what they get back
+    points      INTEGER NOT NULL DEFAULT 0,
+    status      TEXT NOT NULL,           -- proposed|accepted|published|declined|withdrawn
+    note        TEXT,
+    created_at  TEXT NOT NULL,
+    resolved_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS trade_veto (
+    trade_id    INTEGER NOT NULL REFERENCES trade(id),
+    manager     TEXT NOT NULL REFERENCES manager(key),
+    created_at  TEXT NOT NULL,
+    PRIMARY KEY (trade_id, manager)
+);
+
 CREATE TABLE IF NOT EXISTS lineup (
     manager     TEXT NOT NULL REFERENCES manager(key),
     gameweek    INTEGER NOT NULL,
@@ -375,3 +399,73 @@ def transactions():
                     "team": row["manager"], "declared_at": row["declared_at"],
                     **payload})
     return out
+
+
+# ── Trades ─────────────────────────────────────────────────────────────────
+def propose_trade(gameweek, proposer, receiver, players_out, players_in,
+                  points=0, note=None):
+    with connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO trade (gameweek, proposer, receiver, players_out,"
+            " players_in, points, status, note, created_at)"
+            " VALUES (?, ?, ?, ?, ?, ?, 'proposed', ?, ?)",
+            (gameweek, proposer, receiver, json.dumps(players_out),
+             json.dumps(players_in), int(points), note, now()))
+        return cur.lastrowid
+
+
+def _row_to_trade(row, vetoes):
+    return {
+        "id": row["id"], "gameweek": row["gameweek"],
+        "proposer": row["proposer"], "receiver": row["receiver"],
+        "players_out": json.loads(row["players_out"]),
+        "players_in": json.loads(row["players_in"]),
+        "points": row["points"], "status": row["status"], "note": row["note"],
+        "created_at": row["created_at"], "resolved_at": row["resolved_at"],
+        "vetoes": vetoes.get(row["id"], []),
+    }
+
+
+def trades(status=None, manager=None):
+    sql = "SELECT * FROM trade"
+    where, args = [], []
+    if status:
+        where.append("status = ?"); args.append(status)
+    if manager:
+        where.append("(proposer = ? OR receiver = ?)"); args += [manager, manager]
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    with connect() as conn:
+        rows = list(conn.execute(sql + " ORDER BY id DESC", args))
+        vetoes = {}
+        for v in conn.execute("SELECT * FROM trade_veto"):
+            vetoes.setdefault(v["trade_id"], []).append(v["manager"])
+    return [_row_to_trade(r, vetoes) for r in rows]
+
+
+def trade(trade_id):
+    with connect() as conn:
+        row = conn.execute("SELECT * FROM trade WHERE id = ?", (trade_id,)).fetchone()
+        if not row:
+            return None
+        vetoes = {trade_id: [v["manager"] for v in conn.execute(
+            "SELECT manager FROM trade_veto WHERE trade_id = ?", (trade_id,))]}
+    return _row_to_trade(row, vetoes)
+
+
+def set_trade_status(trade_id, status):
+    with connect() as conn:
+        conn.execute("UPDATE trade SET status = ?, resolved_at = ? WHERE id = ?",
+                     (status, now(), trade_id))
+
+
+def veto_trade(trade_id, manager):
+    with connect() as conn:
+        conn.execute("INSERT OR IGNORE INTO trade_veto (trade_id, manager, created_at)"
+                     " VALUES (?, ?, ?)", (trade_id, manager, now()))
+
+
+def unveto_trade(trade_id, manager):
+    with connect() as conn:
+        conn.execute("DELETE FROM trade_veto WHERE trade_id = ? AND manager = ?",
+                     (trade_id, manager))

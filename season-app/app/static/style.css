@@ -267,3 +267,38 @@ select, input[type="text"] {
 .bdetail .dim { opacity: .8; font-size: .95em; }
 .bside { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
 .buses { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+
+/* ── Trades ──────────────────────────────────────────── */
+.trade { padding: .9rem 1.05rem; display: flex; flex-direction: column; gap: .7rem; margin-bottom: .7rem; }
+.tbody { display: grid; grid-template-columns: 1fr auto 1fr; gap: .9rem; align-items: start; }
+.tside { display: flex; flex-direction: column; gap: .2rem; }
+.tarrow { color: var(--muted); font-size: 1.1rem; align-self: center; }
+.tp { font-weight: 600; font-size: .93rem; }
+.tpoints { font-family: var(--mono); font-size: .8rem; color: var(--accent); margin-top: .2rem; }
+.tnote { font-size: .86rem; color: var(--muted); }
+.tacts { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.tcount { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin-right: auto; }
+
+.proposal { display: flex; flex-direction: column; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: .3rem; }
+.field .hint { font-size: .82rem; color: var(--muted); }
+.twocol { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; }
+.picklist {
+  display: flex; flex-direction: column; gap: 2px; margin-top: .35rem;
+  max-height: 19rem; overflow-y: auto;
+  border: 1px solid var(--border); border-radius: 9px; padding: 3px;
+}
+.pick {
+  display: flex; justify-content: space-between; gap: .6rem; align-items: baseline;
+  padding: .38rem .55rem; border-radius: 6px; cursor: pointer; text-align: left;
+  background: transparent; border: 1px solid transparent; color: var(--text);
+  font-family: var(--body);
+}
+.pick:hover { border-color: var(--border-2); }
+.pick.on { background: var(--accent-dim); border-color: var(--accent); }
+.pn2 { font-weight: 600; font-size: .88rem; }
+input[type="number"] {
+  font-family: var(--mono); font-size: .9rem; padding: .35rem .5rem; width: 7rem;
+  border-radius: 5px; background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-2);
+}

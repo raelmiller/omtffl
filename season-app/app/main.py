@@ -94,9 +94,10 @@ def _context(request):
         "request": request,
         "mode": fetcher.mode(),
         "me": me,
-        "season": engine.season(stored if stored else None,
-                                transactions=db.transactions(),
-                                drafted=db.manager_clubs()),
+        "season": engine.season(
+            stored if stored else None,
+            transactions=db.transactions() + engine.effective_trades(db.trades()),
+            drafted=db.manager_clubs()),
     }
 
 
@@ -325,6 +326,136 @@ def declare_boost(request: Request, gameweek: int, on: str = Form("")):
     db.declare(me["key"], gameweek, "boost")
     return JSONResponse({"ok": True, "declared": True,
                          "club": status["club"], "pct": status["pct"]})
+
+
+# ── Trades ─────────────────────────────────────────────────────────────────
+def _trade_context(request):
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me:
+        return ctx
+    gw = engine.current_gameweek()
+    records = db.trades()
+    squads = engine.squads_for_gameweek(gw["gameweek"], records)
+
+    def decorate(r):
+        r = dict(r)
+        r["outcome"] = engine.trade_outcome(r)
+        r["proposer_team"] = (db.manager_by_key(r["proposer"]) or {}).get("team")
+        r["receiver_team"] = (db.manager_by_key(r["receiver"]) or {}).get("team")
+        r["i_vetoed"] = me["key"] in r["vetoes"]
+        return r
+
+    all_trades = [decorate(r) for r in records]
+    ctx.update({
+        "gw": gw,
+        "lock": engine.deadline_state(gw),
+        "incoming": [t for t in all_trades
+                     if t["receiver"] == me["key"] and t["status"] == "proposed"],
+        "outgoing": [t for t in all_trades
+                     if t["proposer"] == me["key"] and t["status"] == "proposed"],
+        "open_to_veto": [t for t in all_trades
+                         if t["outcome"]["open"]
+                         and me["key"] not in (t["proposer"], t["receiver"])],
+        "settled": [t for t in all_trades
+                    if t["outcome"]["state"] in ("accepted", "vetoed", "declined")][:12],
+        "my_squad": squads.get(me["key"], []),
+        "others": [{"key": m["key"], "team": m["team"],
+                    "squad": squads.get(m["key"], [])}
+                   for m in db.managers() if m["key"] != me["key"]],
+        "received": sum(t["points"] for t in engine.effective_trades(records)
+                        if t["to"] == me["key"]),
+        "cap": engine.setting(None, "points_received_cap"),
+        "accumulated": engine.accumulated_points(
+            me["key"], gw["gameweek"], ctx["season"]),
+    })
+    return ctx
+
+
+@app.get("/trade", response_class=HTMLResponse)
+def trade_page(request: Request):
+    ctx = _trade_context(request)
+    if not ctx["me"]:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+    ctx["squads_json"] = json.dumps({
+        "mine": ctx["my_squad"],
+        "others": {o["key"]: {"team": o["team"], "squad": o["squad"]}
+                   for o in ctx["others"]},
+    })
+    return templates.TemplateResponse("trade.html", ctx)
+
+
+@app.post("/trade/propose")
+def propose(request: Request, receiver: str = Form(...), give: str = Form(""),
+            take: str = Form(""), points: int = Form(0), note: str = Form("")):
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    gw = engine.current_gameweek()
+    if not engine.deadline_state(gw)["open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline has passed — propose this for the next gameweek."]},
+            status_code=409)
+    if receiver == me["key"]:
+        return JSONResponse({"ok": False, "errors": ["Pick another manager."]},
+                            status_code=422)
+
+    records = db.trades()
+    squads = engine.squads_for_gameweek(gw["gameweek"], records)
+    ids = lambda raw: [int(x) for x in raw.split(",") if x.strip().isdigit()]
+    by_id = {p["id"]: p for squad in squads.values() for p in squad}
+    out = [by_id[i] for i in ids(give) if i in by_id]
+    back = [by_id[i] for i in ids(take) if i in by_id]
+    if not out or not back:
+        return JSONResponse({"ok": False, "errors": [
+            "Choose at least one player on each side."]}, status_code=422)
+
+    season = engine.season(db.all_lineups() or None, db.transactions(),
+                           db.manager_clubs())
+    record = {"proposer": me["key"], "receiver": receiver,
+              "players_out": out, "players_in": back, "points": points,
+              "vetoes": []}
+    problem = engine.check_trade(
+        record, squads,
+        accumulated=engine.accumulated_points(me["key"], gw["gameweek"], season),
+        received=sum(t["points"] for t in engine.effective_trades(records)
+                     if t["to"] == receiver))
+    if problem:
+        return JSONResponse({"ok": False, "errors": [problem]}, status_code=422)
+
+    db.propose_trade(gw["gameweek"], me["key"], receiver, out, back, points,
+                     note.strip() or None)
+    return JSONResponse({"ok": True})
+
+
+@app.post("/trade/{trade_id}/{action}")
+def respond(request: Request, trade_id: int, action: str):
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    record = db.trade(trade_id)
+    if not record:
+        raise HTTPException(404, "no such trade")
+
+    if action == "accept" and record["receiver"] == me["key"]:
+        # A straight swap is between the two of them. Points change the league,
+        # so the league gets a say before it takes effect.
+        db.set_trade_status(trade_id,
+                            "published" if record["points"] else "accepted")
+    elif action == "decline" and record["receiver"] == me["key"]:
+        db.set_trade_status(trade_id, "declined")
+    elif action == "withdraw" and record["proposer"] == me["key"]:
+        db.set_trade_status(trade_id, "withdrawn")
+    elif action in ("veto", "unveto"):
+        outcome = engine.trade_outcome(record)
+        if not outcome["open"]:
+            raise HTTPException(409, "that trade is no longer open to objection")
+        if me["key"] in (record["proposer"], record["receiver"]):
+            raise HTTPException(403, "you can't object to your own trade")
+        (db.veto_trade if action == "veto" else db.unveto_trade)(trade_id, me["key"])
+    else:
+        raise HTTPException(403, "not yours to do that with")
+    return RedirectResponse("/trade", status_code=303)
 
 
 # ── Admin ──────────────────────────────────────────────────────────────────
