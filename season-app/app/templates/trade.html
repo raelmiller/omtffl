@@ -192,6 +192,13 @@
   const send = document.getElementById('send');
   const points = document.getElementById('points');
 
+  // Football order, not alphabetical: a manager scanning for a defender
+  // expects them where defenders live.
+  const POS_ORDER = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
+  const byPosition = list => [...list].sort((a, b) =>
+    (POS_ORDER[a.position] - POS_ORDER[b.position]) ||
+    a.name.localeCompare(b.name));
+
   const counts = list => list.reduce((c, p) => (c[p.position] = (c[p.position] || 0) + 1, c), {});
   const same = (a, b) => {
     const ka = Object.keys(a), kb = Object.keys(b);
@@ -202,7 +209,12 @@
     const el = document.createElement('button');
     el.type = 'button';
     el.className = 'pick' + (chosen.has(p.id) ? ' on' : '');
-    el.innerHTML = `<span class="pn2">${p.name}</span><span class="pclub">${p.position}</span>`;
+    el.setAttribute('aria-pressed', chosen.has(p.id) ? 'true' : 'false');
+    // An always-visible box, ticked when chosen. A tinted background alone is
+    // easy to miss on a bright screen, and there is no second cue.
+    el.innerHTML = `<span class="tick" aria-hidden="true"></span>` +
+                   `<span class="pn2">${p.name}</span>` +
+                   `<span class="pclub">${p.position}</span>`;
     el.addEventListener('click', () => {
       chosen.has(p.id) ? chosen.delete(p.id) : chosen.add(p.id);
       onToggle();
@@ -213,9 +225,10 @@
   function render() {
     const other = data.others[receiver.value];
     mine.innerHTML = '';
-    data.mine.forEach(p => mine.appendChild(row(p, give, render)));
+    byPosition(data.mine).forEach(p => mine.appendChild(row(p, give, render)));
     theirs.innerHTML = '';
-    (other ? other.squad : []).forEach(p => theirs.appendChild(row(p, take, render)));
+    byPosition(other ? other.squad : []).forEach(
+      p => theirs.appendChild(row(p, take, render)));
 
     const out = data.mine.filter(p => give.has(p.id));
     const back = (other ? other.squad : []).filter(p => take.has(p.id));

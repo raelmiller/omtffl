@@ -53,7 +53,16 @@ p { margin: 0; }
   letter-spacing: .16em; color: var(--muted);
 }
 header { display: flex; flex-direction: column; gap: .7rem; }
-.topline { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
+.topline { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.themebtn {
+  margin-left: auto; cursor: pointer;
+  font-family: var(--mono); font-size: .66rem; text-transform: uppercase;
+  letter-spacing: .12em; padding: .26rem .55rem; border-radius: 4px;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border-2);
+}
+.themebtn:hover { color: var(--text); border-color: var(--text); }
+.themebtn[data-auto="1"] { border-style: dashed; }
 .pill {
   font-family: var(--mono); font-size: .66rem; text-transform: uppercase;
   letter-spacing: .12em; padding: .22rem .5rem; border-radius: 3px;
@@ -289,13 +298,26 @@ select, input[type="text"] {
   border: 1px solid var(--border); border-radius: 9px; padding: 3px;
 }
 .pick {
-  display: flex; justify-content: space-between; gap: .6rem; align-items: baseline;
-  padding: .38rem .55rem; border-radius: 6px; cursor: pointer; text-align: left;
+  display: grid; grid-template-columns: auto 1fr auto; gap: .6rem;
+  align-items: center;
+  padding: .42rem .55rem; border-radius: 6px; cursor: pointer; text-align: left;
   background: transparent; border: 1px solid transparent; color: var(--text);
   font-family: var(--body);
 }
-.pick:hover { border-color: var(--border-2); }
-.pick.on { background: var(--accent-dim); border-color: var(--accent); }
+.pick:hover { border-color: var(--border-2); background: var(--surface-2); }
+.tick {
+  width: 1.05rem; height: 1.05rem; border-radius: 4px; flex: none;
+  border: 1.5px solid var(--border-2); background: var(--surface);
+  display: grid; place-items: center;
+}
+.tick::after {
+  content: "✓"; font-size: .78rem; font-weight: 700; line-height: 1;
+  color: transparent;
+}
+.pick.on { background: var(--accent); border-color: var(--accent); color: #06130c; }
+.pick.on .pclub { color: rgba(6, 19, 12, .7); }
+.pick.on .tick { background: #06130c; border-color: #06130c; }
+.pick.on .tick::after { color: var(--accent); }
 .pn2 { font-weight: 600; font-size: .88rem; }
 input[type="number"] {
   font-family: var(--mono); font-size: .9rem; padding: .35rem .5rem; width: 7rem;

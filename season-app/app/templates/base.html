@@ -8,6 +8,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/static/style.css">
+<script>
+// Apply a saved theme before the first paint. Doing this in the body would
+// show a flash of the wrong one on every page load.
+(function () {
+  try {
+    var t = localStorage.getItem("matchweek-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) { /* private browsing, or storage blocked — the OS setting stands */ }
+})();
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f12'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='19' font-weight='700' fill='%237fffb2' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -21,6 +31,10 @@
   <header>
     <div class="topline">
       <span class="eyebrow">OMTFFL</span>
+      <button id="theme" class="themebtn" type="button"
+              title="Switch between light and dark">
+        <span class="tlabel"></span>
+      </button>
       {% if mode == "live" %}
         <span class="pill live">live data</span>
       {% elif mode == "archive" %}
@@ -47,5 +61,46 @@
     Running alongside FPL Draft this season &middot; <a href="/health">status</a>
   </footer>
 </div>
+<script>
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  var label = btn.querySelector(".tlabel");
+
+  function systemIsDark() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function stored() {
+    try { return localStorage.getItem("matchweek-theme"); } catch (e) { return null; }
+  }
+  function showing() {
+    return document.documentElement.dataset.theme || (systemIsDark() ? "dark" : "light");
+  }
+  function paint() {
+    var s = stored();
+    label.textContent = showing() === "dark" ? "Dark" : "Light";
+    btn.dataset.auto = s ? "0" : "1";
+    btn.title = s ? "Following your choice — long-press to follow the device again"
+                  : "Following your device";
+  }
+
+  btn.addEventListener("click", function () {
+    var next = showing() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("matchweek-theme", next); } catch (e) {}
+    paint();
+  });
+  // Long-press or right-click hands control back to the device setting.
+  btn.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    delete document.documentElement.dataset.theme;
+    try { localStorage.removeItem("matchweek-theme"); } catch (e2) {}
+    paint();
+  });
+  window.matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", function () { if (!stored()) paint(); });
+  paint();
+})();
+</script>
 </body>
 </html>
