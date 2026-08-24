@@ -20,7 +20,7 @@
 <section>
   <div class="pickhead">
     <div>
-      <span class="eyebrow">Starting eleven</span>
+      <span class="eyebrow">Formation</span>
       <div id="formation" class="formation">&mdash;</div>
     </div>
     <div class="pickactions">
@@ -29,13 +29,26 @@
     </div>
   </div>
 
-  <div id="picker" class="panel"></div>
+  <p id="hint" class="hint">Tap a player, then tap who to swap them with.</p>
 
-  <div class="sechead" style="margin-top:1.4rem">
-    <h2>Substitutes</h2>
-    <span class="eyebrow">in the order they come on</span>
+  <div class="pitch" id="pitch" aria-label="Your starting eleven">
+    <div class="markings" aria-hidden="true">
+      <span class="box top"></span>
+      <span class="six top"></span>
+      <span class="arc top"></span>
+      <span class="halfway"></span>
+      <span class="centre"></span>
+    </div>
+    <div class="rows" id="rows"></div>
   </div>
-  <div id="benchlist" class="panel"></div>
+
+  <div class="benchbar">
+    <div class="benchhead">
+      <span class="eyebrow">Substitutes</span>
+      <span class="eyebrow dim">in the order they come on</span>
+    </div>
+    <div class="benchrow" id="benchrow"></div>
+  </div>
 
   <p class="note">A starter who doesn&rsquo;t play at all is replaced by the first
   substitute who did, as long as the formation stays legal. Keepers only ever
@@ -57,21 +70,17 @@
   const ORDER = ['GK','DEF','MID','FWD'];
   const byId = Object.fromEntries(squad.map(p => [p.id, p]));
 
-  let starting = new Set(saved.xi || []);
-  let bench = (saved.bench || []).filter(id => byId[id] && !starting.has(id));
-  // Anyone unaccounted for goes to the back of the bench rather than vanishing.
+  let starting = (saved.xi || []).filter(id => byId[id]);
+  let bench = (saved.bench || []).filter(id => byId[id] && !starting.includes(id));
   squad.forEach(p => {
-    if (!starting.has(p.id) && !bench.includes(p.id)) bench.push(p.id);
+    if (!starting.includes(p.id) && !bench.includes(p.id)) bench.push(p.id);
   });
+  let selected = null;
 
-  function counts(ids) {
-    const c = { GK:0, DEF:0, MID:0, FWD:0 };
-    ids.forEach(id => c[byId[id].position]++);
-    return c;
-  }
+  const counts = ids => ids.reduce((c, id) => (c[byId[id].position]++, c),
+                                   { GK:0, DEF:0, MID:0, FWD:0 });
 
-  function problem() {
-    const ids = [...starting];
+  function illegal(ids) {
     if (ids.length !== 11) return `${ids.length} picked, need 11`;
     const c = counts(ids);
     for (const pos of ORDER) {
@@ -82,95 +91,108 @@
     return null;
   }
 
-  function shape() {
-    const c = counts([...starting]);
-    return `${c.DEF}-${c.MID}-${c.FWD}`;
+  // A swap is offered only when the eleven it produces is legal, so an
+  // impossible move is never presented as available.
+  function swapLegal(outId, inId) {
+    const next = starting.map(id => (id === outId ? inId : id));
+    return !illegal(next);
+  }
+
+  function partners(id) {
+    if (starting.includes(id)) return bench.filter(b => swapLegal(id, b));
+    // A benched player can come on for any starter the swap leaves legal,
+    // or move up and down the substitution order.
+    return starting.filter(s => swapLegal(s, id))
+                   .concat(bench.filter(b => b !== id));
+  }
+
+  function choose(id) {
+    if (!open) return;
+    if (selected === id) { selected = null; return render(); }
+    if (selected === null) { selected = id; return render(); }
+
+    const a = selected, b = id;
+    const aStarts = starting.includes(a), bStarts = starting.includes(b);
+    if (aStarts && !bStarts && swapLegal(a, b)) {
+      starting = starting.map(x => (x === a ? b : x));
+      bench = bench.map(x => (x === b ? a : x));
+    } else if (!aStarts && bStarts && swapLegal(b, a)) {
+      starting = starting.map(x => (x === b ? a : x));
+      bench = bench.map(x => (x === a ? b : x));
+    } else if (!aStarts && !bStarts) {
+      const i = bench.indexOf(a), j = bench.indexOf(b);
+      [bench[i], bench[j]] = [bench[j], bench[i]];
+    } else {
+      // Two starters, or a move that would break the shape: treat the second
+      // tap as choosing a different player rather than as a failed swap.
+      selected = b;
+      return render();
+    }
+    selected = null;
+    render();
+  }
+
+  function card(id, opts = {}) {
+    const p = byId[id];
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'player';
+    if (selected === id) el.classList.add('picked');
+    if (selected !== null && selected !== id) {
+      el.classList.toggle('target', partners(selected).includes(id));
+      el.classList.toggle('faded', !partners(selected).includes(id));
+    }
+    if (!open) el.disabled = true;
+    el.innerHTML = `
+      ${opts.order ? `<span class="ord">${opts.order}</span>` : ''}
+      <span class="shirt" data-pos="${p.position}"></span>
+      <span class="pn">${p.name}</span>
+      <span class="pc">${p.club || p.position}</span>`;
+    el.addEventListener('click', () => choose(id));
+    return el;
   }
 
   function render() {
-    const picker = document.getElementById('picker');
-    picker.innerHTML = '';
+    const rows = document.getElementById('rows');
+    rows.innerHTML = '';
     ORDER.forEach(pos => {
-      const group = squad.filter(p => p.position === pos);
-      const head = document.createElement('div');
-      head.className = 'poshead';
-      const c = counts([...starting]);
-      head.innerHTML = `<span>${pos}</span><span class="count">${c[pos]} of ${LIMITS[pos][1]}</span>`;
-      picker.appendChild(head);
-      group.forEach(p => picker.appendChild(row(p)));
+      const line = starting.filter(id => byId[id].position === pos);
+      if (!line.length) return;
+      const row = document.createElement('div');
+      row.className = 'line';
+      line.forEach(id => row.appendChild(card(id)));
+      rows.appendChild(row);
     });
 
-    const list = document.getElementById('benchlist');
-    list.innerHTML = '';
-    bench.forEach((id, i) => list.appendChild(benchRow(byId[id], i)));
+    const strip = document.getElementById('benchrow');
+    strip.innerHTML = '';
+    bench.forEach((id, i) => strip.appendChild(card(id, { order: i + 1 })));
 
-    const bad = problem();
+    const bad = illegal(starting);
+    const c = counts(starting);
     const f = document.getElementById('formation');
-    f.textContent = bad ? bad : shape();
+    f.textContent = bad ? bad : `${c.DEF}-${c.MID}-${c.FWD}`;
     f.className = 'formation ' + (bad ? 'bad' : 'good');
     document.getElementById('save').disabled = !open || !!bad;
-  }
 
-  function row(p) {
-    const el = document.createElement('div');
-    const on = starting.has(p.id);
-    el.className = 'prow' + (on ? ' on' : '');
-    el.innerHTML = `
-      <span class="pname">${p.name}</span>
-      <span class="pclub">${p.club || ''}</span>
-      <button class="toggle" ${open ? '' : 'disabled'}>${on ? 'Starting' : 'Bench'}</button>`;
-    el.querySelector('.toggle').addEventListener('click', () => {
-      if (!open) return;
-      if (starting.has(p.id)) {
-        starting.delete(p.id);
-        if (!bench.includes(p.id)) bench.push(p.id);
-      } else {
-        starting.add(p.id);
-        bench = bench.filter(id => id !== p.id);
-      }
-      render();
-    });
-    return el;
-  }
-
-  function benchRow(p, i) {
-    const el = document.createElement('div');
-    el.className = 'prow bench';
-    el.innerHTML = `
-      <span class="border">${i + 1}</span>
-      <span class="pname">${p.name}</span>
-      <span class="pclub">${p.position}</span>
-      <span class="moves">
-        <button class="mv" data-dir="-1" ${(!open || i === 0) ? 'disabled' : ''}>&uarr;</button>
-        <button class="mv" data-dir="1" ${(!open || i === bench.length - 1) ? 'disabled' : ''}>&darr;</button>
-      </span>`;
-    el.querySelectorAll('.mv').forEach(b => b.addEventListener('click', () => {
-      const d = Number(b.dataset.dir), j = i + d;
-      if (j < 0 || j >= bench.length) return;
-      [bench[i], bench[j]] = [bench[j], bench[i]];
-      render();
-    }));
-    return el;
+    const hint = document.getElementById('hint');
+    if (!open) hint.textContent = 'This gameweek is locked.';
+    else if (selected === null) hint.textContent = 'Tap a player, then tap who to swap them with.';
+    else hint.textContent = `${byId[selected].name} selected — tap a highlighted player to swap, or tap again to cancel.`;
   }
 
   document.getElementById('save').addEventListener('click', async () => {
     const status = document.getElementById('status');
     status.textContent = 'Saving…';
     status.className = 'savestate';
-    const body = new URLSearchParams({
-      xi: [...starting].join(','),
-      bench: bench.join(','),
-    });
     try {
-      const res = await fetch(`/declare/${gw}`, { method: 'POST', body });
+      const res = await fetch(`/declare/${gw}`, {
+        method: 'POST',
+        body: new URLSearchParams({ xi: starting.join(','), bench: bench.join(',') }),
+      });
       const data = await res.json();
-      if (data.ok) {
-        status.textContent = 'Saved';
-        status.className = 'savestate ok';
-      } else {
-        status.textContent = (data.errors || ['Could not save']).join(' · ');
-        status.className = 'savestate bad';
-      }
+      status.textContent = data.ok ? 'Saved' : (data.errors || ['Could not save']).join(' · ');
+      status.className = 'savestate ' + (data.ok ? 'ok' : 'bad');
     } catch (e) {
       status.textContent = 'Could not reach the server — your team was not saved.';
       status.className = 'savestate bad';

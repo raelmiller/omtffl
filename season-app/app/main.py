@@ -173,14 +173,23 @@ def _declare_context(request, gameweek=None):
     rolled = None
     if not saved:
         # Nothing submitted for this round, so show what would actually play:
-        # last week's team, which is what rollover will use.
-        stored = db.all_lineups()
+        # the most recent team, which is what rollover will use. The
+        # placeholder file counts here, since it is what the engine would fall
+        # back to as well.
+        merged = engine.merge_lineups(db.all_lineups())
         picked, bench, how = engine.effective_lineup(
-            me["key"], target["gameweek"], stored, squad)
+            me["key"], target["gameweek"], merged, squad)
         if picked:
             saved = {"xi": [p["id"] for p in picked],
                      "bench": [p["id"] for p in bench]}
             rolled = how
+        else:
+            # Nobody has ever picked for this team. An empty pitch is a poor
+            # welcome, so open on a legal side built from what was knowable
+            # before the deadline — never from hindsight.
+            xi, bench = engine.suggest_for(me["key"], target["gameweek"], squad)
+            saved = {"xi": [p["id"] for p in xi], "bench": [p["id"] for p in bench]}
+            rolled = "a suggested eleven — change anything you like"
 
     ctx.update({
         "squad_json": json.dumps(squad),

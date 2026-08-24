@@ -28,8 +28,9 @@ if str(SHADOW) not in sys.path:
 from h2h import WIN, DRAW, gameweek_scores          # noqa: E402
 from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
-    apply_autosubs, effective_lineup, legal_formation, load_lineups,
-    minutes_from_gameweek, validate as validate_lineup,
+    apply_autosubs, effective_lineup, form_before, legal_formation,
+    load_lineups, minutes_from_gameweek, suggest_lineup,
+    validate as validate_lineup,
 )
 from scoring import score_entry                     # noqa: E402
 
@@ -353,3 +354,19 @@ def squad_for(key):
         if team["key"] == key:
             return list(team["squad"])
     return []
+
+
+def suggest_for(key, gameweek, squad=None):
+    """A plausible starting eleven for a manager who has never picked.
+
+    Ranked on points from gameweeks already played, or on draft price before
+    any football has happened. Never on hindsight — this only ever knows what
+    a manager could have known before the deadline.
+    """
+    squad = squad if squad is not None else squad_for(key)
+    if not squad:
+        return [], []
+    form = form_before(gameweek, load_positions())
+    if not form:
+        form = {p["id"]: p.get("price", 0) for p in squad}
+    return suggest_lineup(squad, form)
