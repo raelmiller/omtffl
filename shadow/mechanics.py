@@ -23,7 +23,13 @@ TRADE
     debts already promised away. A single gameweek can go negative — that's
     the gamble, and it's allowed to look ugly — but a **season total** can't.
     You can mortgage what you've earned; you can't play with house money.
-  - Trades are bilateral and final. No veto, no commissioner.
+  - A straight player-for-player swap is between the two managers and takes
+    effect immediately: no veto, no commissioner.
+  - A trade carrying POINTS is published to the league first and can be voted
+    down. Enough objections and it never happens.
+  - There is also a season cap on what any manager may receive in trade
+    points. Both the cap and the veto threshold are league settings, not
+    engine constants.
 
 BANK
   Credited by receiving points in a trade. Spendable in any later gameweek,
@@ -92,6 +98,24 @@ NEUTRAL_POSITION = 10
 
 SQUAD_SHAPE = {"GK": 2, "DEF": 5, "MID": 5, "FWD": 3}
 
+# Points trades are the one mechanic a pair can abuse: drip-feeding ten points
+# a week nets a friendly pair 33 league points across a season, against a
+# title won on 70 (see stress_trades.py). Two brakes, both set from the admin
+# panel rather than hard-coded here, because the right numbers are a matter
+# for the league rather than for the engine.
+DEFAULTS = {
+    # Most a manager may RECEIVE in trade points across a whole season. A
+    # single headline trade is untouched; the drip is what this stops.
+    "points_received_cap": 50,
+    # Objections needed to void a published points trade. Straight
+    # player-for-player swaps are never subject to this.
+    "veto_threshold": 4,
+}
+
+
+def setting(config, name):
+    return (config or {}).get(name, DEFAULTS[name])
+
 
 # ── Transactions ───────────────────────────────────────────────────────────
 def load_transactions(path=None):
@@ -108,12 +132,14 @@ def position_counts(squad):
     return counts
 
 
-def validate_trade(tx, squads_now, accumulated=None):
+def validate_trade(tx, squads_now, accumulated=None, received=0, config=None):
     """Why a trade is illegal, or None if it's fine.
 
-    `accumulated` is what the offering manager has scored so far this season.
-    Pass it to enforce the offer cap; without it the cap can't be checked and
-    isn't guessed at.
+    `accumulated` is what the offering manager has scored so far this season;
+    pass it to enforce the offer cap, since without it the cap can't be
+    checked and isn't guessed at. `received` is what the receiving manager has
+    already taken in trade points this season, checked against the league's
+    own cap. `config` carries the league's admin settings.
     """
     a, b = tx["from"], tx["to"]
     for t in (a, b):
@@ -145,6 +171,19 @@ def validate_trade(tx, squads_now, accumulated=None):
     if accumulated is not None and pts > accumulated:
         return (f"offers {pts} points but has only scored {accumulated} this season "
                 "— you can't offer more than you've accumulated")
+
+    # A straight swap is between the two managers and nobody else. Points
+    # change the league, so a points trade is published and can be voted down.
+    if pts:
+        threshold = setting(config, "veto_threshold")
+        vetoes = len(tx.get("vetoes") or [])
+        if vetoes >= threshold:
+            return (f"vetoed by the league — {vetoes} objections, "
+                    f"{threshold} required")
+        cap = setting(config, "points_received_cap")
+        if cap is not None and received + pts > cap:
+            return (f"{b} has already received {received} points this season; "
+                    f"another {pts} would pass the {cap} cap")
     return None
 
 
@@ -240,7 +279,7 @@ def process_waivers(claims, squads, table_order):
 
 def apply_transactions(base_squads, transactions, upto_gameweek,
                        points_to_date=None, standings=None, managers=None,
-                       deadlines=None):
+                       deadlines=None, config=None):
     """Squad state and per-gameweek adjustments up to and including a gameweek.
 
     `points_to_date[gw][team]` is what a team had scored going into that
@@ -249,7 +288,8 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
     `managers[team]` describes the drafted manager, and a `sacked_from`
     gameweek there kills that team's remaining boosts. `deadlines[gw]` is that
     gameweek's kick-off deadline, used to check a boost was declared in
-    advance. All of them are optional
+    advance. `config` carries the league's admin settings — the trade points
+    cap and the veto threshold. All of them are optional
     — without them those rules can't be checked, and the caller is told so
     rather than the rule being silently skipped.
 
@@ -274,6 +314,7 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
     ORDER = {"trade": 0, "waiver": 1, "waiver_run": 1, "bank_use": 2, "boost": 3}
     waiver_log = []
     committed = {}  # (gameweek, team) -> points already promised away that week
+    received = {}   # team -> trade points taken this season, against the cap
     for tx in sorted(transactions,
                      key=lambda t: (t.get("gameweek", 0), ORDER.get(t.get("type"), 9))):
         gw = tx.get("gameweek")
@@ -290,7 +331,9 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
                 # Two 40-point offers in one week off a 50-point season would
                 # otherwise both pass and leave the season total at -30.
                 accumulated -= committed.get((gw, a), 0)
-            problem = validate_trade(tx, squads, accumulated)
+            problem = validate_trade(
+                tx, squads, accumulated,
+                received=received.get(tx.get("to"), 0), config=config)
             if problem:
                 problems.append(f"GW{gw} trade {a}→{tx.get('to')}: {problem}")
                 continue
@@ -307,6 +350,7 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
                 adjust(gw, a, -pts)   # mortgaged against this gameweek
                 bank[b] += pts        # spendable whenever B likes
                 committed[(gw, a)] = committed.get((gw, a), 0) + pts
+                received[b] = received.get(b, 0) + pts
 
         elif kind == "bank_use":
             team, pts = tx["team"], tx["points"]

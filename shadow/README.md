@@ -97,8 +97,15 @@ Prototyped in `mechanics.py` and demonstrated by `simulate.py`:
   Position counts must balance so both squads stay a legal 2/5/5/3. A single
   gameweek can go below zero — that's the gamble — but a season total can't:
   you can't offer more than you've scored, counting what you've already
-  promised away. So no points change hands in gameweek 1. Trades are
-  bilateral and final.
+  promised away. So no points change hands in gameweek 1.
+
+  A straight player-for-player swap is between the two managers and takes
+  effect immediately. A trade carrying **points** is published to the league
+  first and can be voted down — enough objections and it never happens. There
+  is also a season cap on what any manager may receive in trade points, which
+  is what stops a friendly pair drip-feeding ten points a week. Both the cap
+  and the veto threshold are league settings rather than engine constants, so
+  they belong in the admin panel.
 - **The points bank.** Spendable in any later gameweek, declared beforehand,
   in whole or in part. It doesn't fund trade offers and doesn't raise your
   offer cap — trade points are always mortgaged against your score.

@@ -10,7 +10,7 @@ Run: python3 shadow/test_mechanics.py
 import sys
 
 from mechanics import (
-    BOOST_MAX_PCT, BOOST_MIN_PCT, BOOST_USES_PER_SEASON,
+    BOOST_MAX_PCT, BOOST_MIN_PCT, BOOST_USES_PER_SEASON, DEFAULTS,
     apply_transactions, boost_pct, boost_value, club_result, league_table,
     process_waivers, snake_order, validate_trade,
 )
@@ -153,6 +153,65 @@ _, _, _, bank, _, problems = apply_transactions(
 check_true("a second offer can't take the season below zero",
            len(problems) == 1, str(problems))
 check("only the affordable offer lands", bank["B"], 30)
+
+print("\n── Veto on points trades ───────────────────────────────")
+
+# A straight swap is nobody else's business — no objection can touch it.
+straight = dict(trade, points=0, vetoes=["X", "Y", "Z", "W", "V"])
+check("a straight swap can't be vetoed at all",
+      validate_trade(straight, {"A": A, "B": B}), None)
+
+# A points trade is published, and enough objections kill it.
+threshold = DEFAULTS["veto_threshold"]
+few = dict(trade, vetoes=["X"] * (threshold - 1))
+check("objections below the threshold don't stop it",
+      validate_trade(few, {"A": A, "B": B}, accumulated=100), None)
+
+many = dict(trade, vetoes=["X"] * threshold)
+check_true("enough objections void it",
+           "vetoed by the league" in (
+               validate_trade(many, {"A": A, "B": B}, accumulated=100) or ""),
+           str(validate_trade(many, {"A": A, "B": B}, accumulated=100)))
+
+# The threshold is a league setting, not an engine constant.
+check_true("a stricter league can lower the bar",
+           validate_trade(dict(trade, vetoes=["X"]), {"A": A, "B": B},
+                          accumulated=100, config={"veto_threshold": 1}) is not None)
+check("and a permissive one can raise it",
+      validate_trade(many, {"A": A, "B": B}, accumulated=100,
+                     config={"veto_threshold": 99}), None)
+
+print("\n── Season cap on points received ───────────────────────")
+
+cap = DEFAULTS["points_received_cap"]
+check("receiving within the cap is fine",
+      validate_trade(dict(trade, points=cap), {"A": A, "B": B},
+                     accumulated=1000, received=0), None)
+check_true("receiving past it is refused",
+           "cap" in (validate_trade(dict(trade, points=1), {"A": A, "B": B},
+                                    accumulated=1000, received=cap) or ""),
+           str(validate_trade(dict(trade, points=1), {"A": A, "B": B},
+                              accumulated=1000, received=cap)))
+
+# The cap is cumulative across the season, which is what stops the drip.
+# Three separate swaps, so nobody is trading a player they already sent away.
+A3 = [p(1, "FWD"), p(2, "FWD"), p(3, "FWD")]
+B3 = [p(10, "FWD"), p(11, "FWD"), p(12, "FWD")]
+drip = [{"type": "trade", "gameweek": gw, "from": "A", "to": "B",
+         "players_out": [p(out, "FWD")], "players_in": [p(inn, "FWD")],
+         "points": 20}
+        for gw, out, inn in ((5, 1, 10), (9, 2, 11), (13, 3, 12))]
+_, _, _, bank, _, problems = apply_transactions(
+    base(A3, B3), drip, 20,
+    points_to_date={g: {"A": 500} for g in (5, 9, 13)},
+    config={"points_received_cap": 50})
+check("two drips land, the third is over the cap", bank["B"], 40)
+check_true("and says why", any("cap" in x for x in problems), str(problems))
+
+check("an unlimited league can switch the cap off",
+      validate_trade(dict(trade, points=500), {"A": A, "B": B},
+                     accumulated=1000, received=9999,
+                     config={"points_received_cap": None}), None)
 
 print("\n── Waiver priority ─────────────────────────────────────")
 
