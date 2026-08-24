@@ -34,7 +34,7 @@ from lineups import (                               # noqa: E402
 )
 from mechanics import (                             # noqa: E402
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
-    league_table,
+    boost_value, league_table,
 )
 from scoring import score_entry                     # noqa: E402
 
@@ -88,7 +88,8 @@ def merge_lineups(stored):
 
 
 @lru_cache(maxsize=8)
-def _season(version, lineup_key, lineups_json, real_keys):
+def _season(version, lineup_key, lineups_json, real_keys,
+            transactions_json, managers_json):
     """Score the whole season. Cached on the data fingerprint, not on time.
 
     `lineups_json` is passed in rather than read here so the app can serve
@@ -97,6 +98,9 @@ def _season(version, lineup_key, lineups_json, real_keys):
     """
     lineups_in = json.loads(lineups_json) if lineups_json else None
     real = set(real_keys or ())
+    transactions = json.loads(transactions_json) if transactions_json else []
+    drafted = json.loads(managers_json) if managers_json else {}
+    pl_fixtures = _read("pl_fixtures.json") or []
     squads = _read("squads.json")
     fixtures = _read("fixtures.json")
     if not squads or not fixtures:
@@ -121,6 +125,18 @@ def _season(version, lineup_key, lineups_json, real_keys):
              for t in squads["teams"]}
     rounds = []
 
+    # Run the declarations through the rules engine once. It decides which
+    # boosts actually count — the allowance, one a gameweek, a sacked manager
+    # — so the table can never credit one the rules would have refused.
+    boosts_allowed = set()
+    if transactions:
+        managers_arg = {k: {"name": v.get("name"), "club": v.get("club"),
+                            "sacked_from": v.get("sacked_from")}
+                        for k, v in drafted.items()}
+        _, _, boost_log, _, _, _ = apply_transactions(
+            squads, transactions, 38, managers=managers_arg)
+        boosts_allowed = {(b["gameweek"], b["team"]) for b in boost_log}
+
     for path in gameweek_files():
         gw = json.loads(path.read_text())
         n = gw["gameweek"]
@@ -135,7 +151,7 @@ def _season(version, lineup_key, lineups_json, real_keys):
                 pts[el["id"]] = score_entry(el, pos)
         minutes = minutes_from_gameweek(gw)
 
-        scores, sources = {}, {}
+        scores, sources, boosts = {}, {}, {}
         for team in squads["teams"]:
             key = team["key"]
             picked, bench, how = effective_lineup(key, n, lineups, team["squad"])
@@ -150,6 +166,16 @@ def _season(version, lineup_key, lineups_json, real_keys):
             else:
                 scores[key] = hindsight.get(key, 0)
                 sources[key] = "best available"
+
+            # A boost multiplies the XI that actually played, so it is priced
+            # after the eleven is settled and the substitutions resolved.
+            if (n, key) in boosts_allowed:
+                club = (drafted.get(key) or {}).get("club")
+                if club is not None:
+                    gained, detail = boost_value(scores[key], club, n, pl_fixtures)
+                    scores[key] += gained
+                    boosts[key] = {"points": gained, "club": clubs().get(club, {}).get("name"),
+                                   **detail}
 
         matches = []
         for fx in by_gw.get(n, []):
@@ -169,6 +195,7 @@ def _season(version, lineup_key, lineups_json, real_keys):
                 else:
                     row["L"] += 1
             matches.append({
+                "home_boost": boosts.get(h), "away_boost": boosts.get(a),
                 "home": names[h], "away": names[a],
                 "home_key": h, "away_key": a,
                 "home_score": hs, "away_score": as_,
@@ -181,6 +208,7 @@ def _season(version, lineup_key, lineups_json, real_keys):
             "state": state(gw),
             "deadline": gw.get("deadline_time"),
             "matches": matches,
+            "boosts": boosts,
             "high": max(scores.values()) if scores else 0,
             "low": min(scores.values()) if scores else 0,
             "average": round(sum(scores.values()) / len(scores)) if scores else 0,
@@ -225,21 +253,24 @@ def _lineups_are_seeded():
     return "worked example" in (raw.get("note") or "").lower()
 
 
-def season(stored=None):
-    """Score the season, with any real submissions laid over the placeholder.
+def season(stored=None, transactions=None, drafted=None):
+    """Score the season: submitted elevens, plus whatever was declared.
 
-    `stored` is what managers have actually saved. The cache key includes it,
-    so a team saved a moment ago shows on the next page load without a restart
-    or a manual flush.
+    `stored` is what managers saved as lineups, `transactions` everything else
+    they declared, `drafted` which club each team's manager runs. All three
+    are in the cache key, so a boost played a moment ago is reflected on the
+    next page load without a restart.
     """
+    tx = json.dumps(transactions or [], sort_keys=True) if transactions else None
+    mg = json.dumps(drafted or {}, sort_keys=True) if drafted else None
     if not stored:
-        return _season(data_version(), 0, None, ())
+        return _season(data_version(), 0, None, (), tx, mg)
     merged = merge_lineups(stored)
     real = tuple(sorted((int(gw), key)
                         for gw, teams in stored.items() for key in teams))
     payload = json.dumps({str(k): v for k, v in sorted(merged.items())},
                          sort_keys=True)
-    return _season(data_version(), len(payload), payload, real)
+    return _season(data_version(), len(payload), payload, real, tx, mg)
 
 
 def freshness():

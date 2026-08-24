@@ -94,7 +94,9 @@ def _context(request):
         "request": request,
         "mode": fetcher.mode(),
         "me": me,
-        "season": engine.season(stored if stored else None),
+        "season": engine.season(stored if stored else None,
+                                transactions=db.transactions(),
+                                drafted=db.manager_clubs()),
     }
 
 
