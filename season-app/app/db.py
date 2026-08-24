@@ -167,13 +167,61 @@ def all_lineups():
     return out
 
 
+def is_mount(path: Path) -> bool:
+    """Whether this path sits on a mounted filesystem of its own.
+
+    Reads the kernel's own mount table rather than trusting an environment
+    variable. DB_PATH being set proves somebody intended a volume; this proves
+    one is actually there, which is the difference between a league that
+    survives a redeploy and one that doesn't.
+    """
+    try:
+        mounts = Path("/proc/mounts").read_text().splitlines()
+    except OSError:
+        return False
+    points = {line.split()[1] for line in mounts if len(line.split()) > 1}
+    for parent in [path, *path.parents]:
+        if str(parent) in points and str(parent) != "/":
+            return True
+    return False
+
+
+def storage():
+    """Where the database lives and whether it will survive a redeploy.
+
+    This is the check worth having on the health page: a container's own
+    filesystem is wiped on every deploy, so a database sitting on it quietly
+    loses every team the league has picked.
+    """
+    directory = DB_PATH.parent
+    configured = bool(os.environ.get("DB_PATH"))
+    mounted = is_mount(DB_PATH)
+    writable = os.access(directory, os.W_OK) if directory.exists() else False
+
+    if mounted and writable:
+        verdict = "safe — the database is on a mounted volume"
+    elif configured and not mounted:
+        verdict = ("AT RISK — DB_PATH is set but nothing is mounted there, so "
+                   "every team will be lost on the next deploy")
+    elif not configured:
+        verdict = ("AT RISK — no DB_PATH set, so the database is on the "
+                   "container's own disk and will be wiped on the next deploy")
+    else:
+        verdict = f"AT RISK — {directory} is not writable"
+
+    return {
+        "path": str(DB_PATH),
+        "directory_exists": directory.exists(),
+        "writable": writable,
+        "db_path_set": configured,
+        "on_mounted_volume": mounted,
+        "survives_redeploy": mounted and writable,
+        "verdict": verdict,
+    }
+
+
 def stats():
     with connect() as conn:
         rows = conn.execute("SELECT COUNT(*) c FROM manager").fetchone()["c"]
         lineups = conn.execute("SELECT COUNT(*) c FROM lineup").fetchone()["c"]
-    return {
-        "path": str(DB_PATH),
-        "on_volume": bool(os.environ.get("DB_PATH")),
-        "managers": rows,
-        "lineups": lineups,
-    }
+    return {"managers": rows, "lineups": lineups, "storage": storage()}

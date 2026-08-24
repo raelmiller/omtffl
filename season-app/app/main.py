@@ -113,6 +113,7 @@ def health():
             "detail": fetcher.STATUS["last_refresh_detail"],
         },
         "data": engine.freshness(),
+        "database": db.stats(),
         "scored": {
             "gameweeks": season.get("played", 0),
             "scheduled": season.get("scheduled", 0),
