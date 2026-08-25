@@ -60,42 +60,125 @@
 
 <section>
   <div class="sechead">
-    <h2>Results</h2>
-    <span class="eyebrow">most recent first</span>
+    <h2>Results and fixtures</h2>
+    <span class="eyebrow">all {{ fixtures|length }} rounds</span>
   </div>
 
-  <div class="rounds">
-    {% for round in season.rounds %}
-    <div>
+  <nav class="gwrail" id="gwrail" aria-label="Gameweeks">
+    {% for round in fixtures %}
+    <a class="gwchip{{ ' done' if round.played }}{{ ' on' if round.gameweek == show_gw }}"
+       href="#gw{{ round.gameweek }}" data-gw="{{ round.gameweek }}">{{ round.gameweek }}</a>
+    {% endfor %}
+  </nav>
+
+  <div class="rounds" id="rounds">
+    {% for round in fixtures %}
+    <div class="round" id="gw{{ round.gameweek }}" data-gw="{{ round.gameweek }}"
+         {% if round.gameweek != show_gw %}hidden{% endif %}>
       <div class="roundhead">
-        <h2><a href="/gameweek/{{ round.gameweek }}">{{ round.name }}</a></h2>
+        <h2>
+          {% if round.played %}
+            <a href="/gameweek/{{ round.gameweek }}">{{ round.name }}</a>
+          {% else %}{{ round.name }}{% endif %}
+        </h2>
         <span class="pill">{{ round.state }}</span>
-        <span class="stats">avg {{ round.average }} &middot; high {{ round.high }} &middot; low {{ round.low }}</span>
+        {% if round.played %}
+          <span class="stats">avg {{ round.average }} &middot; high {{ round.high }} &middot; low {{ round.low }}</span>
+        {% elif round.deadline %}
+          <span class="stats">closes <time data-when="{{ round.deadline }}">{{ round.deadline }}</time></span>
+        {% endif %}
       </div>
       <div class="panel" style="margin-top:.55rem">
         {% for m in round.matches %}
         <div class="match">
           <div class="home">
-            <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
-               href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a>
+            {% if round.played %}
+              <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
+                 href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a>
+            {% else %}
+              <span class="name">{{ m.home }}</span>
+            {% endif %}
           </div>
-          <div class="score">{{ m.home_score }} &ndash; {{ m.away_score }}</div>
+          <div class="score">
+            {% if round.played %}{{ m.home_score }} &ndash; {{ m.away_score }}{% else %}v{% endif %}
+          </div>
           <div class="away">
-            <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
-               href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a>
+            {% if round.played %}
+              <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
+                 href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a>
+            {% else %}
+              <span class="name">{{ m.away }}</span>
+            {% endif %}
           </div>
         </div>
         {% endfor %}
       </div>
+      {% if round.played and round.state != "final" %}
+      <p class="note" style="margin-top:.6rem">This round isn&rsquo;t settled yet.
+      FPL revises stats for a day or two after the final whistle &mdash; assists
+      get reassigned and bonus is confirmed &mdash; so these numbers can still
+      move.</p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
 
-  {% if season.rounds and season.rounds[0].state != "final" %}
-  <p class="note">The latest round isn&rsquo;t settled yet. FPL revises stats for a
-  day or two after the final whistle &mdash; assists get reassigned and bonus is
-  confirmed &mdash; so these numbers can still move.</p>
-  {% endif %}
+  <div class="tacts roundnav">
+    <button type="button" class="btn small ghost" id="prevgw">&larr; Previous</button>
+    <button type="button" class="btn small ghost" id="nextgw">Next &rarr;</button>
+  </div>
+
 </section>
+
+<noscript>
+  <style>
+    /* Without scripting there is nothing to click through with, so every
+       round is simply listed. */
+    .round[hidden] { display: block; }
+    .roundnav { display: none; }
+  </style>
+</noscript>
+
+<script>
+(() => {
+  const rail = document.getElementById('gwrail');
+  const rounds = [...document.querySelectorAll('.round')];
+  if (!rail || !rounds.length) return;
+  const weeks = rounds.map(r => Number(r.dataset.gw));
+  let at = weeks.indexOf(Number(
+    (document.querySelector('.gwchip.on') || {}).dataset?.gw));
+  if (at < 0) at = weeks.length - 1;
+
+  function show(i, scroll) {
+    at = Math.max(0, Math.min(weeks.length - 1, i));
+    rounds.forEach((r, n) => { r.hidden = n !== at; });
+    rail.querySelectorAll('.gwchip').forEach((c, n) =>
+      c.classList.toggle('on', n === at));
+    document.getElementById('prevgw').disabled = at === 0;
+    document.getElementById('nextgw').disabled = at === weeks.length - 1;
+    if (scroll) rail.querySelectorAll('.gwchip')[at]
+      .scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }
+
+  rail.addEventListener('click', ev => {
+    const chip = ev.target.closest('.gwchip');
+    if (!chip) return;
+    ev.preventDefault();
+    show(weeks.indexOf(Number(chip.dataset.gw)), false);
+  });
+  document.getElementById('prevgw').addEventListener('click', () => show(at - 1, true));
+  document.getElementById('nextgw').addEventListener('click', () => show(at + 1, true));
+
+  show(at, false);
+  rail.querySelectorAll('.gwchip')[at].scrollIntoView({ block: 'nearest', inline: 'center' });
+
+  document.querySelectorAll('time[data-when]').forEach(t => {
+    const d = new Date(t.dataset.when);
+    if (!isNaN(d)) t.textContent = d.toLocaleString(undefined, {
+      weekday: 'short', day: 'numeric', month: 'short',
+      hour: '2-digit', minute: '2-digit' });
+  });
+})();
+</script>
 {% endif %}
 {% endblock %}

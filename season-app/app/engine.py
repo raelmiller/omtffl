@@ -355,6 +355,47 @@ def gameweeks():
     return [g for g in calendar() if g.get("has_data")]
 
 
+def fixture_list(scored=None):
+    """Every round of the season, played or not, oldest first.
+
+    The table can only speak for rounds that have been scored. The other
+    twenty-odd are already fixed, and who you play in gameweek 30 is a reason
+    to make a trade in gameweek 12 — so the whole list goes on the page, with
+    scores filled in as far as they go.
+    """
+    fixtures = _read("fixtures.json")
+    squads = _read("squads.json")
+    if not fixtures or not squads:
+        return []
+
+    names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
+    played = {r["gameweek"]: r for r in (scored or [])}
+    meta = {g["gameweek"]: g for g in calendar()}
+
+    by_gw = {}
+    for fx in fixtures["fixtures"]:
+        by_gw.setdefault(fx["gameweek"], []).append(fx)
+
+    rounds = []
+    for n in sorted(by_gw):
+        if n in played:
+            rounds.append({**played[n], "played": True})
+            continue
+        info = meta.get(n, {})
+        rounds.append({
+            "gameweek": n,
+            "name": info.get("name") or f"Gameweek {n}",
+            "state": info.get("state") or "upcoming",
+            "deadline": info.get("deadline"),
+            "played": False,
+            "matches": [{"home": names.get(fx["home"], fx["home"]),
+                         "away": names.get(fx["away"], fx["away"]),
+                         "home_key": fx["home"], "away_key": fx["away"]}
+                        for fx in by_gw[n]],
+        })
+    return rounds
+
+
 def current_gameweek():
     """The round managers should be picking a team for.
 

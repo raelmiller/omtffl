@@ -550,6 +550,34 @@ check("an unknown manager is a 404", vc.get(f"/team/NOBODY/{gwv}").status_code, 
 check_true("results on the table link into it",
            '/team/' in vc.get("/").text)
 
+print("\n── The whole fixture list ──────────────────────────────")
+
+scored = engine.season(db.all_lineups() or None, db.transactions(),
+                       db.manager_clubs())["rounds"]
+allfx = engine.fixture_list(scored)
+check("every round of the season", len(allfx), 38)
+check_true("in order, one to thirty-eight",
+           [r["gameweek"] for r in allfx] == list(range(1, 39)))
+check("every fixture", sum(len(r["matches"]) for r in allfx), 38 * 7)
+check("the scored ones are marked played",
+      sorted(r["gameweek"] for r in allfx if r["played"]),
+      sorted(r["gameweek"] for r in scored))
+future = next(r for r in allfx if not r["played"])
+check_true("an unplayed round still names both teams",
+           all(m["home"] and m["away"] for m in future["matches"]))
+check_true("and carries its deadline", bool(future["deadline"]),
+           str(future.get("deadline")))
+check_true("but no score to show",
+           not any("home_score" in m for m in future["matches"]))
+
+front = vc.get("/").text
+check_true("the table page carries all 38 rounds",
+           all(f'id="gw{n}"' in front for n in range(1, 39)),
+           ", ".join(str(n) for n in range(1, 39) if f'id="gw{n}"' not in front))
+check("with a chip apiece to click through", front.count('class="gwchip'), 38)
+check("and only one of them open", front.count('<div class="round" id="gw')
+      - front.count("hidden>"), 1)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

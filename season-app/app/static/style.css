@@ -95,6 +95,10 @@ tbody tr.top td.rank { color: var(--accent); }
 }
 .match:last-child { border-bottom: none; }
 .match .home { text-align: right; }
+/* Team names are unbroken strings like "Brobbey'sGonnaGetYa!" — without
+   this they run out of the panel on a phone. */
+.match .home, .match .away { min-width: 0; }
+.match .name { overflow-wrap: anywhere; }
 .match .score {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
   font-size: .95rem; white-space: nowrap; padding: .12rem .5rem;
@@ -105,6 +109,29 @@ tbody tr.top td.rank { color: var(--accent); }
 .rounds { display: flex; flex-direction: column; gap: 1.1rem; }
 .roundhead { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
 .roundhead .stats { font-family: var(--mono); font-size: .7rem; color: var(--muted); }
+
+/* The season runs to 38 rounds, so they are clicked through one at a time
+   rather than stacked down the page — a rail you can scroll on a phone, and
+   arrows for stepping a week at a time. */
+.gwrail {
+  display: flex; gap: .3rem; overflow-x: auto;
+  padding: .15rem .1rem .5rem; scrollbar-width: thin;
+}
+.gwchip {
+  flex: 0 0 auto; min-width: 2.15rem; text-align: center;
+  font-family: var(--mono); font-size: .74rem; text-decoration: none;
+  padding: .32rem .35rem; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted);
+}
+.gwchip.done { color: var(--text); background: var(--surface-2); }
+.gwchip.on {
+  color: #06130c; background: var(--accent); border-color: var(--accent);
+  font-weight: 700;
+}
+.gwchip:hover { border-color: var(--accent); }
+.roundnav { justify-content: space-between; }
+.roundnav .btn[disabled] { opacity: .35; cursor: default; }
 .note {
   font-size: .88rem; color: var(--muted); border-left: 2px solid var(--border-2);
   padding-left: .9rem;

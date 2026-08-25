@@ -120,6 +120,14 @@ def _context(request):
 @app.get("/", response_class=HTMLResponse)
 def table(request: Request):
     ctx = _context(request)
+    season = ctx["season"]
+    ctx["fixtures"] = engine.fixture_list(season.get("rounds") or [])
+    now = engine.current_gameweek()
+    ctx["now_gw"] = now["gameweek"] if now else None
+    # Open on the last round that was scored — that's the news. Before a ball
+    # is kicked there isn't one, so open on the round being picked for.
+    played = [r["gameweek"] for r in ctx["fixtures"] if r["played"]]
+    ctx["show_gw"] = played[-1] if played else ctx["now_gw"]
     return templates.TemplateResponse("table.html", ctx)
 
 
