@@ -113,9 +113,6 @@ def now():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-_schema_ready = False
-
-
 @contextmanager
 def connect():
     """A connection, with the schema guaranteed to exist.
@@ -125,8 +122,13 @@ def connect():
     was not theoretical: a fresh volume plus any code path that reaches the
     database before startup has run produces "no such table", and on a first
     deploy those are the same moment.
+
+    Done on every connection rather than once per process. A flag would be
+    faster and would also lie the moment the file underneath it changed — a
+    deleted database left a running process convinced the tables were still
+    there. CREATE TABLE IF NOT EXISTS against an existing schema is cheap
+    enough that the flag was never worth the failure mode.
     """
-    global _schema_ready
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
@@ -134,9 +136,7 @@ def connect():
     # A season app is overwhelmingly reads; WAL keeps the table page fast
     # while somebody is saving a lineup.
     conn.execute("PRAGMA journal_mode = WAL")
-    if not _schema_ready:
-        conn.executescript(SCHEMA)
-        _schema_ready = True
+    conn.executescript(SCHEMA)
     try:
         yield conn
         conn.commit()
