@@ -292,6 +292,10 @@ footer {
 .player .shirt[data-club="WHU"] { --k1: #7a263a; --k2: #1bb1e7; }
 .player .shirt[data-club="WOL"] { --k1: #fdb913; --k2: #14100f; }
 
+/* Keepers wear their own kit, and this one is loud enough not to be lost
+   against the pitch. Last in the cascade so it beats the club above it. */
+.player .shirt[data-pos="GK"] { --k1: #8ff232; --kit: none; }
+
 .benchbar {
   border: 1px solid var(--pitch-edge); border-top: none;
   border-radius: 0 0 12px 12px;
