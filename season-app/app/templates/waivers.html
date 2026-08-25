@@ -67,6 +67,10 @@
       <input type="search" id="search" placeholder="name" autocomplete="off">
     </label>
     <label class="field">
+      <span class="eyebrow">Sort by</span>
+      <select id="fsort"></select>
+    </label>
+    <label class="field">
       <span class="eyebrow">Minutes</span>
       <select id="fmins">
         <option value="0">Any</option>
@@ -83,7 +87,10 @@
       <tbody id="poolbody"></tbody>
     </table>
   </div>
-  <p class="note" id="poolnote"></p>
+  <div class="tacts" style="margin-top:.6rem">
+    <button id="showmore" class="btn ghost small" hidden></button>
+    <span class="note" id="poolnote"></span>
+  </div>
 
   <div class="tacts" style="margin-top:.9rem">
     <span id="cstatus" class="savestate"></span>
@@ -137,6 +144,10 @@
   const METRICS = JSON.parse(document.getElementById('metric-data').textContent);
   let dropId = null, addId = null;
   let sortKey = METRICS.length ? METRICS[0].key : null, sortDesc = true;
+  // Eighty rows is a seven-thousand-pixel page on a phone. Show a screenful,
+  // and let anyone who wants more ask for it.
+  const PAGE = 25;
+  let showing = PAGE;
   const el = id => document.getElementById(id);
 
   const num = v => (v === null || v === undefined ? null : Number(v));
@@ -233,21 +244,23 @@
         const key = th.dataset.key;
         if (key === sortKey) sortDesc = !sortDesc;
         else { sortKey = key; sortDesc = true; }
+        showing = PAGE;
         render();
       }));
 
     const body = el('poolbody');
     body.innerHTML = '';
-    rows.slice(0, 80).forEach(p => {
+    rows.slice(0, showing).forEach(p => {
       const tr = document.createElement('tr');
       tr.className = addId === p.id ? 'chosen' : '';
       tr.innerHTML =
-        `<td><span class="tick" aria-hidden="true"></span></td>` +
-        `<td class="team">${p.name}</td><td class="pclub">${p.position}</td>` +
-        `<td class="pclub">${p.club || ''}</td>` +
+        `<td class="cpick"><span class="tick" aria-hidden="true"></span></td>` +
+        `<td class="team">${p.name}</td>` +
+        `<td class="pclub cpos">${p.position}</td>` +
+        `<td class="pclub cclub">${p.club || ''}</td>` +
         METRICS.map(m =>
-          `<td class="num${m.key === sortKey ? ' active' : ''}">` +
-          `${show(p.stats[m.key])}</td>`).join('');
+          `<td class="num m-${m.key}${m.key === sortKey ? ' active' : ''}" ` +
+          `data-label="${m.short}">${show(p.stats[m.key])}</td>`).join('');
       tr.addEventListener('click', () => {
         addId = (addId === p.id ? null : p.id);
         render();
@@ -255,15 +268,41 @@
       body.appendChild(tr);
     });
 
+    el('fsort').value = sortKey;
     el('count').textContent = `${rows.length} available` +
       (dropping ? ` · ${dropping.position} only, to replace ${dropping.name}` : '');
-    el('poolnote').textContent = rows.length > 80
-      ? `Showing the top 80 by ${METRICS.find(m => m.key === sortKey).label.toLowerCase()}. Filter to narrow it down.`
-      : '';
+
+    const more = el('showmore');
+    if (rows.length > showing) {
+      more.hidden = false;
+      more.textContent = `Show ${Math.min(PAGE, rows.length - showing)} more ` +
+                         `of ${rows.length - showing}`;
+    } else {
+      more.hidden = true;
+    }
+    el('poolnote').textContent = rows.length
+      ? `Sorted by ${METRICS.find(m => m.key === sortKey).label.toLowerCase()}.`
+      : 'Nothing matches those filters.';
   }
 
+  // Any change to the filters or the sort starts the list again from the top.
   ['fpos', 'fclub', 'fmins', 'search'].forEach(id =>
-    el(id).addEventListener('input', render));
+    el(id).addEventListener('input', () => { showing = PAGE; render(); }));
+  el('showmore').addEventListener('click', () => { showing += PAGE; render(); });
+
+  METRICS.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.key;
+    o.textContent = m.label;
+    el('fsort').appendChild(o);
+  });
+  el('fsort').value = sortKey;
+  el('fsort').addEventListener('change', () => {
+    sortKey = el('fsort').value;
+    sortDesc = true;
+    showing = PAGE;
+    render();
+  });
 
   el('addclaim').addEventListener('click', () => {
     const drop = squad.find(p => p.id === dropId);

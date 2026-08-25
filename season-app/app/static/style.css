@@ -374,3 +374,44 @@ th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
 th.sortable:hover { color: var(--text); }
 th.active { color: var(--accent); }
 td.active { color: var(--text); font-weight: 600; }
+
+/* On a phone a sixteen-column table is a horizontal scrollbar with numbers in
+   it. Below 45rem each row becomes a card: name, position and club on one
+   line, then the metric being sorted on — which is the one the manager just
+   asked to see — alongside a few staples. The rest stay in the DOM for wider
+   screens rather than being re-rendered. */
+@media (max-width: 45rem) {
+  .wrap.wide { max-width: 100%; }
+  table.pool { min-width: 0; width: 100%; }
+  table.pool thead { display: none; }
+  table.pool, table.pool tbody, table.pool tr, table.pool td { display: block; }
+  table.pool tr {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding: .55rem .7rem .6rem 2.3rem;
+  }
+  table.pool tr:last-child { border-bottom: none; }
+  table.pool td { padding: 0; border: none; }
+  table.pool td.cpick { position: absolute; left: .7rem; top: .62rem; }
+  table.pool td.team { font-size: .95rem; font-weight: 600; }
+  table.pool td.cpos, table.pool td.cclub {
+    display: inline-block; margin-right: .45rem; font-size: .7rem;
+  }
+  /* Only the sorted metric and three staples earn space on a phone. */
+  table.pool td[class*="m-"] { display: none; }
+  table.pool td.active,
+  table.pool td.m-total_points,
+  table.pool td.m-minutes,
+  table.pool td.m-form {
+    display: inline-block; text-align: left;
+    margin: .3rem .8rem 0 0; font-variant-numeric: tabular-nums;
+  }
+  table.pool td[class*="m-"]::before {
+    content: attr(data-label) " ";
+    font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  table.pool td.active { color: var(--accent); font-weight: 700; }
+  table.pool td.active::before { color: var(--accent); }
+  .filters .field { flex: 1 1 8rem; min-width: 0; }
+}
