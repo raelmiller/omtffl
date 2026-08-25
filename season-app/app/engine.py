@@ -760,3 +760,94 @@ def free_agent_pool(gameweek, stored_trades=None):
     for player in free_agents(gameweek, stored_trades):
         pool.append({**player, "stats": stats.get(player["id"], {})})
     return pool
+
+
+# ── One team's gameweek ────────────────────────────────────────────────────
+def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
+    """How a team's round actually went, player by player.
+
+    The same eleven the scoring used, with each player's points, the
+    substitutions that were made for them, and whatever the boost and the bank
+    added on top — so the total on this page and the total in the table are
+    the same number arrived at the same way.
+    """
+    path = DATA / f"gw{gameweek:02d}.json"
+    if not path.exists():
+        return None
+    gw = json.loads(path.read_text())
+    positions = load_positions()
+    squads_base = _read("squads.json")
+    if not squads_base:
+        return None
+
+    points = {}
+    for el in gw["elements"]:
+        pos = positions.get(el["id"])
+        if pos is not None:
+            points[el["id"]] = score_entry(el, pos)
+    minutes = minutes_from_gameweek(gw)
+
+    transactions = transactions or []
+    drafted = drafted or {}
+    managers_arg = {k: {"club": v.get("club"), "sacked_from": v.get("sacked_from")}
+                    for k, v in drafted.items()}
+    squads, adjustments, boost_log, _, _, _ = apply_transactions(
+        squads_base, transactions, gameweek, managers=managers_arg)
+    roster = squads.get(key) or next(
+        (t["squad"] for t in squads_base["teams"] if t["key"] == key), [])
+    if not roster:
+        # No such manager. The caller turns this into a 404 rather than an
+        # empty pitch that looks like a team who scored nothing.
+        return None
+    roster = refresh_clubs(roster)
+
+    # The same basis the table uses: real submissions laid over the committed
+    # placeholder. Reading the database alone would fall back to a best-XI
+    # here while the table used the placeholder, and the two pages would show
+    # different totals for the same round.
+    picked, bench, source = effective_lineup(
+        key, gameweek, merge_lineups(lineups or {}), roster)
+    if not picked:
+        total, _, picked = best_xi(roster, points)
+        bench = [p for p in roster if p not in picked]
+        source = "best available"
+    final_xi, subs = apply_autosubs(picked, bench, minutes)
+    swapped_in = {on["id"] for _, on in subs}
+    swapped_out = {off["id"] for off, _ in subs}
+
+    def card(player, played=True):
+        return {**player, "points": points.get(player["id"], 0),
+                "minutes": minutes.get(player["id"], 0),
+                "came_on": player["id"] in swapped_in,
+                "went_off": player["id"] in swapped_out}
+
+    xi_total = sum(points.get(p["id"], 0) for p in final_xi)
+
+    boost = None
+    if (gameweek, key) in {(b["gameweek"], b["team"]) for b in boost_log}:
+        club = (drafted.get(key) or {}).get("club")
+        if club is not None:
+            gained, detail = boost_value(xi_total, club, gameweek,
+                                         _read("pl_fixtures.json") or [])
+            boost = {"points": gained,
+                     "club": clubs().get(club, {}).get("name"), **detail}
+
+    adjustment = adjustments.get(gameweek, {}).get(key, 0)
+    lines = {}
+    for player in final_xi:
+        lines.setdefault(player["position"], []).append(card(player))
+
+    names = {t["key"]: t.get("team", t["key"]) for t in squads_base["teams"]}
+    return {
+        "key": key, "team": names.get(key, key), "gameweek": gameweek,
+        "state": state(gw), "source": source,
+        "lines": [(pos, lines.get(pos, [])) for pos in ("GK", "DEF", "MID", "FWD")],
+        "bench": [card(p) for p in bench if p["id"] not in swapped_in],
+        "subs": [{"off": off["name"], "on": on["name"],
+                  "points": points.get(on["id"], 0)} for off, on in subs],
+        "xi_total": xi_total,
+        "boost": boost,
+        "adjustment": adjustment,
+        "total": xi_total + (boost["points"] if boost else 0) + adjustment,
+        "bench_points": sum(points.get(p["id"], 0) for p in bench),
+    }

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}{{ detail.team }} — {{ round_name }}{% endblock %}
+{% block heading %}{{ detail.team }}{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {{ round_name }} &middot; <span class="pill">{{ detail.state }}</span>
+  {% if opponent %}
+    &middot; {{ 'beat' if detail.total > opponent.total else 'lost to' if detail.total < opponent.total else 'drew with' }}
+    <a href="/team/{{ opponent.key }}/{{ detail.gameweek }}">{{ opponent.team }}</a>
+    {{ detail.total }}&ndash;{{ opponent.total }}
+  {% endif %}
+</p>
+{% if detail.source and detail.source != 'submitted' %}
+<p class="note">No eleven was submitted for this round, so this is
+{{ 'the best available team — which flatters the total, since nobody picks perfectly' if detail.source == 'best available' else detail.source }}.</p>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section>
+  <div class="pickhead">
+    <div>
+      <span class="eyebrow">Total</span>
+      <div class="formation good">{{ detail.total }}</div>
+    </div>
+    <div class="pickactions scoreparts">
+      <span class="part"><b>{{ detail.xi_total }}</b> from the eleven</span>
+      {% if detail.boost and detail.boost.points %}
+        <span class="part up">+{{ detail.boost.points }} boost</span>
+      {% endif %}
+      {% if detail.adjustment %}
+        <span class="part {{ 'up' if detail.adjustment > 0 else 'down' }}">
+          {{ '+' if detail.adjustment > 0 else '' }}{{ detail.adjustment }}
+          {{ 'from the bank' if detail.adjustment > 0 else 'traded away' }}
+        </span>
+      {% endif %}
+      <span class="part dim">{{ detail.bench_points }} left on the bench</span>
+    </div>
+  </div>
+
+  <div class="pitch">
+    <div class="markings" aria-hidden="true">
+      <span class="box top"></span><span class="six top"></span>
+      <span class="arc top"></span><span class="halfway"></span>
+      <span class="centre"></span>
+    </div>
+    <div class="rows">
+      {% for pos, players in detail.lines %}
+        {% if players %}
+        <div class="line">
+          {% for p in players %}
+          <div class="player static">
+            <span class="shirt" data-pos="{{ p.position }}">
+              <span class="pts">{{ p.points }}</span>
+            </span>
+            <span class="pn">{{ p.name }}</span>
+            <span class="pc">
+              {{ p.club }}{% if p.came_on %} · on{% elif not p.minutes %} · 0'{% endif %}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="benchbar">
+    <div class="benchhead">
+      <span class="eyebrow">Substitutes</span>
+      <span class="eyebrow dim">{{ detail.bench_points }} points unused</span>
+    </div>
+    <div class="benchrow">
+      {% for p in detail.bench %}
+      <div class="player static">
+        <span class="shirt" data-pos="{{ p.position }}">
+          <span class="pts">{{ p.points }}</span>
+        </span>
+        <span class="pn">{{ p.name }}</span>
+        <span class="pc">{{ p.position }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if detail.subs %}
+  <p class="note">
+    {% for s in detail.subs %}
+      {{ s.on }} came on for {{ s.off }} and scored {{ s.points }}{% if not loop.last %}; {% endif %}
+    {% endfor %}
+  </p>
+  {% endif %}
+
+  {% if detail.boost %}
+  <div class="boostbar {% if detail.boost.points %}on{% endif %}">
+    <div class="bmain">
+      <span class="eyebrow">Manager boost</span>
+      <div class="bclub">{{ detail.boost.club }}</div>
+      <div class="bdetail">
+        {% if detail.boost.played %}
+          {{ detail.boost.position }}th &middot; {{ detail.boost.pct|round|int }}% &middot;
+          {{ detail.boost.result }} &rarr;
+          {{ '+' ~ detail.boost.points if detail.boost.points else 'nothing — a defeat pays nothing' }}
+        {% else %}
+          They didn&rsquo;t play, so nothing was paid and the use wasn&rsquo;t spent.
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="tacts" style="margin-top:1rem">
+    {% if prev_gw %}<a class="btn small ghost" href="/team/{{ detail.key }}/{{ prev_gw }}">&larr; GW{{ prev_gw }}</a>{% endif %}
+    {% if next_gw %}<a class="btn small ghost" href="/team/{{ detail.key }}/{{ next_gw }}">GW{{ next_gw }} &rarr;</a>{% endif %}
+  </div>
+
+  <div class="sechead" style="margin-top:1.4rem">
+    <h2>Everyone else</h2>
+    <span class="eyebrow">{{ round_name }}</span>
+  </div>
+  <div class="snake">
+    {% for t in others %}
+    <a class="slot {% if t.key == detail.key %}mine{% endif %}"
+       href="/team/{{ t.key }}/{{ detail.gameweek }}">{{ t.team }}
+      <span class="c">{{ t.score }}</span></a>
+    {% endfor %}
+  </div>
+
+  <p class="sub"><a href="/">&larr; The table</a></p>
+</section>
+{% endblock %}

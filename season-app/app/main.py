@@ -494,6 +494,52 @@ def respond(request: Request, trade_id: int, action: str):
     return RedirectResponse("/trade", status_code=303)
 
 
+@app.get("/team/{key}", response_class=HTMLResponse)
+@app.get("/team/{key}/{gameweek}", response_class=HTMLResponse)
+def team_page(request: Request, key: str, gameweek: int = None):
+    """How one team's gameweek went, laid out the way they picked it."""
+    ctx = _context(request)
+    season = ctx["season"]
+    played = [r["gameweek"] for r in season.get("rounds", [])]
+    if not played:
+        raise HTTPException(404, "no gameweek has been scored yet")
+    target = gameweek if gameweek in played else max(played)
+
+    detail = engine.team_gameweek(
+        key, target, db.all_lineups(),
+        db.transactions() + engine.effective_trades(db.trades()),
+        db.manager_clubs())
+    if detail is None:
+        raise HTTPException(404, "no such team or gameweek")
+
+    rnd = next(r for r in season["rounds"] if r["gameweek"] == target)
+    opponent = None
+    for m in rnd["matches"]:
+        if m["home_key"] == key:
+            opponent = {"key": m["away_key"], "team": m["away"], "total": m["away_score"]}
+        elif m["away_key"] == key:
+            opponent = {"key": m["home_key"], "team": m["home"], "total": m["home_score"]}
+
+    scores = {}
+    for m in rnd["matches"]:
+        scores[m["home_key"]] = m["home_score"]
+        scores[m["away_key"]] = m["away_score"]
+    others = sorted(
+        ({"key": k, "team": t, "score": scores.get(k, 0)}
+         for k, t in ((r["key"], r["team"]) for r in season["table"])),
+        key=lambda x: -x["score"])
+
+    earlier = [g for g in played if g < target]
+    later = [g for g in played if g > target]
+    ctx.update({
+        "detail": detail, "opponent": opponent, "others": others,
+        "round_name": rnd["name"],
+        "prev_gw": max(earlier) if earlier else None,
+        "next_gw": min(later) if later else None,
+    })
+    return templates.TemplateResponse("team.html", ctx)
+
+
 # ── Waivers ────────────────────────────────────────────────────────────────
 def _claims_from_declarations(gameweek):
     """Everyone's claims for a gameweek, in each manager's priority order."""

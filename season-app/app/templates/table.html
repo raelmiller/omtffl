@@ -42,7 +42,7 @@
         {% for row in season.table %}
         <tr {% if loop.index == 1 %}class="top"{% endif %}>
           <td class="rank">{{ row.rank }}</td>
-          <td class="team">{{ row.team }}</td>
+          <td class="team"><a href="/team/{{ row.key }}">{{ row.team }}</a></td>
           <td class="num">{{ row.P }}</td>
           <td class="num">{{ row.W }}</td>
           <td class="num">{{ row.D }}</td>
@@ -76,11 +76,13 @@
         {% for m in round.matches %}
         <div class="match">
           <div class="home">
-            <span class="name {% if m.home_score > m.away_score %}won{% endif %}">{{ m.home }}</span>
+            <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
+               href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a>
           </div>
           <div class="score">{{ m.home_score }} &ndash; {{ m.away_score }}</div>
           <div class="away">
-            <span class="name {% if m.away_score > m.home_score %}won{% endif %}">{{ m.away }}</span>
+            <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
+               href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a>
           </div>
         </div>
         {% endfor %}

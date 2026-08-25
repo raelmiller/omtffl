@@ -503,6 +503,37 @@ check_true("nobody in the pool is owned",
                 {p["id"] for sq in engine.squads_for_gameweek(gwp, db.trades()).values()
                  for p in sq}))
 
+print("\n── A team's gameweek ───────────────────────────────────")
+
+vc = TestClient(app)
+gwv = engine.season()["rounds"][0]["gameweek"]
+detail = engine.team_gameweek("RM", gwv, db.all_lineups(), db.transactions(),
+                              db.manager_clubs())
+check_true("a team's round can be read back", detail is not None)
+check("eleven on the pitch",
+      sum(len(players) for _, players in detail["lines"]), 11)
+check_true("laid out in position lines",
+           [pos for pos, _ in detail["lines"]] == ["GK", "DEF", "MID", "FWD"])
+check_true("every player carries their points",
+           all("points" in p for _, players in detail["lines"] for p in players))
+
+# The total here and the total in the table have to be the same number.
+season_now = engine.season(db.all_lineups() or None, db.transactions(),
+                           db.manager_clubs())
+rnd = next(r for r in season_now["rounds"] if r["gameweek"] == gwv)
+from_table = next((m["home_score"] if m["home_key"] == "RM" else m["away_score"])
+                  for m in rnd["matches"]
+                  if "RM" in (m["home_key"], m["away_key"]))
+detail2 = engine.team_gameweek("RM", gwv, db.all_lineups(), db.transactions(),
+                               db.manager_clubs())
+check("the team page agrees with the table", detail2["total"], from_table)
+
+check("the page renders", vc.get(f"/team/RM/{gwv}").status_code, 200)
+check("without a gameweek it shows the latest", vc.get("/team/RM").status_code, 200)
+check("an unknown manager is a 404", vc.get(f"/team/NOBODY/{gwv}").status_code, 404)
+check_true("results on the table link into it",
+           '/team/' in vc.get("/").text)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

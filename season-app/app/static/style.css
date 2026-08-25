@@ -423,3 +423,22 @@ td.active { color: var(--text); font-weight: 600; }
   table.pool td.active::before { color: var(--accent); }
   .filters .field { flex: 1 1 8rem; min-width: 0; }
 }
+
+/* ── A team's gameweek ───────────────────────────────── */
+.player.static { cursor: default; }
+.player .shirt { position: relative; }
+.player .pts {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--mono); font-size: .78rem; font-weight: 500; color: #06130c;
+  font-variant-numeric: tabular-nums;
+}
+.scoreparts { gap: .9rem; flex-wrap: wrap; }
+.part { font-size: .84rem; color: var(--muted); }
+.part b { color: var(--text); font-weight: 600; }
+.part.up { color: var(--accent); }
+.part.down { color: var(--warn); }
+.part.dim { opacity: .75; }
+a.slot { text-decoration: none; color: var(--text); }
+a.slot:hover { border-color: var(--accent); }
+.match a.name { text-decoration: none; }
+.match a.name:hover { text-decoration: underline; }
