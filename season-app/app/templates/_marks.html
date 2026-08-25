@@ -1,0 +1,15 @@
+{# Markers that sit beside a team's name on a fixture: a boost that has been
+   played, and points that changed hands. Both are already in the score — these
+   say where an unusual number came from. #}
+{% macro marks(boost, move) -%}
+  {%- if boost -%}
+    <span class="tag boost{{ ' paid' if boost.points }}"
+          title="Boost on {{ boost.club }}{% if boost.played %} &mdash; {{ boost.position }}th, {{ boost.pct|round|int }}%, {{ boost.result }}{% else %} &mdash; they didn't play{% endif %}"
+    >&#9889;{% if boost.points %}{{ boost.points }}{% endif %}</span>
+  {%- endif -%}
+  {%- if move -%}
+    <span class="tag bank {{ 'up' if move > 0 else 'down' }}"
+          title="{{ move|abs }} points {{ 'from the bank' if move > 0 else 'paid in a trade' }}"
+    >{{ '+' if move > 0 }}{{ move }}</span>
+  {%- endif -%}
+{%- endmacro %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_marks.html" import marks %}
 {% block heading %}The table{% endblock %}
 {% block subheading %}
   {% if season.ready %}
@@ -95,9 +96,9 @@
           <div class="home">
             {% if round.played %}
               <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
-                 href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a><span class="mgr">{{ m.home_key }}</span>
+                 href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a><span class="mgr">{{ m.home_key }}</span>{{ marks(m.home_boost, m.home_move) }}
             {% else %}
-              <span class="name">{{ m.home }}</span><span class="mgr">{{ m.home_key }}</span>
+              <span class="name">{{ m.home }}</span><span class="mgr">{{ m.home_key }}</span>{{ marks(m.home_boost, m.home_move) }}
             {% endif %}
           </div>
           <div class="score">
@@ -106,9 +107,9 @@
           <div class="away">
             {% if round.played %}
               <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
-                 href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a><span class="mgr">{{ m.away_key }}</span>
+                 href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a><span class="mgr">{{ m.away_key }}</span>{{ marks(m.away_boost, m.away_move) }}
             {% else %}
-              <span class="name">{{ m.away }}</span><span class="mgr">{{ m.away_key }}</span>
+              <span class="name">{{ m.away }}</span><span class="mgr">{{ m.away_key }}</span>{{ marks(m.away_boost, m.away_move) }}
             {% endif %}
           </div>
         </div>

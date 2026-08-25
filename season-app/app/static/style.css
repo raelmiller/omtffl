@@ -113,6 +113,19 @@ td.who {
   white-space: nowrap;
 }
 h1 .mgr, .sub .mgr { vertical-align: middle; }
+
+/* A boost played, or points that changed hands. Both are already inside the
+   score — these say where an odd-looking number came from. */
+.tag {
+  display: inline-block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .04em; white-space: nowrap; cursor: help;
+  border: 1px solid var(--border-2); border-radius: 4px;
+  padding: 0 .28rem; margin-left: .25rem; color: var(--muted);
+}
+.tag.boost { font-variant-emoji: text; }
+.tag.boost.paid { color: var(--accent); border-color: var(--accent); }
+.tag.bank.up { color: var(--accent); border-color: var(--accent); }
+.tag.bank.down { color: var(--warn); border-color: currentColor; }
 .match .score {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
   font-size: .95rem; white-space: nowrap; padding: .12rem .5rem;

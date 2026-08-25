@@ -641,6 +641,63 @@ check("with a chip apiece to click through", front.count('class="gwchip'), 38)
 check("and only one of them open", front.count('<div class="round" id="gw')
       - front.count("hidden>"), 1)
 
+print("\n── Points that changed hands ───────────────────────────")
+
+# A trade paid for in points has to land on the table as well as on the team
+# page, or a manager tops the league on a score they spent.
+sq = engine.squads_for_gameweek(gwv, db.trades())
+buyer, seller = "EE", "DP"
+out = next(p for p in sq[buyer] if p["position"] == "FWD")
+back = next(p for p in sq[seller] if p["position"] == "FWD")
+paid_id = db.propose_trade(gwv, buyer, seller, [out], [back], 20)
+db.set_trade_status(paid_id, "accepted")
+
+# And a boost played in the same round, so the fixture can mark both.
+booster = next((k for k, v in db.manager_clubs().items()
+                if v.get("club") and k not in (buyer, seller)), None)
+if booster:
+    db.declare(booster, gwv, "boost")
+
+tx = db.transactions() + engine.effective_trades(db.trades())
+after = engine.season(db.all_lineups() or None, tx, db.manager_clubs())
+rnd = next(r for r in after["rounds"] if r["gameweek"] == gwv)
+
+
+def side_of(key, match):
+    return "home" if match["home_key"] == key else "away"
+
+
+m = next(m for m in rnd["matches"] if buyer in (m["home_key"], m["away_key"]))
+side = side_of(buyer, m)
+page = engine.team_gameweek(buyer, gwv, db.all_lineups(), tx, db.manager_clubs())
+check("the team page still knows what was paid", page["adjustment"], -20)
+check("the table now agrees with it", m[f"{side}_score"], page["total"])
+check("and the fixture says how much moved", m[f"{side}_move"], -20)
+check("the standings count it too",
+      next(r["PF"] for r in after["table"] if r["key"] == buyer),
+      sum(x[f"{side_of(buyer, x)}_score"] for r in after["rounds"]
+          for x in r["matches"] if buyer in (x["home_key"], x["away_key"])))
+check("the seller banks it rather than scoring it",
+      next(m[f"{side_of(seller, m)}_move"] for m in rnd["matches"]
+           if seller in (m["home_key"], m["away_key"])), 0)
+
+if booster:
+    bm = next(m for m in rnd["matches"]
+              if booster in (m["home_key"], m["away_key"]))
+    check_true("a boost played shows on the fixture",
+               bm[f"{side_of(booster, bm)}_boost"] is not None)
+    check_true("with the club it was played on",
+               bool(bm[f"{side_of(booster, bm)}_boost"]["club"]))
+    other = next(m for m in rnd["matches"]
+                 if booster not in (m["home_key"], m["away_key"])
+                 and buyer not in (m["home_key"], m["away_key"]))
+    check("and nothing on a fixture where nobody played one",
+          (other["home_boost"], other["away_boost"], other["home_move"],
+           other["away_move"]), (None, None, 0, 0))
+
+front = vc.get("/").text
+check_true("the table page draws the markers", 'class="tag' in front)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

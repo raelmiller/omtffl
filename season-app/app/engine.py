@@ -136,6 +136,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
     standings = {}
     boosts_allowed = set()
     squads_at = {}
+    adjustments = {}
 
     for path in gameweek_files():
         gw = json.loads(path.read_text())
@@ -146,7 +147,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 table.values(),
                 key=lambda r: (-r["Pts"], -(r["PF"] - r["PA"]), -r["PF"]))
             standings[n] = [r["key"] for r in ranked_now]
-            moved, _, boost_log, _, _, _ = apply_transactions(
+            moved, adjustments, boost_log, _, _, _ = apply_transactions(
                 squads, transactions, n, managers=managers_arg,
                 standings=standings)
             boosts_allowed = {(b["gameweek"], b["team"]) for b in boost_log}
@@ -163,7 +164,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 pts[el["id"]] = score_entry(el, pos)
         minutes = minutes_from_gameweek(gw)
 
-        scores, sources, boosts = {}, {}, {}
+        scores, sources, boosts, moves = {}, {}, {}, {}
         for team in squads["teams"]:
             key = team["key"]
             roster = squads_at.get(key, team["squad"])
@@ -190,6 +191,14 @@ def _season(version, lineup_key, lineups_json, real_keys,
                     boosts[key] = {"points": gained, "club": clubs().get(club, {}).get("name"),
                                    **detail}
 
+            # Points that changed hands: paid for a trade, or drawn from the
+            # bank. The team page has always counted these; the table has to
+            # count them too, or a manager tops it on a score they spent.
+            move = adjustments.get(n, {}).get(key, 0)
+            if move:
+                scores[key] += move
+                moves[key] = move
+
         matches = []
         for fx in by_gw.get(n, []):
             h, a = fx["home"], fx["away"]
@@ -209,6 +218,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
                     row["L"] += 1
             matches.append({
                 "home_boost": boosts.get(h), "away_boost": boosts.get(a),
+                "home_move": moves.get(h, 0), "away_move": moves.get(a, 0),
                 "home": names[h], "away": names[a],
                 "home_key": h, "away_key": a,
                 "home_score": hs, "away_score": as_,
