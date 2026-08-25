@@ -666,3 +666,97 @@ def run_waivers(gameweek, claims, stored_trades=None, season_data=None):
     results, problems = process_waivers(claims, squads, order)
     return {"results": results, "problems": problems, "order": order,
             "squads": squads}
+
+
+# ── Player statistics ──────────────────────────────────────────────────────
+# What a manager judges a claim on. `sum` accumulates across gameweeks;
+# `last` takes the most recent round only.
+METRICS = [
+    ("total_points",  "Pts",      "sum",  "Points this season"),
+    ("event_points",  "GW",       "last", "Points last gameweek"),
+    ("form",          "Form",     "form", "Average points over recent gameweeks"),
+    ("minutes",       "Mins",     "sum",  "Minutes played"),
+    ("starts",        "Starts",   "sum",  "Games started"),
+    ("goals_scored",  "Goals",    "sum",  "Goals scored"),
+    ("assists",       "Assists",  "sum",  "Assists"),
+    ("clean_sheets",  "CS",       "sum",  "Clean sheets"),
+    ("bonus",         "Bonus",    "sum",  "Bonus points"),
+    ("defensive_contribution", "DefCon", "sum", "Defensive contributions"),
+    ("expected_goals", "xG",      "sum",  "Expected goals"),
+    ("expected_assists", "xA",    "sum",  "Expected assists"),
+    ("expected_goal_involvements", "xGI", "sum", "Expected goal involvements"),
+    ("expected_goals_conceded", "xGC", "sum", "Expected goals conceded"),
+    ("creativity",    "Creat",    "sum",  "Creativity"),
+    ("influence",     "Infl",     "sum",  "Influence"),
+    ("threat",        "Threat",   "sum",  "Threat"),
+    ("ict_index",     "ICT",      "sum",  "ICT index"),
+]
+
+FORM_GAMEWEEKS = 4
+
+
+@lru_cache(maxsize=4)
+def _player_stats(version):
+    """Season totals per player, aggregated from the saved gameweeks.
+
+    A metric the fetched data never carried comes back as None rather than
+    zero. The difference matters: nought minutes is a fact about a player,
+    while a missing expected-goals column is a fact about our data, and
+    sorting on it as though it were nought would quietly rank everyone equal.
+    """
+    files = gameweek_files()
+    totals, seen, points_by_gw = {}, {}, {}
+
+    for path in files:
+        gw = json.loads(path.read_text())
+        n = gw["gameweek"]
+        for el in gw["elements"]:
+            pid = el["id"]
+            stats = el.get("stats") or {}
+            row = totals.setdefault(pid, {})
+            present = seen.setdefault(pid, set())
+            for key, _, how, _ in METRICS:
+                if how == "sum":
+                    value = stats.get(key)
+                    if value is None:
+                        continue
+                    present.add(key)
+                    row[key] = round(row.get(key, 0) + float(value), 2)
+            points_by_gw.setdefault(pid, {})[n] = stats.get("total_points")
+
+    latest = max((int(f.stem[2:]) for f in files), default=None)
+    for pid, row in totals.items():
+        history = points_by_gw.get(pid, {})
+        row["event_points"] = history.get(latest)
+        recent = [history[g] for g in sorted(history)[-FORM_GAMEWEEKS:]
+                  if history.get(g) is not None]
+        row["form"] = round(sum(recent) / len(recent), 1) if recent else None
+        for key, _, how, _ in METRICS:
+            if how == "sum" and key not in seen.get(pid, set()):
+                row[key] = None
+    return totals
+
+
+def player_stats():
+    return _player_stats(data_version())
+
+
+def available_metrics():
+    """Which metrics the data actually supports, so the page offers no column
+    that would be blank for everyone."""
+    stats = player_stats()
+    if not stats:
+        return [m for m in METRICS if m[2] != "sum"]
+    have = set()
+    for row in stats.values():
+        have |= {k for k, v in row.items() if v is not None}
+    return [m for m in METRICS if m[0] in have]
+
+
+def free_agent_pool(gameweek, stored_trades=None):
+    """Free agents with their season numbers attached."""
+    stats = player_stats()
+    pool = []
+    for player in free_agents(gameweek, stored_trades):
+        pool.append({**player, "stats": stats.get(player["id"], {})})
+    return pool

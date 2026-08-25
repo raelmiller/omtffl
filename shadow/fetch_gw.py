@@ -34,6 +34,10 @@ KEEP = [
     "red_cards", "saves", "bonus", "bps", "total_points",
     "defensive_contribution", "clearances_blocks_interceptions", "recoveries",
     "tackles", "starts", "expected_goals", "expected_assists",
+    # Not used by the scoring engine, but managers judge a waiver claim on
+    # them, so the app needs them to sort by.
+    "influence", "creativity", "threat", "ict_index",
+    "expected_goal_involvements", "expected_goals_conceded",
 ]
 
 

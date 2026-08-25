@@ -526,7 +526,10 @@ def waivers(request: Request):
         "lock": engine.deadline_state(gw),
         "my_squad": squads.get(me["key"], []),
         "my_claims": claims.get(me["key"], []),
-        "free_json": json.dumps(engine.free_agents(gw["gameweek"], trades)),
+        "free_json": json.dumps(engine.free_agent_pool(gw["gameweek"], trades)),
+        "metrics_json": json.dumps([
+            {"key": k, "short": short, "label": label}
+            for k, short, _, label in engine.available_metrics()]),
         "squad_json": json.dumps(squads.get(me["key"], [])),
         "claims_json": json.dumps(claims.get(me["key"], [])),
         "order": [{"key": k, "team": names.get(k, k)}

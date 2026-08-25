@@ -38,6 +38,7 @@ body {
   font-family: var(--body); font-size: 16px; line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
+.wrap.wide { max-width: 78rem; }
 .wrap {
   max-width: 58rem; margin: 0 auto;
   padding: clamp(1.75rem,5vw,3.5rem) clamp(1rem,4vw,2.5rem) 5rem;
@@ -354,3 +355,22 @@ input[type="search"] {
   padding: .38rem .5rem; margin-top: .35rem; border-radius: 6px;
   background: var(--surface); color: var(--text); border: 1px solid var(--border-2);
 }
+
+/* ── Free-agent pool ─────────────────────────────────── */
+.dropbox { margin-top: 1rem; }
+.picklist.short { max-height: 11rem; }
+.filters { display: flex; gap: .7rem; flex-wrap: wrap; align-items: flex-end; margin: .8rem 0; }
+.filters .field { min-width: 7rem; }
+.filters .field.grow { flex: 1 1 11rem; }
+.filters input[type="search"] { margin-top: 0; }
+table.pool { min-width: 44rem; font-size: .86rem; }
+table.pool tbody tr { cursor: pointer; }
+table.pool tbody tr:hover { background: var(--surface-2); }
+table.pool tbody tr.chosen { background: var(--accent-dim); }
+table.pool tbody tr.chosen .tick { background: var(--accent); border-color: var(--accent); }
+table.pool tbody tr.chosen .tick::after { color: #06130c; }
+table.pool td, table.pool th { padding: .42rem .6rem; }
+th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+th.sortable:hover { color: var(--text); }
+th.active { color: var(--accent); }
+td.active { color: var(--text); font-weight: 600; }

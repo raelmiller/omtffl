@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Waivers — Matchweek{% endblock %}
+{% block wrapclass %} wide{% endblock %}
 {% block heading %}Waivers{% endblock %}
 {% block subheading %}
 <p class="sub">
@@ -39,18 +40,50 @@
   {% else %}
   <div id="claimlist" class="panel"></div>
 
-  <div class="twocol" style="margin-top:1rem">
-    <div>
-      <span class="eyebrow">Drop</span>
-      <div id="mine" class="picklist"></div>
-    </div>
-    <div>
-      <span class="eyebrow">Claim</span>
-      <input type="search" id="search" placeholder="search free agents"
-             autocomplete="off">
-      <div id="free" class="picklist"></div>
-    </div>
+  <div class="dropbox">
+    <span class="eyebrow">Drop</span>
+    <div id="mine" class="picklist short"></div>
   </div>
+
+  <div class="sechead" style="margin-top:1.3rem">
+    <h2>Free agents</h2>
+    <span class="eyebrow" id="count"></span>
+  </div>
+
+  <div class="filters">
+    <label class="field">
+      <span class="eyebrow">Position</span>
+      <select id="fpos">
+        <option value="">All</option>
+        <option>GK</option><option>DEF</option><option>MID</option><option>FWD</option>
+      </select>
+    </label>
+    <label class="field">
+      <span class="eyebrow">Club</span>
+      <select id="fclub"><option value="">All</option></select>
+    </label>
+    <label class="field grow">
+      <span class="eyebrow">Search</span>
+      <input type="search" id="search" placeholder="name" autocomplete="off">
+    </label>
+    <label class="field">
+      <span class="eyebrow">Minutes</span>
+      <select id="fmins">
+        <option value="0">Any</option>
+        <option value="1">Played at all</option>
+        <option value="60">60+</option>
+        <option value="180">180+</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="panel scroll">
+    <table class="pool">
+      <thead><tr id="poolhead"></tr></thead>
+      <tbody id="poolbody"></tbody>
+    </table>
+  </div>
+  <p class="note" id="poolnote"></p>
 
   <div class="tacts" style="margin-top:.9rem">
     <span id="cstatus" class="savestate"></span>
@@ -87,6 +120,7 @@
 
 {% if lock.open %}
 <script id="free-data" type="application/json">{{ free_json|safe }}</script>
+<script id="metric-data" type="application/json">{{ metrics_json|safe }}</script>
 <script id="squad-data" type="application/json">{{ squad_json|safe }}</script>
 <script id="claims-data" type="application/json">{{ claims_json|safe }}</script>
 <script>
@@ -100,8 +134,14 @@
   const order = list => [...list].sort((a, b) =>
     (POS[a.position] - POS[b.position]) || a.name.localeCompare(b.name));
 
-  let dropId = null, addId = null, filter = '';
+  const METRICS = JSON.parse(document.getElementById('metric-data').textContent);
+  let dropId = null, addId = null;
+  let sortKey = METRICS.length ? METRICS[0].key : null, sortDesc = true;
   const el = id => document.getElementById(id);
+
+  const num = v => (v === null || v === undefined ? null : Number(v));
+  const show = v => (v === null || v === undefined ? '—'
+                     : Number.isInteger(v) ? v : Number(v).toFixed(1));
 
   function row(p, selected, onClick, extra) {
     const b = document.createElement('button');
@@ -122,23 +162,7 @@
     order(squad).forEach(p => el('mine').appendChild(
       row(p, dropId === p.id, () => { dropId = (dropId === p.id ? null : p.id); render(); })));
 
-    const list = el('free')
-    list.innerHTML = '';
-    const matching = order(free.filter(p =>
-      !claimed.has(p.id) &&
-      (!filter || p.name.toLowerCase().includes(filter) ||
-       (p.club || '').toLowerCase().includes(filter))));
-    // The free-agent list runs to hundreds; showing all of them makes the
-    // page unusable and the search is right there.
-    matching.slice(0, 60).forEach(p => list.appendChild(
-      row(p, addId === p.id, () => { addId = (addId === p.id ? null : p.id); render(); },
-          `${p.position} ${p.club || ''}`)));
-    if (matching.length > 60) {
-      const more = document.createElement('div');
-      more.className = 'moretxt';
-      more.textContent = `${matching.length - 60} more — keep typing to narrow it down`;
-      list.appendChild(more);
-    }
+    renderPool(claimed);
 
     const cl = el('claimlist');
     cl.innerHTML = '';
@@ -172,10 +196,74 @@
     el('addclaim').disabled = !(dropId && addId);
   }
 
-  el('search').addEventListener('input', e => {
-    filter = e.target.value.trim().toLowerCase();
-    render();
-  });
+  function renderPool(claimed) {
+    const pos = el('fpos').value;
+    const club = el('fclub').value;
+    const mins = Number(el('fmins').value || 0);
+    const q = el('search').value.trim().toLowerCase();
+    const dropping = squad.find(p => p.id === dropId);
+
+    let rows = free.filter(p =>
+      !claimed.has(p.id) &&
+      (!pos || p.position === pos) &&
+      (!club || p.club === club) &&
+      (!q || p.name.toLowerCase().includes(q)) &&
+      (!mins || (p.stats.minutes || 0) >= mins));
+
+    // A claim has to replace like for like, so once a player is chosen to
+    // drop, anyone who couldn't legally replace them is only noise.
+    if (dropping) rows = rows.filter(p => p.position === dropping.position);
+
+    rows.sort((a, b) => {
+      const x = num(a.stats[sortKey]), y = num(b.stats[sortKey]);
+      if (x === y) return a.name.localeCompare(b.name);
+      if (x === null) return 1;          // missing data sorts last either way
+      if (y === null) return -1;
+      return sortDesc ? y - x : x - y;
+    });
+
+    const head = el('poolhead');
+    head.innerHTML = '<th></th><th>Player</th><th>Pos</th><th>Club</th>' +
+      METRICS.map(m =>
+        `<th class="num sortable${m.key === sortKey ? ' active' : ''}" ` +
+        `data-key="${m.key}" title="${m.label}">${m.short}` +
+        `${m.key === sortKey ? (sortDesc ? ' ▾' : ' ▴') : ''}</th>`).join('');
+    head.querySelectorAll('.sortable').forEach(th =>
+      th.addEventListener('click', () => {
+        const key = th.dataset.key;
+        if (key === sortKey) sortDesc = !sortDesc;
+        else { sortKey = key; sortDesc = true; }
+        render();
+      }));
+
+    const body = el('poolbody');
+    body.innerHTML = '';
+    rows.slice(0, 80).forEach(p => {
+      const tr = document.createElement('tr');
+      tr.className = addId === p.id ? 'chosen' : '';
+      tr.innerHTML =
+        `<td><span class="tick" aria-hidden="true"></span></td>` +
+        `<td class="team">${p.name}</td><td class="pclub">${p.position}</td>` +
+        `<td class="pclub">${p.club || ''}</td>` +
+        METRICS.map(m =>
+          `<td class="num${m.key === sortKey ? ' active' : ''}">` +
+          `${show(p.stats[m.key])}</td>`).join('');
+      tr.addEventListener('click', () => {
+        addId = (addId === p.id ? null : p.id);
+        render();
+      });
+      body.appendChild(tr);
+    });
+
+    el('count').textContent = `${rows.length} available` +
+      (dropping ? ` · ${dropping.position} only, to replace ${dropping.name}` : '');
+    el('poolnote').textContent = rows.length > 80
+      ? `Showing the top 80 by ${METRICS.find(m => m.key === sortKey).label.toLowerCase()}. Filter to narrow it down.`
+      : '';
+  }
+
+  ['fpos', 'fclub', 'fmins', 'search'].forEach(id =>
+    el(id).addEventListener('input', render));
 
   el('addclaim').addEventListener('click', () => {
     const drop = squad.find(p => p.id === dropId);
@@ -208,6 +296,13 @@
     if (data.ok) { location.reload(); return; }
     status.textContent = (data.errors || ['Could not save']).join(' · ');
     status.className = 'savestate bad';
+  });
+
+  // Club filter, built from whoever is actually available.
+  [...new Set(free.map(p => p.club).filter(Boolean))].sort().forEach(c => {
+    const o = document.createElement('option');
+    o.value = o.textContent = c;
+    el('fclub').appendChild(o);
   });
 
   render();

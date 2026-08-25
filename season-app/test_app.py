@@ -472,6 +472,37 @@ db.withdraw(top, gww, "waiver")
 db.withdraw(bottom, gww, "waiver")
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── The free-agent pool ─────────────────────────────────")
+
+gwp = engine.current_gameweek()["gameweek"]
+pool = engine.free_agent_pool(gwp, db.trades())
+check_true("free agents carry their season numbers",
+           pool and "stats" in pool[0], str(pool[:1]))
+
+metrics = engine.available_metrics()
+check_true("metrics are offered", len(metrics) >= 10, f"{len(metrics)}")
+keys = {m[0] for m in metrics}
+for wanted in ("total_points", "form", "minutes", "goals_scored",
+               "assists", "clean_sheets", "bonus", "defensive_contribution",
+               "expected_goals", "expected_assists", "starts"):
+    check_true(f"  can sort by {wanted}", wanted in keys)
+
+# A metric the data doesn't carry must not be offered as a column that would
+# read nought for every player.
+stats = engine.player_stats()
+sample = next(iter(stats.values()))
+missing = [k for k, v in sample.items() if v is None]
+check_true("missing data is None rather than nought",
+           all(k not in keys for k in missing),
+           f"offered but absent: {[k for k in missing if k in keys]}")
+
+totals = [p["stats"].get("total_points") or 0 for p in pool]
+check_true("season points aggregate to something", max(totals) > 0, f"max {max(totals)}")
+check_true("nobody in the pool is owned",
+           not ({p["id"] for p in pool} &
+                {p["id"] for sq in engine.squads_for_gameweek(gwp, db.trades()).values()
+                 for p in sq}))
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")
