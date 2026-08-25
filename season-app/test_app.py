@@ -698,6 +698,82 @@ if booster:
 front = vc.get("/").text
 check_true("the table page draws the markers", 'class="tag' in front)
 
+print("\n── The season read sideways ────────────────────────────")
+
+# Four teams, two rounds, worked by hand. Luck is the only figure here that
+# isn't obvious by eye, so it's the one worth pinning:
+#
+#   GW1  A 50 B 40 C 30 D 20     GW2  A 10 B 40 C 20 D 40
+#
+# A outscored everyone in GW1 (a whole expected win) and nobody in GW2 (none),
+# so A is owed 1.0 and won 1 — dead level. C outscored one of three in each
+# round, so is owed 0.67, but the fixture list handed it two wins.
+def _round(gw, pairs):
+    return {"gameweek": gw, "name": f"Gameweek {gw}", "state": "final",
+            "matches": [{"home": h, "away": a, "home_key": h, "away_key": a,
+                         "home_score": hs, "away_score": as_,
+                         "home_boost": None, "away_boost": None,
+                         "home_move": 0, "away_move": 0}
+                        for h, hs, a, as_ in pairs]}
+
+
+worked = {
+    "ready": True,
+    "rounds": [_round(2, [("A", 10, "C", 20), ("B", 40, "D", 40)]),
+               _round(1, [("A", 50, "B", 40), ("C", 30, "D", 20)])],
+    "table": [{"key": k, "team": k, "rank": i}
+              for i, k in enumerate("ABCD", 1)],
+}
+an = engine.analytics(worked)
+by = {t["key"]: t for t in an["teams"]}
+
+check("both rounds counted", an["played"], 2)
+check("a team's scores come back in order", by["A"]["scores"], [50, 10])
+check("and their results with them", by["A"]["results"], ["W", "L"])
+check("expected wins for the team that topped one week and propped the other",
+      by["A"]["expected_wins"], 1.0)
+check("so its luck is nil", by["A"]["luck"], 0.0)
+check("the team owed least got most", by["C"]["expected_wins"], 0.7)
+check("which is luck of", by["C"]["luck"], 1.3)
+check("and a draw pays half an expected win", by["D"]["expected_wins"], 0.8)
+check("spread of fifty and ten", by["A"]["spread"], 20.0)
+check("no spread at all for two identical scores", by["B"]["spread"], 0.0)
+check("low and high", (by["A"]["low"], by["A"]["high"], by["A"]["range"]),
+      (10, 50, 40))
+check("what they won by", by["A"]["won_by"], 10.0)
+check("and lost by", by["A"]["lost_by"], 10.0)
+check("a draw is neither", (by["B"]["won_by"], by["B"]["lost_by"]), (0.0, 10.0))
+
+# A single round has no spread to speak of, and the page must say so rather
+# than print a confident 0.0.
+one = engine.analytics({"ready": True, "rounds": [worked["rounds"][1]],
+                        "table": worked["table"]})
+check("one round is not a spread",
+      [t["spread"] for t in one["teams"]], [None] * 4)
+
+tight = engine.analytics({
+    "ready": True, "table": worked["table"],
+    "rounds": [_round(1, [("A", 41, "B", 40), ("C", 60, "D", 20)])]})
+tby = {t["key"]: t for t in tight["teams"]}
+check("a one-point win is a close one",
+      (tby["A"]["close_wins"], tby["B"]["close_losses"]), (1, 1))
+check("and forty points is a thrashing",
+      (tby["C"]["blowout_wins"], tby["D"]["blowout_losses"]), (1, 1))
+check("neither is the other",
+      (tby["A"]["blowout_wins"], tby["C"]["close_wins"]), (0, 0))
+
+sp = vc.get("/stats")
+check("the stats page renders", sp.status_code, 200)
+check_true("without signing in", TestClient(app).get("/stats").status_code == 200)
+check_true("with all four analyses on it",
+           all(f'data-panel="{p}"' in sp.text
+               for p in ("form", "spread", "luck", "margins")))
+check("and only one of them open",
+      sp.text.count('<div class="panelblock"') - sp.text.count('hidden>'), 1)
+nav = TestClient(app)
+nav.get(f"/m/{db.manager_by_key('RM')['token']}")
+check_true("and the nav offers it", 'href="/stats"' in nav.get("/").text)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

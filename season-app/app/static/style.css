@@ -126,6 +126,83 @@ h1 .mgr, .sub .mgr { vertical-align: middle; }
 .tag.boost.paid { color: var(--accent); border-color: var(--accent); }
 .tag.bank.up { color: var(--accent); border-color: var(--accent); }
 .tag.bank.down { color: var(--warn); border-color: currentColor; }
+
+/* ── Stats ───────────────────────────────────────────── */
+.gwchip.wide { min-width: 0; padding: .32rem .6rem; font-size: .7rem; }
+.panelblock { display: flex; flex-direction: column; gap: .8rem; }
+/* A class that sets display beats the hidden attribute, so say it again. */
+.panelblock[hidden] { display: none; }
+
+/* A bar per team, drawn as a share of the widest in the set. On a phone the
+   label and the numbers stack above the bar rather than squeezing it. */
+.barrow {
+  display: grid; align-items: center; gap: .1rem .7rem;
+  grid-template-columns: minmax(7rem, 1fr) minmax(6rem, 2fr) 3rem;
+  grid-template-areas: "label bar val" "note note note";
+  padding: .55rem .85rem; border-bottom: 1px solid var(--border);
+}
+.barrow:last-child { border-bottom: none; }
+.blabel { grid-area: label; font-size: .88rem; font-weight: 600; }
+.bval {
+  grid-area: val; text-align: right; font-family: var(--mono);
+  font-size: .84rem; font-variant-numeric: tabular-nums;
+}
+.bval.up { color: var(--accent); }
+.bval.down { color: var(--warn); }
+.bnote {
+  grid-area: note; font-family: var(--mono); font-size: .66rem;
+  color: var(--muted);
+}
+.bar, .dbar {
+  grid-area: bar; position: relative; height: .5rem; border-radius: 3px;
+  background: var(--surface-2); border: 1px solid var(--border);
+}
+.bar > span {
+  position: absolute; inset: 0 auto 0 0; border-radius: 2px;
+  background: var(--accent); min-width: 2px;
+}
+/* Luck runs either side of nought, so its bar grows out from the middle. */
+.dbar::before {
+  content: ''; position: absolute; left: 50%; top: -2px; bottom: -2px;
+  border-left: 1px solid var(--border-2);
+}
+.dbar > span { position: absolute; top: 0; bottom: 0; border-radius: 2px; min-width: 2px; }
+.dbar > span.pos { left: 50%; background: var(--accent); }
+.dbar > span.neg { right: 50%; background: var(--warn); }
+
+/* Form is a list rather than a table: on a phone a table pushed the two
+   columns worth reading — the last five, and which way they're going — off
+   the side of the screen. */
+.teamrow {
+  display: grid; align-items: center; gap: .15rem .7rem;
+  grid-template-columns: 1.6rem 1fr auto;
+  grid-template-areas: "rk label move" ". note note";
+  padding: .55rem .85rem; border-bottom: 1px solid var(--border);
+}
+.teamrow:last-child { border-bottom: none; }
+.teamrow .rk {
+  grid-area: rk; font-family: var(--mono); font-size: .78rem; color: var(--muted);
+}
+.teamrow .bval { grid-area: move; }
+.teamrow .bnote { display: flex; align-items: center; gap: .45rem; }
+
+.formrow { display: inline-flex; gap: 2px; }
+.res {
+  display: inline-grid; place-items: center; width: 1.15rem; height: 1.15rem;
+  border-radius: 3px; font-family: var(--mono); font-size: .62rem;
+  font-weight: 600; color: var(--bg);
+}
+.res.W { background: var(--accent); }
+.res.D { background: var(--muted); }
+.res.L { background: var(--warn); }
+td .up { color: var(--accent); }
+td .down { color: var(--warn); }
+td .dim { color: var(--muted); }
+
+@media (max-width: 30rem) {
+  .barrow { grid-template-columns: 1fr 3rem;
+            grid-template-areas: "label val" "bar bar" "note note"; }
+}
 .match .score {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
   font-size: .95rem; white-space: nowrap; padding: .12rem .5rem;

@@ -131,6 +131,15 @@ def table(request: Request):
     return templates.TemplateResponse("table.html", ctx)
 
 
+@app.get("/stats", response_class=HTMLResponse)
+def stats(request: Request):
+    ctx = _context(request)
+    if not ctx["season"].get("ready"):
+        raise HTTPException(404, "no season data yet")
+    ctx["stats"] = engine.analytics(ctx["season"])
+    return templates.TemplateResponse("stats.html", ctx)
+
+
 @app.get("/gameweek/{number}", response_class=HTMLResponse)
 def gameweek(request: Request, number: int):
     ctx = _context(request)

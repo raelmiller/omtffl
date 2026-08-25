@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Stats — Matchweek{% endblock %}
+{% block heading %}Stats{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {{ stats.played }} of {{ season.scheduled }} rounds scored &middot;
+  league average {{ stats.league_average }} a week.
+  {% if stats.played < 5 %}
+    Every figure here is drawn from {{ stats.played }}
+    round{{ '' if stats.played == 1 else 's' }}, which is not yet enough to
+    tell a good manager from a lucky one.
+  {% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+<section>
+  <nav class="gwrail" id="statrail" aria-label="Which analysis">
+    <a class="gwchip wide on" href="#panel-form" data-panel="form">Form</a>
+    <a class="gwchip wide" href="#panel-spread" data-panel="spread">Consistency</a>
+    <a class="gwchip wide" href="#panel-luck" data-panel="luck">Luck</a>
+    <a class="gwchip wide" href="#panel-margins" data-panel="margins">Margins</a>
+  </nav>
+
+  {# ── Form ─────────────────────────────────────────────────────────── #}
+  <div class="panelblock" id="panel-form" data-panel="form">
+    <div class="sechead">
+      <h2>Form</h2>
+      <span class="eyebrow">last five rounds</span>
+    </div>
+    <p class="note">Where each team is now, which way it is travelling, and
+    what it has done lately. The arrow compares against five rounds ago.</p>
+    <div class="panel">
+      {% for t in stats.teams %}
+      <div class="teamrow">
+        <span class="rk">{{ t.rank }}</span>
+        <span class="blabel">
+          <a href="/team/{{ t.key }}">{{ t.team }}</a><span class="mgr">{{ t.key }}</span>
+        </span>
+        <span class="bval">
+          {% set move = (t.rank_then - t.rank) if t.rank_then else 0 %}
+          {% if move > 0 %}<span class="up">&uarr;{{ move }}</span>
+          {% elif move < 0 %}<span class="down">&darr;{{ -move }}</span>
+          {% else %}<span class="dim">&ndash;</span>{% endif %}
+        </span>
+        <span class="bnote">
+          <span class="formrow">
+            {% for r in t.form %}<span class="res {{ r }}">{{ r }}</span>{% endfor %}
+          </span>
+          {{ t.average }} a week
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── Consistency ──────────────────────────────────────────────────── #}
+  <div class="panelblock" id="panel-spread" data-panel="spread" hidden>
+    <div class="sechead">
+      <h2>Consistency</h2>
+      <span class="eyebrow">standard deviation</span>
+    </div>
+    {% if stats.played < 2 %}
+    <p class="note">A spread needs at least two rounds. Come back after
+    gameweek {{ stats.weeks[-1] + 1 }}.</p>
+    {% else %}
+    <p class="note">How far a team's weekly score wanders from its own
+    average. A low number is a manager you can predict; a high one is a
+    manager who wins big and loses badly.</p>
+    <div class="panel">
+      {% for t in stats.teams|sort(attribute='spread', reverse=true) %}
+      <div class="barrow">
+        <span class="blabel">{{ t.team }}<span class="mgr">{{ t.key }}</span></span>
+        <span class="bar">
+          <span style="width: {{ (100 * (t.spread or 0) / stats.max_spread)|round(1) if stats.max_spread else 0 }}%"></span>
+        </span>
+        <span class="bval">{{ t.spread if t.spread is not none else '—' }}</span>
+        <span class="bnote">{{ t.low }}&ndash;{{ t.high }}, avg {{ t.average }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── Luck ─────────────────────────────────────────────────────────── #}
+  <div class="panelblock" id="panel-luck" data-panel="luck" hidden>
+    <div class="sechead">
+      <h2>Luck</h2>
+      <span class="eyebrow">wins against expected wins</span>
+    </div>
+    <p class="note">Expected wins is the share of the league a team outscored
+    each week &mdash; beat everyone and that is a whole win, beat half of them
+    and it is half. The gap to real wins is the fixture list doing the work
+    rather than the manager.</p>
+    <div class="panel">
+      {% for t in stats.teams|sort(attribute='luck', reverse=true) %}
+      <div class="barrow">
+        <span class="blabel">{{ t.team }}<span class="mgr">{{ t.key }}</span></span>
+        <span class="dbar">
+          <span class="{{ 'pos' if t.luck > 0 else 'neg' }}"
+                style="width: {{ (50 * (t.luck|abs) / stats.max_luck)|round(1) if stats.max_luck else 0 }}%"></span>
+        </span>
+        <span class="bval {{ 'up' if t.luck > 0 else 'down' if t.luck < 0 }}">
+          {{ '+' if t.luck > 0 }}{{ t.luck }}</span>
+        <span class="bnote">{{ t.wins }} won, {{ t.expected_wins }} expected</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── Margins ──────────────────────────────────────────────────────── #}
+  <div class="panelblock" id="panel-margins" data-panel="margins" hidden>
+    <div class="sechead">
+      <h2>Margins</h2>
+      <span class="eyebrow">how games are won and lost</span>
+    </div>
+    <p class="note">A game inside {{ stats.close }} points is close; one of
+    {{ stats.blowout }} or more was never in doubt. A team with more close
+    losses than close wins has been on the wrong side of the coin.</p>
+    <div class="panel scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Team</th><th>Manager</th>
+            <th class="num">Won by</th><th class="num">Lost by</th>
+            <th class="num">Close W&ndash;L</th>
+            <th class="num">Thrashings W&ndash;L</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in stats.teams %}
+          <tr>
+            <td class="team"><a href="/team/{{ t.key }}">{{ t.team }}</a></td>
+            <td class="who">{{ t.key }}</td>
+            <td class="num">{{ t.won_by or '—' }}</td>
+            <td class="num">{{ t.lost_by or '—' }}</td>
+            <td class="num">{{ t.close_wins }}&ndash;{{ t.close_losses }}</td>
+            <td class="num">{{ t.blowout_wins }}&ndash;{{ t.blowout_losses }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="sub"><a href="/">&larr; The table</a></p>
+</section>
+
+<noscript>
+  <style>
+    /* Without scripting there is nothing to switch with, so all four are
+       listed down the page. */
+    .panelblock[hidden] { display: flex; }
+    #statrail { display: none; }
+  </style>
+</noscript>
+
+<script>
+(() => {
+  const rail = document.getElementById('statrail');
+  const panels = [...document.querySelectorAll('.panelblock')];
+  if (!rail || !panels.length) return;
+  function show(name) {
+    panels.forEach(p => { p.hidden = p.dataset.panel !== name; });
+    rail.querySelectorAll('.gwchip').forEach(c =>
+      c.classList.toggle('on', c.dataset.panel === name));
+  }
+  rail.addEventListener('click', ev => {
+    const chip = ev.target.closest('.gwchip');
+    if (!chip) return;
+    ev.preventDefault();
+    show(chip.dataset.panel);
+  });
+})();
+</script>
+{% endblock %}

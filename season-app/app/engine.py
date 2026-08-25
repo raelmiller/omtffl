@@ -365,6 +365,146 @@ def gameweeks():
     return [g for g in calendar() if g.get("has_data")]
 
 
+CLOSE_MARGIN = 3        # a game decided by a substitute's late goal
+BLOWOUT_MARGIN = 20     # a game that was never in doubt
+
+
+def analytics(season_data):
+    """The season read sideways: form, volatility, luck and margins.
+
+    All of it comes off the rounds the engine has already scored, so these
+    numbers are the same ones on the table — boosts and traded points
+    included. Nothing here needs the FPL API.
+
+    Every section says how many rounds it has to work with. A standard
+    deviation over one gameweek is not a fact about a manager, and the page
+    has to be able to say so rather than print 0.0 and look authoritative.
+    """
+    rounds = list(reversed(season_data.get("rounds") or []))   # oldest first
+    table = season_data.get("table") or []
+    names = {r["key"]: r["team"] for r in table}
+    if not rounds or not table:
+        return {"played": 0, "teams": [], "names": names}
+
+    weeks = [r["gameweek"] for r in rounds]
+    scores, results, margins = {}, {}, {}
+    for key in names:
+        scores[key], results[key], margins[key] = [], [], []
+
+    for rnd in rounds:
+        for m in rnd["matches"]:
+            h, a = m["home_key"], m["away_key"]
+            hs, as_ = m["home_score"], m["away_score"]
+            for me, mine, theirs in ((h, hs, as_), (a, as_, hs)):
+                if me not in scores:
+                    continue
+                scores[me].append(mine)
+                results[me].append("W" if mine > theirs
+                                   else "D" if mine == theirs else "L")
+                margins[me].append(mine - theirs)
+
+    # League position after each round, so form can say which way a team is
+    # travelling rather than only where it has arrived.
+    ranks = {key: [] for key in names}
+    running = {key: dict(Pts=0, PF=0, PA=0) for key in names}
+    for rnd in rounds:
+        for m in rnd["matches"]:
+            h, a = m["home_key"], m["away_key"]
+            hs, as_ = m["home_score"], m["away_score"]
+            for me, mine, theirs in ((h, hs, as_), (a, as_, hs)):
+                if me not in running:
+                    continue
+                running[me]["PF"] += mine
+                running[me]["PA"] += theirs
+                running[me]["Pts"] += (WIN if mine > theirs
+                                       else DRAW if mine == theirs else 0)
+        order = sorted(running, key=lambda k: (-running[k]["Pts"],
+                                               -(running[k]["PF"] - running[k]["PA"]),
+                                               -running[k]["PF"]))
+        for place, key in enumerate(order, 1):
+            ranks[key].append(place)
+
+    # Expected wins: the share of the league a team outscored each week. Beat
+    # everyone and it's a full win; beat half of them and a draw's worth. The
+    # gap to actual wins is the luck — the same score can be a win or a loss
+    # depending only on who the fixture list paired you with.
+    expected = {key: 0.0 for key in names}
+    for i in range(len(rounds)):
+        week = {key: scores[key][i] for key in names if i < len(scores[key])}
+        for key, mine in week.items():
+            others = [v for k, v in week.items() if k != key]
+            if not others:
+                continue
+            beat = sum(1 for v in others if mine > v)
+            drew = sum(1 for v in others if mine == v)
+            expected[key] += (beat + drew / 2) / len(others)
+
+    teams = []
+    for row in table:
+        key = row["key"]
+        mine = scores[key]
+        wins = results[key].count("W")
+        won = [m for m in margins[key] if m > 0]
+        lost = [-m for m in margins[key] if m < 0]
+        teams.append({
+            "key": key, "team": row["team"], "rank": row["rank"],
+            "played": len(mine),
+            "scores": mine,
+            "results": results[key],
+            "form": results[key][-5:],
+            "ranks": ranks[key],
+            "rank_then": ranks[key][-6] if len(ranks[key]) > 5 else (
+                ranks[key][0] if ranks[key] else None),
+            "average": _mean(mine),
+            "spread": _stdev(mine),
+            "low": min(mine) if mine else 0,
+            "high": max(mine) if mine else 0,
+            "range": (max(mine) - min(mine)) if mine else 0,
+            "wins": wins,
+            "expected_wins": round(expected[key], 1),
+            "luck": round(wins - expected[key], 1),
+            "won_by": _mean(won),
+            "lost_by": _mean(lost),
+            "close_wins": sum(1 for m in won if m <= CLOSE_MARGIN),
+            "close_losses": sum(1 for m in lost if m <= CLOSE_MARGIN),
+            "blowout_wins": sum(1 for m in won if m >= BLOWOUT_MARGIN),
+            "blowout_losses": sum(1 for m in lost if m >= BLOWOUT_MARGIN),
+        })
+
+    # Bars are drawn as a share of the widest, so the scale travels with the
+    # data rather than being guessed at in the template.
+    return {
+        "played": len(rounds),
+        "weeks": weeks,
+        "teams": teams,
+        "names": names,
+        "close": CLOSE_MARGIN,
+        "blowout": BLOWOUT_MARGIN,
+        "league_average": _mean([t["average"] for t in teams]),
+        "max_spread": max([t["spread"] or 0 for t in teams], default=0),
+        "max_luck": max([abs(t["luck"]) for t in teams], default=0),
+        "max_margin": max([max(t["won_by"], t["lost_by"]) for t in teams],
+                          default=0),
+        "max_average": max([t["average"] for t in teams], default=0),
+    }
+
+
+def _mean(values):
+    return round(sum(values) / len(values), 1) if values else 0.0
+
+
+def _stdev(values):
+    """Population standard deviation, or None when it would be meaningless.
+
+    One score has no spread and two barely do; printing 0.0 for a manager who
+    has played once would read as "remarkably consistent".
+    """
+    if len(values) < 2:
+        return None
+    avg = sum(values) / len(values)
+    return round((sum((v - avg) ** 2 for v in values) / len(values)) ** 0.5, 1)
+
+
 def fixture_list(scored=None):
     """Every round of the season, played or not, oldest first.
 
