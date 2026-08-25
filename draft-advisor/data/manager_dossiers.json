@@ -5788,7 +5788,7 @@
    ]
   ],
   "pts_per_million": 20.1,
-  "total_points_bought": 2005,
+  "total_points_bought": 2013,
   "max_ever_bid": 19.0,
   "seasons": {
    "2024-25": {
@@ -6148,13 +6148,13 @@
       "player": "Samu",
       "club": "NEW",
       "cost": 0.0,
-      "fpl_id": 49,
-      "fpl_name": "Iling Jr",
-      "points_that_season": 0
+      "fpl_id": 149,
+      "fpl_name": "Colwill",
+      "points_that_season": 8
      }
     ],
     "spend": 50.0,
-    "points_bought": 1307,
+    "points_bought": 1315,
     "points_matched_players": 14,
     "best_value": {
      "season": "2025-26",
