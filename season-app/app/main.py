@@ -29,6 +29,21 @@ from . import auth, db, engine, fetcher
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
 
+
+def asset_version():
+    """A stamp that changes whenever the stylesheet does.
+
+    Without it a browser keeps the CSS it already has while happily taking the
+    new HTML, which renders new markup against old rules — points sitting
+    unstyled at the top-left of a shirt instead of centred in it, and every
+    card's layout pushed out with them. Deploys are the moment that breaks, so
+    the file's own modification time is the stamp.
+    """
+    try:
+        return str(int((HERE / "static" / "style.css").stat().st_mtime))
+    except OSError:
+        return "0"
+
 app = FastAPI(title="Matchweek", docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory=str(HERE / "static")), name="static")
 
@@ -93,6 +108,7 @@ def _context(request):
     return {
         "request": request,
         "mode": fetcher.mode(),
+        "asset_version": asset_version(),
         "me": me,
         "season": engine.season(
             stored if stored else None,
@@ -538,6 +554,15 @@ def team_page(request: Request, key: str, gameweek: int = None):
         "next_gw": min(later) if later else None,
     })
     return templates.TemplateResponse("team.html", ctx)
+
+
+@app.get("/api/player/{player_id}")
+def player_api(player_id: int):
+    """Stats for the player popup. Public — it is all public FPL data."""
+    detail = engine.player_detail(player_id)
+    if detail is None:
+        raise HTTPException(404, "no such player")
+    return JSONResponse(detail)
 
 
 # ── Waivers ────────────────────────────────────────────────────────────────

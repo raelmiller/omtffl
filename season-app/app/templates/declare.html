@@ -202,9 +202,14 @@
     el.innerHTML = `
       ${opts.order ? `<span class="ord">${opts.order}</span>` : ''}
       <span class="shirt" data-pos="${p.position}"></span>
-      <span class="pn">${p.name}</span>
+      <span class="pn tappable" title="See ${p.name}'s stats">${p.name}</span>
       <span class="pc">${p.club || p.position}</span>`;
     el.addEventListener('click', () => choose(id));
+    // Tapping the name asks about the player; tapping the shirt picks them.
+    el.querySelector('.pn').addEventListener('click', ev => {
+      ev.stopPropagation();
+      document.dispatchEvent(new CustomEvent('player:open', { detail: p.id }));
+    });
     return el;
   }
 

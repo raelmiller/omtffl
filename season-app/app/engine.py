@@ -851,3 +851,80 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
         "total": xi_total + (boost["points"] if boost else 0) + adjustment,
         "bench_points": sum(points.get(p["id"], 0) for p in bench),
     }
+
+
+# ── One player ─────────────────────────────────────────────────────────────
+def player_detail(player_id, ahead=5):
+    """Everything worth knowing about a player, for the popup.
+
+    A headline of the season so far, what they did in each gameweek, and who
+    they play next — the three things a manager weighs before starting someone
+    or claiming them.
+    """
+    meta = _read("players.json") or {}
+    positions = {int(k): v for k, v in (meta.get("positions") or {}).items()}
+    if player_id not in positions:
+        return None
+    POS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
+    club_id = (meta.get("player_clubs") or {}).get(str(player_id))
+    club_names = clubs()
+
+    history = []
+    for path in gameweek_files():
+        gw = json.loads(path.read_text())
+        entry = next((e for e in gw["elements"] if e["id"] == player_id), None)
+        if entry is None:
+            continue
+        stats = entry.get("stats") or {}
+        history.append({
+            "gameweek": gw["gameweek"],
+            "points": score_entry(entry, positions[player_id]),
+            "minutes": stats.get("minutes") or 0,
+            "goals": stats.get("goals_scored") or 0,
+            "assists": stats.get("assists") or 0,
+            "clean_sheet": bool(stats.get("clean_sheets")),
+            "bonus": stats.get("bonus") or 0,
+            "defcon": stats.get("defensive_contribution"),
+            "xg": stats.get("expected_goals"),
+            "xa": stats.get("expected_assists"),
+            "opponent": None, "home": None,
+        })
+
+    # Who they played, and who they play next.
+    fixtures = _read("pl_fixtures.json") or []
+    played = {h["gameweek"] for h in history}
+    upcoming = []
+    for fx in sorted((f for f in fixtures if f.get("event")),
+                     key=lambda f: (f["event"], f.get("kickoff_time") or "")):
+        if club_id not in (fx["team_h"], fx["team_a"]):
+            continue
+        home = fx["team_h"] == club_id
+        other = fx["team_a"] if home else fx["team_h"]
+        row = {"gameweek": fx["event"], "home": home,
+               "opponent": club_names.get(other, {}).get("short", "?")}
+        if fx["event"] in played:
+            for h in history:
+                if h["gameweek"] == fx["event"]:
+                    h["opponent"], h["home"] = row["opponent"], home
+        elif not fx["finished"] and len(upcoming) < ahead:
+            upcoming.append(row)
+
+    totals = player_stats().get(player_id, {})
+    owner = None
+    squads = _read("squads.json") or {"teams": []}
+    for team in squads["teams"]:
+        if any(p["id"] == player_id for p in team["squad"]):
+            owner = team.get("team", team["key"])
+
+    return {
+        "id": player_id,
+        "name": (meta.get("names") or {}).get(str(player_id), f"#{player_id}"),
+        "position": POS.get(positions[player_id], "?"),
+        "club": club_names.get(club_id, {}).get("name", ""),
+        "club_short": club_names.get(club_id, {}).get("short", ""),
+        "owner": owner,
+        "totals": totals,
+        "history": history,
+        "upcoming": upcoming,
+        "best": max((h["points"] for h in history), default=None),
+    }

@@ -255,7 +255,7 @@
       tr.className = addId === p.id ? 'chosen' : '';
       tr.innerHTML =
         `<td class="cpick"><span class="tick" aria-hidden="true"></span></td>` +
-        `<td class="team">${p.name}</td>` +
+        `<td class="team"><span class="pn tappable">${p.name}</span></td>` +
         `<td class="pclub cpos">${p.position}</td>` +
         `<td class="pclub cclub">${p.club || ''}</td>` +
         METRICS.map(m =>
@@ -264,6 +264,10 @@
       tr.addEventListener('click', () => {
         addId = (addId === p.id ? null : p.id);
         render();
+      });
+      tr.querySelector('.pn').addEventListener('click', ev => {
+        ev.stopPropagation();
+        document.dispatchEvent(new CustomEvent('player:open', { detail: p.id }));
       });
       body.appendChild(tr);
     });

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/style.css?v={{ asset_version }}">
 <script>
 // Apply a saved theme before the first paint. Doing this in the body would
 // show a flash of the wrong one on every page load.
@@ -101,6 +101,96 @@
   window.matchMedia("(prefers-color-scheme: dark)")
         .addEventListener("change", function () { if (!stored()) paint(); });
   paint();
+})();
+</script>
+<dialog id="playercard" class="pcard">
+  <div class="pcard-head">
+    <div>
+      <h2 id="pc-name">&nbsp;</h2>
+      <p class="sub" id="pc-meta">&nbsp;</p>
+    </div>
+    <button id="pc-close" class="btn small ghost" aria-label="Close">Close</button>
+  </div>
+  <div id="pc-body"><p class="empty">Loading…</p></div>
+</dialog>
+
+<script>
+// One popup, shared by every page that shows players. Opened by dispatching
+// a `player:open` event with the id, so no page needs to know how it works.
+(function () {
+  const dlg = document.getElementById('playercard');
+  if (!dlg) return;
+  const body = document.getElementById('pc-body');
+  const cache = new Map();
+
+  const cell = v => (v === null || v === undefined ? '—'
+                     : Number.isInteger(v) ? v : Number(v).toFixed(1));
+
+  function headline(d) {
+    const t = d.totals || {};
+    const parts = [
+      ['Points', t.total_points], ['Form', t.form], ['Minutes', t.minutes],
+      ['Goals', t.goals_scored], ['Assists', t.assists],
+      ['Clean sheets', t.clean_sheets], ['Bonus', t.bonus],
+      ['DefCon', t.defensive_contribution], ['xG', t.expected_goals],
+      ['xA', t.expected_assists],
+    ];
+    return `<div class="pc-stats">` + parts.map(([k, v]) =>
+      `<div class="pc-stat"><dt>${k}</dt><dd>${cell(v)}</dd></div>`).join('') +
+      `</div>`;
+  }
+
+  function history(d) {
+    if (!d.history.length) return '<p class="empty">No gameweeks played yet.</p>';
+    return `<div class="scroll"><table class="pc-table"><thead><tr>
+      <th>GW</th><th>Opp</th><th class="num">Pts</th><th class="num">Mins</th>
+      <th class="num">G</th><th class="num">A</th><th class="num">CS</th>
+      <th class="num">Bonus</th></tr></thead><tbody>` +
+      d.history.map(h => `<tr>
+        <td>${h.gameweek}</td>
+        <td class="pclub">${h.opponent || '—'}${h.home === null ? '' : h.home ? ' (H)' : ' (A)'}</td>
+        <td class="num"><b>${h.points}</b></td><td class="num">${h.minutes}</td>
+        <td class="num">${h.goals}</td><td class="num">${h.assists}</td>
+        <td class="num">${h.clean_sheet ? '✓' : '—'}</td>
+        <td class="num">${h.bonus}</td></tr>`).join('') +
+      `</tbody></table></div>`;
+  }
+
+  function fixtures(d) {
+    if (!d.upcoming.length) return '';
+    return `<div class="sechead"><h2>Next up</h2></div><div class="snake">` +
+      d.upcoming.map(f => `<span class="slot"><span class="n">GW${f.gameweek}</span>` +
+        `${f.opponent} ${f.home ? '(H)' : '(A)'}</span>`).join('') + `</div>`;
+  }
+
+  async function open(id) {
+    dlg.showModal();
+    body.innerHTML = '<p class="empty">Loading…</p>';
+    document.getElementById('pc-name').textContent = ' ';
+    document.getElementById('pc-meta').textContent = ' ';
+    try {
+      if (!cache.has(id)) {
+        const res = await fetch(`/api/player/${id}`);
+        if (!res.ok) throw new Error('not found');
+        cache.set(id, await res.json());
+      }
+      const d = cache.get(id);
+      document.getElementById('pc-name').textContent = d.name;
+      document.getElementById('pc-meta').textContent =
+        [d.position, d.club, d.owner ? `owned by ${d.owner}` : 'a free agent']
+          .filter(Boolean).join(' · ');
+      body.innerHTML = headline(d) +
+        '<div class="sechead"><h2>Gameweek by gameweek</h2></div>' +
+        history(d) + fixtures(d);
+    } catch (e) {
+      body.innerHTML = '<p class="empty">Could not load that player.</p>';
+    }
+  }
+
+  document.addEventListener('player:open', e => open(e.detail));
+  document.getElementById('pc-close').addEventListener('click', () => dlg.close());
+  // Clicking the backdrop closes it, the same as pressing Escape.
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 })();
 </script>
 </body>

@@ -1,6 +1,18 @@
 {% extends "base.html" %}
-{% block title %}{{ detail.team }} — {{ round_name }}{% endblock %}
-{% block heading %}{{ detail.team }}{% endblock %}
+{% block title %}{{ detail.team }} — {{ round_name }}<script>
+document.querySelectorAll('[data-player]').forEach(el =>
+  el.addEventListener('click', () =>
+    document.dispatchEvent(new CustomEvent('player:open',
+      { detail: Number(el.dataset.player) }))));
+</script>
+{% endblock %}
+{% block heading %}{{ detail.team }}<script>
+document.querySelectorAll('[data-player]').forEach(el =>
+  el.addEventListener('click', () =>
+    document.dispatchEvent(new CustomEvent('player:open',
+      { detail: Number(el.dataset.player) }))));
+</script>
+{% endblock %}
 {% block subheading %}
 <p class="sub">
   {{ round_name }} &middot; <span class="pill">{{ detail.state }}</span>
@@ -14,6 +26,12 @@
 <p class="note">No eleven was submitted for this round, so this is
 {{ 'the best available team — which flatters the total, since nobody picks perfectly' if detail.source == 'best available' else detail.source }}.</p>
 {% endif %}
+<script>
+document.querySelectorAll('[data-player]').forEach(el =>
+  el.addEventListener('click', () =>
+    document.dispatchEvent(new CustomEvent('player:open',
+      { detail: Number(el.dataset.player) }))));
+</script>
 {% endblock %}
 
 {% block content %}
@@ -49,7 +67,7 @@
         {% if players %}
         <div class="line">
           {% for p in players %}
-          <div class="player static">
+          <button type="button" class="player static" data-player="{{ p.id }}">
             <span class="shirt" data-pos="{{ p.position }}">
               <span class="pts">{{ p.points }}</span>
             </span>
@@ -57,7 +75,7 @@
             <span class="pc">
               {{ p.club }}{% if p.came_on %} · on{% elif not p.minutes %} · 0'{% endif %}
             </span>
-          </div>
+          </button>
           {% endfor %}
         </div>
         {% endif %}
@@ -72,13 +90,13 @@
     </div>
     <div class="benchrow">
       {% for p in detail.bench %}
-      <div class="player static">
+      <button type="button" class="player static" data-player="{{ p.id }}">
         <span class="shirt" data-pos="{{ p.position }}">
           <span class="pts">{{ p.points }}</span>
         </span>
         <span class="pn">{{ p.name }}</span>
         <span class="pc">{{ p.position }}</span>
-      </div>
+      </button>
       {% endfor %}
     </div>
   </div>
@@ -128,4 +146,10 @@
 
   <p class="sub"><a href="/">&larr; The table</a></p>
 </section>
+<script>
+document.querySelectorAll('[data-player]').forEach(el =>
+  el.addEventListener('click', () =>
+    document.dispatchEvent(new CustomEvent('player:open',
+      { detail: Number(el.dataset.player) }))));
+</script>
 {% endblock %}

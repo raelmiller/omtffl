@@ -181,7 +181,11 @@ footer {
   width: 6.5rem; height: 6.5rem; border-radius: 50%;
 }
 .rows { position: relative; display: flex; flex-direction: column; gap: clamp(.6rem, 2.4vw, 1.4rem); }
-.line { display: flex; justify-content: center; gap: clamp(.3rem, 1.6vw, .9rem); flex-wrap: wrap; }
+.line { display: flex; justify-content: center; gap: clamp(.3rem, 1.6vw, .9rem); flex-wrap: wrap; align-items: flex-start; }
+/* Only the picker needs room for a name to wrap without the rows jumping as
+   players move between lines. The read-only views size to their content. */
+#rows .player .pn, .benchrow .player .pn { min-height: 2.1em; }
+.rows .player.static .pn, .benchbar .player.static .pn { min-height: 0; }
 
 .player {
   position: relative; display: flex; flex-direction: column; align-items: center;
@@ -212,7 +216,7 @@ footer {
      "Verbrugge / n" reads worse than a slightly smaller name. */
   overflow-wrap: break-word; hyphens: none;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden; min-height: 2.1em;
+  overflow: hidden;
   text-shadow: 0 1px 3px rgba(0,0,0,.7);
 }
 .player .pc {
@@ -442,3 +446,39 @@ a.slot { text-decoration: none; color: var(--text); }
 a.slot:hover { border-color: var(--accent); }
 .match a.name { text-decoration: none; }
 .match a.name:hover { text-decoration: underline; }
+
+/* ── Player popup ────────────────────────────────────── */
+dialog.pcard {
+  width: min(38rem, calc(100vw - 1.6rem));
+  max-height: min(84vh, 46rem);
+  overflow: auto; padding: 1.1rem 1.2rem 1.4rem;
+  border: 1px solid var(--border-2); border-radius: 12px;
+  background: var(--surface); color: var(--text);
+}
+dialog.pcard::backdrop { background: rgba(0, 0, 0, .55); }
+.pcard-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; margin-bottom: .9rem;
+}
+.pcard-head h2 { font-size: 1.4rem; }
+.pc-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(5.2rem, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 9px; overflow: hidden;
+}
+.pc-stat { background: var(--surface); padding: .5rem .6rem; }
+.pc-stat dt {
+  font-family: var(--mono); font-size: .58rem; text-transform: uppercase;
+  letter-spacing: .11em; color: var(--muted); margin-bottom: .12rem;
+}
+.pc-stat dd {
+  margin: 0; font-family: var(--display); font-weight: 700; font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+table.pc-table { min-width: 26rem; font-size: .84rem; }
+table.pc-table td, table.pc-table th { padding: .34rem .55rem; }
+.player .pn.tappable { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
+
+button.player.static { cursor: pointer; }
+button.player.static:hover .shirt { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+td.team .pn.tappable { font-weight: 600; }
