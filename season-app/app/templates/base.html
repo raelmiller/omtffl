@@ -140,6 +140,24 @@
       `</div>`;
   }
 
+  // Where the latest round's points came from. The rows come from the same
+  // rules engine that scored the pitch, so they always add up to the number
+  // on the shirt.
+  function makeup(d) {
+    const h = d.history[d.history.length - 1];
+    if (!h || !h.breakdown || !h.breakdown.length) return '';
+    const opp = h.opponent
+      ? ` &middot; ${h.opponent} ${h.home ? '(H)' : '(A)'}` : '';
+    const rows = h.breakdown.map(b => `<tr>
+      <td>${b.match ? `<span class="n">M${b.match}</span> ` : ''}${b.what}</td>
+      <td class="dim">${b.detail || ''}</td>
+      <td class="num">${b.points > 0 ? '+' : ''}${b.points}</td></tr>`).join('');
+    return `<div class="sechead"><h2>Gameweek ${h.gameweek}${opp}</h2></div>
+      <table class="pc-table makeup"><tbody>${rows}
+        <tr class="tot"><td>Total</td><td></td>
+        <td class="num"><b>${h.points}</b></td></tr></tbody></table>`;
+  }
+
   function history(d) {
     if (!d.history.length) return '<p class="empty">No gameweeks played yet.</p>';
     return `<div class="scroll"><table class="pc-table"><thead><tr>
@@ -179,7 +197,7 @@
       document.getElementById('pc-meta').textContent =
         [d.position, d.club, d.owner ? `owned by ${d.owner}` : 'a free agent']
           .filter(Boolean).join(' · ');
-      body.innerHTML = headline(d) +
+      body.innerHTML = headline(d) + makeup(d) +
         '<div class="sechead"><h2>Gameweek by gameweek</h2></div>' +
         history(d) + fixtures(d);
     } catch (e) {

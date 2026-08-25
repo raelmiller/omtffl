@@ -37,7 +37,7 @@ from mechanics import (                             # noqa: E402
     boost_value, league_table, process_waivers, setting, snake_order,
     validate_trade,
 )
-from scoring import score_entry                     # noqa: E402
+from scoring import entry_breakdown, score_entry    # noqa: E402
 
 
 def _read(name):
@@ -864,6 +864,13 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
 
     xi_total = sum(points.get(p["id"], 0) for p in final_xi)
 
+    # Everyone in the fifteen who didn't play for you: the bench that stayed
+    # there, then the starters an autosub took off. A player who was replaced
+    # otherwise disappears from the page entirely, which reads as a bug — and
+    # their points are the ones genuinely left unused.
+    sat_out = ([p for p in bench if p["id"] not in swapped_in]
+               + [p for p in picked if p["id"] in swapped_out])
+
     boost = None
     if (gameweek, key) in {(b["gameweek"], b["team"]) for b in boost_log}:
         club = (drafted.get(key) or {}).get("club")
@@ -883,14 +890,14 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
         "key": key, "team": names.get(key, key), "gameweek": gameweek,
         "state": state(gw), "source": source,
         "lines": [(pos, lines.get(pos, [])) for pos in ("GK", "DEF", "MID", "FWD")],
-        "bench": [card(p) for p in bench if p["id"] not in swapped_in],
+        "bench": [card(p) for p in sat_out],
         "subs": [{"off": off["name"], "on": on["name"],
                   "points": points.get(on["id"], 0)} for off, on in subs],
         "xi_total": xi_total,
         "boost": boost,
         "adjustment": adjustment,
         "total": xi_total + (boost["points"] if boost else 0) + adjustment,
-        "bench_points": sum(points.get(p["id"], 0) for p in bench),
+        "bench_points": sum(points.get(p["id"], 0) for p in sat_out),
     }
 
 
@@ -920,6 +927,7 @@ def player_detail(player_id, ahead=5):
         history.append({
             "gameweek": gw["gameweek"],
             "points": score_entry(entry, positions[player_id]),
+            "breakdown": entry_breakdown(entry, positions[player_id]),
             "minutes": stats.get("minutes") or 0,
             "goals": stats.get("goals_scored") or 0,
             "assists": stats.get("assists") or 0,

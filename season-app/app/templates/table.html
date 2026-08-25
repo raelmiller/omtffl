@@ -32,7 +32,7 @@
     <table>
       <thead>
         <tr>
-          <th></th><th>Team</th>
+          <th></th><th>Team</th><th>Manager</th>
           <th class="num">P</th><th class="num">W</th><th class="num">D</th><th class="num">L</th>
           <th class="num">For</th><th class="num">Against</th><th class="num">Diff</th>
           <th class="num">Pts</th>
@@ -43,6 +43,7 @@
         <tr {% if loop.index == 1 %}class="top"{% endif %}>
           <td class="rank">{{ row.rank }}</td>
           <td class="team"><a href="/team/{{ row.key }}">{{ row.team }}</a></td>
+          <td class="who">{{ row.key }}</td>
           <td class="num">{{ row.P }}</td>
           <td class="num">{{ row.W }}</td>
           <td class="num">{{ row.D }}</td>
@@ -94,9 +95,9 @@
           <div class="home">
             {% if round.played %}
               <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
-                 href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a>
+                 href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a><span class="mgr">{{ m.home_key }}</span>
             {% else %}
-              <span class="name">{{ m.home }}</span>
+              <span class="name">{{ m.home }}</span><span class="mgr">{{ m.home_key }}</span>
             {% endif %}
           </div>
           <div class="score">
@@ -105,9 +106,9 @@
           <div class="away">
             {% if round.played %}
               <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
-                 href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a>
+                 href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a><span class="mgr">{{ m.away_key }}</span>
             {% else %}
-              <span class="name">{{ m.away }}</span>
+              <span class="name">{{ m.away }}</span><span class="mgr">{{ m.away_key }}</span>
             {% endif %}
           </div>
         </div>

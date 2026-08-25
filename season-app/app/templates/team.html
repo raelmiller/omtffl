@@ -6,7 +6,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
       { detail: Number(el.dataset.player) }))));
 </script>
 {% endblock %}
-{% block heading %}{{ detail.team }}<script>
+{% block heading %}{{ detail.team }}<span class="mgr">{{ detail.key }}</span><script>
 document.querySelectorAll('[data-player]').forEach(el =>
   el.addEventListener('click', () =>
     document.dispatchEvent(new CustomEvent('player:open',
@@ -18,7 +18,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
   {{ round_name }} &middot; <span class="pill">{{ detail.state }}</span>
   {% if opponent %}
     &middot; {{ 'beat' if detail.total > opponent.total else 'lost to' if detail.total < opponent.total else 'drew with' }}
-    <a href="/team/{{ opponent.key }}/{{ detail.gameweek }}">{{ opponent.team }}</a>
+    <a href="/team/{{ opponent.key }}/{{ detail.gameweek }}">{{ opponent.team }}</a><span class="mgr">{{ opponent.key }}</span>
     {{ detail.total }}&ndash;{{ opponent.total }}
   {% endif %}
 </p>
@@ -95,7 +95,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
           <span class="pts">{{ p.points }}</span>
         </span>
         <span class="pn">{{ p.name }}</span>
-        <span class="pc">{{ p.position }}</span>
+        <span class="pc">{{ p.position }}{% if p.went_off %} &middot; off{% endif %}</span>
       </button>
       {% endfor %}
     </div>
@@ -139,7 +139,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
   <div class="snake">
     {% for t in others %}
     <a class="slot {% if t.key == detail.key %}mine{% endif %}"
-       href="/team/{{ t.key }}/{{ detail.gameweek }}">{{ t.team }}
+       href="/team/{{ t.key }}/{{ detail.gameweek }}">{{ t.team }}<span class="mgr">{{ t.key }}</span>
       <span class="c">{{ t.score }}</span></a>
     {% endfor %}
   </div>

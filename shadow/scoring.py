@@ -83,14 +83,30 @@ def defensive_actions(stats: dict, position: int) -> int:
     return int(cbit + _stat(stats, "recoveries"))
 
 
-def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
-    """Points for one player in one gameweek.
+def breakdown(stats: dict, position: int, rules: dict | None = None) -> list[dict]:
+    """Where a player's points came from, line by line.
 
-    `stats` is a raw FPL stat dict (from event/{gw}/live or element-summary).
-    Returns an integer — fantasy points are always whole numbers.
+    Each row is {what, detail, points}. score_player is this summed, so a
+    breakdown shown to a manager can never disagree with the score on their
+    pitch.
+
+    A line is kept when it scored something, and also when it explains a
+    nought a manager would otherwise wonder about: one goal conceded (it
+    takes two), two saves (it takes three), eight defensive actions (it takes
+    ten). Minutes are always there, since a nought in that row answers most
+    questions about a blank.
     """
     r = rules or RULES
     minutes = int(_stat(stats, "minutes"))
+    rows = []
+
+    def add(what, detail, points, keep=False):
+        if points or keep:
+            rows.append({"what": what, "detail": detail, "points": points})
+
+    yellows = int(_stat(stats, "yellow_cards"))
+    reds = int(_stat(stats, "red_cards"))
+    owns = int(_stat(stats, "own_goals"))
 
     # No minutes, almost no points — but discipline still counts. A player
     # can be booked without the clock recording a minute: shown a card on the
@@ -98,59 +114,76 @@ def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
     # turned up exactly that (a forward on 0 minutes, one yellow, -1), which
     # a single gameweek never would have.
     if minutes <= 0:
-        return (
-            int(_stat(stats, "yellow_cards")) * r["yellow_card"]
-            + int(_stat(stats, "red_cards")) * r["red_card"]
-            + int(_stat(stats, "own_goals")) * r["own_goal"]
-        )
-
-    pts = 0
+        add("Minutes", "0", 0, keep=True)
+        add("Yellow card", "", yellows * r["yellow_card"])
+        add("Red card", "", reds * r["red_card"])
+        add("Own goals", str(owns), owns * r["own_goal"])
+        return rows
 
     # Appearance
     if minutes >= r["minutes_long"]["threshold"]:
-        pts += r["minutes_long"]["points"]
-    elif minutes >= r["minutes_short"]["threshold"]:
-        pts += r["minutes_short"]["points"]
+        add("Minutes", str(minutes), r["minutes_long"]["points"])
+    else:
+        add("Minutes", str(minutes), r["minutes_short"]["points"], keep=True)
 
     # Attacking returns
-    pts += int(_stat(stats, "goals_scored")) * r["goal"][position]
-    pts += int(_stat(stats, "assists")) * r["assist"][position]
+    goals = int(_stat(stats, "goals_scored"))
+    assists = int(_stat(stats, "assists"))
+    add("Goals", str(goals), goals * r["goal"][position])
+    add("Assists", str(assists), assists * r["assist"][position])
 
     # Clean sheet — needs a full-ish game
     if (
         int(_stat(stats, "clean_sheets")) > 0
         and minutes >= r["clean_sheet_min_minutes"]
     ):
-        pts += r["clean_sheet"][position]
+        add("Clean sheet", "", r["clean_sheet"][position])
 
     # Goals conceded, in whole blocks of N
     conceded = int(_stat(stats, "goals_conceded"))
     if conceded and r["conceded_points"][position]:
-        pts += (conceded // r["conceded_per"]) * r["conceded_points"][position]
+        add("Goals conceded", str(conceded),
+            (conceded // r["conceded_per"]) * r["conceded_points"][position],
+            keep=True)
 
     # Goalkeeping
     saves = int(_stat(stats, "saves"))
     if saves:
-        pts += (saves // r["saves_per"]) * r["saves_points"]
-    pts += int(_stat(stats, "penalties_saved")) * r["penalty_save"]
+        add("Saves", str(saves), (saves // r["saves_per"]) * r["saves_points"],
+            keep=True)
+    pens_saved = int(_stat(stats, "penalties_saved"))
+    add("Penalties saved", str(pens_saved), pens_saved * r["penalty_save"])
 
     # Misses and discipline
-    pts += int(_stat(stats, "penalties_missed")) * r["penalty_miss"]
-    pts += int(_stat(stats, "own_goals")) * r["own_goal"]
-    pts += int(_stat(stats, "yellow_cards")) * r["yellow_card"]
-    pts += int(_stat(stats, "red_cards")) * r["red_card"]
+    missed = int(_stat(stats, "penalties_missed"))
+    add("Penalties missed", str(missed), missed * r["penalty_miss"])
+    add("Own goals", str(owns), owns * r["own_goal"])
+    add("Yellow card", "", yellows * r["yellow_card"])
+    add("Red card", "", reds * r["red_card"])
 
     # Defensive contribution
     threshold = r["defcon_threshold"].get(position)
     if threshold is not None:
-        if defensive_actions(stats, position) >= threshold:
-            pts += r["defcon_points"]
+        actions = defensive_actions(stats, position)
+        hit = actions >= threshold
+        if actions:
+            add("Defensive actions", f"{actions} of {threshold}",
+                r["defcon_points"] if hit else 0, keep=True)
 
     # Bonus is awarded by FPL from the BPS system; we take it as given rather
     # than trying to recompute the bonus algorithm.
-    pts += int(_stat(stats, "bonus"))
+    add("Bonus", "", int(_stat(stats, "bonus")))
 
-    return pts
+    return rows
+
+
+def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
+    """Points for one player in one gameweek.
+
+    `stats` is a raw FPL stat dict (from event/{gw}/live or element-summary).
+    Returns an integer — fantasy points are always whole numbers.
+    """
+    return sum(row["points"] for row in breakdown(stats, position, rules))
 
 
 def score_entry(entry: dict, position: int, rules: dict | None = None) -> int:
@@ -169,6 +202,20 @@ def score_entry(entry: dict, position: int, rules: dict | None = None) -> int:
     if per_fixture and len(per_fixture) > 1:
         return sum(score_player(f, position, rules) for f in per_fixture)
     return score_player(entry.get("stats", {}), position, rules)
+
+
+def entry_breakdown(entry: dict, position: int, rules: dict | None = None) -> list[dict]:
+    """score_entry, itemised — and in a double gameweek, per match.
+
+    The rows carry a `match` number when there was more than one, because
+    "90 minutes" twice in a list is otherwise a puzzle rather than an answer.
+    """
+    per_fixture = entry.get("fixtures")
+    if per_fixture and len(per_fixture) > 1:
+        return [{**row, "match": i}
+                for i, f in enumerate(per_fixture, 1)
+                for row in breakdown(f, position, rules)]
+    return breakdown(entry.get("stats", {}), position, rules)
 
 
 def score_gameweek(elements: list[dict], positions: dict[int, int]) -> dict[int, int]:

@@ -550,6 +550,69 @@ check("an unknown manager is a 404", vc.get(f"/team/NOBODY/{gwv}").status_code, 
 check_true("results on the table link into it",
            '/team/' in vc.get("/").text)
 
+# A player an autosub replaced is still one of your fifteen. Dropping them
+# from the page made the bench look short, and counted points as "unused"
+# that had in fact been used.
+subbed = next((engine.team_gameweek(t["key"], gwv, db.all_lineups(),
+                                    db.transactions(), db.manager_clubs())
+               for t in engine.season()["table"]
+               if engine.team_gameweek(t["key"], gwv, db.all_lineups(),
+                                       db.transactions(),
+                                       db.manager_clubs())["subs"]), None)
+if subbed:
+    check("the whole fifteen is accounted for",
+          sum(len(p) for _, p in subbed["lines"]) + len(subbed["bench"]), 15)
+    taken_off = {s["off"] for s in subbed["subs"]}
+    check("the ones taken off are on the bench",
+          sorted(b["name"] for b in subbed["bench"] if b["went_off"]),
+          sorted(taken_off))
+    check_true("and they come after the ones never called on",
+               [b["name"] for b in subbed["bench"][-len(taken_off):]]
+               == [b["name"] for b in subbed["bench"] if b["went_off"]])
+    check("unused points exclude anyone who came on",
+          subbed["bench_points"],
+          sum(b["points"] for b in subbed["bench"]))
+
+print("\n── Where a player's points came from ───────────────────")
+
+# The best scorer on the pitch, so the breakdown has something in it beyond
+# "didn't play" — a nought itemises to one line and proves very little.
+scorer = max((p for _, players in detail["lines"] for p in players),
+             key=lambda p: p["points"])
+detail_p = engine.player_detail(scorer["id"])
+pid = scorer["id"]
+week = detail_p["history"][-1]
+check_true("the latest round is itemised", bool(week["breakdown"]),
+           str(week["breakdown"]))
+check("and the items add up to the score",
+      sum(r["points"] for r in week["breakdown"]), week["points"])
+check_true("every row says what it was for",
+           all(r["what"] for r in week["breakdown"]))
+check_true("a scorer's week is more than one line",
+           len(week["breakdown"]) > 1, str(week["breakdown"]))
+check_true("starting with the minutes they played",
+           week["breakdown"][0]["what"] == "Minutes")
+check("the popup serves it too",
+      vc.get(f"/api/player/{pid}").json()["history"][-1]["breakdown"],
+      week["breakdown"])
+
+print("\n── Whose team is that ──────────────────────────────────")
+
+front = vc.get("/").text
+check_true("the table names the manager as well as the team",
+           "<th>Manager</th>" in front)
+check_true("with everyone's initials against their row",
+           all(f'<td class="who">{m["key"]}</td>' in front
+               for m in db.managers()),
+           ", ".join(m["key"] for m in db.managers()
+                     if f'<td class="who">{m["key"]}</td>' not in front))
+check_true("and against both sides of every fixture",
+           front.count('class="mgr"') >= 2 * 7)
+check_true("a round of its own says so too",
+           'class="mgr"' in vc.get(f"/gameweek/{gwv}").text)
+check_true("as does a team's page",
+           'class="mgr"' in vc.get(f"/team/RM/{gwv}").text)
+
 print("\n── The whole fixture list ──────────────────────────────")
 
 scored = engine.season(db.all_lineups() or None, db.transactions(),

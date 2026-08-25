@@ -88,7 +88,7 @@
     <label class="field">
       <span class="eyebrow">Trade with</span>
       <select id="receiver" name="receiver">
-        {% for o in others %}<option value="{{ o.key }}">{{ o.team }}</option>{% endfor %}
+        {% for o in others %}<option value="{{ o.key }}">{{ o.team }} ({{ o.key }})</option>{% endfor %}
       </select>
     </label>
 

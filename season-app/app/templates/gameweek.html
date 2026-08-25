@@ -15,12 +15,12 @@
     <div class="match">
       <div class="home">
         <a class="name {% if m.home_score > m.away_score %}won{% endif %}"
-           href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a>
+           href="/team/{{ m.home_key }}/{{ round.gameweek }}">{{ m.home }}</a><span class="mgr">{{ m.home_key }}</span>
       </div>
       <div class="score">{{ m.home_score }} &ndash; {{ m.away_score }}</div>
       <div class="away">
         <a class="name {% if m.away_score > m.home_score %}won{% endif %}"
-           href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a>
+           href="/team/{{ m.away_key }}/{{ round.gameweek }}">{{ m.away }}</a><span class="mgr">{{ m.away_key }}</span>
       </div>
     </div>
     {% endfor %}

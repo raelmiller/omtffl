@@ -8,7 +8,8 @@ across every real player in a gameweek, which is the harder test.
 Run: python3 shadow/test_scoring.py
 """
 import sys
-from scoring import score_entry, score_player, GK, DEF, MID, FWD
+from scoring import (breakdown, entry_breakdown, score_entry,
+                     score_player, GK, DEF, MID, FWD)
 
 FAILS = []
 
@@ -17,6 +18,12 @@ def check(name, got, want):
     ok = got == want
     print(f"{'PASS' if ok else 'FAIL'}  {name}: got {got}, want {want}")
     if not ok:
+        FAILS.append(name)
+
+
+def check_true(name, cond, detail=""):
+    print(f"{'PASS' if cond else 'FAIL'}  {name}{' — ' + detail if detail else ''}")
+    if not cond:
         FAILS.append(name)
 
 
@@ -186,6 +193,41 @@ check("a blank in the second match adds nothing",
 single = {"id": 3, "stats": {"minutes": 90, "goals_scored": 1}}
 check("an ordinary gameweek is unaffected",
       score_entry(single, FWD), score_player(single["stats"], FWD))
+
+print("\n── Where the points came from ─────────────────────────")
+
+# The breakdown is what a manager is shown; score_player is what their team
+# is scored on. They are the same arithmetic, and this is what keeps them so.
+CASES = [
+    ({"minutes": 90, "clean_sheets": 1, "goals_conceded": 0,
+      "defensive_contribution": 11, "yellow_cards": 1}, DEF),
+    ({"minutes": 90, "goals_conceded": 4, "saves": 5, "bonus": 1}, GK),
+    ({"minutes": 22, "goals_scored": 1, "assists": 2}, MID),
+    ({"minutes": 0, "yellow_cards": 1}, FWD),
+    ({"minutes": 90, "penalties_missed": 1, "own_goals": 1, "red_cards": 1}, FWD),
+]
+for stats, pos in CASES:
+    rows = breakdown(stats, pos)
+    check(f"the rows add up to the score ({stats.get('minutes')}' as {pos})",
+          sum(r["points"] for r in rows), score_player(stats, pos))
+
+booked = breakdown({"minutes": 0, "yellow_cards": 1}, FWD)
+check("a blank still shows the minutes", booked[0]["what"], "Minutes")
+check("and the booking that made it worse", booked[-1]["points"], -1)
+
+keeper = breakdown({"minutes": 90, "goals_conceded": 1, "saves": 2}, GK)
+check_true("a nought worth explaining is still a row — one conceded",
+           any(r["what"] == "Goals conceded" and r["points"] == 0 for r in keeper))
+check_true("and two saves, which is one short of a point",
+           any(r["what"] == "Saves" and r["points"] == 0 for r in keeper))
+
+check("a double gameweek is broken down match by match",
+      sum(r["points"] for r in entry_breakdown(two_nineties, DEF)),
+      score_entry(two_nineties, DEF))
+check_true("with each row saying which match it was",
+           all("match" in r for r in entry_breakdown(two_nineties, DEF)))
+check_true("and an ordinary gameweek saying nothing of the sort",
+           not any("match" in r for r in entry_breakdown(single, FWD)))
 
 print()
 if FAILS:

@@ -99,6 +99,20 @@ tbody tr.top td.rank { color: var(--accent); }
    this they run out of the panel on a phone. */
 .match .home, .match .away { min-width: 0; }
 .match .name { overflow-wrap: anywhere; }
+/* Team names are invented and there are fourteen of them; the manager's
+   initials are how you actually know whose team you're looking at. */
+.mgr {
+  display: inline-block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .06em; color: var(--muted); white-space: nowrap;
+  border: 1px solid var(--border-2); border-radius: 4px;
+  padding: 0 .28rem; margin-left: .35rem;
+}
+.match .mgr { margin-left: .3rem; }
+td.who {
+  font-family: var(--mono); font-size: .78rem; color: var(--muted);
+  white-space: nowrap;
+}
+h1 .mgr, .sub .mgr { vertical-align: middle; }
 .match .score {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
   font-size: .95rem; white-space: nowrap; padding: .12rem .5rem;
@@ -524,10 +538,9 @@ td.active { color: var(--text); font-weight: 600; }
    on rather than a per-club ink colour that has to be right thirty times.
    Only shirts that carry a score are darkened. */
 .player .shirt:has(.pts)::before {
-  content: ''; position: absolute; inset: 0; z-index: 1;
-  border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%,
-    rgba(6,12,9,.66) 0 32%, rgba(6,12,9,0) 70%);
+  content: ''; position: absolute; inset: 22% 18%; z-index: 1;
+  border-radius: 4px;
+  background: rgba(6,12,9,.72);
 }
 .player .pts {
   position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
@@ -576,6 +589,13 @@ dialog.pcard::backdrop { background: rgba(0, 0, 0, .55); }
 }
 table.pc-table { min-width: 26rem; font-size: .84rem; }
 table.pc-table td, table.pc-table th { padding: .34rem .55rem; }
+/* The points breakdown is three narrow columns — it fits a phone as it is,
+   so it doesn't take the history table's minimum width. */
+table.pc-table.makeup { min-width: 0; width: 100%; }
+table.pc-table.makeup td.dim { color: var(--muted); font-family: var(--mono); font-size: .74rem; }
+table.pc-table.makeup td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.pc-table.makeup .n { font-family: var(--mono); font-size: .66rem; color: var(--muted); }
+table.pc-table.makeup .tot td { border-bottom: none; font-weight: 600; }
 .player .pn.tappable { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
 
 button.player.static { cursor: pointer; }

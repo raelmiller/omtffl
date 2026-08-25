@@ -22,7 +22,7 @@
   <div class="panel snake">
     {% for m in order %}
     <span class="slot {% if me and m.key == me.key %}mine{% endif %}">
-      <span class="n">{{ loop.index }}</span>{{ m.team }}
+      <span class="n">{{ loop.index }}</span>{{ m.team }}<span class="mgr">{{ m.key }}</span>
       {%- if claim_counts.get(m.team) %} <span class="c">{{ claim_counts[m.team] }}</span>{% endif -%}
     </span>
     {% endfor %}
