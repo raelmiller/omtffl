@@ -199,13 +199,14 @@ footer {
 .player .shirt {
   width: clamp(1.6rem, 5.5vw, 2.15rem); height: clamp(1.6rem, 5.5vw, 2.15rem);
   border-radius: 5px 5px 7px 7px;
-  background: #e8eaf0; border: 1px solid rgba(0,0,0,.25);
+  border: 1px solid rgba(0,0,0,.25);
   box-shadow: 0 2px 5px rgba(0,0,0,.35);
+  /* The club's home kit: --k1 the body, --k2 the trim, --kit the pattern
+     painted over the body. A player whose club we don't know falls back to
+     the blank tile. */
+  background-color: var(--k1, #e8eaf0);
+  background-image: var(--kit, none);
 }
-.player .shirt[data-pos="GK"] { background: #ffd166; }
-.player .shirt[data-pos="DEF"] { background: #7fd7ff; }
-.player .shirt[data-pos="MID"] { background: #7fffb2; }
-.player .shirt[data-pos="FWD"] { background: #ff9d7f; }
 .player .pn {
   font-size: clamp(.58rem, 2.1vw, .74rem); font-weight: 600; line-height: 1.12;
   text-align: center; max-width: 100%;
@@ -232,7 +233,64 @@ footer {
 .player.picked { background: rgba(255,255,255,.16); transform: translateY(-2px); }
 .player.picked .shirt { outline: 2px solid #fff; outline-offset: 2px; }
 .player.target .shirt { outline: 2px dashed rgba(255,255,255,.85); outline-offset: 2px; }
-.player.faded { opacity: .38; }
+/* Enough to say "not a legal swap", not so much that the kits stop reading —
+   the club a player turns out for is half of why you'd swap them. */
+.player.faded { opacity: .52; }
+
+/* ── Club kits ───────────────────────────────────────── */
+/* Home shirts, keyed on the club's short code. Three patterns cover the
+   league: a plain body, a body with contrasting sleeves, and vertical
+   stripes. The pattern rules come first so a club only has to name its two
+   colours below. */
+.player .shirt[data-club="ARS"], .player .shirt[data-club="AVL"],
+.player .shirt[data-club="BUR"], .player .shirt[data-club="FUL"],
+.player .shirt[data-club="IPS"], .player .shirt[data-club="TOT"],
+.player .shirt[data-club="WHU"] {
+  --kit: linear-gradient(90deg,
+    var(--k2) 0 18%, var(--k1) 18% 82%, var(--k2) 82% 100%);
+}
+.player .shirt[data-club="BHA"], .player .shirt[data-club="BOU"],
+.player .shirt[data-club="BRE"], .player .shirt[data-club="CRY"],
+.player .shirt[data-club="HUL"], .player .shirt[data-club="NEW"],
+.player .shirt[data-club="SHU"], .player .shirt[data-club="SOU"],
+.player .shirt[data-club="STK"], .player .shirt[data-club="SUN"],
+.player .shirt[data-club="WBA"] {
+  --kit: repeating-linear-gradient(90deg,
+    var(--k1) 0 12.5%, var(--k2) 12.5% 25%);
+}
+
+.player .shirt[data-club="ARS"] { --k1: #ef0107; --k2: #ffffff; }
+.player .shirt[data-club="AVL"] { --k1: #670e36; --k2: #95bfe5; }
+.player .shirt[data-club="BHA"] { --k1: #0057b8; --k2: #ffffff; }
+.player .shirt[data-club="BOU"] { --k1: #d71920; --k2: #14100f; }
+.player .shirt[data-club="BRE"] { --k1: #e30613; --k2: #ffffff; }
+.player .shirt[data-club="BUR"] { --k1: #6c1d45; --k2: #99d6ea; }
+.player .shirt[data-club="CHE"] { --k1: #034694; --k2: #ffffff; }
+.player .shirt[data-club="COV"] { --k1: #7ec2ea; --k2: #001e5a; }
+.player .shirt[data-club="CRY"] { --k1: #1b458f; --k2: #c4122e; }
+.player .shirt[data-club="EVE"] { --k1: #003399; --k2: #ffffff; }
+.player .shirt[data-club="FUL"] { --k1: #ffffff; --k2: #14100f; }
+.player .shirt[data-club="HUL"] { --k1: #f5a12d; --k2: #14100f; }
+.player .shirt[data-club="IPS"] { --k1: #3a64a3; --k2: #ffffff; }
+.player .shirt[data-club="LEE"] { --k1: #ffffff; --k2: #1d428a; }
+.player .shirt[data-club="LEI"] { --k1: #003090; --k2: #fdbe11; }
+.player .shirt[data-club="LIV"] { --k1: #c8102e; --k2: #f6eb61; }
+.player .shirt[data-club="LUT"] { --k1: #f78f1e; --k2: #002d62; }
+.player .shirt[data-club="MCI"] { --k1: #6cabdd; --k2: #ffffff; }
+.player .shirt[data-club="MID"] { --k1: #e21c38; --k2: #ffffff; }
+.player .shirt[data-club="MUN"] { --k1: #da291c; --k2: #14100f; }
+.player .shirt[data-club="NEW"] { --k1: #241f20; --k2: #ffffff; }
+.player .shirt[data-club="NFO"] { --k1: #dd0000; --k2: #ffffff; }
+.player .shirt[data-club="NOR"] { --k1: #fff200; --k2: #00a650; }
+.player .shirt[data-club="SHU"] { --k1: #ee2737; --k2: #ffffff; }
+.player .shirt[data-club="SOU"] { --k1: #d71920; --k2: #ffffff; }
+.player .shirt[data-club="STK"] { --k1: #e03a3e; --k2: #ffffff; }
+.player .shirt[data-club="SUN"] { --k1: #eb172b; --k2: #ffffff; }
+.player .shirt[data-club="TOT"] { --k1: #ffffff; --k2: #132257; }
+.player .shirt[data-club="WAT"] { --k1: #fbee23; --k2: #14100f; }
+.player .shirt[data-club="WBA"] { --k1: #122f67; --k2: #ffffff; }
+.player .shirt[data-club="WHU"] { --k1: #7a263a; --k2: #1bb1e7; }
+.player .shirt[data-club="WOL"] { --k1: #fdb913; --k2: #14100f; }
 
 .benchbar {
   border: 1px solid var(--pitch-edge); border-top: none;
@@ -431,10 +489,20 @@ td.active { color: var(--text); font-weight: 600; }
 /* ── A team's gameweek ───────────────────────────────── */
 .player.static { cursor: default; }
 .player .shirt { position: relative; }
+/* Club kits run from white to black, so the score gets its own ground to sit
+   on rather than a per-club ink colour that has to be right thirty times.
+   Only shirts that carry a score are darkened. */
+.player .shirt:has(.pts)::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(6,12,9,.66) 0 32%, rgba(6,12,9,0) 70%);
+}
 .player .pts {
-  position: absolute; inset: 0; display: grid; place-items: center;
-  font-family: var(--mono); font-size: .78rem; font-weight: 500; color: #06130c;
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+  font-family: var(--mono); font-size: .78rem; font-weight: 600; color: #fff;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
 }
 .scoreparts { gap: .9rem; flex-wrap: wrap; }
 .part { font-size: .84rem; color: var(--muted); }

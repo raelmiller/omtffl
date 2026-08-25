@@ -201,7 +201,7 @@
     if (!open) el.disabled = true;
     el.innerHTML = `
       ${opts.order ? `<span class="ord">${opts.order}</span>` : ''}
-      <span class="shirt" data-pos="${p.position}"></span>
+      <span class="shirt" data-pos="${p.position}" data-club="${p.club || ''}"></span>
       <span class="pn tappable" title="See ${p.name}'s stats">${p.name}</span>
       <span class="pc">${p.club || p.position}</span>`;
     el.addEventListener('click', () => choose(id));

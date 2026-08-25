@@ -68,7 +68,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
         <div class="line">
           {% for p in players %}
           <button type="button" class="player static" data-player="{{ p.id }}">
-            <span class="shirt" data-pos="{{ p.position }}">
+            <span class="shirt" data-pos="{{ p.position }}" data-club="{{ p.club }}">
               <span class="pts">{{ p.points }}</span>
             </span>
             <span class="pn">{{ p.name }}</span>
@@ -91,7 +91,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
     <div class="benchrow">
       {% for p in detail.bench %}
       <button type="button" class="player static" data-player="{{ p.id }}">
-        <span class="shirt" data-pos="{{ p.position }}">
+        <span class="shirt" data-pos="{{ p.position }}" data-club="{{ p.club }}">
           <span class="pts">{{ p.points }}</span>
         </span>
         <span class="pn">{{ p.name }}</span>

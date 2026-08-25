@@ -8,6 +8,7 @@ degrades honestly when data or the FPL API is missing.
 Run: python3 season-app/test_app.py
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -528,7 +529,22 @@ detail2 = engine.team_gameweek("RM", gwv, db.all_lineups(), db.transactions(),
                                db.manager_clubs())
 check("the team page agrees with the table", detail2["total"], from_table)
 
-check("the page renders", vc.get(f"/team/RM/{gwv}").status_code, 200)
+page = vc.get(f"/team/RM/{gwv}")
+check("the page renders", page.status_code, 200)
+# Every shirt has to name a club, or it falls back to a blank tile and the
+# manager loses the quickest read on the pitch: who plays for whom.
+shirts = re.findall(r'<span class="shirt"[^>]*>', page.text)
+check("a shirt for the eleven and the bench behind them",
+      len(shirts), 11 + len(detail["bench"]))
+check_true("every shirt names a club",
+           all(re.search(r'data-club="[A-Z]{3}"', s) for s in shirts),
+           next((s for s in shirts if not re.search(r'data-club="[A-Z]{3}"', s)), ""))
+kits = open("app/static/style.css").read()
+check_true("and the stylesheet dresses it",
+           all(f'data-club="{c["short"]}"' in kits for c in engine.clubs().values()),
+           ", ".join(c["short"] for c in engine.clubs().values()
+                     if f'data-club="{c["short"]}"' not in kits))
+
 check("without a gameweek it shows the latest", vc.get("/team/RM").status_code, 200)
 check("an unknown manager is a 404", vc.get(f"/team/NOBODY/{gwv}").status_code, 404)
 check_true("results on the table link into it",
