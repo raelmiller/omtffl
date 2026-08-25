@@ -132,14 +132,17 @@ def position_counts(squad):
     return counts
 
 
-def validate_trade(tx, squads_now, accumulated=None, received=0, config=None):
+def validate_trade(tx, squads_now, accumulated=None, received=0, config=None,
+                   opponent=None):
     """Why a trade is illegal, or None if it's fine.
 
     `accumulated` is what the offering manager has scored so far this season;
     pass it to enforce the offer cap, since without it the cap can't be
     checked and isn't guessed at. `received` is what the receiving manager has
     already taken in trade points this season, checked against the league's
-    own cap. `config` carries the league's admin settings.
+    own cap. `config` carries the league's admin settings. `opponent` maps a
+    team to whoever it plays in the round the trade lands in, which is what
+    the head-to-head rule below is checked against.
     """
     a, b = tx["from"], tx["to"]
     for t in (a, b):
@@ -184,6 +187,14 @@ def validate_trade(tx, squads_now, accumulated=None, received=0, config=None):
         if cap is not None and received + pts > cap:
             return (f"{b} has already received {received} points this season; "
                     f"another {pts} would pass the {cap} cap")
+
+        # Selling points to the manager you are about to play is the one trade
+        # that decides its own fixture: whatever the players are worth, the
+        # buyer starts the game up and the seller starts it down. Straight
+        # swaps are untouched — they move footballers, not the scoreline.
+        if opponent and opponent.get(a) == b:
+            return (f"{a} plays {b} this round — points can't be traded with "
+                    "the team you're about to face, only players")
     return None
 
 
@@ -279,7 +290,7 @@ def process_waivers(claims, squads, table_order):
 
 def apply_transactions(base_squads, transactions, upto_gameweek,
                        points_to_date=None, standings=None, managers=None,
-                       deadlines=None, config=None):
+                       deadlines=None, config=None, opponents=None):
     """Squad state and per-gameweek adjustments up to and including a gameweek.
 
     `points_to_date[gw][team]` is what a team had scored going into that
@@ -289,7 +300,9 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
     gameweek there kills that team's remaining boosts. `deadlines[gw]` is that
     gameweek's kick-off deadline, used to check a boost was declared in
     advance. `config` carries the league's admin settings — the trade points
-    cap and the veto threshold. All of them are optional
+    cap and the veto threshold. `opponents[gw][team]` is who that team plays
+    that round, which stops points being traded with the team you are about
+    to face. All of them are optional
     — without them those rules can't be checked, and the caller is told so
     rather than the rule being silently skipped.
 
@@ -333,7 +346,8 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
                 accumulated -= committed.get((gw, a), 0)
             problem = validate_trade(
                 tx, squads, accumulated,
-                received=received.get(tx.get("to"), 0), config=config)
+                received=received.get(tx.get("to"), 0), config=config,
+                opponent=(opponents or {}).get(gw))
             if problem:
                 problems.append(f"GW{gw} trade {a}→{tx.get('to')}: {problem}")
                 continue

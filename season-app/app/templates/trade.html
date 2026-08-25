@@ -88,7 +88,7 @@
     <label class="field">
       <span class="eyebrow">Trade with</span>
       <select id="receiver" name="receiver">
-        {% for o in others %}<option value="{{ o.key }}">{{ o.team }} ({{ o.key }})</option>{% endfor %}
+        {% for o in others %}<option value="{{ o.key }}">{{ o.team }} ({{ o.key }}){% if o.key == facing %} — you play them this round{% endif %}</option>{% endfor %}
       </select>
     </label>
 
@@ -108,7 +108,8 @@
       <input type="number" id="points" name="points" min="0" value="0" step="1">
       <span class="hint" id="capnote">You can offer up to {{ accumulated }} —
       what you&rsquo;ve scored this season. Points make this a published trade
-      the league can object to.</span>
+      the league can object to{% if facing %}, and they can&rsquo;t go to the
+      manager you play this round{% endif %}.</span>
     </label>
 
     <label class="field">

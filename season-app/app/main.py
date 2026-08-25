@@ -432,6 +432,9 @@ def _trade_context(request):
         "others": [{"key": m["key"], "team": m["team"],
                     "squad": squads.get(m["key"], [])}
                    for m in db.managers() if m["key"] != me["key"]],
+        # Whoever they play this round can't be sold points, so the page says
+        # which manager that is before anyone fills the form in.
+        "facing": engine.opponents(gw["gameweek"]).get(me["key"]),
         "received": sum(t["points"] for t in engine.effective_trades(records)
                         if t["to"] == me["key"]),
         "cap": engine.setting(None, "points_received_cap"),
@@ -482,6 +485,7 @@ def propose(request: Request, receiver: str = Form(...), give: str = Form(""),
     season = engine.season(db.all_lineups() or None, db.transactions(),
                            db.manager_clubs())
     record = {"proposer": me["key"], "receiver": receiver,
+              "gameweek": gw["gameweek"],
               "players_out": out, "players_in": back, "points": points,
               "vetoes": []}
     problem = engine.check_trade(

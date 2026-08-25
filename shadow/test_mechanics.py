@@ -72,6 +72,25 @@ check_true("can't trade a player you don't own",
 # Points are mortgaged, not spent from the bank — A had nothing banked
 check_true("points can be offered without a bank balance", bank["A"] == 0 and adj[5]["A"] == -40)
 
+# Selling points to the manager you are about to play decides that fixture,
+# whatever the players are worth. Straight swaps still go through.
+facing = {5: {"A": "B", "B": "A"}}
+check_true("can't sell points to the team you play this round",
+           "about to face" in (validate_trade(trade, {"A": A, "B": B},
+                                              opponent=facing[5]) or ""),
+           str(validate_trade(trade, {"A": A, "B": B}, opponent=facing[5])))
+swap = {**trade, "points": 0}
+check("but players can still change hands",
+      validate_trade(swap, {"A": A, "B": B}, opponent=facing[5]), None)
+check("and points are fine with anyone else",
+      validate_trade(trade, {"A": A, "B": B}, opponent={"A": "C", "B": "D"}), None)
+check_true("the scoring pass refuses it too",
+           any("about to face" in x for x in apply_transactions(
+               base(A, B), [trade], 10, opponents=facing)[5]),
+           str(apply_transactions(base(A, B), [trade], 10, opponents=facing)[5]))
+check("so no points move",
+      apply_transactions(base(A, B), [trade], 10, opponents=facing)[1], {})
+
 print("\n── Points bank ─────────────────────────────────────────")
 
 spend = [trade, {"type": "bank_use", "gameweek": 9, "team": "B", "points": 25}]

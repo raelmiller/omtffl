@@ -149,7 +149,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
             standings[n] = [r["key"] for r in ranked_now]
             moved, adjustments, boost_log, _, _, _ = apply_transactions(
                 squads, transactions, n, managers=managers_arg,
-                standings=standings)
+                standings=standings, opponents=opponents())
             boosts_allowed = {(b["gameweek"], b["team"]) for b in boost_log}
             squads_at = moved
 
@@ -363,6 +363,24 @@ def calendar():
 def gameweeks():
     """Only the rounds we hold data for, newest first."""
     return [g for g in calendar() if g.get("has_data")]
+
+
+@lru_cache(maxsize=1)
+def _opponents(version):
+    """Who each team plays, round by round: {gameweek: {team: opponent}}."""
+    fixtures = _read("fixtures.json") or {}
+    out = {}
+    for fx in fixtures.get("fixtures", []):
+        gw = out.setdefault(fx["gameweek"], {})
+        gw[fx["home"]] = fx["away"]
+        gw[fx["away"]] = fx["home"]
+    return out
+
+
+def opponents(gameweek=None):
+    """The head-to-head draw, for the whole season or one round of it."""
+    draw = _opponents(data_version())
+    return draw.get(gameweek, {}) if gameweek is not None else draw
 
 
 CLOSE_MARGIN = 3        # a game decided by a substitute's late goal
@@ -737,13 +755,15 @@ def check_trade(record, squads_at_gw, accumulated=None, received=0, config=None)
     Calls the same validator the scoring uses, so a trade the app accepts can
     never be one the engine later refuses.
     """
+    round_of = record.get("gameweek")
     return validate_trade({
         "from": record["proposer"], "to": record["receiver"],
         "players_out": record["players_out"],
         "players_in": record["players_in"],
         "points": record["points"],
         "vetoes": record.get("vetoes", []),
-    }, squads_at_gw, accumulated=accumulated, received=received, config=config)
+    }, squads_at_gw, accumulated=accumulated, received=received, config=config,
+        opponent=opponents(round_of) if round_of is not None else None)
 
 
 def squads_for_gameweek(gameweek, stored_trades=None, config=None):
@@ -754,7 +774,8 @@ def squads_for_gameweek(gameweek, stored_trades=None, config=None):
     txs = effective_trades(stored_trades or [], config)
     if not txs:
         return {t["key"]: refresh_clubs(t["squad"]) for t in base["teams"]}
-    squads, *_ = apply_transactions(base, txs, gameweek)
+    squads, *_ = apply_transactions(base, txs, gameweek,
+                                    opponents=opponents())
     return {k: refresh_clubs(v) for k, v in squads.items()}
 
 
@@ -794,7 +815,7 @@ def bank_status(key, gameweek, transactions, drafted=None):
     managers_arg = {k: {"club": v.get("club"), "sacked_from": v.get("sacked_from")}
                     for k, v in (drafted or {}).items()}
     _, _, _, bank, _, problems = apply_transactions(
-        base, earlier, 38, managers=managers_arg)
+        base, earlier, 38, managers=managers_arg, opponents=opponents())
 
     spending = next((t.get("points", 0) for t in transactions
                      if t.get("type") == "bank_use"
@@ -983,7 +1004,8 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
     managers_arg = {k: {"club": v.get("club"), "sacked_from": v.get("sacked_from")}
                     for k, v in drafted.items()}
     squads, adjustments, boost_log, _, _, _ = apply_transactions(
-        squads_base, transactions, gameweek, managers=managers_arg)
+        squads_base, transactions, gameweek, managers=managers_arg,
+        opponents=opponents())
     roster = squads.get(key) or next(
         (t["squad"] for t in squads_base["teams"] if t["key"] == key), [])
     if not roster:

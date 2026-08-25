@@ -353,6 +353,18 @@ r = offer(points=99999)
 check("you can't offer more than you've scored", r.status_code, 422)
 check("trading with yourself is refused", offer(to="RM").status_code, 422)
 
+# The manager RM plays this round can be sent players but not points.
+rival = engine.opponents(gwt)["RM"]
+theirs = [p for p in sq[rival] if p["position"] == "FWD"][0]
+r = offer(points=10, to=rival, take=theirs)
+check("no points to the team you play this round", r.status_code, 422)
+check_true("and it says which team that is",
+           "about to face" in r.json()["errors"][0], str(r.json()["errors"]))
+check("but a straight swap with them is fine",
+      offer(to=rival, take=theirs).status_code, 200)
+check_true("the page names them before anyone tries",
+           "you play them this round" in a.get("/trade").text)
+
 # The receiver decides, and nobody else can decide for them.
 pending = [t for t in db.trades("proposed") if t["receiver"] == "AF"][0]
 b = TestClient(app)
@@ -646,7 +658,11 @@ print("\n── Points that changed hands ────────────�
 # A trade paid for in points has to land on the table as well as on the team
 # page, or a manager tops the league on a score they spent.
 sq = engine.squads_for_gameweek(gwv, db.trades())
-buyer, seller = "EE", "DP"
+# Not each other's opponent, or the head-to-head rule refuses it — which is
+# the point of that rule, and tested where it belongs.
+buyer = "EE"
+seller = next(k for k in sq
+              if k != buyer and engine.opponents(gwv).get(buyer) != k)
 out = next(p for p in sq[buyer] if p["position"] == "FWD")
 back = next(p for p in sq[seller] if p["position"] == "FWD")
 paid_id = db.propose_trade(gwv, buyer, seller, [out], [back], 20)
