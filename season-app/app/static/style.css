@@ -186,6 +186,15 @@ h1 .mgr, .sub .mgr { vertical-align: middle; }
 .teamrow .bval { grid-area: move; }
 .teamrow .bnote { display: flex; align-items: center; gap: .45rem; }
 
+/* Your own players sitting in the pool table, so a claim can be weighed
+   against the man it would replace. Tinted, and never mistaken for a claim. */
+tr.mine td { background: var(--surface-2); }
+tr.mine.chosen td { background: var(--accent-dim); }
+tr.mine .mgr { text-transform: uppercase; }
+
+.pickmetric { display: flex; align-items: center; gap: .5rem; }
+.pickmetric select { max-width: 14rem; }
+
 .formrow { display: inline-flex; gap: 2px; }
 .res {
   display: inline-grid; place-items: center; width: 1.15rem; height: 1.15rem;

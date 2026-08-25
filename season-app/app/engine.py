@@ -37,7 +37,8 @@ from mechanics import (                             # noqa: E402
     boost_value, league_table, process_waivers, setting, snake_order,
     validate_trade,
 )
-from scoring import entry_breakdown, score_entry    # noqa: E402
+from scoring import (contributions, entry_breakdown,  # noqa: E402
+                     score_entry)
 
 
 def _read(name):
@@ -137,6 +138,11 @@ def _season(version, lineup_key, lineups_json, real_keys,
     boosts_allowed = set()
     squads_at = {}
     adjustments = {}
+    # Goals, assists and the rest, credited to the manager who had the player
+    # in their eleven that week — not to whoever happens to own him now.
+    RETURNS = ("goals", "assists", "clean_sheets", "defcon", "bonus")
+    returns = {t["key"]: {m: 0 for m in RETURNS} for t in squads["teams"]}
+    by_player = {t["key"]: {} for t in squads["teams"]}
 
     for path in gameweek_files():
         gw = json.loads(path.read_text())
@@ -158,10 +164,12 @@ def _season(version, lineup_key, lineups_json, real_keys,
         # Where a manager submitted an XI, that's their score. Where nobody
         # has, the best available XI stands in — and the page says which.
         pts = {}
+        elements = {}
         for el in gw["elements"]:
             pos = positions.get(el["id"])
             if pos is not None:
                 pts[el["id"]] = score_entry(el, pos)
+                elements[el["id"]] = el
         minutes = minutes_from_gameweek(gw)
 
         scores, sources, boosts, moves = {}, {}, {}, {}
@@ -177,6 +185,21 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 final_xi, _ = apply_autosubs(picked, bench, minutes)
                 scores[key] = sum(pts.get(p["id"], 0) for p in final_xi)
                 sources[key] = how
+                for player in final_xi:
+                    el = elements.get(player["id"])
+                    pos = positions.get(player["id"])
+                    if el is None or pos is None:
+                        continue
+                    got = contributions(el, pos)
+                    for metric, count in got.items():
+                        if not count:
+                            continue
+                        returns[key][metric] += count
+                        seen = by_player[key].setdefault(
+                            player["id"],
+                            {"name": player["name"],
+                             **{m: 0 for m in RETURNS}})
+                        seen[metric] += count
             else:
                 scores[key] = hindsight.get(key, 0)
                 sources[key] = "best available"
@@ -260,6 +283,12 @@ def _season(version, lineup_key, lineups_json, real_keys,
         "scheduled": len(by_gw),
         "submitted_share": (submitted, total_slots),
         "seeded_lineups": seeded,
+        "returns": {key: {**totals,
+                          "best": {m: max(
+                              (pl for pl in by_player[key].values() if pl[m]),
+                              key=lambda pl: pl[m], default=None)
+                              for m in RETURNS}}
+                    for key, totals in returns.items()},
     }
 
 
@@ -383,6 +412,15 @@ def opponents(gameweek=None):
     return draw.get(gameweek, {}) if gameweek is not None else draw
 
 
+# (key, what the dropdown calls it, what a single one of them is)
+RETURN_METRICS = [
+    ("goals", "Goals", "goal"),
+    ("assists", "Assists", "assist"),
+    ("clean_sheets", "Clean sheets", "clean sheet"),
+    ("defcon", "Defensive contributions", "defensive contribution"),
+    ("bonus", "Bonus points", "bonus point"),
+]
+
 CLOSE_MARGIN = 3        # a game decided by a substitute's late goal
 BLOWOUT_MARGIN = 20     # a game that was never in doubt
 
@@ -457,6 +495,11 @@ def analytics(season_data):
             drew = sum(1 for v in others if mine == v)
             expected[key] += (beat + drew / 2) / len(others)
 
+    got = season_data.get("returns") or {}
+    # A season scored before returns were counted, or a team with no eleven
+    # yet, still has to render — so every team gets the full shape.
+    blank = {m: 0 for m, _, _ in RETURN_METRICS}
+    blank["best"] = {m: None for m, _, _ in RETURN_METRICS}
     teams = []
     for row in table:
         key = row["key"]
@@ -487,6 +530,7 @@ def analytics(season_data):
             "close_losses": sum(1 for m in lost if m <= CLOSE_MARGIN),
             "blowout_wins": sum(1 for m in won if m >= BLOWOUT_MARGIN),
             "blowout_losses": sum(1 for m in lost if m >= BLOWOUT_MARGIN),
+            "returns": {**blank, **got.get(key, {})},
         })
 
     # Bars are drawn as a share of the widest, so the scale travels with the
@@ -504,6 +548,10 @@ def analytics(season_data):
         "max_margin": max([max(t["won_by"], t["lost_by"]) for t in teams],
                           default=0),
         "max_average": max([t["average"] for t in teams], default=0),
+        # One scale per metric, so a bar means the same thing down a column.
+        "returns": RETURN_METRICS,
+        "max_return": {m: max([t["returns"][m] for t in teams], default=0)
+                       for m, _, _ in RETURN_METRICS},
     }
 
 
@@ -967,11 +1015,18 @@ def available_metrics():
 
 def free_agent_pool(gameweek, stored_trades=None):
     """Free agents with their season numbers attached."""
+    return with_stats(free_agents(gameweek, stored_trades))
+
+
+def with_stats(players):
+    """The same season numbers the pool carries, for any list of players.
+
+    A manager deciding who to claim is really deciding who to drop, and that
+    comparison only works if both sides of it are measured the same way.
+    """
     stats = player_stats()
-    pool = []
-    for player in free_agents(gameweek, stored_trades):
-        pool.append({**player, "stats": stats.get(player["id"], {})})
-    return pool
+    return [{**player, "stats": stats.get(player["id"], {})}
+            for player in players]
 
 
 # ── One team's gameweek ────────────────────────────────────────────────────

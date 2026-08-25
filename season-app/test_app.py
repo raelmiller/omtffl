@@ -448,7 +448,23 @@ print("\n── Waivers ──────────────────�
 
 wc = TestClient(app)
 wc.get(f"/m/{db.manager_by_key('RM')['token']}")
-check("the waivers page loads", wc.get("/waivers").status_code, 200)
+wpage = wc.get("/waivers")
+check("the waivers page loads", wpage.status_code, 200)
+
+# Deciding who to claim is really deciding who to drop, so a manager's own
+# players go in the same table, measured the same way.
+check_true("the pool can be switched to your own squad",
+           'id="fshow"' in wpage.text)
+own = json.loads(re.search(r'id="squad-data"[^>]*>(.*?)</script>',
+                           wpage.text, re.S).group(1))
+check("all fifteen of them are there", len(own), 15)
+check_true("each carrying the same numbers the pool does",
+           all("stats" in p for p in own),
+           str([p["name"] for p in own if "stats" not in p]))
+metrics = {k for k, _, _, _ in engine.available_metrics()}
+check_true("every sortable metric among them",
+           all(metrics <= set(p["stats"]) for p in own),
+           str(sorted(metrics - set(own[0]["stats"]))))
 
 gww = engine.current_gameweek()["gameweek"]
 sqw = engine.squads_for_gameweek(gww, db.trades())
@@ -781,14 +797,41 @@ check("neither is the other",
 sp = vc.get("/stats")
 check("the stats page renders", sp.status_code, 200)
 check_true("without signing in", TestClient(app).get("/stats").status_code == 200)
-check_true("with all four analyses on it",
+check_true("with every analysis on it",
            all(f'data-panel="{p}"' in sp.text
-               for p in ("form", "spread", "luck", "margins")))
+               for p in ("form", "spread", "luck", "margins", "returns")))
+blocks = re.findall(r'<div class="panelblock"[^>]*>', sp.text)
+check("all five are there", len(blocks), 5)
 check("and only one of them open",
-      sp.text.count('<div class="panelblock"') - sp.text.count('hidden>'), 1)
+      sum(1 for b in blocks if "hidden" not in b), 1)
 nav = TestClient(app)
 nav.get(f"/m/{db.manager_by_key('RM')['token']}")
 check_true("and the nav offers it", 'href="/stats"' in nav.get("/").text)
+
+# Returns are credited to the eleven that played, so they should add up to
+# what the squads actually did rather than to who owns whom now.
+live = engine.analytics(engine.season(db.all_lineups() or None, tx,
+                                      db.manager_clubs()))
+check("five things to flip between", len(live["returns"]), 5)
+check_true("each with a total for every team",
+           all(set(m for m, _, _ in live["returns"]) <= set(t["returns"])
+               for t in live["teams"]))
+check_true("and nobody has returned a negative number of anything",
+           all(t["returns"][m] >= 0 for t in live["teams"]
+               for m, _, _ in live["returns"]))
+scored = [t for t in live["teams"] if t["returns"]["clean_sheets"]]
+check_true("somebody kept a clean sheet in the round that has been played",
+           bool(scored))
+if scored:
+    t = scored[0]
+    check_true("and the player who kept most of them is named",
+               (t["returns"]["best"]["clean_sheets"] or {}).get("name"))
+check_true("the panel is on the page",
+           'data-panel="returns"' in sp.text)
+check("with one list showing and the rest waiting on the dropdown",
+      sp.text.count('class="panel metricblock"'), 5)
+check_true("and the dropdown names all five",
+           all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
 print()
 if FAILS:

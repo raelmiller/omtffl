@@ -622,7 +622,7 @@ def waivers(request: Request):
         "metrics_json": json.dumps([
             {"key": k, "short": short, "label": label}
             for k, short, _, label in engine.available_metrics()]),
-        "squad_json": json.dumps(squads.get(me["key"], [])),
+        "squad_json": json.dumps(engine.with_stats(squads.get(me["key"], []))),
         "claims_json": json.dumps(claims.get(me["key"], [])),
         "order": [{"key": k, "team": names.get(k, k)}
                   for k in reversed(run["order"] or sorted(squads))],

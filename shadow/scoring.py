@@ -177,6 +177,38 @@ def breakdown(stats: dict, position: int, rules: dict | None = None) -> list[dic
     return rows
 
 
+def contributions(entry: dict, position: int, rules: dict | None = None) -> dict:
+    """What a player returned in a gameweek, counted rather than scored.
+
+    Goals, assists and bonus are as recorded. A clean sheet is only counted
+    where the rules pay for one — the minutes were there and the position
+    earns it — so a forward whose side kept one doesn't collect it. A
+    defensive contribution counts on the round it cleared the threshold, not
+    per action, since that is the thing that happened.
+
+    Per match in a double gameweek, for the same reason score_entry is.
+    """
+    r = rules or RULES
+    per_fixture = entry.get("fixtures")
+    games = (per_fixture if per_fixture and len(per_fixture) > 1
+             else [entry.get("stats", {})])
+
+    out = {"goals": 0, "assists": 0, "clean_sheets": 0, "defcon": 0, "bonus": 0}
+    for stats in games:
+        out["goals"] += int(_stat(stats, "goals_scored"))
+        out["assists"] += int(_stat(stats, "assists"))
+        out["bonus"] += int(_stat(stats, "bonus"))
+        if (int(_stat(stats, "clean_sheets")) > 0
+                and int(_stat(stats, "minutes")) >= r["clean_sheet_min_minutes"]
+                and r["clean_sheet"][position]):
+            out["clean_sheets"] += 1
+        threshold = r["defcon_threshold"].get(position)
+        if (threshold is not None
+                and defensive_actions(stats, position) >= threshold):
+            out["defcon"] += 1
+    return out
+
+
 def score_player(stats: dict, position: int, rules: dict | None = None) -> int:
     """Points for one player in one gameweek.
 

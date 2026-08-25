@@ -8,8 +8,8 @@ across every real player in a gameweek, which is the harder test.
 Run: python3 shadow/test_scoring.py
 """
 import sys
-from scoring import (breakdown, entry_breakdown, score_entry,
-                     score_player, GK, DEF, MID, FWD)
+from scoring import (breakdown, contributions, entry_breakdown,
+                     score_entry, score_player, GK, DEF, MID, FWD)
 
 FAILS = []
 
@@ -228,6 +228,41 @@ check_true("with each row saying which match it was",
            all("match" in r for r in entry_breakdown(two_nineties, DEF)))
 check_true("and an ordinary gameweek saying nothing of the sort",
            not any("match" in r for r in entry_breakdown(single, FWD)))
+
+print("\n── What a player returned ──────────────────────────────")
+
+# Counted, not scored: the difference matters for clean sheets, which only
+# belong to a player the rules actually paid one to.
+kept = {"stats": s(minutes=90, clean_sheets=1, goals_conceded=0)}
+check("a defender who played the full match keeps it",
+      contributions(kept, DEF)["clean_sheets"], 1)
+check("a forward doesn't, whatever his side did",
+      contributions(kept, FWD)["clean_sheets"], 0)
+check("nor does a defender hooked at half time",
+      contributions({"stats": s(minutes=45, clean_sheets=1)},
+                    DEF)["clean_sheets"], 0)
+
+check("goals and assists are as recorded",
+      {k: v for k, v in contributions(
+          {"stats": s(minutes=90, goals_scored=2, assists=1, bonus=3)},
+          FWD).items() if k in ("goals", "assists", "bonus")},
+      {"goals": 2, "assists": 1, "bonus": 3})
+
+check("a defensive contribution counts on the round it was earned",
+      contributions({"stats": s(minutes=90, defensive_contribution=10)},
+                    DEF)["defcon"], 1)
+check("and not when it fell short",
+      contributions({"stats": s(minutes=90, defensive_contribution=9)},
+                    DEF)["defcon"], 0)
+check("once, not once per action",
+      contributions({"stats": s(minutes=90, defensive_contribution=30)},
+                    DEF)["defcon"], 1)
+
+double = {"fixtures": [s(minutes=90, clean_sheets=1, goals_scored=1),
+                       s(minutes=90, clean_sheets=1)]}
+check("a double gameweek returns twice",
+      (contributions(double, DEF)["clean_sheets"],
+       contributions(double, DEF)["goals"]), (2, 1))
 
 print()
 if FAILS:

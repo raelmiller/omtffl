@@ -20,6 +20,7 @@
     <a class="gwchip wide" href="#panel-spread" data-panel="spread">Consistency</a>
     <a class="gwchip wide" href="#panel-luck" data-panel="luck">Luck</a>
     <a class="gwchip wide" href="#panel-margins" data-panel="margins">Margins</a>
+    <a class="gwchip wide" href="#panel-returns" data-panel="returns">Returns</a>
   </nav>
 
   {# ── Form ─────────────────────────────────────────────────────────── #}
@@ -143,6 +144,45 @@
     </div>
   </div>
 
+  {# ── Returns ──────────────────────────────────────────────────────── #}
+  <div class="panelblock" id="panel-returns" data-panel="returns" hidden>
+    <div class="sechead">
+      <h2>Returns</h2>
+      <label class="pickmetric">
+        <span class="eyebrow">Showing</span>
+        <select id="metric">
+          {% for key, label, _ in stats.returns %}
+          <option value="{{ key }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <p class="note">Credited to the manager who had the player in their
+    eleven that week, not to whoever owns him now &mdash; so a striker bought
+    in January doesn&rsquo;t arrive with someone else&rsquo;s goals. Clean
+    sheets and defensive contributions are counted only where the rules paid
+    for them.</p>
+    {% for key, label, one in stats.returns %}
+    <div class="panel metricblock" data-metric="{{ key }}"
+         {% if not loop.first %}hidden{% endif %}>
+      {% for t in stats.teams|sort(attribute='returns.' ~ key, reverse=true) %}
+      <div class="barrow">
+        <span class="blabel">{{ t.team }}<span class="mgr">{{ t.key }}</span></span>
+        <span class="bar">
+          <span style="width: {{ (100 * t.returns[key] / stats.max_return[key])|round(1) if stats.max_return[key] else 0 }}%"></span>
+        </span>
+        <span class="bval">{{ t.returns[key] }}</span>
+        <span class="bnote">
+          {% set best = t.returns.best[key] %}
+          {% if best %}most from {{ best.name }} ({{ best[key] }})
+          {% else %}no {{ one }}s yet{% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
   <p class="sub"><a href="/">&larr; The table</a></p>
 </section>
 
@@ -170,6 +210,13 @@
     if (!chip) return;
     ev.preventDefault();
     show(chip.dataset.panel);
+  });
+
+  const metric = document.getElementById('metric');
+  if (metric) metric.addEventListener('change', () => {
+    document.querySelectorAll('.metricblock').forEach(b => {
+      b.hidden = b.dataset.metric !== metric.value;
+    });
   });
 })();
 </script>

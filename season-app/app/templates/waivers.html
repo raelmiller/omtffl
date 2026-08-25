@@ -52,6 +52,14 @@
 
   <div class="filters">
     <label class="field">
+      <span class="eyebrow">Show</span>
+      <select id="fshow">
+        <option value="free">Free agents</option>
+        <option value="mine">My squad</option>
+        <option value="both">Both</option>
+      </select>
+    </label>
+    <label class="field">
       <span class="eyebrow">Position</span>
       <select id="fpos">
         <option value="">All</option>
@@ -214,12 +222,17 @@
     const q = el('search').value.trim().toLowerCase();
     const dropping = squad.find(p => p.id === dropId);
 
-    let rows = free.filter(p =>
-      !claimed.has(p.id) &&
+    const showing_side = el('fshow').value;
+    const source = [
+      ...(showing_side === 'mine' ? [] : free.filter(p => !claimed.has(p.id))),
+      ...(showing_side === 'free' ? [] : squad.map(p => ({ ...p, mine: true }))),
+    ];
+
+    let rows = source.filter(p =>
       (!pos || p.position === pos) &&
       (!club || p.club === club) &&
       (!q || p.name.toLowerCase().includes(q)) &&
-      (!mins || (p.stats.minutes || 0) >= mins));
+      (!mins || ((p.stats || {}).minutes || 0) >= mins));
 
     // A claim has to replace like for like, so once a player is chosen to
     // drop, anyone who couldn't legally replace them is only noise.
@@ -252,17 +265,20 @@
     body.innerHTML = '';
     rows.slice(0, showing).forEach(p => {
       const tr = document.createElement('tr');
-      tr.className = addId === p.id ? 'chosen' : '';
+      const picked = p.mine ? dropId === p.id : addId === p.id;
+      tr.className = (picked ? 'chosen ' : '') + (p.mine ? 'mine' : '');
       tr.innerHTML =
         `<td class="cpick"><span class="tick" aria-hidden="true"></span></td>` +
-        `<td class="team"><span class="pn tappable">${p.name}</span></td>` +
+        `<td class="team"><span class="pn tappable">${p.name}</span>` +
+        `${p.mine ? '<span class="mgr">yours</span>' : ''}</td>` +
         `<td class="pclub cpos">${p.position}</td>` +
         `<td class="pclub cclub">${p.club || ''}</td>` +
         METRICS.map(m =>
           `<td class="num m-${m.key}${m.key === sortKey ? ' active' : ''}" ` +
           `data-label="${m.short}">${show(p.stats[m.key])}</td>`).join('');
       tr.addEventListener('click', () => {
-        addId = (addId === p.id ? null : p.id);
+        if (p.mine) dropId = (dropId === p.id ? null : p.id);
+        else addId = (addId === p.id ? null : p.id);
         render();
       });
       tr.querySelector('.pn').addEventListener('click', ev => {
@@ -273,7 +289,9 @@
     });
 
     el('fsort').value = sortKey;
-    el('count').textContent = `${rows.length} available` +
+    const noun = showing_side === 'mine' ? 'in your squad'
+               : showing_side === 'both' ? 'players' : 'available';
+    el('count').textContent = `${rows.length} ${noun}` +
       (dropping ? ` · ${dropping.position} only, to replace ${dropping.name}` : '');
 
     const more = el('showmore');
@@ -290,7 +308,7 @@
   }
 
   // Any change to the filters or the sort starts the list again from the top.
-  ['fpos', 'fclub', 'fmins', 'search'].forEach(id =>
+  ['fshow', 'fpos', 'fclub', 'fmins', 'search'].forEach(id =>
     el(id).addEventListener('input', () => { showing = PAGE; render(); }));
   el('showmore').addEventListener('click', () => { showing += PAGE; render(); });
 
@@ -342,7 +360,8 @@
   });
 
   // Club filter, built from whoever is actually available.
-  [...new Set(free.map(p => p.club).filter(Boolean))].sort().forEach(c => {
+  [...new Set([...free, ...squad].map(p => p.club).filter(Boolean))]
+    .sort().forEach(c => {
     const o = document.createElement('option');
     o.value = o.textContent = c;
     el('fclub').appendChild(o);
