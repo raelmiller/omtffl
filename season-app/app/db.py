@@ -225,21 +225,35 @@ def manager_by_token(token):
 
 
 def spend_token(token):
-    """Sign in with a link and burn it.
+    """Sign in with a link, and start its clock running.
 
     A link that stays valid is a password that never changes, sitting in
-    whatever chat it was pasted into. Spending it on first use means a leaked
-    link is good until the manager opens it and no longer — and a manager
-    whose link has already been used knows immediately that someone else got
-    there first.
+    whatever chat it was pasted into. But killing it outright on first use
+    breaks the way links are actually opened: tapped in a messaging app, they
+    open in that app's own browser, and the manager who then opens the app
+    properly in Safari finds a link that has already been spent.
 
-    Returns (manager, session_secret), or (None, None) if the link is spent,
-    expired or wrong.
+    So first use doesn't spend the link, it shortens it — to an hour, or to
+    whatever it had left if that was less. Long enough to open it again on the
+    browser you actually use; short enough that a leaked link is exposed for
+    an hour after its owner opens it rather than for the season.
+
+    Later uses inside that hour don't extend it. The window is measured from
+    the first time anyone used the link, not the last.
+
+    Returns (manager, session_secret), or (None, None) if the link has run
+    out or was never real.
     """
     manager = manager_by_token(token)
     if not manager:
         return None, None
-    rotate_token(manager["key"], days=LINK_DAYS)
+    grace = (datetime.now(timezone.utc) + timedelta(minutes=LINK_GRACE_MINUTES)
+             ).isoformat(timespec="seconds")
+    if manager["token_expires"] is None or manager["token_expires"] > grace:
+        with connect() as conn:
+            conn.execute(
+                "UPDATE manager SET token_expires = ? WHERE key = ?",
+                (grace, manager["key"]))
     return manager, start_session(manager["key"])
 
 
@@ -278,6 +292,7 @@ def rotate_token(key, days=None, minutes=None):
 # table holds only its hash, so reading the database gives you nobody's login.
 LINK_DAYS = 7           # how long an admin-issued link stays good for
 LINK_MINUTES = 15       # how long a self-issued one does
+LINK_GRACE_MINUTES = 60  # how much longer it lasts once somebody has used it
 SESSION_DAYS = 90       # how long a browser can go unused before it is dropped
 
 

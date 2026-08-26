@@ -10,7 +10,7 @@ Run: python3 season-app/test_app.py
 import json
 import re
 import sys
-from datetime import datetime, timezone as _tz
+from datetime import datetime, timedelta, timezone as _tz
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -834,7 +834,7 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
-print("\n── A link is good once ─────────────────────────────────")
+print("\n── A link, and the hour after someone opens it ─────────")
 
 # A manager the rest of the suite leaves alone, so the session counts below
 # mean what they say.
@@ -847,14 +847,56 @@ r = browser_a.get(f"/m/{link}", follow_redirects=False)
 check("the link signs you in", r.status_code, 303)
 check("and the app opens", browser_a.get("/declare").status_code, 200)
 
+# Tapping a link in a messaging app opens it in that app's browser. The
+# manager who then opens the app properly must not find the link already
+# dead — that is the whole reason for the hour.
 again = TestClient(app)
 r = again.get(f"/m/{link}", follow_redirects=False)
-check_true("the same link a second time is refused",
+check("the same link still works in a second browser", r.status_code, 303)
+check("which is now signed in too", again.get("/declare").status_code, 200)
+check("two browsers off one link", len(db.sessions_for(WHO)), 2)
+
+# ...but the window is measured from the first use, not the last, so opening
+# it repeatedly can't keep it alive.
+after_first = db.manager_by_key(WHO)["token_expires"]
+TestClient(app).get(f"/m/{link}")
+check("using it again doesn't push the hour back",
+      db.manager_by_key(WHO)["token_expires"], after_first)
+check_true("and the hour is an hour, not the week it started with",
+           after_first < (datetime.now(_tz.utc)
+                          + timedelta(minutes=db.LINK_GRACE_MINUTES + 5)
+                          ).isoformat(timespec="seconds"), after_first)
+
+# Once the hour is up it is gone, whoever is holding it.
+with db.connect() as conn:
+    conn.execute("UPDATE manager SET token_expires = ? WHERE key = ?",
+                 ((datetime.now(_tz.utc) - timedelta(minutes=1))
+                  .isoformat(timespec="seconds"), WHO))
+late = TestClient(app)
+r = late.get(f"/m/{link}", follow_redirects=False)
+check_true("an hour later the link is dead",
            "bad_link" in r.headers["location"], r.headers["location"])
-check("so the second browser is still a stranger",
-      again.get("/declare").status_code, 401)
-check_true("and a fresh link took its place",
-           db.manager_by_key(WHO)["token"] != link)
+check("so a latecomer is still a stranger",
+      late.get("/declare").status_code, 401)
+check("and the browsers already signed in are untouched",
+      browser_a.get("/declare").status_code, 200)
+db.end_all_sessions(WHO)
+db.rotate_token(WHO, days=db.LINK_DAYS)
+
+# A short link a manager mints for themselves is not lengthened by using it.
+own = db.rotate_token(WHO, minutes=db.LINK_MINUTES)
+TestClient(app).get(f"/m/{own}")
+check_true("a fifteen-minute link stays a fifteen-minute link",
+           db.manager_by_key(WHO)["token_expires"]
+           < (datetime.now(_tz.utc) + timedelta(minutes=db.LINK_MINUTES + 2)
+              ).isoformat(timespec="seconds"),
+           db.manager_by_key(WHO)["token_expires"])
+
+# Clean slate for the session tests below, with one browser signed in.
+db.end_all_sessions(WHO)
+browser_a = TestClient(app)
+browser_a.get(f"/m/{db.rotate_token(WHO, days=db.LINK_DAYS)}")
+check("one browser to start from", len(db.sessions_for(WHO)), 1)
 
 # The cookie is a session secret, not the sign-in link. A copy of the
 # database should not be a set of working logins.

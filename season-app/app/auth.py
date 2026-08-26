@@ -6,11 +6,13 @@ unguessable link, and that link is spent on arrival.
 
 Two separate things, which is the point:
 
-- A **sign-in link** is a one-shot. Opening it starts a session and issues a
-  fresh link in its place, so a link pasted into a group chat is good until
-  the manager opens it and dead afterwards. Links expire on their own as
-  well — a week for one an admin hands out, minutes for one a manager mints
-  for their own second device.
+- A **sign-in link** starts a clock rather than being consumed. Opening it
+  shortens whatever it had left to an hour, so a link tapped in a messaging
+  app can still be opened in the browser the manager actually uses, and is
+  dead by teatime either way. Links expire on their own as well — a week for
+  one an admin hands out, minutes for one a manager mints for their own
+  second device. The hour is measured from the first use, so opening it
+  repeatedly cannot keep it alive.
 - A **session** is a browser. The cookie carries a secret the database only
   holds the hash of, so a copy of the database is not a set of working
   logins. Sessions can be listed and revoked one at a time or all at once,
@@ -18,8 +20,8 @@ Two separate things, which is the point:
 
 The honest limits, stated rather than glossed:
 
-- Anyone holding an unspent link is that manager until they open it. It is
-  still a bearer token, just a short-lived one.
+- Anyone holding a live link is that manager. It is still a bearer token,
+  just one with an hour to live once anybody has used it.
 - Anyone holding the cookie is that manager until it is revoked, which is
   what "sign out everywhere" is for.
 - There is no second factor and no proof of identity beyond the link. That is

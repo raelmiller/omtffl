@@ -71,11 +71,17 @@ only way in.
 
 ## Signing in
 
-There is no password. A manager opens an unguessable link, which is **spent on
-arrival**: it starts a session and a new link takes its place, so one pasted
-into a group chat works until they open it and not afterwards. Links expire on
-their own too — a week for one an admin hands out, fifteen minutes for one a
-manager mints for their own second device from `/account`.
+There is no password. A manager opens an unguessable link, and opening it
+**starts a one-hour clock** rather than consuming the link outright. That hour
+exists because of how links are really opened: tapped in a messaging app, they
+open in that app's own browser, and the manager who then opens the app in
+Safari must not find a link that is already dead. An hour is long enough for
+that and short enough that a leaked link is exposed for an evening rather than
+a season. It runs from the first use, so opening the link again cannot extend
+it.
+
+Links expire on their own too — a week for one an admin hands out, fifteen
+minutes for one a manager mints for their own second device from `/account`.
 
 The cookie carries a session secret whose hash is all the database keeps, so a
 copy of the database is not a set of working logins. Sessions are listed on

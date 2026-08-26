@@ -758,6 +758,8 @@ def admin(request: Request):
     ctx["submitted"] = db.all_lineups()
     ctx["current_gw"] = engine.current_gameweek()
     ctx["nowish"] = db.now()
+    ctx["signed_in"] = {m["key"]: len(db.sessions_for(m["key"]))
+                        for m in ctx["managers"]}
     ctx["data"] = engine.freshness()
     ctx["refresh"] = dict(fetcher.STATUS)
     job = scheduler.get_job("refresh") if scheduler.running else None

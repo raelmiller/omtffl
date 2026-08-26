@@ -3,9 +3,11 @@
 {% block heading %}Sign-in links{% endblock %}
 {% block subheading %}
 <p class="sub">One link per manager. Send each person their own &mdash; anyone
-holding a link is that manager until it is opened, at which point it is spent
-and a fresh one takes its place here. Nobody needs to come back to you for a
-second device: they can make their own from their sign-in page.</p>
+holding a link is that manager. Opening one starts a clock: it lasts an hour
+from then, so it can be opened again on a proper browser after a tap in a
+messaging app, and then it stops. Nobody needs to come back to you for a
+second device afterwards &mdash; they can make their own from their sign-in
+page.</p>
 {% endblock %}
 
 {% block content %}
@@ -21,9 +23,15 @@ second device: they can make their own from their sign-in page.</p>
           <td>
             <code class="link">{{ base }}/m/{{ m.token }}</code>
             <div class="pclub">
-              {% if not m.token_expires %}no expiry
-              {% elif m.token_expires < nowish %}<span class="no">expired</span> &mdash; issue a new one
-              {% else %}good once, until <time data-when="{{ m.token_expires }}">{{ m.token_expires }}</time>
+              {% set live = m.token_expires and m.token_expires > nowish %}
+              {% set browsers = signed_in.get(m.key, 0) %}
+              {% if live %}
+                good until <time data-when="{{ m.token_expires }}">{{ m.token_expires }}</time>
+              {% elif browsers %}
+                <span class="yes">signed in</span> on {{ browsers }}
+                browser{{ '' if browsers == 1 else 's' }} &mdash; no link needed
+              {% else %}
+                <span class="no">expired</span> &mdash; issue a new one
               {% endif %}
             </div>
           </td>
