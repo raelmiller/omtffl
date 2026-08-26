@@ -1019,6 +1019,623 @@
   }
  },
  {
+  "name": "Richard",
+  "years": [
+   "2023-24",
+   "2024-25",
+   "2025-26"
+  ],
+  "avg_spend": 49.67,
+  "top3_share": 18.3,
+  "pos_split": {
+   "GK": 5.2,
+   "DEF": 28.7,
+   "MID": 32.7,
+   "FWD": 33.4
+  },
+  "fav_clubs": [
+   [
+    "ARS",
+    10
+   ],
+   [
+    "NEW",
+    6
+   ],
+   [
+    "MCI",
+    6
+   ]
+  ],
+  "pts_per_million": 23.7,
+  "total_points_bought": 3529,
+  "max_ever_bid": 10.0,
+  "seasons": {
+   "2023-24": {
+    "squad": [
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Martin Odegaard",
+      "club": "ARS",
+      "cost": 10.0,
+      "fpl_id": 15,
+      "fpl_name": "\u00d8degaard",
+      "points_that_season": 186
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Luis Diaz",
+      "club": "LIV",
+      "cost": 7.5,
+      "fpl_id": 163,
+      "fpl_name": "D.Essugo",
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Leandro Trossard",
+      "club": "ARS",
+      "cost": 6.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Ben Chilwell",
+      "club": "CHE",
+      "cost": 4.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "John Stones",
+      "club": "MCI",
+      "cost": 3.5,
+      "fpl_id": 468,
+      "fpl_name": "John",
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Virgil Van Dijk",
+      "club": "LIV",
+      "cost": 3.5,
+      "fpl_id": 356,
+      "fpl_name": "Virgil",
+      "points_that_season": 117
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Ben White",
+      "club": "ARS",
+      "cost": 3.0,
+      "fpl_id": 10,
+      "fpl_name": "White",
+      "points_that_season": 182
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Callum Wilson",
+      "club": "NEW",
+      "cost": 3.0,
+      "fpl_id": 108,
+      "fpl_name": "Wilson",
+      "points_that_season": 69
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Evan Ferguson",
+      "club": "BHA",
+      "cost": 2.75,
+      "fpl_id": 139,
+      "fpl_name": "Ferguson",
+      "points_that_season": 69
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Nick Pope",
+      "club": "NEW",
+      "cost": 2.0,
+      "fpl_id": 442,
+      "fpl_name": "Pope",
+      "points_that_season": 57
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Bruno Guimaraes",
+      "club": "NEW",
+      "cost": 1.75,
+      "fpl_id": 452,
+      "fpl_name": "Bruno G.",
+      "points_that_season": 153
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Diogo Dalot",
+      "club": "MUN",
+      "cost": 1.0,
+      "fpl_id": 417,
+      "fpl_name": "Dalot",
+      "points_that_season": 111
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Mateo Kovacic",
+      "club": "MCI",
+      "cost": 1.0,
+      "fpl_id": 406,
+      "fpl_name": "Kova\u010di\u0107",
+      "points_that_season": 59
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "John McGinn",
+      "club": "AVL",
+      "cost": 1.0,
+      "fpl_id": 45,
+      "fpl_name": "McGinn",
+      "points_that_season": 119
+     },
+     {
+      "season": "2023-24",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Martin Dubravka",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": 497,
+      "fpl_name": "Dubravka",
+      "points_that_season": 75
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 1197,
+    "points_matched_players": 11,
+    "best_value": {
+     "season": "2023-24",
+     "manager": "Richard",
+     "position": "GK",
+     "player": "Martin Dubravka",
+     "club": "NEW",
+     "cost": 0.0,
+     "fpl_id": 497,
+     "fpl_name": "Dubravka",
+     "points_that_season": 75
+    },
+    "biggest_bust": {
+     "season": "2023-24",
+     "manager": "Richard",
+     "position": "MID",
+     "player": "Martin Odegaard",
+     "club": "ARS",
+     "cost": 10.0,
+     "fpl_id": 15,
+     "fpl_name": "\u00d8degaard",
+     "points_that_season": 186
+    }
+   },
+   "2024-25": {
+    "squad": [
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Larsen",
+      "club": "WOL",
+      "cost": 8.25,
+      "fpl_id": 222,
+      "fpl_name": "Strand Larsen",
+      "points_that_season": 145
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Gakpo",
+      "club": "LIV",
+      "cost": 6.75,
+      "fpl_id": 367,
+      "fpl_name": "Gakpo",
+      "points_that_season": 127
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Nkunku",
+      "club": "CHE",
+      "cost": 6.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Toney",
+      "club": "BRE",
+      "cost": 6.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Mitoma",
+      "club": "BRI",
+      "cost": 4.75,
+      "fpl_id": 121,
+      "fpl_name": "Mitoma",
+      "points_that_season": 145
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Trossard",
+      "club": "ARS",
+      "cost": 3.75,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Akanji",
+      "club": "MCI",
+      "cost": 2.5,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Calafiori",
+      "club": "ARS",
+      "cost": 2.5,
+      "fpl_id": 8,
+      "fpl_name": "Calafiori",
+      "points_that_season": 39
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Barnes",
+      "club": "NEW",
+      "cost": 2.25,
+      "fpl_id": 453,
+      "fpl_name": "Barnes",
+      "points_that_season": 130
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Cucurella",
+      "club": "CHE",
+      "cost": 2.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Pau Torres",
+      "club": "AVL",
+      "cost": 2.0,
+      "fpl_id": 34,
+      "fpl_name": "Pau",
+      "points_that_season": 55
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Vicario",
+      "club": "TOT",
+      "cost": 1.75,
+      "fpl_id": 494,
+      "fpl_name": "Vicario",
+      "points_that_season": 66
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Sarr",
+      "club": "CRY",
+      "cost": 0.5,
+      "fpl_id": 208,
+      "fpl_name": "Sarr",
+      "points_that_season": 149
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Jorgensen",
+      "club": "CHE",
+      "cost": 0.0,
+      "fpl_id": 141,
+      "fpl_name": "J\u00f6rgensen",
+      "points_that_season": 18
+     },
+     {
+      "season": "2024-25",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Wan-Bissaka",
+      "club": "WHU",
+      "cost": 0.0,
+      "fpl_id": 611,
+      "fpl_name": "Wan-Bissaka",
+      "points_that_season": 118
+     }
+    ],
+    "spend": 49.0,
+    "points_bought": 992,
+    "points_matched_players": 10,
+    "best_value": {
+     "season": "2024-25",
+     "manager": "Richard",
+     "position": "DEF",
+     "player": "Wan-Bissaka",
+     "club": "WHU",
+     "cost": 0.0,
+     "fpl_id": 611,
+     "fpl_name": "Wan-Bissaka",
+     "points_that_season": 118
+    },
+    "biggest_bust": {
+     "season": "2024-25",
+     "manager": "Richard",
+     "position": "FWD",
+     "player": "Larsen",
+     "club": "WOL",
+     "cost": 8.25,
+     "fpl_id": 222,
+     "fpl_name": "Strand Larsen",
+     "points_that_season": 145
+    }
+   },
+   "2025-26": {
+    "squad": [
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Barry",
+      "club": "EVE",
+      "cost": 9.0,
+      "fpl_id": 249,
+      "fpl_name": "Barry",
+      "points_that_season": 95
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Gakpo",
+      "club": "LIV",
+      "cost": 6.5,
+      "fpl_id": 367,
+      "fpl_name": "Gakpo",
+      "points_that_season": 131
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Muniz",
+      "club": "FUL",
+      "cost": 6.5,
+      "fpl_id": 271,
+      "fpl_name": "Muniz",
+      "points_that_season": 36
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Gabriel",
+      "club": "ARS",
+      "cost": 5.0,
+      "fpl_id": 4,
+      "fpl_name": "Gabriel",
+      "points_that_season": 209
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Gvardiol",
+      "club": "MCI",
+      "cost": 4.75,
+      "fpl_id": 391,
+      "fpl_name": "Gvardiol",
+      "points_that_season": 79
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Raya",
+      "club": "ARS",
+      "cost": 4.0,
+      "fpl_id": 1,
+      "fpl_name": "Raya",
+      "points_that_season": 162
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Pedro Porro",
+      "club": "TOT",
+      "cost": 4.0,
+      "fpl_id": 499,
+      "fpl_name": "Pedro Porro",
+      "points_that_season": 117
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Livramento",
+      "club": "NEW",
+      "cost": 3.5,
+      "fpl_id": 450,
+      "fpl_name": "Livramento",
+      "points_that_season": 59
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Madueke",
+      "club": "ARS",
+      "cost": 3.0,
+      "fpl_id": 16,
+      "fpl_name": "Madueke",
+      "points_that_season": 72
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "DEF",
+      "player": "Timber",
+      "club": "ARS",
+      "cost": 1.5,
+      "fpl_id": 5,
+      "fpl_name": "J.Timber",
+      "points_that_season": 149
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Reijnders",
+      "club": "MCI",
+      "cost": 1.25,
+      "fpl_id": 404,
+      "fpl_name": "Reijnders",
+      "points_that_season": 92
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Savinho",
+      "club": "MCI",
+      "cost": 1.0,
+      "fpl_id": 403,
+      "fpl_name": "Savinho",
+      "points_that_season": 43
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "GK",
+      "player": "Kepa",
+      "club": "ARS",
+      "cost": 0.0,
+      "fpl_id": 2,
+      "fpl_name": "Arrizabalaga",
+      "points_that_season": 2
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "MID",
+      "player": "Ndoye",
+      "club": "NFO",
+      "cost": 0.0,
+      "fpl_id": 483,
+      "fpl_name": "Ndoye",
+      "points_that_season": 50
+     },
+     {
+      "season": "2025-26",
+      "manager": "Richard",
+      "position": "FWD",
+      "player": "Guesson",
+      "club": "AVL",
+      "cost": 0.0,
+      "fpl_id": 42,
+      "fpl_name": "Guessand",
+      "points_that_season": 44
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 1340,
+    "points_matched_players": 15,
+    "best_value": {
+     "season": "2025-26",
+     "manager": "Richard",
+     "position": "DEF",
+     "player": "Timber",
+     "club": "ARS",
+     "cost": 1.5,
+     "fpl_id": 5,
+     "fpl_name": "J.Timber",
+     "points_that_season": 149
+    },
+    "biggest_bust": {
+     "season": "2025-26",
+     "manager": "Richard",
+     "position": "FWD",
+     "player": "Muniz",
+     "club": "FUL",
+     "cost": 6.5,
+     "fpl_id": 271,
+     "fpl_name": "Muniz",
+     "points_that_season": 36
+    }
+   }
+  }
+ },
+ {
   "name": "Friede",
   "years": [
    "2023-24",
@@ -1636,623 +2253,6 @@
   }
  },
  {
-  "name": "Richard",
-  "years": [
-   "2023-24",
-   "2024-25",
-   "2025-26"
-  ],
-  "avg_spend": 49.67,
-  "top3_share": 18.3,
-  "pos_split": {
-   "GK": 5.2,
-   "DEF": 28.7,
-   "MID": 32.7,
-   "FWD": 33.4
-  },
-  "fav_clubs": [
-   [
-    "ARS",
-    10
-   ],
-   [
-    "NEW",
-    6
-   ],
-   [
-    "MCI",
-    6
-   ]
-  ],
-  "pts_per_million": 22.9,
-  "total_points_bought": 3411,
-  "max_ever_bid": 10.0,
-  "seasons": {
-   "2023-24": {
-    "squad": [
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Martin Odegaard",
-      "club": "ARS",
-      "cost": 10.0,
-      "fpl_id": 15,
-      "fpl_name": "\u00d8degaard",
-      "points_that_season": 186
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Luis Diaz",
-      "club": "LIV",
-      "cost": 7.5,
-      "fpl_id": 163,
-      "fpl_name": "D.Essugo",
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Leandro Trossard",
-      "club": "ARS",
-      "cost": 6.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Ben Chilwell",
-      "club": "CHE",
-      "cost": 4.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "John Stones",
-      "club": "MCI",
-      "cost": 3.5,
-      "fpl_id": 468,
-      "fpl_name": "John",
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Virgil Van Dijk",
-      "club": "LIV",
-      "cost": 3.5,
-      "fpl_id": 356,
-      "fpl_name": "Virgil",
-      "points_that_season": 117
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Ben White",
-      "club": "ARS",
-      "cost": 3.0,
-      "fpl_id": 10,
-      "fpl_name": "White",
-      "points_that_season": 182
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Callum Wilson",
-      "club": "NEW",
-      "cost": 3.0,
-      "fpl_id": 108,
-      "fpl_name": "Wilson",
-      "points_that_season": 69
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Evan Ferguson",
-      "club": "BHA",
-      "cost": 2.75,
-      "fpl_id": 139,
-      "fpl_name": "Ferguson",
-      "points_that_season": 69
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Nick Pope",
-      "club": "NEW",
-      "cost": 2.0,
-      "fpl_id": 442,
-      "fpl_name": "Pope",
-      "points_that_season": 57
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Bruno Guimaraes",
-      "club": "NEW",
-      "cost": 1.75,
-      "fpl_id": 452,
-      "fpl_name": "Bruno G.",
-      "points_that_season": 153
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Diogo Dalot",
-      "club": "MUN",
-      "cost": 1.0,
-      "fpl_id": 417,
-      "fpl_name": "Dalot",
-      "points_that_season": 111
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Mateo Kovacic",
-      "club": "MCI",
-      "cost": 1.0,
-      "fpl_id": 406,
-      "fpl_name": "Kova\u010di\u0107",
-      "points_that_season": 59
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "John McGinn",
-      "club": "AVL",
-      "cost": 1.0,
-      "fpl_id": 45,
-      "fpl_name": "McGinn",
-      "points_that_season": 119
-     },
-     {
-      "season": "2023-24",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Martin Dubravka",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": 497,
-      "fpl_name": "Dubravka",
-      "points_that_season": 75
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 1197,
-    "points_matched_players": 11,
-    "best_value": {
-     "season": "2023-24",
-     "manager": "Richard",
-     "position": "GK",
-     "player": "Martin Dubravka",
-     "club": "NEW",
-     "cost": 0.0,
-     "fpl_id": 497,
-     "fpl_name": "Dubravka",
-     "points_that_season": 75
-    },
-    "biggest_bust": {
-     "season": "2023-24",
-     "manager": "Richard",
-     "position": "MID",
-     "player": "Martin Odegaard",
-     "club": "ARS",
-     "cost": 10.0,
-     "fpl_id": 15,
-     "fpl_name": "\u00d8degaard",
-     "points_that_season": 186
-    }
-   },
-   "2024-25": {
-    "squad": [
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Larsen",
-      "club": "WOL",
-      "cost": 8.25,
-      "fpl_id": 222,
-      "fpl_name": "Strand Larsen",
-      "points_that_season": 145
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Gakpo",
-      "club": "LIV",
-      "cost": 6.75,
-      "fpl_id": 367,
-      "fpl_name": "Gakpo",
-      "points_that_season": 127
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Nkunku",
-      "club": "CHE",
-      "cost": 6.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Toney",
-      "club": "BRE",
-      "cost": 6.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Mitoma",
-      "club": "BRI",
-      "cost": 4.75,
-      "fpl_id": 121,
-      "fpl_name": "Mitoma",
-      "points_that_season": 145
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Trossard",
-      "club": "ARS",
-      "cost": 3.75,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Akanji",
-      "club": "MCI",
-      "cost": 2.5,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Calafiori",
-      "club": "ARS",
-      "cost": 2.5,
-      "fpl_id": 8,
-      "fpl_name": "Calafiori",
-      "points_that_season": 39
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Barnes",
-      "club": "NEW",
-      "cost": 2.25,
-      "fpl_id": 453,
-      "fpl_name": "Barnes",
-      "points_that_season": 130
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Cucurella",
-      "club": "CHE",
-      "cost": 2.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Pau Torres",
-      "club": "AVL",
-      "cost": 2.0,
-      "fpl_id": 34,
-      "fpl_name": "Pau",
-      "points_that_season": 55
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Vicario",
-      "club": "TOT",
-      "cost": 1.75,
-      "fpl_id": 494,
-      "fpl_name": "Vicario",
-      "points_that_season": 66
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Sarr",
-      "club": "CRY",
-      "cost": 0.5,
-      "fpl_id": 208,
-      "fpl_name": "Sarr",
-      "points_that_season": 149
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Jorgensen",
-      "club": "CHE",
-      "cost": 0.0,
-      "fpl_id": 141,
-      "fpl_name": "J\u00f6rgensen",
-      "points_that_season": 18
-     },
-     {
-      "season": "2024-25",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Wan-Bissaka",
-      "club": "WHU",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     }
-    ],
-    "spend": 49.0,
-    "points_bought": 874,
-    "points_matched_players": 9,
-    "best_value": {
-     "season": "2024-25",
-     "manager": "Richard",
-     "position": "MID",
-     "player": "Sarr",
-     "club": "CRY",
-     "cost": 0.5,
-     "fpl_id": 208,
-     "fpl_name": "Sarr",
-     "points_that_season": 149
-    },
-    "biggest_bust": {
-     "season": "2024-25",
-     "manager": "Richard",
-     "position": "FWD",
-     "player": "Larsen",
-     "club": "WOL",
-     "cost": 8.25,
-     "fpl_id": 222,
-     "fpl_name": "Strand Larsen",
-     "points_that_season": 145
-    }
-   },
-   "2025-26": {
-    "squad": [
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Barry",
-      "club": "EVE",
-      "cost": 9.0,
-      "fpl_id": 249,
-      "fpl_name": "Barry",
-      "points_that_season": 95
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Gakpo",
-      "club": "LIV",
-      "cost": 6.5,
-      "fpl_id": 367,
-      "fpl_name": "Gakpo",
-      "points_that_season": 131
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Muniz",
-      "club": "FUL",
-      "cost": 6.5,
-      "fpl_id": 271,
-      "fpl_name": "Muniz",
-      "points_that_season": 36
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Gabriel",
-      "club": "ARS",
-      "cost": 5.0,
-      "fpl_id": 4,
-      "fpl_name": "Gabriel",
-      "points_that_season": 209
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Gvardiol",
-      "club": "MCI",
-      "cost": 4.75,
-      "fpl_id": 391,
-      "fpl_name": "Gvardiol",
-      "points_that_season": 79
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Raya",
-      "club": "ARS",
-      "cost": 4.0,
-      "fpl_id": 1,
-      "fpl_name": "Raya",
-      "points_that_season": 162
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Pedro Porro",
-      "club": "TOT",
-      "cost": 4.0,
-      "fpl_id": 499,
-      "fpl_name": "Pedro Porro",
-      "points_that_season": 117
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Livramento",
-      "club": "NEW",
-      "cost": 3.5,
-      "fpl_id": 450,
-      "fpl_name": "Livramento",
-      "points_that_season": 59
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Madueke",
-      "club": "ARS",
-      "cost": 3.0,
-      "fpl_id": 16,
-      "fpl_name": "Madueke",
-      "points_that_season": 72
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "DEF",
-      "player": "Timber",
-      "club": "ARS",
-      "cost": 1.5,
-      "fpl_id": 5,
-      "fpl_name": "J.Timber",
-      "points_that_season": 149
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Reijnders",
-      "club": "MCI",
-      "cost": 1.25,
-      "fpl_id": 404,
-      "fpl_name": "Reijnders",
-      "points_that_season": 92
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Savinho",
-      "club": "MCI",
-      "cost": 1.0,
-      "fpl_id": 403,
-      "fpl_name": "Savinho",
-      "points_that_season": 43
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "GK",
-      "player": "Kepa",
-      "club": "ARS",
-      "cost": 0.0,
-      "fpl_id": 2,
-      "fpl_name": "Arrizabalaga",
-      "points_that_season": 2
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "MID",
-      "player": "Ndoye",
-      "club": "NFO",
-      "cost": 0.0,
-      "fpl_id": 483,
-      "fpl_name": "Ndoye",
-      "points_that_season": 50
-     },
-     {
-      "season": "2025-26",
-      "manager": "Richard",
-      "position": "FWD",
-      "player": "Guesson",
-      "club": "AVL",
-      "cost": 0.0,
-      "fpl_id": 42,
-      "fpl_name": "Guessand",
-      "points_that_season": 44
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 1340,
-    "points_matched_players": 15,
-    "best_value": {
-     "season": "2025-26",
-     "manager": "Richard",
-     "position": "DEF",
-     "player": "Timber",
-     "club": "ARS",
-     "cost": 1.5,
-     "fpl_id": 5,
-     "fpl_name": "J.Timber",
-     "points_that_season": 149
-    },
-    "biggest_bust": {
-     "season": "2025-26",
-     "manager": "Richard",
-     "position": "FWD",
-     "player": "Muniz",
-     "club": "FUL",
-     "cost": 6.5,
-     "fpl_id": 271,
-     "fpl_name": "Muniz",
-     "points_that_season": 36
-    }
-   }
-  }
- },
- {
   "name": "Tiggy",
   "years": [
    "2023-24",
@@ -2281,8 +2281,8 @@
     4
    ]
   ],
-  "pts_per_million": 22.7,
-  "total_points_bought": 3322,
+  "pts_per_million": 23.2,
+  "total_points_bought": 3389,
   "max_ever_bid": 16.0,
   "seasons": {
    "2023-24": {
@@ -2737,9 +2737,9 @@
       "player": "Wan-Bissaka",
       "club": "WHU",
       "cost": 2.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
+      "fpl_id": 611,
+      "fpl_name": "Wan-Bissaka",
+      "points_that_season": 67
      },
      {
       "season": "2025-26",
@@ -2842,8 +2842,8 @@
      }
     ],
     "spend": 49.5,
-    "points_bought": 1297,
-    "points_matched_players": 12,
+    "points_bought": 1364,
+    "points_matched_players": 13,
     "best_value": {
      "season": "2025-26",
      "manager": "Tiggy",
@@ -6210,8 +6210,8 @@
     6
    ]
   ],
-  "pts_per_million": 18.4,
-  "total_points_bought": 2749,
+  "pts_per_million": 18.7,
+  "total_points_bought": 2796,
   "max_ever_bid": 17.5,
   "seasons": {
    "2023-24": {
@@ -6355,9 +6355,9 @@
       "player": "Aaron Wan-Bissaka",
       "club": "MUN",
       "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
+      "fpl_id": 611,
+      "fpl_name": "Wan-Bissaka",
+      "points_that_season": 47
      },
      {
       "season": "2023-24",
@@ -6383,8 +6383,8 @@
      }
     ],
     "spend": 49.75,
-    "points_bought": 816,
-    "points_matched_players": 10,
+    "points_bought": 863,
+    "points_matched_players": 11,
     "best_value": {
      "season": "2023-24",
      "manager": "Deepesh",

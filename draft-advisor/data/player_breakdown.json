@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-25T05:34:57Z",
+  "fpl_baked_at": "2026-08-26T05:37:07Z",
   "sales": 645,
-  "unique_players": 393,
-  "matched_to_fpl": 259
+  "unique_players": 392,
+  "matched_to_fpl": 260
  },
  "players": [
   {
@@ -219,7 +219,7 @@
    "display": "Palmer",
    "position": "MID",
    "current_club": "CHE",
-   "status": "d",
+   "status": "a",
    "last_season_points": 13,
    "xgi": "0.47",
    "penalties": true,
@@ -1098,7 +1098,7 @@
    "display": "Maddison",
    "position": "MID",
    "current_club": "TOT",
-   "status": "a",
+   "status": "d",
    "last_season_points": 1,
    "xgi": "0.01",
    "penalties": false,
@@ -2424,7 +2424,7 @@
    "display": "Pedro Porro",
    "position": "DEF",
    "current_club": "TOT",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -3705,7 +3705,7 @@
    "display": "Florentino",
    "position": "FWD",
    "current_club": "IPS",
-   "status": "a",
+   "status": "d",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -4092,7 +4092,7 @@
    "display": "Carvalho",
    "position": "MID",
    "current_club": "BRE",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -4183,6 +4183,39 @@
    }
   },
   {
+   "key": "fpl_611",
+   "fpl_id": 611,
+   "display": "Wan-Bissaka",
+   "position": "DEF",
+   "current_club": "AVL",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2023-24": {
+     "price": 0.0,
+     "buyer": "Deepesh",
+     "club_then": "MUN",
+     "points_that_season": 47
+    },
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Richard",
+     "club_then": "WHU",
+     "points_that_season": 118
+    },
+    "2025-26": {
+     "price": 2.25,
+     "buyer": "Tiggy",
+     "club_then": "WHU",
+     "points_that_season": 67
+    }
+   }
+  },
+  {
    "key": "fpl_241",
    "fpl_id": 241,
    "display": "McNeil",
@@ -4245,33 +4278,6 @@
      "buyer": "Maccers",
      "club_then": "CRY",
      "points_that_season": 179
-    }
-   }
-  },
-  {
-   "key": "name_wan bissaka",
-   "fpl_id": null,
-   "display": "Wan-Bissaka",
-   "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2024-25": {
-     "price": 0.0,
-     "buyer": "Richard",
-     "club_then": "WHU",
-     "points_that_season": null
-    },
-    "2025-26": {
-     "price": 2.25,
-     "buyer": "Tiggy",
-     "club_then": "WHU",
-     "points_that_season": null
     }
    }
   },
@@ -4851,7 +4857,7 @@
    "display": "Enciso",
    "position": "FWD",
    "current_club": "IPS",
-   "status": "d",
+   "status": "a",
    "last_season_points": 5,
    "xgi": "0.54",
    "penalties": false,
@@ -5795,7 +5801,7 @@
    "fpl_id": 403,
    "display": "Savinho",
    "position": "MID",
-   "current_club": "MCI",
+   "current_club": "TOT",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
@@ -7342,27 +7348,6 @@
    }
   },
   {
-   "key": "name_aaron wan bissaka",
-   "fpl_id": null,
-   "display": "Aaron Wan-Bissaka",
-   "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2023-24": {
-     "price": 0.0,
-     "buyer": "Deepesh",
-     "club_then": "MUN",
-     "points_that_season": null
-    }
-   }
-  },
-  {
    "key": "name_pablo sarabia",
    "fpl_id": null,
    "display": "Pablo Sarabia",
@@ -8133,7 +8118,7 @@
    "display": "Van de Ven",
    "position": "DEF",
    "current_club": "TOT",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -8619,7 +8604,7 @@
    "display": "B.Badiashile",
    "position": "DEF",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,

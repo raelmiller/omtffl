@@ -204,9 +204,9 @@
   "player": "Aaron Wan-Bissaka",
   "club": "MUN",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 611,
+  "fpl_name": "Wan-Bissaka",
+  "points_that_season": 47
  },
  {
   "season": "2023-24",
@@ -3042,9 +3042,9 @@
   "player": "Wan-Bissaka",
   "club": "WHU",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 611,
+  "fpl_name": "Wan-Bissaka",
+  "points_that_season": 118
  },
  {
   "season": "2024-25",
@@ -4978,9 +4978,9 @@
   "player": "Wan-Bissaka",
   "club": "WHU",
   "cost": 2.25,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 611,
+  "fpl_name": "Wan-Bissaka",
+  "points_that_season": 67
  },
  {
   "season": "2025-26",
