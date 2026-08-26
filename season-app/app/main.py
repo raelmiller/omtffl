@@ -112,15 +112,20 @@ def _context(request):
     # Real submissions live in the database; the committed file is only a
     # placeholder, so once anyone has picked a team the database wins.
     stored = db.all_lineups()
+    # What managers call their teams now, rather than what the draft file
+    # called them. Read once and handed to everything that shows a name.
+    names = db.team_names()
     return {
         "request": request,
         "mode": fetcher.mode(),
         "asset_version": asset_version(),
         "me": me,
+        "names": names,
         "season": engine.season(
             stored if stored else None,
             transactions=db.transactions() + engine.effective_trades(db.trades()),
-            drafted=db.manager_clubs()),
+            drafted=db.manager_clubs(),
+            names=names),
     }
 
 
@@ -128,7 +133,8 @@ def _context(request):
 def table(request: Request):
     ctx = _context(request)
     season = ctx["season"]
-    ctx["fixtures"] = engine.fixture_list(season.get("rounds") or [])
+    ctx["fixtures"] = engine.fixture_list(season.get("rounds") or [],
+                                          names=ctx["names"])
     now = engine.current_gameweek()
     ctx["now_gw"] = now["gameweek"] if now else None
     # Open on the last round that was scored — that's the news. Before a ball
@@ -239,6 +245,18 @@ def signout(request: Request):
     return auth.sign_out(RedirectResponse("/", status_code=303), request)
 
 
+@app.post("/declare/name")
+def rename(request: Request, team: str = Form("")):
+    """Rename your own team. Nobody else's, and nobody vets the name."""
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    name, problem = db.rename_team(me["key"], team)
+    if problem:
+        return JSONResponse({"ok": False, "errors": [problem]}, status_code=422)
+    return JSONResponse({"ok": True, "team": name})
+
+
 @app.get("/account", response_class=HTMLResponse)
 def account(request: Request):
     """Where a manager can see and revoke their own sessions.
@@ -285,6 +303,7 @@ def signout_everywhere(request: Request):
 # ── Declaring a team ───────────────────────────────────────────────────────
 def _declare_context(request, gameweek=None):
     ctx = _context(request)
+    ctx["name_max"] = db.TEAM_NAME_MAX
     me = ctx["me"]
     if not me:
         return ctx, None
@@ -606,7 +625,7 @@ def team_page(request: Request, key: str, gameweek: int = None):
     detail = engine.team_gameweek(
         key, target, db.all_lineups(),
         db.transactions() + engine.effective_trades(db.trades()),
-        db.manager_clubs())
+        db.manager_clubs(), names=ctx["names"])
     if detail is None:
         raise HTTPException(404, "no such team or gameweek")
 
@@ -641,7 +660,7 @@ def team_page(request: Request, key: str, gameweek: int = None):
 @app.get("/api/player/{player_id}")
 def player_api(player_id: int):
     """Stats for the player popup. Public — it is all public FPL data."""
-    detail = engine.player_detail(player_id)
+    detail = engine.player_detail(player_id, names=db.team_names())
     if detail is None:
         raise HTTPException(404, "no such player")
     return JSONResponse(detail)

@@ -834,6 +834,69 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
+print("\n── Naming your own team ────────────────────────────────")
+
+namer = TestClient(app)
+namer.get(f"/m/{db.manager_by_key('DP')['token']}")
+was = db.manager_by_key("DP")["team"]
+
+r = namer.post("/declare/name", data={"team": "  Salah  Dressing  "})
+check("a manager can rename their own team", r.status_code, 200)
+check("with the spacing tidied but the words left alone",
+      r.json()["team"], "Salah Dressing")
+check("and it sticks", db.manager_by_key("DP")["team"], "Salah Dressing")
+
+check("an empty name is refused",
+      namer.post("/declare/name", data={"team": "   "}).status_code, 422)
+check_true("and says why",
+           "needs a name" in namer.post("/declare/name", data={"team": ""})
+           .json()["errors"][0])
+check("the name survives a refusal", db.manager_by_key("DP")["team"],
+      "Salah Dressing")
+
+long_one = "x" * (db.TEAM_NAME_MAX + 1)
+r = namer.post("/declare/name", data={"team": long_one})
+check("one character too long is refused", r.status_code, 422)
+check_true("and says how long is too long",
+           str(db.TEAM_NAME_MAX) in r.json()["errors"][0],
+           r.json()["errors"][0])
+check("exactly the limit is fine",
+      namer.post("/declare/name",
+                 data={"team": "y" * db.TEAM_NAME_MAX}).status_code, 200)
+
+# Newlines would break every row the name sits in, so they are folded away
+# rather than refused — nobody types one on purpose.
+r = namer.post("/declare/name", data={"team": "Two\nLines"})
+check("a name with a line break becomes one line", r.json()["team"], "Two Lines")
+
+check("a stranger can't rename anyone",
+      TestClient(app).post("/declare/name",
+                           data={"team": "Hostile Takeover"}).status_code, 401)
+check("and DP is still DP", db.manager_by_key("DP")["team"], "Two Lines")
+
+# The engine takes names from the squad file, so a rename has to reach it or
+# the table would still show what the team was called on draft day.
+renamed = db.team_names()
+league = engine.season(db.all_lineups() or None, db.transactions(),
+                       db.manager_clubs(), names=renamed)
+check("the table shows the new name",
+      next(r["team"] for r in league["table"] if r["key"] == "DP"), "Two Lines")
+check_true("and so do the fixtures",
+           any(m["home"] == "Two Lines" or m["away"] == "Two Lines"
+               for r in engine.fixture_list(league["rounds"], names=renamed)
+               for m in r["matches"]))
+check("the stats page too",
+      next(t["team"] for t in engine.analytics(league)["teams"]
+           if t["key"] == "DP"), "Two Lines")
+gwn = league["rounds"][0]["gameweek"]
+check("and a team's own page",
+      engine.team_gameweek("DP", gwn, db.all_lineups(), db.transactions(),
+                           db.manager_clubs(), names=renamed)["team"],
+      "Two Lines")
+check_true("the front page renders it",
+           "Two Lines" in namer.get("/").text)
+db.rename_team("DP", was)
+
 print("\n── A link, and the hour after someone opens it ─────────")
 
 # A manager the rest of the suite leaves alone, so the session counts below

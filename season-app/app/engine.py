@@ -63,6 +63,20 @@ def data_version():
     return tuple((f.name, f.stat().st_mtime_ns) for f in files if f.exists())
 
 
+def team_names(squad_teams, renamed=None):
+    """What each team is called: the draft file, then whatever they renamed
+    themselves to.
+
+    The squad file is the roster of record and carries the name from draft
+    day. A manager can change theirs afterwards, and that has to show up
+    everywhere the name does — the table, the fixtures, the stats — rather
+    than only in the places that read the database.
+    """
+    names = {t["key"]: t.get("team", t["key"]) for t in squad_teams}
+    names.update({k: v for k, v in (renamed or {}).items() if v})
+    return names
+
+
 def state(gw: dict) -> str:
     """How settled a gameweek's numbers are — never dress one up as final."""
     if gw.get("data_checked"):
@@ -91,7 +105,7 @@ def merge_lineups(stored):
 
 @lru_cache(maxsize=8)
 def _season(version, lineup_key, lineups_json, real_keys,
-            transactions_json, managers_json):
+            transactions_json, managers_json, names_json=None):
     """Score the whole season. Cached on the data fingerprint, not on time.
 
     `lineups_json` is passed in rather than read here so the app can serve
@@ -116,7 +130,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
     # draft price so the engine had something to score. Nobody picked those
     # elevens, and the page must not imply anyone did.
     placeholder_file = _lineups_are_seeded()
-    names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
+    names = team_names(squads["teams"], json.loads(names_json or "{}"))
 
     by_gw = {}
     for fx in fixtures["fixtures"]:
@@ -305,24 +319,26 @@ def _lineups_are_seeded():
     return "worked example" in (raw.get("note") or "").lower()
 
 
-def season(stored=None, transactions=None, drafted=None):
+def season(stored=None, transactions=None, drafted=None, names=None):
     """Score the season: submitted elevens, plus whatever was declared.
 
     `stored` is what managers saved as lineups, `transactions` everything else
-    they declared, `drafted` which club each team's manager runs. All three
-    are in the cache key, so a boost played a moment ago is reflected on the
-    next page load without a restart.
+    they declared, `drafted` which club each team's manager runs, `names` what
+    they have renamed their teams to. All four are in the cache key, so a
+    boost played or a name changed a moment ago is reflected on the next page
+    load without a restart.
     """
     tx = json.dumps(transactions or [], sort_keys=True) if transactions else None
     mg = json.dumps(drafted or {}, sort_keys=True) if drafted else None
+    nm = json.dumps(names or {}, sort_keys=True) if names else None
     if not stored:
-        return _season(data_version(), 0, None, (), tx, mg)
+        return _season(data_version(), 0, None, (), tx, mg, nm)
     merged = merge_lineups(stored)
     real = tuple(sorted((int(gw), key)
                         for gw, teams in stored.items() for key in teams))
     payload = json.dumps({str(k): v for k, v in sorted(merged.items())},
                          sort_keys=True)
-    return _season(data_version(), len(payload), payload, real, tx, mg)
+    return _season(data_version(), len(payload), payload, real, tx, mg, nm)
 
 
 def freshness():
@@ -636,7 +652,7 @@ def _stdev(values):
     return round((sum((v - avg) ** 2 for v in values) / len(values)) ** 0.5, 1)
 
 
-def fixture_list(scored=None):
+def fixture_list(scored=None, names=None):
     """Every round of the season, played or not, oldest first.
 
     The table can only speak for rounds that have been scored. The other
@@ -649,7 +665,7 @@ def fixture_list(scored=None):
     if not fixtures or not squads:
         return []
 
-    names = {t["key"]: t.get("team", t["key"]) for t in squads["teams"]}
+    names = team_names(squads["teams"], names)
     played = {r["gameweek"]: r for r in (scored or [])}
     meta = {g["gameweek"]: g for g in calendar()}
 
@@ -1108,7 +1124,8 @@ def with_stats(players):
 
 
 # ── One team's gameweek ────────────────────────────────────────────────────
-def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
+def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None,
+                  names=None):
     """How a team's round actually went, player by player.
 
     The same eleven the scoring used, with each player's points, the
@@ -1190,7 +1207,7 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
     for player in final_xi:
         lines.setdefault(player["position"], []).append(card(player))
 
-    names = {t["key"]: t.get("team", t["key"]) for t in squads_base["teams"]}
+    names = team_names(squads_base["teams"], names)
     return {
         "key": key, "team": names.get(key, key), "gameweek": gameweek,
         "state": state(gw), "source": source,
@@ -1207,7 +1224,7 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None):
 
 
 # ── One player ─────────────────────────────────────────────────────────────
-def player_detail(player_id, ahead=5):
+def player_detail(player_id, ahead=5, names=None):
     """Everything worth knowing about a player, for the popup.
 
     A headline of the season so far, what they did in each gameweek, and who
@@ -1266,9 +1283,10 @@ def player_detail(player_id, ahead=5):
     totals = player_stats().get(player_id, {})
     owner = None
     squads = _read("squads.json") or {"teams": []}
+    called = team_names(squads["teams"], names)
     for team in squads["teams"]:
         if any(p["id"] == player_id for p in team["squad"]):
-            owner = team.get("team", team["key"])
+            owner = called.get(team["key"], team["key"])
 
     return {
         "id": player_id,

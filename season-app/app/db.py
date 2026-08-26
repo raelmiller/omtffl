@@ -257,6 +257,38 @@ def spend_token(token):
     return manager, start_session(manager["key"])
 
 
+# Long enough for anything anyone has actually called a team — the longest in
+# the league is twenty characters — and short enough not to break the places a
+# name has to fit: a dropdown that sizes itself to its widest option, a column
+# in the standings, a heading on a phone.
+TEAM_NAME_MAX = 40
+
+
+def rename_team(key, name):
+    """Change a team's name, or say why not.
+
+    Returns (name, None) on success and (None, reason) on refusal. The only
+    rules are the ones a page can't cope with: something has to be there, it
+    has to fit, and it has to be one line.
+    """
+    cleaned = " ".join((name or "").split())
+    if not cleaned:
+        return None, "A team needs a name."
+    if len(cleaned) > TEAM_NAME_MAX:
+        return None, (f"That is {len(cleaned)} characters; "
+                      f"{TEAM_NAME_MAX} is as much as the table can hold.")
+    with connect() as conn:
+        conn.execute("UPDATE manager SET team = ? WHERE key = ?", (cleaned, key))
+    return cleaned, None
+
+
+def team_names():
+    """What every manager currently calls their team."""
+    with connect() as conn:
+        return {r["key"]: r["team"]
+                for r in conn.execute("SELECT key, team FROM manager")}
+
+
 def manager_by_key(key):
     with connect() as conn:
         row = conn.execute(

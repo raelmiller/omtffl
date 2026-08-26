@@ -3,7 +3,9 @@
 {% block heading %}{{ gw.name }}{% endblock %}
 {% block subheading %}
 <p class="sub">
-  {{ me.team }} &middot;
+  <span id="teamname">{{ me.team }}</span>
+  <button type="button" id="rename" class="linkish"
+          title="Change your team name">edit</button> &middot;
   {% if lock.open %}
     <span id="countdown" data-deadline="{{ lock.deadline }}">deadline {{ lock.deadline }}</span>
   {% else %}
@@ -17,6 +19,22 @@
 {% endblock %}
 
 {% block content %}
+<div class="panel namebox" id="namebox" hidden>
+  <label class="field">
+    <span class="eyebrow">Team name</span>
+    <input type="text" id="teaminput" maxlength="{{ name_max }}"
+           value="{{ me.team }}" autocomplete="off">
+    <span class="hint">Up to {{ name_max }} characters. Call it whatever you
+    like &mdash; it shows on the table, the fixtures and everyone else&rsquo;s
+    screen.</span>
+  </label>
+  <div class="tacts">
+    <span id="namestate" class="savestate"></span>
+    <button type="button" id="namecancel" class="btn small ghost">Cancel</button>
+    <button type="button" id="namesave" class="btn small">Save name</button>
+  </div>
+</div>
+
 <section>
   <div class="pickhead">
     <div>
@@ -324,6 +342,52 @@
       }
     });
   }
+
+  // ── Team name ─────────────────────────────────────────────────────────
+  const nameBox = document.getElementById('namebox');
+  const nameInput = document.getElementById('teaminput');
+  const nameState = document.getElementById('namestate');
+  const nameShown = document.getElementById('teamname');
+
+  function showNameBox(open) {
+    nameBox.hidden = !open;
+    if (open) { nameInput.value = nameShown.textContent.trim(); nameInput.focus(); }
+    nameState.textContent = '';
+  }
+  document.getElementById('rename').addEventListener('click', () => showNameBox(true));
+  document.getElementById('namecancel').addEventListener('click', () => showNameBox(false));
+
+  async function saveName() {
+    nameState.textContent = 'saving…';
+    nameState.className = 'savestate';
+    const body = new URLSearchParams({ team: nameInput.value });
+    try {
+      const res = await fetch('/declare/name', { method: 'POST', body });
+      const out = await res.json();
+      if (!out.ok) {
+        nameState.textContent = out.errors[0];
+        nameState.className = 'savestate bad';
+        return;
+      }
+      // Every other page reads the name from the server, so the only copy to
+      // keep in step is the one on this one.
+      nameShown.textContent = out.team;
+      document.querySelectorAll('.nav .who').forEach(el => {
+        el.textContent = out.team;
+      });
+      nameState.textContent = 'saved';
+      nameState.className = 'savestate ok';
+      setTimeout(() => showNameBox(false), 700);
+    } catch (e) {
+      nameState.textContent = 'could not save: ' + e;
+      nameState.className = 'savestate bad';
+    }
+  }
+  document.getElementById('namesave').addEventListener('click', saveName);
+  nameInput.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') { ev.preventDefault(); saveName(); }
+    if (ev.key === 'Escape') showNameBox(false);
+  });
 
   render();
 })();
