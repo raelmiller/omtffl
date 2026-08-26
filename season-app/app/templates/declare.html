@@ -19,22 +19,6 @@
 {% endblock %}
 
 {% block content %}
-<div class="panel namebox" id="namebox" hidden>
-  <label class="field">
-    <span class="eyebrow">Team name</span>
-    <input type="text" id="teaminput" maxlength="{{ name_max }}"
-           value="{{ me.team }}" autocomplete="off">
-    <span class="hint">Up to {{ name_max }} characters. Call it whatever you
-    like &mdash; it shows on the table, the fixtures and everyone else&rsquo;s
-    screen.</span>
-  </label>
-  <div class="tacts">
-    <span id="namestate" class="savestate"></span>
-    <button type="button" id="namecancel" class="btn small ghost">Cancel</button>
-    <button type="button" id="namesave" class="btn small">Save name</button>
-  </div>
-</div>
-
 <section>
   <div class="pickhead">
     <div>
@@ -88,7 +72,9 @@
       {% endif %}
     </div>
     <div class="bside">
+      {% if boost.available or boost.declared or boost.used %}
       <div class="buses">{{ boost.left }} of {{ boost.total }} left</div>
+      {% endif %}
       {% if boost.available or boost.declared %}
       <button id="boost" class="btn {% if boost.declared %}{% else %}ghost{% endif %}"
               data-on="{{ 1 if boost.declared else 0 }}"
@@ -127,6 +113,22 @@
   <p class="note">A starter who doesn&rsquo;t play at all is replaced by the first
   substitute who did, as long as the formation stays legal. Keepers only ever
   replace keepers.</p>
+
+  <div class="panel namebox" id="namebox" hidden>
+    <label class="field">
+      <span class="eyebrow">Team name</span>
+      <input type="text" id="teaminput" maxlength="{{ name_max }}"
+             value="{{ me.team }}" autocomplete="off">
+      <span class="hint">Up to {{ name_max }} characters. Call it whatever you
+      like &mdash; it shows on the table, the fixtures and everyone else&rsquo;s
+      screen.</span>
+    </label>
+    <div class="tacts">
+      <span id="namestate" class="savestate"></span>
+      <button type="button" id="namecancel" class="btn small ghost">Cancel</button>
+      <button type="button" id="namesave" class="btn small">Save name</button>
+    </div>
+  </div>
 
   <p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/account">Your sign-in</a></p>
 </section>
@@ -351,7 +353,13 @@
 
   function showNameBox(open) {
     nameBox.hidden = !open;
-    if (open) { nameInput.value = nameShown.textContent.trim(); nameInput.focus(); }
+    if (open) {
+      nameInput.value = nameShown.textContent.trim();
+      // The box sits below the team, where it isn't in the way of picking
+      // one. The link that opens it is at the top, so bring the two together.
+      nameBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      nameInput.focus({ preventScroll: true });
+    }
     nameState.textContent = '';
   }
   document.getElementById('rename').addEventListener('click', () => showNameBox(true));

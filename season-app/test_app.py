@@ -834,6 +834,16 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
+# Every answer from boost_status has to carry the same keys. Two of them
+# didn't, and the page rendered a bare "of left" where the numbers belong.
+for label, drafted in [("no manager drafted", {}),
+                       ("a manager who was sacked",
+                        {"RM": {"club": 1, "sacked_from": 1}})]:
+    st = engine.boost_status("RM", 5, drafted, used=0)
+    check(f"{label}: still says how many boosts there are",
+          (st.get("used"), st.get("left"), st.get("total")), (0, 0, 8))
+    check_true(f"{label}: and says why there is nothing to play", bool(st["why"]))
+
 print("\n── Naming your own team ────────────────────────────────")
 
 namer = TestClient(app)

@@ -798,16 +798,23 @@ def boost_status(key, gameweek, drafted, used, declared=False):
     Everything a manager needs to decide with: which club, where they sit,
     what that band pays, how many uses are left, and why it might be refused.
     """
+    # Every answer carries the same keys. A page that reads `left` on the
+    # "no manager drafted" branch and got nothing rendered "of left", which is
+    # what happens when only the happy path is fully populated.
+    counts = {"declared": declared, "used": used,
+              "total": BOOST_USES_PER_SEASON, "left": 0}
+
     entry = (drafted or {}).get(key)
     if not entry:
-        return {"available": False,
+        return {**counts, "available": False,
                 "why": "no manager drafted — the league hasn't assigned one yet"}
 
     club_id = entry["club"]
     club = clubs().get(club_id, {})
     sacked = entry.get("sacked_from")
     if sacked is not None and gameweek >= sacked:
-        return {"available": False, "club": club.get("name", "?"),
+        # None left to play, whatever is unspent — they went with the manager.
+        return {**counts, "available": False, "club": club.get("name", "?"),
                 "why": (f"your manager left {club.get('name', 'the club')} in "
                         f"gameweek {sacked} — the boost went with them")}
 
@@ -821,16 +828,14 @@ def boost_status(key, gameweek, drafted, used, declared=False):
 
     left = BOOST_USES_PER_SEASON - used
     return {
+        **counts,
+        "left": left,
         "available": left > 0,
-        "declared": declared,
         "club": club.get("name", "?"),
         "short": club.get("short", ""),
         "position": position,
         "provisional_position": not settled,
         "pct": boost_pct(position),
-        "used": used,
-        "left": left,
-        "total": BOOST_USES_PER_SEASON,
         "why": None if left > 0 else
                f"all {BOOST_USES_PER_SEASON} boosts used this season",
     }
