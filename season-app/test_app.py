@@ -841,6 +841,23 @@ check_true("along with how many players we know of", fresh["players"] > 0)
 check_true("an absent availability file reads as unknown, not as nobody hurt",
            fresh["availability"] is None, str(fresh["availability"]))
 
+from datetime import datetime, timezone as _tz              # noqa: E402
+from app.main import REFRESH_SCHEDULE                       # noqa: E402
+
+# Injury news and prices move all week, and a manager picking on Friday is
+# reading whatever the last fetch brought in — so the fetch runs every day.
+runs = []
+prev, now = None, datetime(2026, 8, 26, 0, 0, tzinfo=_tz.utc)
+for _ in range(4):
+    nxt = REFRESH_SCHEDULE.get_next_fire_time(prev, now)
+    runs.append(nxt)
+    prev, now = nxt, nxt
+check("four runs, four consecutive days",
+      [r.day for r in runs], [26, 27, 28, 29])
+check_true("all at the same hour", all((r.hour, r.minute) == (7, 45) for r in runs))
+check_true("including a Friday, which is when most deadlines fall",
+           any(r.weekday() == 4 for r in runs))
+
 adm = TestClient(app)
 os.environ["ADMIN_KEYS"] = "RM"
 adm.get(f"/m/{db.manager_by_key('RM')['token']}")

@@ -49,6 +49,12 @@ app.mount("/static", StaticFiles(directory=str(HERE / "static")), name="static")
 
 scheduler = BackgroundScheduler(timezone="UTC")
 
+# Every morning. Results settle over Monday and Tuesday, but injury news and
+# prices move all week — and a manager picking on Friday afternoon is reading
+# whatever the last fetch brought in. Kept early enough that a fetch has been
+# and gone before anyone is awake to look at it.
+REFRESH_SCHEDULE = CronTrigger(hour=7, minute=45)
+
 
 @app.on_event("startup")
 def startup():
@@ -60,10 +66,7 @@ def startup():
 
     if os.environ.get("DISABLE_SCHEDULER"):
         return
-    # Monday and Tuesday mornings, matching the Actions workflow: after the
-    # weekend's matches, and again once FPL has settled bonus and corrections.
-    scheduler.add_job(fetcher.refresh, CronTrigger(day_of_week="mon,tue", hour=7,
-                                                   minute=45),
+    scheduler.add_job(fetcher.refresh, REFRESH_SCHEDULE,
                       id="refresh", replace_existing=True)
     scheduler.start()
 
