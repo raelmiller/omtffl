@@ -201,7 +201,9 @@
     if (!open) el.disabled = true;
     el.innerHTML = `
       ${opts.order ? `<span class="ord">${opts.order}</span>` : ''}
-      <span class="shirt" data-pos="${p.position}" data-club="${p.club || ''}"></span>
+      <span class="shirt" data-pos="${p.position}" data-club="${p.club || ''}">${
+        p.flag ? `<span class="flag ${p.flag.level}" title="${
+          p.flag.text.replace(/"/g, '')}"></span>` : ''}</span>
       <span class="pn tappable" title="See ${p.name}'s stats">${p.name}</span>
       <span class="pc">${p.club || p.position}</span>`;
     el.addEventListener('click', () => choose(id));
@@ -321,19 +323,6 @@
         status.className = 'savestate bad';
       }
     });
-  }
-
-  const cd = document.getElementById('countdown');
-  if (cd) {
-    const closes = new Date(cd.dataset.deadline);
-    const tick = () => {
-      const left = closes - new Date();
-      if (left <= 0) { cd.textContent = 'deadline passed — reload'; return; }
-      const d = Math.floor(left / 864e5), h = Math.floor(left / 36e5) % 24,
-            m = Math.floor(left / 6e4) % 60;
-      cd.textContent = `${d ? d + 'd ' : ''}${h}h ${m}m until the deadline`;
-    };
-    tick(); setInterval(tick, 30000);
   }
 
   render();

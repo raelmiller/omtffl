@@ -42,6 +42,41 @@
 </section>
 {% endif %}
 
+{% if mine_open %}
+<section>
+  <div class="sechead">
+    <h2>Yours, in front of the league</h2>
+    <span class="eyebrow">agreed, not yet settled</span>
+  </div>
+  <p class="sub">These carried points, so they were published when they were
+  accepted. They stand at the deadline unless enough managers object.</p>
+  {% for t in mine_open %}
+  <div class="panel trade">
+    <div class="tbody">
+      <div class="tside">
+        <span class="eyebrow">{{ t.proposer_team }} gives</span>
+        {% for p in t.players_out %}<div class="tp">{{ p.name }} <span class="pclub">{{ p.position }}</span></div>{% endfor %}
+        {% if t.points %}<div class="tpoints">+ {{ t.points }} points</div>{% endif %}
+      </div>
+      <div class="tarrow" aria-hidden="true">&rarr;</div>
+      <div class="tside">
+        <span class="eyebrow">{{ t.receiver_team }} gives</span>
+        {% for p in t.players_in %}<div class="tp">{{ p.name }} <span class="pclub">{{ p.position }}</span></div>{% endfor %}
+      </div>
+    </div>
+    <p class="tnote">
+      {{ t.outcome.vetoes }} of {{ t.outcome.needed }} objections needed to
+      vote it down.
+      {% if t.outcome.deadline %}
+        Closes <time data-when="{{ t.outcome.deadline }}">{{ t.outcome.deadline }}</time> &mdash;
+        <span class="clock" data-deadline="{{ t.outcome.deadline }}" data-short="1"></span> left.
+      {% endif %}
+    </p>
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
 {% if open_to_veto %}
 <section>
   <div class="sechead">

@@ -833,6 +833,96 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
+print("\n── Who might not play ──────────────────────────────────")
+
+# Two levels only. Red is "he isn't playing", amber is "he might not", and a
+# manager picking a team needs to tell those apart at a glance.
+cases = [
+    ({"status": "i", "chance": 0, "news": "Knee injury"}, "red"),
+    ({"status": "s", "chance": None, "news": "Suspended"}, "red"),
+    ({"status": "u", "chance": None, "news": ""}, "red"),
+    ({"status": "n", "chance": None, "news": ""}, "red"),
+    ({"status": "i", "chance": 25, "news": "Ankle"}, "amber"),
+    ({"status": "d", "chance": 50, "news": ""}, "amber"),
+    ({"status": "d", "chance": 75, "news": ""}, "amber"),
+]
+for entry, want in cases:
+    check(f"{entry['status']} at {entry['chance']}",
+          (engine.flag(entry) or {}).get("level"), want)
+check("nothing against a player is no flag at all", engine.flag(None), None)
+check("a suspension says so without needing FPL's wording",
+      engine.flag({"status": "s", "chance": None, "news": ""})["text"],
+      "Suspended")
+check("but FPL's own note wins when there is one, rather than stuttering",
+      engine.flag({"status": "i", "chance": 25,
+                   "news": "Ankle injury - 25% chance of playing"})["text"],
+      "Ankle injury - 25% chance of playing")
+
+# The data only arrives with a fetch. Until then nobody is flagged, and
+# nobody is wrongly cleared either — the absence has to be silent.
+check("no availability data means no flags",
+      [p for p in engine.squad_for("RM") if p.get("flag")], [])
+
+hurt = engine.squad_for("RM")[0]
+was = engine.availability
+engine.availability = lambda pid=None: (
+    {str(hurt["id"]): {"status": "i", "chance": 0, "news": "Knee"}}
+    if pid is None else
+    ({"status": "i", "chance": 0, "news": "Knee"}
+     if str(pid) == str(hurt["id"]) else None))
+try:
+    flagged = engine.refresh_clubs(engine.squad_for("RM"))
+    check("a squad carries the doubt",
+          [p["name"] for p in flagged if p.get("flag")], [hurt["name"]])
+    check("at the right level",
+          next(p["flag"]["level"] for p in flagged if p.get("flag")), "red")
+    check("everyone else is left clean",
+          sum(1 for p in flagged if p.get("flag")), 1)
+    pooled = engine.with_stats([hurt])
+    check_true("and so does the waiver pool", bool(pooled[0].get("flag")))
+    check_true("the popup carries it too",
+               bool(engine.player_detail(hurt["id"])["flag"]))
+finally:
+    engine.availability = was
+
+print("\n── Deadlines and offers you can see ────────────────────")
+
+wv = TestClient(app)
+wv.get(f"/m/{db.manager_by_key('RM')['token']}")
+wpage2 = wv.get("/waivers").text
+check_true("the waivers page counts down to the deadline",
+           'class="clock" data-deadline=' in wpage2)
+check_true("and says when that is in words",
+           engine.deadline_state(engine.current_gameweek())["deadline"] in wpage2)
+
+# A published trade of your own showed on everyone else's page as something
+# to object to, and on your own page nowhere at all.
+gwp = engine.current_gameweek()["gameweek"]
+sqp = engine.squads_for_gameweek(gwp, db.trades())
+mate = next(k for k in sqp
+            if k not in ("RM", engine.opponents(gwp).get("RM")))
+pid2 = db.propose_trade(gwp, "RM", mate,
+                        [next(p for p in sqp["RM"] if p["position"] == "GK")],
+                        [next(p for p in sqp[mate] if p["position"] == "GK")], 5)
+db.set_trade_status(pid2, "published")
+tpage = wv.get("/trade").text
+check_true("your own open trade is on your own page",
+           "in front of the league" in tpage)
+check_true("with the objections it would take to stop it",
+           "of 4 objections" in tpage, tpage[tpage.find("objections") - 60:][:90])
+other = TestClient(app)
+other.get(f"/m/{db.manager_by_key(mate)['token']}")
+check_true("the other side sees it as theirs too",
+           "in front of the league" in other.get("/trade").text)
+third = next(k for k in sqp if k not in ("RM", mate))
+bystander = TestClient(app)
+bystander.get(f"/m/{db.manager_by_key(third)['token']}")
+btext = bystander.get("/trade").text
+check_true("a bystander still sees it as something to object to",
+           "Open to objection" in btext)
+check_true("and not as one of theirs",
+           "in front of the league" not in btext)
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")

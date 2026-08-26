@@ -173,13 +173,6 @@
 
   show(at, false);
   rail.querySelectorAll('.gwchip')[at].scrollIntoView({ block: 'nearest', inline: 'center' });
-
-  document.querySelectorAll('time[data-when]').forEach(t => {
-    const d = new Date(t.dataset.when);
-    if (!isNaN(d)) t.textContent = d.toLocaleString(undefined, {
-      weekday: 'short', day: 'numeric', month: 'short',
-      hour: '2-digit', minute: '2-digit' });
-  });
 })();
 </script>
 {% endif %}

@@ -426,6 +426,11 @@ def _trade_context(request):
         "open_to_veto": [t for t in all_trades
                          if t["outcome"]["open"]
                          and me["key"] not in (t["proposer"], t["receiver"])],
+        # A published trade of your own shows on everyone else's page as
+        # something to object to, and used to show on yours nowhere at all.
+        "mine_open": [t for t in all_trades
+                      if t["outcome"]["open"]
+                      and me["key"] in (t["proposer"], t["receiver"])],
         "settled": [t for t in all_trades
                     if t["outcome"]["state"] in ("accepted", "vetoed", "declined")][:12],
         "my_squad": squads.get(me["key"], []),

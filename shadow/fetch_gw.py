@@ -158,12 +158,30 @@ def main():
         for t in bs["teams"]
     }
     player_clubs = {str(el["id"]): el["team"] for el in bs["elements"]}
+
+    # Who is injured, suspended or doubtful. Only the players with something
+    # wrong are stored: everyone else is available, and saying so 600 times
+    # over would be most of the file.
+    availability = {}
+    for el in bs["elements"]:
+        status = el.get("status") or "a"
+        chance = el.get("chance_of_playing_next_round")
+        if status == "a" and chance in (None, 100):
+            continue
+        availability[str(el["id"])] = {
+            "status": status,
+            "chance": chance,
+            "news": (el.get("news") or "").strip(),
+        }
+
     (DATA / "players.json").write_text(
         json.dumps({"positions": positions, "names": names,
-                    "clubs": clubs, "player_clubs": player_clubs},
+                    "clubs": clubs, "player_clubs": player_clubs,
+                    "availability": availability},
                    separators=(",", ":"))
     )
-    print(f"  saved positions for {len(positions)} players")
+    print(f"  saved positions for {len(positions)} players, "
+          f"{len(availability)} of them carrying a doubt")
 
     fetch_pl_fixtures()
 

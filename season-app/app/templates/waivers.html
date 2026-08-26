@@ -5,9 +5,15 @@
 {% block subheading %}
 <p class="sub">
   For {{ gw.name }} &middot;
-  {% if lock.open %}claims close at the deadline{% else %}closed{% endif %}
+  {% if lock.open %}
+    claims close <time data-when="{{ lock.deadline }}">{{ lock.deadline }}</time>
+  {% else %}closed &mdash; the run has already happened{% endif %}
   {% if my_place %}&middot; you claim {{ my_place }}{{ 'st' if my_place == 1 else 'nd' if my_place == 2 else 'rd' if my_place == 3 else 'th' }} in round one{% endif %}
 </p>
+{% if lock.open %}
+<p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
+&mdash; claims can be changed until then, and nothing is processed before it.</p>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -169,6 +175,7 @@
     b.setAttribute('aria-pressed', selected ? 'true' : 'false');
     b.innerHTML = `<span class="tick" aria-hidden="true"></span>` +
                   `<span class="pn2">${p.name}</span>` +
+                  `${p.flag ? `<span class="flag ${p.flag.level}"></span>` : ''}` +
                   `<span class="pclub">${extra || p.position}</span>`;
     b.addEventListener('click', onClick);
     return b;
@@ -270,6 +277,8 @@
       tr.innerHTML =
         `<td class="cpick"><span class="tick" aria-hidden="true"></span></td>` +
         `<td class="team"><span class="pn tappable">${p.name}</span>` +
+        `${p.flag ? `<span class="flag ${p.flag.level}" title="${
+          p.flag.text.replace(/"/g, '')}"></span>` : ''}` +
         `${p.mine ? '<span class="mgr">yours</span>' : ''}</td>` +
         `<td class="pclub cpos">${p.position}</td>` +
         `<td class="pclub cclub">${p.club || ''}</td>` +

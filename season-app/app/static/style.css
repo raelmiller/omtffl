@@ -192,6 +192,35 @@ tr.mine td { background: var(--surface-2); }
 tr.mine.chosen td { background: var(--accent-dim); }
 tr.mine .mgr { text-transform: uppercase; }
 
+/* ── Availability ────────────────────────────────────── */
+/* Two levels only: red is not playing, amber is a doubt. Drawn as a triangle
+   rather than a glyph so it looks the same on every device, and given a
+   title so the reason is a hover or a long-press away. */
+.flag {
+  display: inline-block; width: 0; height: 0; vertical-align: .08em;
+  margin-left: .3rem; cursor: help;
+  border-left: .32rem solid transparent;
+  border-right: .32rem solid transparent;
+  border-bottom: .55rem solid var(--warn);
+}
+.flag.amber { border-bottom-color: #e8a33d; }
+.player .shirt .flag {
+  position: absolute; z-index: 3; top: -3px; right: -4px; margin: 0;
+  /* A red triangle on a red shirt needs an edge of its own. */
+  filter: drop-shadow(0 0 1.2px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.55));
+}
+.note.doubt {
+  border-left-color: var(--warn); color: var(--text); font-weight: 500;
+}
+.note.doubt.amber { border-left-color: #e8a33d; }
+
+/* A deadline anyone can act on: the clock counts down, the time next to it
+   says when in the reader's own timezone. */
+.clock {
+  font-family: var(--mono); font-size: .82rem; color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
 .pickmetric { display: flex; align-items: center; gap: .5rem; }
 .pickmetric select { max-width: 14rem; }
 

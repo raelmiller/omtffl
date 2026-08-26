@@ -104,6 +104,38 @@
   paint();
 })();
 </script>
+<script>
+// Times, shared by every page. `data-when` becomes an absolute time in the
+// reader's own timezone; `data-deadline` becomes a countdown to it. Both are
+// rendered from the ISO string in the attribute, so a page that never runs
+// this still shows something true, just less friendly.
+(function () {
+  document.querySelectorAll("[data-when]").forEach(function (el) {
+    var d = new Date(el.dataset.when);
+    if (!isNaN(d)) el.textContent = d.toLocaleString(undefined, {
+      weekday: "short", day: "numeric", month: "short",
+      hour: "2-digit", minute: "2-digit"
+    });
+  });
+
+  var clocks = [].slice.call(document.querySelectorAll("[data-deadline]"));
+  if (!clocks.length) return;
+  function tick() {
+    clocks.forEach(function (el) {
+      var left = new Date(el.dataset.deadline) - new Date();
+      if (isNaN(left)) return;
+      if (left <= 0) { el.textContent = "deadline passed — reload"; return; }
+      var d = Math.floor(left / 864e5),
+          h = Math.floor(left / 36e5) % 24,
+          m = Math.floor(left / 6e4) % 60;
+      el.textContent = (d ? d + "d " : "") + h + "h " + m + "m"
+                     + (el.dataset.short ? "" : " until the deadline");
+    });
+  }
+  tick();
+  setInterval(tick, 30000);
+})();
+</script>
 <dialog id="playercard" class="pcard">
   <div class="pcard-head">
     <div>
@@ -198,7 +230,10 @@
       document.getElementById('pc-meta').textContent =
         [d.position, d.club, d.owner ? `owned by ${d.owner}` : 'a free agent']
           .filter(Boolean).join(' · ');
-      body.innerHTML = headline(d) + makeup(d) +
+      const f = d.flag;
+      body.innerHTML = (f ? `<p class="note doubt ${f.level}"><span class="flag ${
+        f.level}"></span> ${f.text}</p>` : '') +
+        headline(d) + makeup(d) +
         '<div class="sechead"><h2>Gameweek by gameweek</h2></div>' +
         history(d) + fixtures(d);
     } catch (e) {

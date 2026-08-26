@@ -406,6 +406,65 @@ def _opponents(version):
     return out
 
 
+# What FPL's status letters mean, in the order of how worried to be.
+_OUT = {"i": "injured", "s": "suspended", "u": "unavailable",
+        "n": "not in the squad"}
+
+
+@lru_cache(maxsize=1)
+def _availability(version):
+    return (_read("players.json") or {}).get("availability") or {}
+
+
+def availability(player_id=None):
+    """Injuries, suspensions and doubts, as the last fetch found them.
+
+    Returns None for a player with nothing against their name — which is most
+    of them, and also everyone at all if the data predates the fetcher
+    learning to ask. A missing file means no flags, never false ones.
+    """
+    data = _availability(data_version())
+    if player_id is None:
+        return data
+    return data.get(str(player_id))
+
+
+def flag(entry):
+    """A doubt turned into something a page can draw.
+
+    Two levels, because a manager only really needs to know "he isn't playing"
+    from "he might not". Red is out or no chance at all; amber is a doubt with
+    a number attached.
+    """
+    if not entry:
+        return None
+    chance = entry.get("chance")
+    status = entry.get("status") or "a"
+    out = status in _OUT
+    level = "red" if chance == 0 or (out and chance is None) else "amber"
+    if out and chance in (None, 0):
+        why = _OUT[status].capitalize()
+    elif chance is not None:
+        why = f"{chance}% chance of playing"
+    else:
+        why = "Doubtful"
+    news = entry.get("news") or ""
+    # FPL's own note usually already says the chance, so showing both reads as
+    # a stutter: "25% chance of playing — Ankle injury - 25% chance of playing".
+    return {"level": level, "why": why, "news": news,
+            "text": news or why, "chance": chance}
+
+
+def with_availability(players):
+    """The same list back, each player carrying their flag if they have one."""
+    marks = availability()
+    out = []
+    for player in players:
+        mark = flag(marks.get(str(player["id"])))
+        out.append({**player, "flag": mark} if mark else dict(player))
+    return out
+
+
 def opponents(gameweek=None):
     """The head-to-head draw, for the whole season or one round of it."""
     draw = _opponents(data_version())
@@ -664,11 +723,17 @@ def current_club(player_id):
 
 
 def refresh_clubs(squad):
-    """Squad entries with their club brought up to date."""
+    """Squad entries with their club brought up to date, and any doubt about
+    whether they will play at all."""
+    marks = availability()
     out = []
     for player in squad:
         now = current_club(player["id"])
-        out.append({**player, "club": now} if now else dict(player))
+        fresh = {**player, "club": now} if now else dict(player)
+        mark = flag(marks.get(str(player["id"])))
+        if mark:
+            fresh["flag"] = mark
+        out.append(fresh)
     return out
 
 
@@ -1025,8 +1090,15 @@ def with_stats(players):
     comparison only works if both sides of it are measured the same way.
     """
     stats = player_stats()
-    return [{**player, "stats": stats.get(player["id"], {})}
-            for player in players]
+    marks = availability()
+    out = []
+    for player in players:
+        row = {**player, "stats": stats.get(player["id"], {})}
+        mark = flag(marks.get(str(player["id"])))
+        if mark:
+            row["flag"] = mark
+        out.append(row)
+    return out
 
 
 # ── One team's gameweek ────────────────────────────────────────────────────
@@ -1198,6 +1270,7 @@ def player_detail(player_id, ahead=5):
         "position": POS.get(positions[player_id], "?"),
         "club": club_names.get(club_id, {}).get("name", ""),
         "club_short": club_names.get(club_id, {}).get("short", ""),
+        "flag": flag(availability(player_id)),
         "owner": owner,
         "totals": totals,
         "history": history,
