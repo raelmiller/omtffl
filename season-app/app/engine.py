@@ -337,9 +337,15 @@ def freshness():
             "fetched_at": gw.get("fetched_at"),
             "players": len(gw.get("elements", [])),
         }
+    meta = _read("players.json") or {}
     return {
         "gameweeks_on_disk": len(files),
         "latest": latest,
+        "players": len(meta.get("names") or {}),
+        # None means the file predates the fetcher learning to ask, which is
+        # not the same as nobody being injured.
+        "availability": (len(meta["availability"])
+                         if "availability" in meta else None),
         "squads": bool((DATA / "squads.json").exists()),
         "fixtures": bool((DATA / "fixtures.json").exists()),
         "shadow_dir": str(SHADOW),

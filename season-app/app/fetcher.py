@@ -66,14 +66,19 @@ def probe(timeout=8):
     return ok
 
 
-def refresh(timeout=180):
+def refresh(timeout=180, reprobe=False):
     """Pull any new gameweek data, if this host can.
 
     Delegates to the existing fetcher rather than duplicating it: that script
     already handles stat corrections, provisional rounds and the polite delay
     between requests, and it is the same code the Actions workflow runs.
+
+    `reprobe` re-tests the route first. A probe that failed once at boot would
+    otherwise refuse every refresh until the process restarted, and the whole
+    reason someone presses the button by hand is that they think the answer
+    has changed.
     """
-    if STATUS["reachable"] is None:
+    if reprobe or STATUS["reachable"] is None:
         probe()
     if not STATUS["reachable"]:
         STATUS.update(last_refresh=_now(), last_refresh_ok=False,

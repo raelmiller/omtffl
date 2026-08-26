@@ -84,4 +84,91 @@ holding a link is that manager, so they work like a house key.</p>
 
   <p class="sub"><a href="/">&larr; The table</a></p>
 </section>
+
+<section>
+  <div class="sechead">
+    <h2>Data</h2>
+    <span class="eyebrow">
+      {% if mode == "live" %}this host can reach FPL
+      {% elif mode == "archive" %}no route to FPL from here
+      {% else %}route to FPL not tested yet{% endif %}
+    </span>
+  </div>
+
+  <div class="pc-stats">
+    <div class="pc-stat"><dt>Rounds on disk</dt><dd>{{ data.gameweeks_on_disk }}</dd></div>
+    <div class="pc-stat"><dt>Latest</dt>
+      <dd>{{ ('GW' ~ data.latest.gameweek) if data.latest else '—' }}</dd></div>
+    <div class="pc-stat"><dt>Players</dt><dd>{{ data.players }}</dd></div>
+    <div class="pc-stat"><dt>Injury flags</dt>
+      <dd>{{ data.availability if data.availability is not none else '—' }}</dd></div>
+  </div>
+
+  <p class="note">
+    {% if data.latest and data.latest.fetched_at %}
+      GW{{ data.latest.gameweek }} was fetched
+      <time data-when="{{ data.latest.fetched_at }}">{{ data.latest.fetched_at }}</time>
+      and is <strong>{{ data.latest.state }}</strong>.
+    {% endif %}
+    {% if data.availability is none %}
+      No availability data yet &mdash; this file was written before the fetcher
+      learned to ask for it, so no player carries an injury or suspension flag.
+      A refresh brings them in.
+    {% elif data.availability == 0 %}
+      Nobody in the league is currently flagged as injured, suspended or
+      doubtful.
+    {% endif %}
+  </p>
+
+  <div class="tacts">
+    <button id="refresh" class="btn">Refresh from FPL now</button>
+    <span id="rstatus" class="savestate"></span>
+  </div>
+
+  <p class="note">
+    A refresh pulls the latest rounds, prices, clubs and injury news straight
+    into this container. It can take a minute, and it is safe to repeat &mdash;
+    a failed fetch leaves the data that is already here untouched.
+    {% if refresh.last_refresh %}
+      Last run <time data-when="{{ refresh.last_refresh }}">{{ refresh.last_refresh }}</time>:
+      {{ 'succeeded' if refresh.last_refresh_ok else 'failed' }}{% if refresh.last_refresh_detail %} &mdash;
+      {{ refresh.last_refresh_detail }}{% endif %}.
+    {% else %}
+      Nothing has been fetched since this container started.
+    {% endif %}
+    {% if next_refresh %}
+      The next scheduled run is
+      <time data-when="{{ next_refresh }}">{{ next_refresh }}</time>.
+    {% else %}
+      There is no scheduled run, so this button is the only way to bring data in.
+    {% endif %}
+  </p>
+</section>
+
+<script>
+(function () {
+  var btn = document.getElementById('refresh');
+  var out = document.getElementById('rstatus');
+  if (!btn) return;
+  btn.addEventListener('click', async function () {
+    btn.disabled = true;
+    out.textContent = 'fetching — this can take a minute…';
+    out.className = 'savestate';
+    try {
+      var res = await fetch('/admin/refresh', { method: 'POST' });
+      var body = await res.json();
+      out.textContent = body.ok
+        ? 'done — reloading'
+        : 'no data pulled: ' + (body.detail || 'unknown reason');
+      out.className = 'savestate ' + (body.ok ? 'ok' : 'bad');
+      if (body.ok) setTimeout(function () { location.reload(); }, 900);
+      else btn.disabled = false;
+    } catch (e) {
+      out.textContent = 'the request itself failed: ' + e;
+      out.className = 'savestate bad';
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
 {% endblock %}

@@ -833,6 +833,46 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
+print("\n── Bringing data in by hand ────────────────────────────")
+
+fresh = engine.freshness()
+check_true("what is on disk is countable", fresh["gameweeks_on_disk"] >= 1)
+check_true("along with how many players we know of", fresh["players"] > 0)
+check_true("an absent availability file reads as unknown, not as nobody hurt",
+           fresh["availability"] is None, str(fresh["availability"]))
+
+adm = TestClient(app)
+os.environ["ADMIN_KEYS"] = "RM"
+adm.get(f"/m/{db.manager_by_key('RM')['token']}")
+apage = adm.get("/admin")
+check("the admin page still renders", apage.status_code, 200)
+check_true("with a button to fetch", 'id="refresh"' in apage.text)
+check_true("and it says what is on disk now",
+           str(fresh["gameweeks_on_disk"]) in apage.text
+           and "Rounds on disk" in apage.text)
+check_true("and when the next scheduled run is, or that there isn't one",
+           "scheduled run" in apage.text)
+check("and a manager who isn't an admin can't see any of it",
+      TestClient(app).get("/admin").status_code, 404)
+
+# A probe that failed once must not refuse every refresh after it. Pressing
+# the button is someone saying they think the answer has changed.
+fetcher.STATUS["reachable"] = False
+probes = []
+was_probe = fetcher.probe
+fetcher.probe = lambda *a, **k: (probes.append(1), False)[1]
+try:
+    r = adm.post("/admin/refresh")
+    check("a refresh that can't reach FPL answers rather than hanging",
+          r.status_code, 200)
+    check("and says it pulled nothing", r.json()["ok"], False)
+    check("having tested the route again first", len(probes), 1)
+    check_true("with a reason worth reading",
+               "cannot reach" in (r.json()["detail"] or ""), str(r.json()))
+finally:
+    fetcher.probe = was_probe
+os.environ.pop("ADMIN_KEYS", None)
+
 print("\n── Who might not play ──────────────────────────────────")
 
 # Two levels only. Red is "he isn't playing", amber is "he might not", and a

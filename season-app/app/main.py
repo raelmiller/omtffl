@@ -201,7 +201,7 @@ def manual_refresh():
     it can only pull public FPL data into the container's own copy, and a
     failure leaves the previous data untouched.
     """
-    ok = fetcher.refresh()
+    ok = fetcher.refresh(reprobe=True)
     return JSONResponse({
         "ok": ok,
         "mode": fetcher.mode(),
@@ -701,6 +701,11 @@ def admin(request: Request):
     ctx["base"] = str(request.base_url).rstrip("/")
     ctx["submitted"] = db.all_lineups()
     ctx["current_gw"] = engine.current_gameweek()
+    ctx["data"] = engine.freshness()
+    ctx["refresh"] = dict(fetcher.STATUS)
+    job = scheduler.get_job("refresh") if scheduler.running else None
+    ctx["next_refresh"] = (job.next_run_time.isoformat()
+                           if job and job.next_run_time else None)
     return templates.TemplateResponse("admin.html", ctx)
 
 
