@@ -65,6 +65,27 @@ mounted". Check the `verdict` line before handing sign-in links out.
 
 Set `ADMIN_KEYS` to a manager's initials (e.g. `RM`) to reach `/admin`, where
 the sign-in links live. Without it `/admin` returns 404 and `/health` says so.
+The admin's own link is printed to the deploy log on every start, freshly
+issued, because on a database nobody holds a session for that log line is the
+only way in.
+
+## Signing in
+
+There is no password. A manager opens an unguessable link, which is **spent on
+arrival**: it starts a session and a new link takes its place, so one pasted
+into a group chat works until they open it and not afterwards. Links expire on
+their own too — a week for one an admin hands out, fifteen minutes for one a
+manager mints for their own second device from `/account`.
+
+The cookie carries a session secret whose hash is all the database keeps, so a
+copy of the database is not a set of working logins. Sessions are listed on
+`/account` with when they were last used, can be ended one at a time or all at
+once, and one nobody has used for ninety days is dropped.
+
+The honest limit: anyone holding an unspent link, or a live cookie, is that
+manager. There is no second factor. That is proportionate for fourteen people
+who know each other and would not be for anything with money or strangers in
+it.
 
 ## Deploying
 

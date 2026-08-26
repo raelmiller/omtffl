@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Your sign-in — Matchweek{% endblock %}
+{% block heading %}Your sign-in{% endblock %}
+{% block subheading %}
+<p class="sub">{{ me.team }} &middot; how you get in, and from where.</p>
+{% endblock %}
+
+{% block content %}
+
+<section>
+  <div class="sechead">
+    <h2>Another device</h2>
+    <span class="eyebrow">good once, for {{ link_minutes }} minutes</span>
+  </div>
+  <p class="sub">A sign-in link works once and then stops. To add your phone
+  or a second browser, make a new one here and open it there &mdash; you
+  don&rsquo;t need to ask anyone.</p>
+
+  <div class="tacts">
+    <button id="mklink" class="btn">Make a sign-in link</button>
+    <span id="lstatus" class="savestate"></span>
+  </div>
+  <div class="panel" id="linkbox" hidden style="margin-top:.7rem">
+    <div class="linkrow">
+      <code class="link" id="linkout"></code>
+      <button id="copy" class="btn small ghost" type="button">Copy</button>
+    </div>
+  </div>
+  <p class="note">Open it on the other device within {{ link_minutes }}
+  minutes. Anyone holding it before you do is you, so don&rsquo;t post it
+  anywhere you wouldn&rsquo;t post your team.</p>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>Where you&rsquo;re signed in</h2>
+    <span class="eyebrow">{{ sessions|length }}
+      browser{{ '' if sessions|length == 1 else 's' }}</span>
+  </div>
+  <div class="panel">
+    {% for s in sessions %}
+    <div class="wrow">
+      <span class="mark">{{ '●' if s.this_one else '·' }}</span>
+      <span class="wmove">
+        {% if s.this_one %}<strong>This browser</strong>{% else %}Another browser{% endif %}
+        &middot; signed in <time data-when="{{ s.created_at }}">{{ s.created_at }}</time>
+      </span>
+      <span class="pclub">last used <time data-when="{{ s.last_seen }}">{{ s.last_seen }}</time></span>
+    </div>
+    {% else %}
+    <p class="empty">No sessions on record.</p>
+    {% endfor %}
+  </div>
+  <p class="note">A browser that goes {{ session_days }} days without being
+  used is dropped by itself. There is no list of which device is which
+  &mdash; the app never sees anything that would tell them apart, and
+  guessing would only mislead you.</p>
+
+  <div class="tacts" style="margin-top:.9rem">
+    <a class="btn small ghost" href="/signout">Sign out here</a>
+    <form method="post" action="/account/signout-all"
+          onsubmit="return confirm('Sign out of every browser, including this one? You will need a sign-in link to get back in.')">
+      <button class="btn small">Sign out everywhere</button>
+    </form>
+  </div>
+  <p class="note">Sign out everywhere if you&rsquo;ve left yourself signed in
+  somewhere you shouldn&rsquo;t have. It ends every session at once
+  &mdash; including this one, so make a link first if you have no other way
+  back in.</p>
+</section>
+
+<p class="sub"><a href="/">&larr; The table</a></p>
+
+<script>
+(function () {
+  var btn = document.getElementById('mklink');
+  var out = document.getElementById('lstatus');
+  var box = document.getElementById('linkbox');
+  var code = document.getElementById('linkout');
+  if (!btn) return;
+
+  btn.addEventListener('click', async function () {
+    btn.disabled = true;
+    out.textContent = 'making one…';
+    out.className = 'savestate';
+    try {
+      var res = await fetch('/account/link', { method: 'POST' });
+      var body = await res.json();
+      if (!body.ok) throw new Error(body.detail || 'refused');
+      code.textContent = body.link;
+      box.hidden = false;
+      out.textContent = 'good for ' + body.minutes + ' minutes, once';
+      out.className = 'savestate ok';
+    } catch (e) {
+      out.textContent = 'could not make one: ' + e;
+      out.className = 'savestate bad';
+    }
+    btn.disabled = false;
+  });
+
+  document.getElementById('copy').addEventListener('click', async function () {
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      out.textContent = 'copied';
+      out.className = 'savestate ok';
+    } catch (e) {
+      // Clipboard access is refused often enough that selecting the text is
+      // the fallback worth having, rather than an error nobody can act on.
+      var r = document.createRange();
+      r.selectNodeContents(code);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(r);
+      out.textContent = 'selected — copy it yourself';
+    }
+  });
+})();
+</script>
+{% endblock %}

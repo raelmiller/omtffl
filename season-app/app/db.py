@@ -9,12 +9,13 @@ SQLite, single file, on a Railway volume. A season is a few thousand rows.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import secrets
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .engine import DATA
@@ -47,10 +48,22 @@ SCHEMA = """
 CREATE TABLE IF NOT EXISTS manager (
     key         TEXT PRIMARY KEY,        -- initials, matching the squad file
     team        TEXT NOT NULL,
-    token       TEXT NOT NULL UNIQUE,    -- their personal sign-in link
+    token       TEXT NOT NULL UNIQUE,    -- their next sign-in link, single use
     is_admin    INTEGER NOT NULL DEFAULT 0,
-    created_at  TEXT NOT NULL
+    created_at  TEXT NOT NULL,
+    token_expires TEXT                   -- when that link stops working
 );
+
+-- One row per signed-in browser. The cookie carries a secret this table only
+-- ever sees the hash of, so a copy of the database is not a set of working
+-- logins — which the old scheme, where the cookie was the row, could not say.
+CREATE TABLE IF NOT EXISTS session (
+    id          TEXT PRIMARY KEY,        -- sha256 of the cookie secret
+    manager     TEXT NOT NULL REFERENCES manager(key) ON DELETE CASCADE,
+    created_at  TEXT NOT NULL,
+    last_seen   TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS session_manager ON session(manager);
 
 -- Which Premier League club's manager each team drafted. The boost is tied
 -- to that club: its league position sets the size, its result decides the
@@ -137,11 +150,24 @@ def connect():
     # while somebody is saving a lineup.
     conn.execute("PRAGMA journal_mode = WAL")
     conn.executescript(SCHEMA)
+    _migrate(conn)
     try:
         yield conn
         conn.commit()
     finally:
         conn.close()
+
+
+def _migrate(conn):
+    """Columns added after a database already existed.
+
+    CREATE TABLE IF NOT EXISTS is a no-op against a table that is already
+    there, so a column added later has to be added by hand. Cheap, idempotent
+    and in the same place as the schema it patches.
+    """
+    have = {r["name"] for r in conn.execute("PRAGMA table_info(manager)")}
+    if "token_expires" not in have:
+        conn.execute("ALTER TABLE manager ADD COLUMN token_expires TEXT")
 
 
 def init():
@@ -165,6 +191,12 @@ def init():
                 " VALUES (?, ?, ?, 0, ?)",
                 (team["key"], team.get("team", team["key"]),
                  secrets.token_hex(16), now()))
+        # Seeded links expire like any other. The admin's own is reissued at
+        # startup if it has, so the deploy log is always a way back in.
+        conn.execute(
+            "UPDATE manager SET token_expires = ? WHERE token_expires IS NULL",
+            ((datetime.now(timezone.utc) + timedelta(days=LINK_DAYS))
+             .isoformat(timespec="seconds"),))
 
 
 def managers():
@@ -174,12 +206,41 @@ def managers():
 
 
 def manager_by_token(token):
+    """The manager a sign-in link belongs to, if it is still good for one use.
+
+    An expired link is treated exactly like a wrong one. The caller can't tell
+    the difference and shouldn't be able to.
+    """
     if not token:
         return None
     with connect() as conn:
         row = conn.execute(
             "SELECT * FROM manager WHERE token = ?", (token,)).fetchone()
-        return dict(row) if row else None
+    if not row:
+        return None
+    expires = row["token_expires"]
+    if expires and expires < now():
+        return None
+    return dict(row)
+
+
+def spend_token(token):
+    """Sign in with a link and burn it.
+
+    A link that stays valid is a password that never changes, sitting in
+    whatever chat it was pasted into. Spending it on first use means a leaked
+    link is good until the manager opens it and no longer — and a manager
+    whose link has already been used knows immediately that someone else got
+    there first.
+
+    Returns (manager, session_secret), or (None, None) if the link is spent,
+    expired or wrong.
+    """
+    manager = manager_by_token(token)
+    if not manager:
+        return None, None
+    rotate_token(manager["key"], days=LINK_DAYS)
+    return manager, start_session(manager["key"])
 
 
 def manager_by_key(key):
@@ -189,12 +250,111 @@ def manager_by_key(key):
         return dict(row) if row else None
 
 
-def rotate_token(key):
-    """Issue a new link, invalidating the old one."""
+def rotate_token(key, days=None, minutes=None):
+    """Issue a new link, invalidating the old one.
+
+    `days` or `minutes` set how long the new one lasts. A link handed out by
+    an admin gets a week, because it may be sent before anyone is ready to
+    use it. One a manager mints for their own second device gets minutes,
+    because they are about to open it.
+    """
     token = secrets.token_hex(16)
+    if days is None and minutes is None:
+        # Defaulting to "forever" would mean one forgetful call site is enough
+        # to put an immortal link back in the database.
+        days = LINK_DAYS
+    expires = (datetime.now(timezone.utc)
+               + timedelta(days=days or 0, minutes=minutes or 0)
+               ).isoformat(timespec="seconds")
     with connect() as conn:
-        conn.execute("UPDATE manager SET token = ? WHERE key = ?", (token, key))
+        conn.execute(
+            "UPDATE manager SET token = ?, token_expires = ? WHERE key = ?",
+            (token, expires, key))
     return token
+
+
+# ── Sessions ───────────────────────────────────────────────────────────────
+# A session is a browser that has signed in. The cookie holds a secret; this
+# table holds only its hash, so reading the database gives you nobody's login.
+LINK_DAYS = 7           # how long an admin-issued link stays good for
+LINK_MINUTES = 15       # how long a self-issued one does
+SESSION_DAYS = 90       # how long a browser can go unused before it is dropped
+
+
+def _fingerprint(secret):
+    return hashlib.sha256(secret.encode()).hexdigest()
+
+
+def start_session(key):
+    """Sign a browser in, and hand back the secret its cookie should carry."""
+    secret = secrets.token_urlsafe(32)
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO session (id, manager, created_at, last_seen)"
+            " VALUES (?, ?, ?, ?)",
+            (_fingerprint(secret), key, now(), now()))
+    return secret
+
+
+def session_manager(secret):
+    """Who a cookie belongs to, if the session is still alive.
+
+    Touches last_seen, which is what makes the ninety days a sliding window
+    rather than a hard stop: a manager who uses the app never gets logged
+    out, and one who stops is dropped whether or not their browser still has
+    the cookie.
+    """
+    if not secret:
+        return None
+    fingerprint = _fingerprint(secret)
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=SESSION_DAYS)
+              ).isoformat(timespec="seconds")
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT m.* FROM session s JOIN manager m ON m.key = s.manager"
+            " WHERE s.id = ? AND s.last_seen >= ?", (fingerprint, cutoff)
+        ).fetchone()
+        if not row:
+            return None
+        conn.execute("UPDATE session SET last_seen = ? WHERE id = ?",
+                     (now(), fingerprint))
+        return dict(row)
+
+
+def end_session(secret):
+    if not secret:
+        return
+    with connect() as conn:
+        conn.execute("DELETE FROM session WHERE id = ?", (_fingerprint(secret),))
+
+
+def end_all_sessions(key):
+    """Sign out everywhere — the answer to a laptop left in an office."""
+    with connect() as conn:
+        cur = conn.execute("DELETE FROM session WHERE manager = ?", (key,))
+        return cur.rowcount
+
+
+def sessions_for(key, secret=None):
+    """Every browser signed in as this manager, newest first."""
+    current = _fingerprint(secret) if secret else None
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=SESSION_DAYS)
+              ).isoformat(timespec="seconds")
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT * FROM session WHERE manager = ? AND last_seen >= ?"
+            " ORDER BY last_seen DESC", (key, cutoff)).fetchall()
+    return [{"created_at": r["created_at"], "last_seen": r["last_seen"],
+             "this_one": r["id"] == current} for r in rows]
+
+
+def prune_sessions():
+    """Drop sessions nobody has used inside the window."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=SESSION_DAYS)
+              ).isoformat(timespec="seconds")
+    with connect() as conn:
+        return conn.execute("DELETE FROM session WHERE last_seen < ?",
+                            (cutoff,)).rowcount
 
 
 def set_admin(key, is_admin=True):

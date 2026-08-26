@@ -1,21 +1,30 @@
 """Who is this, and are they allowed to change it.
 
-Fourteen people in a private league, so the whole scheme is one unguessable
-link per manager. Open it once, it sets a cookie, and you never think about
-it again. There is no password to reset in August and no email provider to
-keep alive.
+Fourteen people in a private league, so there is no password to reset in
+August and no email provider to keep alive. A manager signs in by opening an
+unguessable link, and that link is spent on arrival.
+
+Two separate things, which is the point:
+
+- A **sign-in link** is a one-shot. Opening it starts a session and issues a
+  fresh link in its place, so a link pasted into a group chat is good until
+  the manager opens it and dead afterwards. Links expire on their own as
+  well — a week for one an admin hands out, minutes for one a manager mints
+  for their own second device.
+- A **session** is a browser. The cookie carries a secret the database only
+  holds the hash of, so a copy of the database is not a set of working
+  logins. Sessions can be listed and revoked one at a time or all at once,
+  and one nobody has used for ninety days is dropped.
 
 The honest limits, stated rather than glossed:
 
-- Anyone holding the link is that manager. It is a bearer token, so treat it
-  like a house key: share it and you have shared your team.
-- If one leaks, the admin page issues a new one and the old link stops
-  working immediately.
-- The cookie is the same token, so signing out on a shared device matters
-  more than it would with a password.
-
-That is proportionate for a fantasy league among friends. It would not be for
-anything with money or strangers in it.
+- Anyone holding an unspent link is that manager until they open it. It is
+  still a bearer token, just a short-lived one.
+- Anyone holding the cookie is that manager until it is revoked, which is
+  what "sign out everywhere" is for.
+- There is no second factor and no proof of identity beyond the link. That is
+  proportionate for a fantasy league among friends, and would not be for
+  anything with money or strangers in it.
 """
 from __future__ import annotations
 
@@ -25,12 +34,14 @@ from fastapi import Request
 
 from . import db
 
-COOKIE = "matchweek"
+COOKIE = "matchweek"          # holds a session secret, never a sign-in link
 # Set separately from the sign-in cookie, and only ever honoured when the
 # sign-in cookie belongs to an admin. Keeping them apart means the real
 # identity is never overwritten, so "view as" can't become "become".
 VIEW_AS = "matchweek_as"
-# A season is long and nobody wants to dig out the link every month.
+# The browser is asked to keep the cookie for a long time; how long the
+# session behind it lives is decided in the database, where it can be seen
+# and revoked. A cookie that outlives its session simply stops working.
 COOKIE_MAX_AGE = 400 * 24 * 60 * 60
 
 
@@ -67,8 +78,8 @@ def admin_source():
 
 
 def real(request: Request):
-    """Whoever actually holds the sign-in cookie."""
-    manager = db.manager_by_token(request.cookies.get(COOKIE))
+    """Whoever actually holds the session cookie."""
+    manager = db.session_manager(request.cookies.get(COOKIE))
     if manager:
         manager["is_admin"] = (bool(manager.get("is_admin"))
                                or manager["key"].upper() in admin_keys())
@@ -99,9 +110,9 @@ def current(request: Request):
     return other
 
 
-def sign_in(response, token):
+def sign_in(response, secret):
     response.set_cookie(
-        COOKIE, token,
+        COOKIE, secret,
         max_age=COOKIE_MAX_AGE,
         httponly=True,
         samesite="lax",
@@ -112,7 +123,15 @@ def sign_in(response, token):
     return response
 
 
-def sign_out(response):
+def sign_out(response, request=None):
+    """Drop this browser's session, and the cookie that pointed at it.
+
+    Deleting the row matters more than deleting the cookie: a cookie the
+    holder declines to throw away is only worth something while the session
+    behind it is alive.
+    """
+    if request is not None:
+        db.end_session(request.cookies.get(COOKIE))
     response.delete_cookie(COOKIE)
     response.delete_cookie(VIEW_AS)
     return response

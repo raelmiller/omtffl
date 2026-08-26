@@ -3,7 +3,9 @@
 {% block heading %}Sign-in links{% endblock %}
 {% block subheading %}
 <p class="sub">One link per manager. Send each person their own &mdash; anyone
-holding a link is that manager, so they work like a house key.</p>
+holding a link is that manager until it is opened, at which point it is spent
+and a fresh one takes its place here. Nobody needs to come back to you for a
+second device: they can make their own from their sign-in page.</p>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +18,15 @@ holding a link is that manager, so they work like a house key.</p>
         {% set has = submitted.get(current_gw.gameweek, {}).get(m.key) if current_gw else None %}
         <tr>
           <td class="team">{{ m.team }} <span class="pclub">{{ m.key }}</span></td>
-          <td><code class="link">{{ base }}/m/{{ m.token }}</code></td>
+          <td>
+            <code class="link">{{ base }}/m/{{ m.token }}</code>
+            <div class="pclub">
+              {% if not m.token_expires %}no expiry
+              {% elif m.token_expires < nowish %}<span class="no">expired</span> &mdash; issue a new one
+              {% else %}good once, until <time data-when="{{ m.token_expires }}">{{ m.token_expires }}</time>
+              {% endif %}
+            </div>
+          </td>
           <td>{% if has %}<span class="yes">picked</span>{% else %}<span class="no">not yet</span>{% endif %}</td>
           <td class="acts">
             <form method="post" action="/admin/view-as/{{ m.key }}">

@@ -95,8 +95,12 @@ def _log_admin_links():
     for key in sorted(keys):
         manager = db.manager_by_key(key)
         if manager:
-            print(f"[matchweek] Admin sign-in for {manager['team']} ({key}): "
-                  f"{base}/m/{manager['token']}")
+            # Links are single use and expire, so the one on file has usually
+            # been spent by now. Issue a fresh one: this log line is the only
+            # way into /admin on a database nobody has a session for.
+            token = db.rotate_token(key, days=db.LINK_DAYS)
+            print(f"[matchweek] Admin sign-in for {manager['team']} ({key}), "
+                  f"good once within {db.LINK_DAYS} days: {base}/m/{token}")
         else:
             print(f"[matchweek] ADMIN_KEYS names {key}, which is not a manager "
                   f"in this league. Known: "
@@ -198,12 +202,17 @@ def health():
 
 
 @app.post("/admin/refresh")
-def manual_refresh():
-    """Kick a refresh by hand. Unauthenticated, and safe because it is:
+def manual_refresh(request: Request):
+    """Kick a refresh by hand, from the button on the admin page.
 
-    it can only pull public FPL data into the container's own copy, and a
-    failure leaves the previous data untouched.
+    What it does is harmless — pull public FPL data into this container's own
+    copy, leaving the previous data alone if it fails. What it costs is a
+    minute of outbound fetching, which is not something a passer-by should be
+    able to start, so it asks who you are like everything else that acts.
     """
+    me = auth.current(request)
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
     ok = fetcher.refresh(reprobe=True)
     return JSONResponse({
         "ok": ok,
@@ -215,18 +224,62 @@ def manual_refresh():
 # ── Signing in ─────────────────────────────────────────────────────────────
 @app.get("/m/{token}")
 def sign_in(token: str):
-    """A manager's personal link. Sets the cookie and gets out of the way."""
-    manager = db.manager_by_token(token)
+    """A manager's personal link. Spends it, starts a session, gets out of
+    the way."""
+    manager, secret = db.spend_token(token)
     if not manager:
         # Deliberately vague: a wrong token shouldn't confirm which part was
-        # wrong, and a rotated link should read as expired rather than broken.
+        # wrong, and a spent or expired link should read the same as a typo.
         return RedirectResponse("/?bad_link=1", status_code=303)
-    return auth.sign_in(RedirectResponse("/declare", status_code=303), token)
+    return auth.sign_in(RedirectResponse("/declare", status_code=303), secret)
 
 
 @app.get("/signout")
-def signout():
-    return auth.sign_out(RedirectResponse("/", status_code=303))
+def signout(request: Request):
+    return auth.sign_out(RedirectResponse("/", status_code=303), request)
+
+
+@app.get("/account", response_class=HTMLResponse)
+def account(request: Request):
+    """Where a manager can see and revoke their own sessions.
+
+    The point of the page is that losing a link is no longer a reason to ask
+    the admin for anything: a manager who is signed in anywhere can mint a
+    fresh one for another device themselves.
+    """
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+    ctx["sessions"] = db.sessions_for(me["key"], request.cookies.get(auth.COOKIE))
+    ctx["link_minutes"] = db.LINK_MINUTES
+    ctx["session_days"] = db.SESSION_DAYS
+    return templates.TemplateResponse("account.html", ctx)
+
+
+@app.post("/account/link")
+def new_device_link(request: Request):
+    """Mint a single-use link for another of your own devices.
+
+    Minutes, not days: you are about to open it. Issuing it also spends
+    whatever link was outstanding, so there is only ever one live at a time.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    token = db.rotate_token(me["key"], minutes=db.LINK_MINUTES)
+    return JSONResponse({"ok": True,
+                         "link": f"{str(request.base_url).rstrip('/')}/m/{token}",
+                         "minutes": db.LINK_MINUTES})
+
+
+@app.post("/account/signout-all")
+def signout_everywhere(request: Request):
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    db.end_all_sessions(me["key"])
+    return auth.sign_out(RedirectResponse("/", status_code=303), request)
 
 
 # ── Declaring a team ───────────────────────────────────────────────────────
@@ -704,6 +757,7 @@ def admin(request: Request):
     ctx["base"] = str(request.base_url).rstrip("/")
     ctx["submitted"] = db.all_lineups()
     ctx["current_gw"] = engine.current_gameweek()
+    ctx["nowish"] = db.now()
     ctx["data"] = engine.freshness()
     ctx["refresh"] = dict(fetcher.STATUS)
     job = scheduler.get_job("refresh") if scheduler.running else None
@@ -758,5 +812,5 @@ def rotate(request: Request, key: str):
     me = auth.current(request)
     if not me or not me["is_admin"]:
         raise HTTPException(404)
-    db.rotate_token(key)
+    db.rotate_token(key, days=db.LINK_DAYS)
     return RedirectResponse("/admin", status_code=303)

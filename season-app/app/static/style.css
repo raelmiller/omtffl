@@ -287,7 +287,16 @@ footer {
 
 /* ── Nav ─────────────────────────────────────────────── */
 .nav { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; font-size: .9rem; }
-.nav .who { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.nav .who {
+  margin-left: auto; font-family: var(--mono); font-size: .72rem;
+  color: var(--muted); text-decoration: none;
+}
+.nav .who:hover { color: var(--accent); }
+.linkrow {
+  display: flex; align-items: center; gap: .6rem; padding: .7rem .85rem;
+  flex-wrap: wrap;
+}
+.linkrow .link { flex: 1 1 16rem; min-width: 0; overflow-wrap: anywhere; }
 
 /* ── Team picker ─────────────────────────────────────── */
 .pickhead {

@@ -10,6 +10,7 @@ Run: python3 season-app/test_app.py
 import json
 import re
 import sys
+from datetime import datetime, timezone as _tz
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -833,6 +834,95 @@ check("with one list showing and the rest waiting on the dropdown",
 check_true("and the dropdown names all five",
            all(f'value="{m}"' in sp.text for m, _, _ in live["returns"]))
 
+print("\n── A link is good once ─────────────────────────────────")
+
+# A manager the rest of the suite leaves alone, so the session counts below
+# mean what they say.
+WHO = "YG"
+db.end_all_sessions(WHO)
+
+link = db.rotate_token(WHO, days=db.LINK_DAYS)
+browser_a = TestClient(app)
+r = browser_a.get(f"/m/{link}", follow_redirects=False)
+check("the link signs you in", r.status_code, 303)
+check("and the app opens", browser_a.get("/declare").status_code, 200)
+
+again = TestClient(app)
+r = again.get(f"/m/{link}", follow_redirects=False)
+check_true("the same link a second time is refused",
+           "bad_link" in r.headers["location"], r.headers["location"])
+check("so the second browser is still a stranger",
+      again.get("/declare").status_code, 401)
+check_true("and a fresh link took its place",
+           db.manager_by_key(WHO)["token"] != link)
+
+# The cookie is a session secret, not the sign-in link. A copy of the
+# database should not be a set of working logins.
+cookie = browser_a.cookies.get(auth.COOKIE)
+check_true("the cookie is not the link that made it", cookie != link)
+check_true("nor anybody's link",
+           cookie not in {m["token"] for m in db.managers()})
+with db.connect() as conn:
+    stored = [r[0] for r in conn.execute("SELECT id FROM session")]
+check_true("and it is not sitting in the session table either",
+           cookie not in stored, "the cookie value is stored verbatim")
+check_true("only its fingerprint is", db._fingerprint(cookie) in stored)
+
+expired = db.rotate_token(WHO, minutes=-1)
+r = TestClient(app).get(f"/m/{expired}", follow_redirects=False)
+check_true("a link past its expiry is refused too",
+           "bad_link" in r.headers["location"], r.headers["location"])
+check_true("and refused the same way a wrong one is",
+           TestClient(app).get("/m/nonsense", follow_redirects=False)
+           .headers["location"] == r.headers["location"])
+db.rotate_token(WHO, days=db.LINK_DAYS)   # a good one again, for what follows
+
+print("\n── Sessions you can see and end ────────────────────────")
+
+browser_b = TestClient(app)
+browser_b.get(f"/m/{db.manager_by_key(WHO)['token']}")
+check("two browsers, two sessions", len(db.sessions_for(WHO)), 2)
+check("one of which knows it is the one asking",
+      sum(1 for x in db.sessions_for(WHO, browser_a.cookies.get(auth.COOKIE))
+          if x["this_one"]), 1)
+
+apage3 = browser_a.get("/account")
+check("the account page renders", apage3.status_code, 200)
+check_true("and says where you're signed in", "Where you" in apage3.text)
+
+made = browser_b.post("/account/link")
+check("a manager can mint their own link", made.json()["ok"], True)
+token3 = made.json()["link"].rsplit("/", 1)[-1]
+browser_c = TestClient(app)
+browser_c.get(f"/m/{token3}")
+check("which signs in a third browser",
+      browser_c.get("/declare").status_code, 200)
+check("three sessions now", len(db.sessions_for(WHO)), 3)
+
+browser_a.get("/signout")
+check("signing out ends one session", len(db.sessions_for(WHO)), 2)
+check("and that browser specifically",
+      browser_a.get("/declare").status_code, 401)
+check("while the others carry on", browser_b.get("/declare").status_code, 200)
+
+browser_b.post("/account/signout-all", follow_redirects=False)
+check("signing out everywhere ends the lot", len(db.sessions_for(WHO)), 0)
+check("including browsers that weren't asking",
+      browser_c.get("/declare").status_code, 401)
+
+# A session nobody has used inside the window is dropped, whether or not the
+# browser still holds the cookie.
+stale = TestClient(app)
+stale.get(f"/m/{db.manager_by_key(WHO)['token']}")
+check("signed in again", stale.get("/declare").status_code, 200)
+with db.connect() as conn:
+    conn.execute("UPDATE session SET last_seen = ? WHERE manager = ?",
+                 (datetime(2020, 1, 1, tzinfo=_tz.utc).isoformat(), WHO))
+check("a session left unused for months stops working",
+      stale.get("/declare").status_code, 401)
+check("and is listed as gone", len(db.sessions_for(WHO)), 0)
+check("pruning clears it out", db.prune_sessions(), 1)
+
 print("\n── Bringing data in by hand ────────────────────────────")
 
 fresh = engine.freshness()
@@ -841,7 +931,6 @@ check_true("along with how many players we know of", fresh["players"] > 0)
 check_true("an absent availability file reads as unknown, not as nobody hurt",
            fresh["availability"] is None, str(fresh["availability"]))
 
-from datetime import datetime, timezone as _tz              # noqa: E402
 from app.main import REFRESH_SCHEDULE                       # noqa: E402
 
 # Injury news and prices move all week, and a manager picking on Friday is
@@ -871,6 +960,15 @@ check_true("and when the next scheduled run is, or that there isn't one",
            "scheduled run" in apage.text)
 check("and a manager who isn't an admin can't see any of it",
       TestClient(app).get("/admin").status_code, 404)
+
+# The button is behind the admin page, so the route it calls has to be too.
+# It is harmless in what it does and expensive in what it costs to run.
+check("a passer-by can't start a fetch",
+      TestClient(app).post("/admin/refresh").status_code, 404)
+plain = TestClient(app)
+plain.get(f"/m/{db.manager_by_key('AJ')['token']}")
+check("nor can a manager who isn't an admin",
+      plain.post("/admin/refresh").status_code, 404)
 
 # A probe that failed once must not refuse every refresh after it. Pressing
 # the button is someone saying they think the answer has changed.
