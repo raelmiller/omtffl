@@ -1255,7 +1255,19 @@ check_true("and the man they would drop for him never leaves their own page",
 check_true("nor does a resolved run anyone could read it out of",
            "If the run happened now" not in spy and "provisional" not in spy)
 check_true("the page says why it is empty rather than looking broken",
-           "Claims are blind" in spy)
+           "Nobody sees anyone else" in spy)
+
+# The rules are folded away behind an icon rather than deleted: still served,
+# still readable without scripting, just not eating half the page.
+check_true("the explainer is behind an icon",
+           'class="infobtn"' in spy and 'aria-controls="howrun"' in spy)
+check_true("shut to begin with",
+           re.search(r'<span class="infobox" id="howrun"[^>]*\shidden>', spy)
+           is not None)
+check_true("but the words are still on the page for anyone without scripting",
+           "processed together at the waiver deadline" in spy)
+check_true("and there is a rule that shows them when there is no scripting",
+           "<noscript>" in spy and ".infobtn { display: none; }" in spy)
 
 wind_past_the_run()
 after = engine.market(gw_two, db.trades(), db.transactions(), for_manager="RM")

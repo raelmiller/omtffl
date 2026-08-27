@@ -1,0 +1,32 @@
+{#- An explainer folded away behind an icon.
+
+    The rules matter, but they are not news: once you have read them twice
+    they are three paragraphs standing between you and the thing you came to
+    the page for. Behind an icon they are one keystroke or one tap away and
+    cost nothing in height.
+
+    Hover opens it on a pointer, click pins it open so it survives a tap and
+    can be read on a phone, Escape or a click outside closes it. The trigger
+    is a real button, so it is reachable by keyboard, and without scripting
+    the box simply renders inline — see the noscript rule in base.html.
+
+    Usage:
+        {% from "_info.html" import info %}
+        {% call info("How the run works", "howrun") %}
+          <p>...</p>
+        {% endcall %}
+
+    `label` is what a screen reader announces, so name the subject rather
+    than saying "more information". `id` has to be unique on the page.
+-#}
+{% macro info(label, id) -%}
+<span class="info">
+  <button type="button" class="infobtn" aria-expanded="false"
+          aria-controls="{{ id }}" aria-label="{{ label }}"
+          title="{{ label }}">i</button>
+  <span class="infobox" id="{{ id }}" role="tooltip" hidden>
+    <span class="infohead">{{ label }}</span>
+    {{ caller() }}
+  </span>
+</span>
+{%- endmacro %}

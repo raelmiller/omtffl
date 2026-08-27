@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_info.html" import info %}
 {% block title %}Waivers — Matchweek{% endblock %}
 {% block wrapclass %} wide{% endblock %}
 {% block heading %}Waivers{% endblock %}
@@ -15,12 +16,18 @@
 </p>
 {% if phase.waivers_open %}
 <p class="sub"><span class="clock" data-deadline="{{ phase.waiver_deadline }}">{{ phase.waiver_deadline }}</span>
-&mdash; claims can be changed until then, and nothing is processed before it.
-Whatever is left over goes to first come, first served afterwards.</p>
+&mdash; claims can be changed until then, and nothing is processed before it.</p>
 {% elif phase.free_agency %}
 <p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
-&mdash; first come, first served, as many moves as you like. Anyone dropped
-since the run is out of reach until next week.</p>
+&mdash; first come, first served, as many moves as you like.{% call info("How the free period works", "howfree") %}
+  <p>The run is done. Whoever is left in the pool is open to everyone until the
+  gameweek deadline, taken there and then rather than by priority &mdash; if
+  two of you want the same player, the first to press the button gets him.</p>
+  <p>As many moves as you like, still one out for one in of the same position
+  so your squad stays a legal 2/5/5/3.</p>
+  <p>Anyone dropped since the run is out of reach until next gameweek, though
+  you can always take back someone you let go yourself.</p>
+{% endcall %}</p>
 {% endif %}
 {% endblock %}
 
@@ -28,17 +35,22 @@ since the run is out of reach until next week.</p>
 
 {% if phase.waivers_open %}
 <section>
-  <div class="sechead"><h2>How the run works</h2></div>
-  <p class="sub">Claims are blind. Nobody sees anyone else&rsquo;s until the run
-  has happened, and then everybody sees all of them at once.</p>
-  <p class="sub">They are processed together at the waiver deadline, from the
-  bottom of the table upwards. Round two runs the other way, and so on. You get
-  one attempt per round &mdash; if someone beats you to a player, your next
-  choice waits for the snake to come back to you rather than going straight
-  through. After the run, whoever is left is first come, first served until the
-  gameweek deadline.</p>
-  <p class="sub">The order below is the table, so you already know where you sit
-  in it. What you cannot know is who anyone is going for.</p>
+  <div class="sechead">
+    <h2>Claim order{% call info("How the run works", "howrun") %}
+      <p>Claims are <strong>blind</strong>. Nobody sees anyone else&rsquo;s
+      until the run has happened, and then everybody sees all of them at once.
+      The order here is the table, so you know where you sit in it &mdash; what
+      you cannot know is who anyone is going for.</p>
+      <p>Claims are processed together at the waiver deadline, from the bottom
+      of the table upwards. Round two runs the other way, and so on. You get
+      one attempt per round: if someone beats you to a player, your next choice
+      waits for the snake to come back to you rather than going straight
+      through.</p>
+      <p>After the run, whoever is left is first come, first served until the
+      gameweek deadline.</p>
+    {% endcall %}</h2>
+    <span class="eyebrow">bottom of the table claims first</span>
+  </div>
   <div class="panel snake">
     {% for m in order %}
     <span class="slot {% if me and m.key == me.key %}mine{% endif %}">
@@ -72,7 +84,12 @@ since the run is out of reach until next week.</p>
 {% if frozen %}
 <section>
   <div class="sechead">
-    <h2>Out of reach this week</h2>
+    <h2>Out of reach this week{% call info("Why these are unavailable", "whyfrozen") %}
+      <p>Dropped since the run went through, so nobody <em>else</em> can pick
+      them up until next gameweek &mdash; they are back in the pool then.</p>
+      <p>Anyone you let go yourself is missing from this list, because you can
+      still take them back.</p>
+    {% endcall %}</h2>
     <span class="eyebrow">{{ frozen|length }} player{{ '' if frozen|length == 1 else 's' }}</span>
   </div>
   <div class="panel snake">
@@ -81,10 +98,6 @@ since the run is out of reach until next week.</p>
       <span class="mgr">{{ f.by }}</span></span>
     {% endfor %}
   </div>
-  <p class="note">Dropped since the run went through, so nobody <em>else</em>
-  can pick them up until next gameweek &mdash; they are back in the pool then.
-  Anyone you let go yourself is missing from this list, because you can still
-  take them back.</p>
 </section>
 {% endif %}
 

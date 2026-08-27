@@ -136,6 +136,16 @@ its own `--chrome-*` tokens, because the crest is a deep purple and the bar is
 the surface it sits on rather than a ground that moves under it. Below 40rem
 the rail becomes a bottom navigation bar in the thumb's reach.
 
+**Rules go behind an info icon**, via the `info` macro in `_info.html`. They
+matter, but once read twice they are paragraphs standing between a manager and
+the thing they came for. Hover opens the box on a pointer; a click pins it, so
+it survives a tap and can be read on a phone without vanishing as the mouse
+travels into it; Escape or a click outside dismisses it. Below 34rem it stops
+being a tooltip and becomes a sheet across the bottom, because a 32rem box
+anchored to an icon runs off one edge or the other on a 390px screen. The text
+is always in the served HTML, and a `noscript` rule prints it inline — folded
+away, never withheld.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

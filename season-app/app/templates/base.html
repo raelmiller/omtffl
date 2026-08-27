@@ -148,6 +148,76 @@
   paint();
 })();
 </script>
+<noscript><style>
+  /* Without scripting there is nothing to open the box with, so the rules are
+     simply printed where they stand rather than being lost behind an icon. */
+  .infobtn { display: none; }
+  .infobox, .infobox[hidden] {
+    display: flex; position: static; max-width: none; width: auto;
+    margin-top: .6rem; box-shadow: none;
+  }
+  .infobox::before { display: none; }
+</style></noscript>
+<script>
+// Explainers behind an icon, shared by every page that folds one away.
+//
+// Hover opens it on a pointer. A click PINS it, which is what makes it usable
+// on a phone — and also lets you move the mouse into the box to select text
+// without it vanishing on the way. Escape or a click outside dismisses a
+// pinned box. Only one is ever open, because two overlapping boxes are worse
+// than none.
+(function () {
+  var all = [].slice.call(document.querySelectorAll(".info"));
+  if (!all.length) return;
+  var pinned = null;
+  var box = function (i) { return i.querySelector(".infobox"); };
+  var btn = function (i) { return i.querySelector(".infobtn"); };
+
+  function open(i) {
+    box(i).hidden = false;
+    btn(i).setAttribute("aria-expanded", "true");
+  }
+  function shut(i) {
+    box(i).hidden = true;
+    btn(i).setAttribute("aria-expanded", "false");
+    if (pinned === i) pinned = null;
+  }
+  function shutOthers(keep) {
+    all.forEach(function (o) { if (o !== keep) { pinned = null; shut(o); } });
+  }
+
+  all.forEach(function (i) {
+    i.addEventListener("mouseenter", function () {
+      if (pinned) return;
+      shutOthers(i); open(i);
+    });
+    i.addEventListener("mouseleave", function () {
+      if (pinned !== i) shut(i);
+    });
+    btn(i).addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (pinned === i) { shut(i); return; }
+      shutOthers(i); pinned = i; open(i);
+    });
+    btn(i).addEventListener("focus", function () {
+      if (!pinned) { shutOthers(i); open(i); }
+    });
+    btn(i).addEventListener("blur", function () {
+      if (pinned !== i) shut(i);
+    });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pinned) { var p = pinned; pinned = null; shut(p); }
+  });
+  document.addEventListener("click", function (e) {
+    if (pinned && !pinned.contains(e.target)) {
+      var p = pinned; pinned = null; shut(p);
+    }
+  });
+})();
+</script>
 <script>
 // Times, shared by every page. `data-when` becomes an absolute time in the
 // reader's own timezone; `data-deadline` becomes a countdown to it. Both are

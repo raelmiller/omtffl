@@ -228,6 +228,62 @@ p { margin: 0; }
   .topbar .themebtn { padding: .3rem .4rem; }
 }
 
+/* ── Explainers ──────────────────────────────────────── */
+/* The rules folded away behind an icon. They matter, but once you have read
+   them twice they are three paragraphs standing between you and the thing you
+   came for. Hover on a pointer, tap to pin, Escape to close. */
+.info { position: relative; display: inline-flex; vertical-align: middle;
+        margin-left: .4rem; }
+.infobtn {
+  width: 1.1rem; height: 1.1rem; padding: 0; border-radius: 999px;
+  display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--border-2); background: var(--surface);
+  color: var(--muted); font-family: var(--mono); font-size: .62rem;
+  font-weight: 600; line-height: 1;
+  transition: color .14s ease, background .14s ease, border-color .14s ease;
+}
+.infobtn:hover, .infobtn[aria-expanded="true"] {
+  color: var(--on-fill); background: var(--fill); border-color: var(--fill);
+}
+.infobox {
+  position: absolute; z-index: 12; top: calc(100% + .55rem); left: -.6rem;
+  width: max-content; max-width: min(32rem, calc(100vw - 2.5rem));
+  display: flex; flex-direction: column; gap: .55rem;
+  padding: .85rem 1rem 1rem; border-radius: 8px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-2);
+  box-shadow: 0 10px 30px rgba(16,24,32,.18);
+  font-family: var(--body); font-size: .85rem; font-weight: 400;
+  line-height: 1.5; letter-spacing: 0; text-align: left; text-transform: none;
+  white-space: normal;
+}
+.infobox[hidden] { display: none; }
+/* A caret, so it reads as belonging to the icon rather than floating near it. */
+.infobox::before {
+  content: ""; position: absolute; top: -5px; left: .85rem;
+  width: 8px; height: 8px; transform: rotate(45deg);
+  background: var(--surface);
+  border-left: 1px solid var(--border-2); border-top: 1px solid var(--border-2);
+}
+.infohead {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.infobox p { margin: 0; }
+.infobox strong { font-weight: 600; }
+/* On a phone there is nowhere to hang a 32rem box off an icon — anchored
+   either way it runs off one edge — so it stops being a tooltip and becomes a
+   sheet across the bottom, clear of the navigation bar. */
+@media (max-width: 34rem) {
+  .infobox {
+    position: fixed; top: auto; left: .75rem; right: .75rem;
+    bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    width: auto; max-width: none;
+    box-shadow: 0 -4px 40px rgba(16,24,32,.28);
+  }
+  .infobox::before { display: none; }
+}
+
 .pill {
   font-family: var(--mono); font-size: .63rem; text-transform: uppercase;
   letter-spacing: .12em; padding: .22rem .45rem; border-radius: 3px;
