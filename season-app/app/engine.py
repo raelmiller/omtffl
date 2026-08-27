@@ -34,8 +34,8 @@ from lineups import (                               # noqa: E402
 )
 from mechanics import (                             # noqa: E402
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
-    boost_value, league_table, process_waivers, setting, snake_order,
-    validate_trade,
+    boost_value, frozen_after, league_table, process_waivers, setting,
+    snake_order, validate_trade,
 )
 from scoring import (contributions, entry_breakdown,  # noqa: E402
                      score_entry)
@@ -906,17 +906,32 @@ def check_trade(record, squads_at_gw, accumulated=None, received=0, config=None)
         opponent=opponents(round_of) if round_of is not None else None)
 
 
-def squads_for_gameweek(gameweek, stored_trades=None, config=None):
-    """Everyone's fifteen as they stand for a gameweek, trades applied."""
+def _settle(gameweek, stored_trades=None, config=None, extra=None):
+    """Run every transaction that counts and hand back squads and moves.
+
+    `extra` is everything that isn't a trade — waiver runs, free-agency
+    moves, boosts, bank spends. The caller decides what belongs in it, which
+    is how the waiver run can be held back while it is still only claims.
+    """
     base = _read("squads.json")
     if not base:
-        return {}
-    txs = effective_trades(stored_trades or [], config)
+        return {}, [], []
+    txs = effective_trades(stored_trades or [], config) + list(extra or [])
     if not txs:
-        return {t["key"]: refresh_clubs(t["squad"]) for t in base["teams"]}
-    squads, *_ = apply_transactions(base, txs, gameweek,
-                                    opponents=opponents())
-    return {k: refresh_clubs(v) for k, v in squads.items()}
+        return ({t["key"]: refresh_clubs(t["squad"]) for t in base["teams"]}, [], [])
+    squads, _, _, _, moves, problems = apply_transactions(
+        base, txs, gameweek, opponents=opponents(), config=config)
+    return {k: refresh_clubs(v) for k, v in squads.items()}, moves, problems
+
+
+def squads_for_gameweek(gameweek, stored_trades=None, config=None, extra=None):
+    """Everyone's fifteen as they stand for a gameweek.
+
+    Trades always. Anything else the caller passes in `extra` — which is how
+    a squad that won a waiver claim or a free agent shows the player it
+    actually owns rather than the one it was dealt on draft night.
+    """
+    return _settle(gameweek, stored_trades, config, extra)[0]
 
 
 def accumulated_points(key, gameweek, season_data):
@@ -973,11 +988,120 @@ def bank_status(key, gameweek, transactions, drafted=None):
     }
 
 
-# ── Waivers ────────────────────────────────────────────────────────────────
-def free_agents(gameweek, stored_trades=None):
-    """Players nobody owns, with their name, position and club."""
-    squads = squads_for_gameweek(gameweek, stored_trades)
+# ── Waivers and free agency ────────────────────────────────────────────────
+def waiver_deadline(gw, config=None):
+    """When the waiver window shuts and the run happens.
+
+    A fixed number of hours before the gameweek deadline, but never so early
+    that it lands on top of the previous round: in a midweek double the two
+    deadlines can be a day and a half apart, and taking 24 hours off the
+    second would leave no waiver window at all. When the rounds are that
+    close together the two windows split the gap between them instead.
+    """
+    if not gw or not gw.get("deadline"):
+        return None
+    closes = _parse(gw["deadline"])
+    opens = closes - timedelta(hours=setting(config, "waiver_hours_before"))
+    previous = [g for g in calendar()
+                if g.get("deadline") and g["gameweek"] < gw["gameweek"]]
+    if previous:
+        last = _parse(max(previous, key=lambda g: g["gameweek"])["deadline"])
+        opens = max(opens, last + (closes - last) / 2)
+    return opens.isoformat(timespec="seconds")
+
+
+def waiver_state(gw, config=None):
+    """Which of a gameweek's two transfer windows is open, and for how long.
+
+    Three phases. In `waivers` claims are collected and nothing has moved —
+    they are still only claims. At the waiver deadline the run happens and
+    `free_agency` opens: the pool is first come, first served until the
+    gameweek deadline, and anyone dropped since the run is out of reach.
+    After the gameweek deadline it is `closed`.
+    """
+    lock = deadline_state(gw)
+    shuts = waiver_deadline(gw, config)
+    if not shuts:
+        return {**lock, "phase": "closed", "waiver_deadline": None,
+                "waivers_open": False, "free_agency": False}
+    now = datetime.now(timezone.utc)
+    left = int((_parse(shuts) - now).total_seconds())
+    if not lock["open"]:
+        phase = "closed"
+    elif left > 0:
+        phase = "waivers"
+    else:
+        phase = "free_agency"
+    return {
+        **lock,
+        "phase": phase,
+        "waiver_deadline": shuts,
+        "waivers_open": phase == "waivers",
+        "free_agency": phase == "free_agency",
+        # What the countdown on the page should be counting down to.
+        "next_deadline": shuts if phase == "waivers" else lock.get("deadline"),
+        "waiver_seconds": max(0, left),
+    }
+
+
+def market(gameweek, stored_trades=None, transactions=None, season_data=None,
+           config=None, for_manager=None):
+    """The transfer market as it stands this second.
+
+    One call, so that no two pages can disagree about who owns whom, who is
+    available, and whether the run has happened yet. Returns the phase, every
+    squad as it actually is now, the pool a manager may pick from, and the
+    players frozen out of it until next round.
+
+    `for_manager` is whose pool it is. The freeze is against everyone else, so
+    a manager still sees the players they themselves let go — dropping the
+    wrong man should cost a move to undo, not a week.
+    """
+    gw = next((g for g in calendar() if g["gameweek"] == gameweek), None)
+    state = waiver_state(gw, config)
+    txs = list(transactions or [])
+    if state["phase"] == "waivers":
+        # Held back deliberately: until the deadline these are claims, not
+        # transfers, and showing them as settled would promise a squad the
+        # run has not yet delivered.
+        txs = [t for t in txs
+               if not (t.get("type") == "waiver_run"
+                       and t.get("gameweek") == gameweek)]
+    squads, moves, problems = _settle(gameweek, stored_trades, config, txs)
+    frozen = frozen_after(moves, gameweek, config)
+    shut_out = {pid for pid, by in frozen.items() if by != for_manager}
+    return {
+        "gameweek": gameweek, "state": state, "squads": squads,
+        "moves": [m for m in moves if m.get("gameweek") == gameweek],
+        "frozen": frozen, "shut_out": shut_out,
+        "pool": free_agents(gameweek, squads=squads, exclude=shut_out),
+        "problems": problems,
+    }
+
+
+def frozen_detail(market_now):
+    """The frozen players, named, so the pool can say why they are missing."""
+    seen, out = set(), []
+    for m in market_now["moves"]:
+        pid = m["drop"]["id"]
+        if pid in market_now["shut_out"] and pid not in seen:
+            seen.add(pid)
+            out.append({**m["drop"], "by": m["team"],
+                        "how": "the waiver run" if m.get("kind") == "waiver"
+                               else "free agency"})
+    return out
+
+
+def free_agents(gameweek, stored_trades=None, squads=None, exclude=None):
+    """Players nobody owns, with their name, position and club.
+
+    `squads` short-circuits the ownership lookup when the caller has already
+    settled them; `exclude` drops anyone frozen for the rest of the gameweek.
+    """
+    if squads is None:
+        squads = squads_for_gameweek(gameweek, stored_trades)
     owned = {p["id"] for squad in squads.values() for p in squad}
+    owned |= set(exclude or ())
     meta = _read("players.json") or {}
     positions = {int(k): v for k, v in (meta.get("positions") or {}).items()}
     names = meta.get("names") or {}
@@ -1105,9 +1229,9 @@ def available_metrics():
     return [m for m in METRICS if m[0] in have]
 
 
-def free_agent_pool(gameweek, stored_trades=None):
+def free_agent_pool(gameweek, stored_trades=None, squads=None, exclude=None):
     """Free agents with their season numbers attached."""
-    return with_stats(free_agents(gameweek, stored_trades))
+    return with_stats(free_agents(gameweek, stored_trades, squads, exclude))
 
 
 def with_stats(players):

@@ -5,26 +5,36 @@
 {% block subheading %}
 <p class="sub">
   For {{ gw.name }} &middot;
-  {% if lock.open %}
-    claims close <time data-when="{{ lock.deadline }}">{{ lock.deadline }}</time>
-  {% else %}closed &mdash; the run has already happened{% endif %}
-  {% if my_place %}&middot; you claim {{ my_place }}{{ 'st' if my_place == 1 else 'nd' if my_place == 2 else 'rd' if my_place == 3 else 'th' }} in round one{% endif %}
+  {% if phase.waivers_open %}
+    claims close <time data-when="{{ phase.waiver_deadline }}">{{ phase.waiver_deadline }}</time>
+    {% if my_place %}&middot; you claim {{ my_place }}{{ 'st' if my_place == 1 else 'nd' if my_place == 2 else 'rd' if my_place == 3 else 'th' }} in round one{% endif %}
+  {% elif phase.free_agency %}
+    the run is done &middot; the pool is open to everyone until
+    <time data-when="{{ lock.deadline }}">{{ lock.deadline }}</time>
+  {% else %}closed &mdash; the deadline has passed{% endif %}
 </p>
-{% if lock.open %}
+{% if phase.waivers_open %}
+<p class="sub"><span class="clock" data-deadline="{{ phase.waiver_deadline }}">{{ phase.waiver_deadline }}</span>
+&mdash; claims can be changed until then, and nothing is processed before it.
+Whatever is left over goes to first come, first served afterwards.</p>
+{% elif phase.free_agency %}
 <p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
-&mdash; claims can be changed until then, and nothing is processed before it.</p>
+&mdash; first come, first served, as many moves as you like. Anyone dropped
+since the run is out of reach until next week.</p>
 {% endif %}
 {% endblock %}
 
 {% block content %}
 
+{% if phase.waivers_open %}
 <section>
   <div class="sechead"><h2>How the run works</h2></div>
-  <p class="sub">Claims are processed together after the deadline, from the
+  <p class="sub">Claims are processed together at the waiver deadline, from the
   bottom of the table upwards. Round two runs the other way, and so on. You get
   one attempt per round &mdash; if someone beats you to a player, your next
   choice waits for the snake to come back to you rather than going straight
-  through.</p>
+  through. After the run, whoever is left is first come, first served until the
+  gameweek deadline.</p>
   <div class="panel snake">
     {% for m in order %}
     <span class="slot {% if me and m.key == me.key %}mine{% endif %}">
@@ -34,17 +44,65 @@
     {% endfor %}
   </div>
 </section>
+{% endif %}
+
+{% if settled %}
+<section>
+  <div class="sechead">
+    <h2>What the run did</h2>
+    <span class="eyebrow">settled</span>
+  </div>
+  <div class="panel">
+    {% for r in settled %}
+    <div class="wrow">
+      <span class="mark">{{ '✓' if r.landed else '·' }}</span>
+      <span class="rnd">{{ 'round ' ~ r.round if r.round else 'free agency' }}</span>
+      <span class="wteam">{{ r.team }}</span>
+      <span class="wmove">{{ r.add.name }} for {{ r.drop.name }}</span>
+      {% if not r.landed %}<span class="pclub">{{ r.why }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if frozen %}
+<section>
+  <div class="sechead">
+    <h2>Out of reach this week</h2>
+    <span class="eyebrow">{{ frozen|length }} player{{ '' if frozen|length == 1 else 's' }}</span>
+  </div>
+  <div class="panel snake">
+    {% for f in frozen %}
+    <span class="slot"><span class="n">{{ f.position }}</span>{{ f.name }}
+      <span class="mgr">{{ f.by }}</span></span>
+    {% endfor %}
+  </div>
+  <p class="note">Dropped since the run went through, so nobody <em>else</em>
+  can pick them up until next gameweek &mdash; they are back in the pool then.
+  Anyone you let go yourself is missing from this list, because you can still
+  take them back.</p>
+</section>
+{% endif %}
 
 <section>
   <div class="sechead">
-    <h2>Your claims</h2>
-    <span class="eyebrow">in the order you want them</span>
+    {% if phase.free_agency %}
+      <h2>Take a free agent</h2>
+      <span class="eyebrow">
+        {%- if my_moves %}{{ my_moves|length }} move{{ '' if my_moves|length == 1 else 's' }} so far
+        {%- else %}first come, first served{% endif -%}
+      </span>
+    {% else %}
+      <h2>Your claims</h2>
+      <span class="eyebrow">in the order you want them</span>
+    {% endif %}
   </div>
 
   {% if not lock.open %}
-    <p class="note">Claims for {{ gw.name }} have closed.</p>
+    <p class="note">{{ gw.name }} has closed.</p>
   {% else %}
-  <div id="claimlist" class="panel"></div>
+  {% if not phase.free_agency %}<div id="claimlist" class="panel"></div>{% endif %}
 
   <div class="dropbox">
     <span class="eyebrow">Drop</span>
@@ -108,13 +166,17 @@
 
   <div class="tacts" style="margin-top:.9rem">
     <span id="cstatus" class="savestate"></span>
-    <button id="addclaim" class="btn ghost">Add claim</button>
-    <button id="savec" class="btn">Save claims</button>
+    {% if phase.free_agency %}
+      <button id="takenow" class="btn" disabled>Take him now</button>
+    {% else %}
+      <button id="addclaim" class="btn ghost">Add claim</button>
+      <button id="savec" class="btn">Save claims</button>
+    {% endif %}
   </div>
   {% endif %}
 </section>
 
-{% if preview %}
+{% if preview and phase.waivers_open %}
 <section>
   <div class="sechead">
     <h2>If the run happened now</h2>
@@ -132,8 +194,8 @@
     {% endfor %}
   </div>
   <p class="note">This is what the rules would do with the claims in right now.
-  It changes as other managers add theirs, and only the run after the deadline
-  counts.</p>
+  It changes as other managers add theirs, and only the run at the waiver
+  deadline counts.</p>
 </section>
 {% endif %}
 
@@ -149,6 +211,10 @@
   const free = JSON.parse(document.getElementById('free-data').textContent);
   const squad = JSON.parse(document.getElementById('squad-data').textContent);
   const gw = {{ gw.gameweek }};
+  // Two windows, one picker. In the waiver window a pick joins a ranked list
+  // and is settled later by priority; in the free window it goes straight
+  // through, so the button posts rather than queueing.
+  const FREE_AGENCY = {{ 'true' if phase.free_agency else 'false' }};
   let claims = JSON.parse(document.getElementById('claims-data').textContent);
 
   const POS = { GK: 0, DEF: 1, MID: 2, FWD: 3 };
@@ -189,6 +255,11 @@
       row(p, dropId === p.id, () => { dropId = (dropId === p.id ? null : p.id); render(); })));
 
     renderPool(claimed);
+
+    if (FREE_AGENCY) {
+      el('takenow').disabled = !(dropId && addId);
+      return;
+    }
 
     const cl = el('claimlist');
     cl.innerHTML = '';
@@ -335,7 +406,7 @@
     render();
   });
 
-  el('addclaim').addEventListener('click', () => {
+  if (!FREE_AGENCY) el('addclaim').addEventListener('click', () => {
     const drop = squad.find(p => p.id === dropId);
     const add = free.find(p => p.id === addId);
     if (!drop || !add) return;
@@ -352,7 +423,28 @@
     render();
   });
 
-  el('savec').addEventListener('click', async () => {
+  if (FREE_AGENCY) el('takenow').addEventListener('click', async () => {
+    const status = el('cstatus');
+    const btn = el('takenow');
+    btn.disabled = true;
+    btn.classList.add('is-busy');
+    status.textContent = '';
+    const res = await fetch(`/waivers/${gw}/take`, {
+      method: 'POST',
+      body: new URLSearchParams({ drop: dropId, add: addId }),
+    });
+    const data = await res.json();
+    if (data.ok) { location.reload(); return; }
+    btn.classList.remove('is-busy');
+    btn.disabled = false;
+    // A refused take usually means somebody else was quicker, and the pool
+    // on screen is already out of date — say so rather than leaving them
+    // clicking a name that has gone.
+    status.textContent = (data.errors || ['Could not take him']).join(' · ');
+    status.className = 'savestate bad';
+  });
+
+  if (!FREE_AGENCY) el('savec').addEventListener('click', async () => {
     const status = el('cstatus');
     status.textContent = 'Saving…';
     status.className = 'savestate';

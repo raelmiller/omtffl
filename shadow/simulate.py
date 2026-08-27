@@ -190,7 +190,8 @@ def main():
             for w in claims:
                 mark = "✓" if w["landed"] else "·"
                 why = "" if w["landed"] else f"  — {w['why']}"
-                print(f"  {mark} round {w['round']}  {names[w['team']]:<24} "
+                when = f"round {w['round']}" if w["round"] else "free agency"
+                print(f"  {mark} {when:<12}  {names[w['team']]:<24} "
                       f"{w['add']['name']} for {w['drop']['name']}{why}")
             print()
 

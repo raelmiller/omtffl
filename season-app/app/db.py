@@ -87,6 +87,21 @@ CREATE TABLE IF NOT EXISTS declaration (
     PRIMARY KEY (manager, gameweek, kind)
 );
 
+-- Free-agency moves, made one at a time in the window between the waiver run
+-- and the gameweek deadline. A declaration row won't do: it is one per
+-- manager per gameweek per kind, and a manager may make as many of these as
+-- they like. `made_at` is not bookkeeping — first come, first served is the
+-- whole rule, so the clock is what decides a race for the same player.
+CREATE TABLE IF NOT EXISTS free_agent_move (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    gameweek    INTEGER NOT NULL,
+    manager     TEXT NOT NULL REFERENCES manager(key),
+    dropped     TEXT NOT NULL,           -- JSON: the player going out
+    added       TEXT NOT NULL,           -- JSON: the player coming in
+    made_at     TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS fam_gameweek ON free_agent_move(gameweek);
+
 -- Trades are the one thing here with two sides and a life of its own, so
 -- they get a table rather than a declaration row: proposed, then accepted or
 -- declined, and when points are attached, published for the league to object.
@@ -618,7 +633,43 @@ def transactions():
                     **payload})
     for gameweek, claims in runs.items():
         out.append({"type": "waiver_run", "gameweek": gameweek, "claims": claims})
+    for row in free_agent_moves():
+        out.append({"type": "free_agent", "gameweek": row["gameweek"],
+                    "team": row["manager"], "made_at": row["made_at"],
+                    "drop": json.loads(row["dropped"]),
+                    "add": json.loads(row["added"])})
     return out
+
+
+# ── Free agency ────────────────────────────────────────────────────────────
+def take_free_agent(gameweek, manager, dropped, added):
+    """Record a free-agency move. The clock on it is what settles a race."""
+    with connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO free_agent_move (gameweek, manager, dropped, added,"
+            " made_at) VALUES (?, ?, ?, ?, ?)",
+            (gameweek, manager, json.dumps(dropped), json.dumps(added), now()))
+        return cur.lastrowid
+
+
+def undo_free_agent(move_id):
+    """Drop a move that lost a race. Only ever used the moment after it was
+    written, when the engine says somebody else got there first."""
+    with connect() as conn:
+        conn.execute("DELETE FROM free_agent_move WHERE id = ?", (move_id,))
+
+
+def free_agent_moves(gameweek=None, manager=None):
+    sql = "SELECT * FROM free_agent_move"
+    where, args = [], []
+    if gameweek is not None:
+        where.append("gameweek = ?"); args.append(gameweek)
+    if manager:
+        where.append("manager = ?"); args.append(manager)
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    with connect() as conn:
+        return [dict(r) for r in conn.execute(sql + " ORDER BY made_at, id", args)]
 
 
 # ── Trades ─────────────────────────────────────────────────────────────────

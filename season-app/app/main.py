@@ -314,7 +314,12 @@ def _declare_context(request, gameweek=None):
     if target is None:
         return ctx, None
 
-    squad = engine.squad_for(me["key"])
+    # The fifteen a manager actually owns right now, not the fifteen they were
+    # dealt on draft night: a trade they accepted, a claim the run landed and
+    # anyone they picked up in the free period all have to be on the pitch, or
+    # they cannot be picked.
+    squad = engine.market(target["gameweek"], db.trades(), db.transactions()
+                          )["squads"].get(me["key"]) or engine.squad_for(me["key"])
     saved = db.get_lineup(me["key"], target["gameweek"])
     rolled = None
     if not saved:
@@ -394,7 +399,10 @@ def save_declaration(request: Request, gameweek: int,
     def ids(raw):
         return [int(x) for x in raw.split(",") if x.strip().isdigit()]
 
-    squad = engine.squad_for(me["key"])
+    # Validated against the live fifteen for the same reason the page draws
+    # it: an XI is only legal if every man in it is actually yours today.
+    squad = engine.market(gameweek, db.trades(), db.transactions()
+                          )["squads"].get(me["key"]) or engine.squad_for(me["key"])
     entry = {"xi": ids(xi), "bench": ids(bench)}
     errors, warnings = engine.validate_lineup(entry, squad)
     if errors:
@@ -688,7 +696,9 @@ def waivers(request: Request):
 
     gw = engine.current_gameweek()
     trades = db.trades()
-    squads = engine.squads_for_gameweek(gw["gameweek"], trades)
+    txs = db.transactions()
+    now = engine.market(gw["gameweek"], trades, txs, for_manager=me["key"])
+    squads = now["squads"]
     claims = _claims_from_declarations(gw["gameweek"])
     run = engine.run_waivers(gw["gameweek"], claims, trades, ctx["season"])
     names = {m["key"]: m["team"] for m in db.managers()}
@@ -696,9 +706,11 @@ def waivers(request: Request):
     ctx.update({
         "gw": gw,
         "lock": engine.deadline_state(gw),
+        "phase": now["state"],
         "my_squad": squads.get(me["key"], []),
         "my_claims": claims.get(me["key"], []),
-        "free_json": json.dumps(engine.free_agent_pool(gw["gameweek"], trades)),
+        "free_json": json.dumps(engine.free_agent_pool(
+            gw["gameweek"], squads=squads, exclude=now["shut_out"])),
         "metrics_json": json.dumps([
             {"key": k, "short": short, "label": label}
             for k, short, _, label in engine.available_metrics()]),
@@ -711,6 +723,15 @@ def waivers(request: Request):
         "preview": [{**r, "team": names.get(r["team"], r["team"])}
                     for r in run["results"]],
         "claim_counts": {names.get(k, k): len(v) for k, v in claims.items()},
+        # What the run actually did, once it has happened, and who it put out
+        # of reach — the pool is short by exactly these players and should
+        # say so rather than leaving a manager hunting for a name.
+        "settled": [{**m, "team": names.get(m["team"], m["team"])}
+                    for m in now["moves"]],
+        "frozen": [{**f, "team": names.get(f["by"], f["by"])}
+                   for f in engine.frozen_detail(now)],
+        "my_moves": [m for m in now["moves"]
+                     if m["team"] == me["key"] and m.get("kind") == "free_agent"],
     })
     return templates.TemplateResponse("waivers.html", ctx)
 
@@ -724,14 +745,21 @@ def save_claims(request: Request, gameweek: int, claims: str = Form("")):
     target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
     if target is None:
         raise HTTPException(404, "no such gameweek")
-    if not engine.deadline_state(target)["open"]:
+    now = engine.market(gameweek, db.trades(), db.transactions(),
+                        for_manager=me["key"])
+    if now["state"]["phase"] == "closed":
         return JSONResponse({"ok": False, "errors": [
             "The deadline for this gameweek has passed."]}, status_code=409)
+    if not now["state"]["waivers_open"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The waiver run has already happened. The pool is open to "
+            "everyone until the deadline — take someone directly instead."]},
+            status_code=409)
 
-    trades = db.trades()
-    squads = engine.squads_for_gameweek(gameweek, trades)
+    squads = now["squads"]
     mine = {p["id"]: p for p in squads.get(me["key"], [])}
-    free = {p["id"]: p for p in engine.free_agents(gameweek, trades)}
+    free = {p["id"]: p for p in engine.free_agents(
+        gameweek, squads=squads, exclude=now["shut_out"])}
 
     parsed, errors = [], []
     for pair in [c for c in claims.split(",") if c.strip()]:
@@ -760,6 +788,69 @@ def save_claims(request: Request, gameweek: int, claims: str = Form("")):
     else:
         db.withdraw(me["key"], gameweek, "waiver")
     return JSONResponse({"ok": True, "claims": len(parsed)})
+
+
+@app.post("/waivers/{gameweek}/take")
+def take_free_agent(request: Request, gameweek: int,
+                    drop: int = Form(...), add: int = Form(...)):
+    """Take a free agent, there and then.
+
+    The window between the waiver run and the deadline is first come, first
+    served, so this settles immediately rather than joining a queue. Whoever
+    posts first gets the player; everyone else is told he has gone.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    target = next((g for g in engine.calendar() if g["gameweek"] == gameweek), None)
+    if target is None:
+        raise HTTPException(404, "no such gameweek")
+
+    now = engine.market(gameweek, db.trades(), db.transactions(),
+                        for_manager=me["key"])
+    state = now["state"]
+    if state["phase"] == "closed":
+        return JSONResponse({"ok": False, "errors": [
+            "The deadline for this gameweek has passed."]}, status_code=409)
+    if not state["free_agency"]:
+        return JSONResponse({"ok": False, "errors": [
+            "The waiver run hasn't happened yet — put a claim in and it will "
+            "be settled by priority."]}, status_code=409)
+
+    mine = {p["id"]: p for p in now["squads"].get(me["key"], [])}
+    pool = {p["id"]: p for p in engine.free_agents(
+        gameweek, squads=now["squads"], exclude=now["shut_out"])}
+
+    errors = []
+    if drop not in mine:
+        errors.append("you can only drop a player you own")
+    elif add in now["shut_out"]:
+        errors.append("that player was dropped this gameweek — nobody else can "
+                      "pick him up until the next one")
+    elif add not in pool:
+        errors.append("somebody has taken him already")
+    elif mine[drop]["position"] != pool[add]["position"]:
+        errors.append(f"{pool[add]['name']} is a {pool[add]['position']} and "
+                      f"{mine[drop]['name']} is a {mine[drop]['position']} — "
+                      "that breaks the squad")
+    if errors:
+        return JSONResponse({"ok": False, "errors": errors}, status_code=422)
+
+    move_id = db.take_free_agent(gameweek, me["key"], mine[drop], pool[add])
+    # Two managers can post inside the same second, and both will have read a
+    # pool that still had him in it. The engine settles that race by the clock,
+    # so the only honest answer is to ask it who won rather than to assume the
+    # write succeeding means the claim did.
+    landed = any(m.get("kind") == "free_agent" and m["team"] == me["key"]
+                 and m["add"]["id"] == add
+                 for m in engine.market(gameweek, db.trades(),
+                                        db.transactions())["moves"])
+    if not landed:
+        db.undo_free_agent(move_id)
+        return JSONResponse({"ok": False, "errors": [
+            "somebody got there first"]}, status_code=409)
+    return JSONResponse({"ok": True, "added": pool[add]["name"],
+                         "dropped": mine[drop]["name"]})
 
 
 # ── Admin ──────────────────────────────────────────────────────────────────

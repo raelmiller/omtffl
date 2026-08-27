@@ -44,6 +44,25 @@ WAIVER
   a snake from the bottom of the table upwards: last place claims first in
   round one, first place claims first in round two, and so on. Each manager
   submits claims in their own priority order and lands at most one per round.
+  The run happens at the WAIVER DEADLINE, a fixed number of hours before the
+  gameweek deadline. Until then the claims are only claims and no squad has
+  moved.
+
+FREE AGENCY
+  Between the waiver run and the gameweek deadline the pool is open, first
+  come first served, as many moves as you like — still one out for one in, of
+  the same position, so a squad stays a legal 2/5/5/3.
+
+  A player DROPPED once the run has finished is frozen for the rest of that
+  gameweek: nobody ELSE may pick him up until the next round, though whoever
+  let him go may take him back — that costs a move and gains them nothing they
+  did not already have, and it means a drop made in error is recoverable
+  rather than costing a week. The freeze covers
+  drops made by the run itself and drops made during free agency, because a
+  rule that only covered the run would be bypassed by not using waivers —
+  drop him in the free period instead and a friendly manager takes him a
+  second later. Narrow the scope with the `freeze_drops` setting if the league
+  would rather the pool reopened immediately.
 
 MANAGER BOOST
   Each team drafts one real Premier League manager and may use the boost
@@ -110,6 +129,13 @@ DEFAULTS = {
     # Objections needed to void a published points trade. Straight
     # player-for-player swaps are never subject to this.
     "veto_threshold": 4,
+    # How long before the gameweek deadline the waiver window shuts and the
+    # run happens. Everything between then and the deadline is free agency.
+    "waiver_hours_before": 24,
+    # Which drops are frozen for the rest of the gameweek once the run has
+    # finished: "all" covers free-agency drops too, "waivers" only the run's
+    # own. See the FREE AGENCY note at the top for why "all" is the default.
+    "freeze_drops": "all",
 }
 
 
@@ -209,6 +235,30 @@ def snake_order(table_order, rounds):
     """
     bottom_up = list(reversed(table_order))
     return [bottom_up if r % 2 == 0 else list(table_order) for r in range(rounds)]
+
+
+def frozen_after(moves, gameweek, config=None):
+    """Players who may not be picked up again until the next gameweek, and
+    who dropped each of them.
+
+    `moves` is the roster-move log `apply_transactions` returns: the waiver
+    run's results plus any free-agency moves, in the order they happened. A
+    drop only freezes anyone out if it actually happened, so claims that lost
+    a race count for nothing.
+
+    The freeze is against **everyone else**. Whoever let a player go may take
+    him back, which costs them a move and gains them nothing they didn't
+    already have — and means a drop made in error is recoverable rather than
+    costing a week.
+
+    The scope is a league setting. Under "all" — the default — a drop made
+    during free agency freezes too, because a rule that only covered the run
+    would be bypassed by not using waivers at all.
+    """
+    scope = setting(config, "freeze_drops")
+    return {m["drop"]["id"]: m["team"] for m in moves
+            if m.get("gameweek") == gameweek and m.get("landed")
+            and (scope == "all" or m.get("kind") != "free_agent")}
 
 
 def process_waivers(claims, squads, table_order):
@@ -324,12 +374,22 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
     # pre-deadline window, so a trade must credit the bank before a spend can
     # draw on it. Sorting alphabetically would put "bank_use" first and
     # wrongly reject spending points received the same week.
-    ORDER = {"trade": 0, "waiver": 1, "waiver_run": 1, "bank_use": 2, "boost": 3}
+    #
+    # Free agency sits after the waiver run because that is when it happens —
+    # the run has to have dropped its players before the pool can be judged.
+    # Among themselves free-agency moves go by the clock: the whole rule is
+    # first come, first served, so the order they were made in IS the rule.
+    ORDER = {"trade": 0, "waiver": 1, "waiver_run": 1, "free_agent": 2,
+             "bank_use": 3, "boost": 4}
+    # Players dropped once the run has finished, by gameweek. Nobody else may
+    # pick them up until the next round.
+    frozen = {}
     waiver_log = []
     committed = {}  # (gameweek, team) -> points already promised away that week
     received = {}   # team -> trade points taken this season, against the cap
     for tx in sorted(transactions,
-                     key=lambda t: (t.get("gameweek", 0), ORDER.get(t.get("type"), 9))):
+                     key=lambda t: (t.get("gameweek", 0), ORDER.get(t.get("type"), 9),
+                                    t.get("made_at") or "")):
         gw = tx.get("gameweek")
         if gw is None or gw > upto_gameweek:
             continue
@@ -388,8 +448,47 @@ def apply_transactions(base_squads, transactions, upto_gameweek,
             res, probs = process_waivers(tx.get("claims", {}), squads, order)
             for r in res:
                 r["gameweek"] = gw
+                r["kind"] = "waiver"
             waiver_log.extend(res)
             problems.extend(f"GW{gw} {p}" for p in probs)
+            # Whoever the run dropped is out of reach until next round. The
+            # rule is written once, in frozen_after, so what the engine
+            # enforces and what the app shows cannot drift apart.
+            frozen[gw] = frozen_after(waiver_log, gw, config)
+
+        elif kind == "free_agent":
+            team = tx["team"]
+            drop_id = tx["drop"]["id"]
+            add = tx["add"]
+            who = tx["drop"].get("name", drop_id)
+            if team not in squads:
+                problems.append(f"GW{gw} free agent by unknown team {team}")
+                continue
+            if drop_id not in {p["id"] for p in squads[team]}:
+                problems.append(f"GW{gw} free agent by {team}: doesn't own {who}")
+                continue
+            if add["id"] in {p["id"] for s in squads.values() for p in s}:
+                problems.append(f"GW{gw} free agent by {team}: "
+                                f"{add['name']} is already owned")
+                continue
+            # Frozen against everyone but the manager who let him go.
+            let_go = frozen.get(gw, {}).get(add["id"])
+            if let_go is not None and let_go != team:
+                problems.append(
+                    f"GW{gw} free agent by {team}: {add['name']} was dropped this "
+                    "gameweek and can't be picked up again until the next one")
+                continue
+            dropped = next(p for p in squads[team] if p["id"] == drop_id)
+            if dropped["position"] != add["position"]:
+                problems.append(
+                    f"GW{gw} free agent by {team}: {add['position']} for "
+                    f"{dropped['position']} would break the squad shape")
+                continue
+            squads[team] = [p for p in squads[team] if p["id"] != drop_id] + [add]
+            waiver_log.append({"gameweek": gw, "kind": "free_agent", "round": None,
+                               "team": team, "add": add, "drop": tx["drop"],
+                               "landed": True, "why": None})
+            frozen[gw] = frozen_after(waiver_log, gw, config)
 
         elif kind == "waiver":
             team = tx["team"]

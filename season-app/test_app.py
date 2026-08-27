@@ -1162,8 +1162,15 @@ wv.get(f"/m/{db.manager_by_key('RM')['token']}")
 wpage2 = wv.get("/waivers").text
 check_true("the waivers page counts down to the deadline",
            'class="clock" data-deadline=' in wpage2)
+# There are two deadlines in a week now, and the page counts down to whichever
+# one is actually next: the run while claims are open, the gameweek after it.
+_wstate = engine.waiver_state(engine.current_gameweek())
 check_true("and says when that is in words",
-           engine.deadline_state(engine.current_gameweek())["deadline"] in wpage2)
+           _wstate["next_deadline"] in wpage2,
+           f"{_wstate['phase']}: expected {_wstate['next_deadline']}")
+check_true("counting down to the run, not past it, while claims are open",
+           f'data-deadline="{_wstate["waiver_deadline"]}"' in wpage2
+           if _wstate["waivers_open"] else True)
 
 # A published trade of your own showed on everyone else's page as something
 # to object to, and on your own page nowhere at all.
@@ -1192,6 +1199,118 @@ check_true("a bystander still sees it as something to object to",
            "Open to objection" in btext)
 check_true("and not as one of theirs",
            "in front of the league" not in btext)
+
+print("\n── Two windows: waivers, then free agency ──────────────")
+
+# The week has two halves and they behave differently, so the tests wind the
+# clock rather than waiting for it. Everything here is restored afterwards.
+gw_two = engine.current_gameweek()["gameweek"]
+real_waiver_deadline = engine.waiver_deadline
+
+
+def wind_past_the_run():
+    engine.waiver_deadline = lambda g, config=None: (
+        datetime.now(_tz.utc) - timedelta(minutes=5)).isoformat(timespec="seconds")
+
+
+state = engine.waiver_state(engine.current_gameweek())
+check("before it, the waiver window is what's open", state["phase"], "waivers")
+check_true("and it shuts a day before the gameweek does",
+           state["waiver_deadline"] < state["deadline"],
+           f"{state['waiver_deadline']} vs {state['deadline']}")
+
+wv2 = TestClient(app)
+wv2.get(f"/m/{db.manager_by_key('RM')['token']}")
+before = engine.market(gw_two, db.trades(), db.transactions(), for_manager="RM")
+drop_a = next(p for p in before["squads"]["RM"] if p["position"] == "FWD")
+add_a = next(p for p in before["pool"] if p["position"] == "FWD")
+check("a claim can be lodged while the window is open",
+      wv2.post(f"/waivers/{gw_two}", data={
+          "claims": f"{drop_a['id']}:{add_a['id']}"}).status_code, 200)
+check_true("but nothing has moved yet — a claim is not a transfer",
+           any(p["id"] == drop_a["id"] for p in
+               engine.market(gw_two, db.trades(), db.transactions())["squads"]["RM"]))
+check_true("and taking someone directly is refused until the run has happened",
+           wv2.post(f"/waivers/{gw_two}/take",
+                    data={"drop": drop_a["id"], "add": add_a["id"]}
+                    ).status_code == 409)
+
+wind_past_the_run()
+after = engine.market(gw_two, db.trades(), db.transactions(), for_manager="RM")
+check("now the free window is open", after["state"]["phase"], "free_agency")
+check_true("the run settled the claim", any(
+    m["landed"] and m["team"] == "RM" and m["add"]["id"] == add_a["id"]
+    for m in after["moves"]), str(after["moves"]))
+check_true("so the squad has actually changed",
+           any(p["id"] == add_a["id"] for p in after["squads"]["RM"]))
+check_true("and the pick-team page draws the man they won, not the man they lost",
+           str(add_a["id"]) in wv2.get("/declare").text
+           and f'"id": {drop_a["id"]},' not in wv2.get("/declare").text)
+check_true("claims are no longer taken",
+           wv2.post(f"/waivers/{gw_two}", data={
+               "claims": f"{drop_a['id']}:{add_a['id']}"}).status_code == 409)
+
+# The freeze, which is the point of the whole exercise.
+mate = TestClient(app)
+other_key = next(k for k in after["squads"] if k != "RM")
+mate.get(f"/m/{db.manager_by_key(other_key)['token']}")
+theirs = engine.market(gw_two, db.trades(), db.transactions(),
+                       for_manager=other_key)
+their_fwd = next(p for p in theirs["squads"][other_key] if p["position"] == "FWD")
+grab = mate.post(f"/waivers/{gw_two}/take",
+                 data={"drop": their_fwd["id"], "add": drop_a["id"]})
+check("a player the run dropped is out of reach", grab.status_code, 422)
+check_true("and is told so plainly",
+           "nobody else can pick him up" in grab.json()["errors"][0],
+           str(grab.json()))
+check_true("the pool they see is short by exactly him",
+           not any(p["id"] == drop_a["id"] for p in theirs["pool"]))
+check_true("but the manager who let him go still sees him",
+           any(p["id"] == drop_a["id"] for p in after["pool"]))
+check_true("and the page says who is out of reach and why",
+           "Out of reach this week" in mate.get("/waivers").text)
+
+# Free agency proper: first come, first served, as often as you like.
+free_fwd = [p for p in theirs["pool"] if p["position"] == "FWD"]
+took = mate.post(f"/waivers/{gw_two}/take",
+                 data={"drop": their_fwd["id"], "add": free_fwd[0]["id"]})
+check("a free agent can be taken there and then", took.status_code, 200)
+now2 = engine.market(gw_two, db.trades(), db.transactions(), for_manager=other_key)
+check_true("and lands immediately rather than joining a queue",
+           any(p["id"] == free_fwd[0]["id"] for p in now2["squads"][other_key]))
+second = mate.post(f"/waivers/{gw_two}/take",
+                   data={"drop": free_fwd[0]["id"], "add": free_fwd[1]["id"]})
+check("there is no limit on how many", second.status_code, 200)
+check_true("what free agency drops is frozen too",
+           mate.post(f"/waivers/{gw_two}/take",
+                     data={"drop": free_fwd[1]["id"], "add": their_fwd["id"]}
+                     ).status_code == 200,
+           "the manager who dropped him may take him back")
+racer = TestClient(app)
+third_key = next(k for k in after["squads"] if k not in ("RM", other_key))
+racer.get(f"/m/{db.manager_by_key(third_key)['token']}")
+their_own = next(p for p in engine.market(
+    gw_two, db.trades(), db.transactions())["squads"][third_key]
+    if p["position"] == "FWD")
+check_true("but nobody else may",
+           racer.post(f"/waivers/{gw_two}/take",
+                      data={"drop": their_own["id"], "add": free_fwd[1]["id"]}
+                      ).status_code == 422)
+
+check_true("a swap that breaks the squad shape is refused either way",
+           mate.post(f"/waivers/{gw_two}/take", data={
+               "drop": their_own["id"],
+               "add": next(p for p in now2["pool"] if p["position"] == "GK")["id"]}
+               ).status_code == 422)
+
+# Put the world back: later readers of this file should not inherit a
+# half-transferred league, and the clock belongs to the real season.
+engine.waiver_deadline = real_waiver_deadline
+for row in db.free_agent_moves(gameweek=gw_two):
+    db.undo_free_agent(row["id"])
+db.withdraw("RM", gw_two, "waiver")
+check("and the league is left as it was found",
+      len(db.free_agent_moves(gameweek=gw_two)), 0)
 
 print("\n── The chrome ──────────────────────────────────────────")
 

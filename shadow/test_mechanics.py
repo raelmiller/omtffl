@@ -133,6 +133,104 @@ _, _, _, _, _, problems = apply_transactions(base(A, B), wv_owned, 10)
 check_true("can't waiver in a player someone owns",
            any("already owned" in x for x in problems), str(problems))
 
+print("\n── Free agency, and the freeze ─────────────────────────")
+
+# Two teams of five so there is room to move without breaking the shape.
+BIG_A = [p(1, "FWD", "Solanke"), p(2, "MID", "Rice"), p(3, "DEF"), p(4, "MID"), p(5, "GK")]
+BIG_B = [p(10, "FWD", "Haaland"), p(11, "MID"), p(12, "DEF"), p(13, "MID"), p(14, "GK")]
+
+
+def run(gw=4, order=("A", "B")):
+    """A waiver run in which A drops Rice for a free MID."""
+    return {"type": "waiver_run", "gameweek": gw,
+            "claims": {"A": [{"drop": p(2, "MID", "Rice"),
+                              "add": p(50, "MID", "NewMid")}]}}
+
+
+standings = {4: ["A", "B"]}
+
+fa = [{"type": "free_agent", "gameweek": 4, "team": "B", "made_at": "2026-08-27T10:00:00",
+       "drop": p(11, "MID"), "add": p(51, "MID", "Spare")}]
+squads, _, _, _, log, problems = apply_transactions(
+    base(BIG_A, BIG_B), [run(), *fa], 10, standings=standings)
+check("the run landed and free agency followed it",
+      sorted(x["id"] for x in squads["B"]), [10, 12, 13, 14, 51])
+check("with nothing to complain about", problems, [])
+check("and both moves are in the log",
+      [(m["kind"], m["team"]) for m in log], [("waiver", "A"), ("free_agent", "B")])
+
+# The point of the whole exercise: a player the run dropped is out of reach.
+grab = [{"type": "free_agent", "gameweek": 4, "team": "B", "made_at": "2026-08-27T10:00:00",
+         "drop": p(11, "MID"), "add": p(2, "MID", "Rice")}]
+squads, _, _, _, _, problems = apply_transactions(
+    base(BIG_A, BIG_B), [run(), *grab], 10, standings=standings)
+check_true("a player the run dropped can't be picked up that gameweek",
+           any("can't be picked up again" in x for x in problems), str(problems))
+check("so the squad doesn't move", sorted(x["id"] for x in squads["B"]),
+      [10, 11, 12, 13, 14])
+
+# Next gameweek he is fair game again — the freeze is for the round, not for good.
+later = [{"type": "free_agent", "gameweek": 5, "team": "B", "made_at": "2026-09-03T10:00:00",
+          "drop": p(11, "MID"), "add": p(2, "MID", "Rice")}]
+squads, _, _, _, _, problems = apply_transactions(
+    base(BIG_A, BIG_B), [run(), *later], 10, standings=standings)
+check("and is fair game the week after", sorted(x["id"] for x in squads["B"]),
+      [2, 10, 12, 13, 14])
+
+# The hole the "all" scope exists to close: drop him yourself in the free
+# period and have a friend take him a second later.
+collude = [
+    {"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:00",
+     "drop": p(2, "MID", "Rice"), "add": p(50, "MID", "NewMid")},
+    {"type": "free_agent", "gameweek": 4, "team": "B", "made_at": "2026-08-27T10:00:01",
+     "drop": p(11, "MID"), "add": p(2, "MID", "Rice")},
+]
+_, _, _, _, _, problems = apply_transactions(base(BIG_A, BIG_B), collude, 10)
+check_true("a free-agency drop freezes too, by default",
+           any("can't be picked up again" in x for x in problems), str(problems))
+squads, _, _, _, _, problems = apply_transactions(
+    base(BIG_A, BIG_B), collude, 10, config={"freeze_drops": "waivers"})
+check("unless the league narrows the scope, when it goes straight through",
+      sorted(x["id"] for x in squads["B"]), [2, 10, 12, 13, 14])
+
+# First come, first served means the clock decides, not the input order.
+race_b_first = [
+    {"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:05",
+     "drop": p(2, "MID"), "add": p(50, "MID", "Wanted")},
+    {"type": "free_agent", "gameweek": 4, "team": "B", "made_at": "2026-08-27T10:00:01",
+     "drop": p(11, "MID"), "add": p(50, "MID", "Wanted")},
+]
+squads, _, _, _, _, problems = apply_transactions(base(BIG_A, BIG_B), race_b_first, 10)
+check_true("the earlier claim wins the race whatever order they arrive in",
+           any(x["id"] == 50 for x in squads["B"]),
+           f"A={sorted(x['id'] for x in squads['A'])} B={sorted(x['id'] for x in squads['B'])}")
+check_true("and the later one is told why",
+           any("already owned" in x for x in problems), str(problems))
+
+# The freeze is against everyone ELSE. Dropping the wrong man is recoverable.
+mine_back = [
+    {"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:00",
+     "drop": p(2, "MID", "Rice"), "add": p(50, "MID", "NewMid")},
+    {"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:02",
+     "drop": p(50, "MID", "NewMid"), "add": p(2, "MID", "Rice")},
+]
+squads, _, _, _, _, problems = apply_transactions(base(BIG_A, BIG_B), mine_back, 10)
+check("you can take back a man you dropped yourself",
+      sorted(x["id"] for x in squads["A"]), [1, 2, 3, 4, 5])
+check("without being told off for it", problems, [])
+
+fa_bad = [{"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:00",
+           "drop": p(2, "MID"), "add": p(52, "FWD", "NewFwd")}]
+_, _, _, _, _, problems = apply_transactions(base(BIG_A, BIG_B), fa_bad, 10)
+check_true("free agency can't break the squad shape either",
+           any("break the squad shape" in x for x in problems), str(problems))
+
+fa_theirs = [{"type": "free_agent", "gameweek": 4, "team": "A", "made_at": "2026-08-27T10:00:00",
+              "drop": p(11, "MID"), "add": p(53, "MID")}]
+_, _, _, _, _, problems = apply_transactions(base(BIG_A, BIG_B), fa_theirs, 10)
+check_true("and you can only drop your own",
+           any("doesn't own" in x for x in problems), str(problems))
+
 print("\n── Offer cap ───────────────────────────────────────────")
 
 # You can mortgage your season, but not more than you've actually scored.

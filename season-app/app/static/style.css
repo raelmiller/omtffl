@@ -165,7 +165,7 @@ p { margin: 0; }
    keeps its edge against the aubergine. */
 .crest { display: block; flex: none; margin-left: .25rem; }
 .crest img {
-  display: block; width: 34px; height: 34px; border-radius: 999px;
+  display: block; width: 38px; height: 38px; border-radius: 999px;
   box-shadow: 0 0 0 1px rgba(255,255,255,.2);
   transition: box-shadow .18s ease, transform .18s ease;
 }

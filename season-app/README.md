@@ -69,6 +69,35 @@ The admin's own link is printed to the deploy log on every start, freshly
 issued, because on a database nobody holds a session for that log line is the
 only way in.
 
+## The transfer week
+
+A gameweek has two windows, not one.
+
+**Waivers** run until the waiver deadline — by default 24 hours before the
+gameweek deadline, set by `waiver_hours_before`. Claims are collected in each
+manager's own priority order and nothing moves: until the run they are claims,
+not transfers, and the page says so. At the deadline they are resolved in one
+pass, snaking from the bottom of the table upwards.
+
+**Free agency** runs from then until the gameweek deadline. Whoever is left is
+first come, first served, as many moves as a manager likes, still one out for
+one in of the same position so a squad stays a legal 2/5/5/3. A take settles
+immediately rather than joining a queue, and because two managers can post
+inside the same second the route asks the engine who actually won before
+telling anyone they got him.
+
+**Anyone dropped once the run has finished is frozen for the rest of that
+gameweek** — the run's own drops and free-agency drops alike, because a rule
+covering only the run would be bypassed by not using waivers. The freeze is
+against everyone *else*: whoever let a player go may take him back, which
+costs a move, gains them nothing they did not already have, and means a drop
+made in error is recoverable rather than costing a week. Narrow it to the run
+alone with `freeze_drops: "waivers"`.
+
+`engine.market()` is the one place any of this is decided. It returns the
+phase, every squad as it actually stands, the pool for a given manager and who
+is frozen out of it — so no two pages can disagree about who owns whom.
+
 ## How it looks
 
 The UI is **Floodlight**, drawn in `design/` and applied here. Two things are
