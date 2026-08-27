@@ -24,6 +24,12 @@
 <p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
 &mdash; anything agreed by then is in your squad in time to be picked.</p>
 {% endif %}
+{% if picking and picking.gameweek != gw.gameweek %}
+<p class="note">You&rsquo;re still picking a team for {{ picking.name }}, but its
+trade window shut a day before its deadline &mdash; so trading has moved on to
+{{ gw.name }}. Anyone you take here plays for {{ gw.name }}, not
+{{ picking.name }}.</p>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -145,10 +151,9 @@
 <section>
   <div class="sechead"><h2>Propose a trade</h2></div>
   {% if not lock.open %}
-    <p class="note">Trades for {{ gw.name }} have closed &mdash; the window
-    shuts when waivers do, so that anyone you take can still be picked. The
-    free-agent pool is open until kick-off, and this reopens with the next
-    gameweek.</p>
+    <p class="note">No round is open for trading. The window shuts a day
+    before each deadline, so that anyone you take can still be picked. The
+    free-agent pool is open until kick-off.</p>
   {% else %}
   <form id="proposal" class="proposal">
     <label class="field">

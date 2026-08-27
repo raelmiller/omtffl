@@ -610,7 +610,11 @@ def _trade_context(request):
     me = ctx["me"]
     if not me:
         return ctx
-    gw = engine.current_gameweek()
+    # The round trades are FOR, which moves on when the window shuts — not the
+    # round a team is being picked for, which runs a day longer. For that last
+    # day the page used to offer a round it would refuse a trade for.
+    gw = engine.trading_gameweek()
+    ctx["picking"] = engine.current_gameweek()
     records = db.trades()
     # market() rather than squads_for_gameweek() because it also hands back
     # what the engine refused to do. Those were being dropped on the floor,
@@ -713,12 +717,14 @@ def propose(request: Request, receiver: str = Form(...), give: str = Form(""),
     me = auth.current(request)
     if not me:
         raise HTTPException(401, "sign in first")
-    gw = engine.current_gameweek()
+    # Whatever round the page was offering — the same call, so the form and
+    # the route cannot disagree about which round an offer lands in.
+    gw = engine.trading_gameweek()
     if not engine.trade_window(gw)["open"]:
         return JSONResponse({"ok": False, "errors": [
-            "Trades for this gameweek have closed. The window shuts when "
-            "waivers do, so that anyone you take can still be picked — "
-            "propose this for the next round."]}, status_code=409)
+            "No round is open for trading. The window shuts a day before "
+            "each deadline, so that anyone you take can still be picked."]},
+            status_code=409)
     if receiver == me["key"]:
         return JSONResponse({"ok": False, "errors": ["Pick another manager."]},
                             status_code=422)

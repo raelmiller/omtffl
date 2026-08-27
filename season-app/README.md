@@ -237,6 +237,17 @@ yet" and where a trade goes when it does. The same reasoning as `/health`
 reporting the truth rather than the intent: an absent thing and an empty thing
 have to look different.
 
+**Trading moves on when the window shuts**, rather than waiting for the round
+to finish. The page named `current_gameweek()` — the round a team is being
+picked for, which runs a full day longer than the trade window — so for the
+last 24 hours of every round it offered a round it would then refuse a trade
+for, told the reader to propose for the next one, and gave them no way to do
+it. `engine.trading_gameweek()` is the round trades are actually for: this one
+while its window is open, otherwise the next one whose window is. The page and
+the propose route call it, so the form and the route cannot disagree about
+where an offer lands, and the page says plainly when trading has moved ahead
+of the round being picked.
+
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for
 one in of the same position so a squad stays a legal 2/5/5/3. A take settles

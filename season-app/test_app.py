@@ -512,7 +512,7 @@ check("and a new proposal is refused",
 # so matching the raw HTML tests the line breaks rather than the words.
 _closed_page = re.sub(r"\s+", " ", tclient.get("/trade").text)
 check_true("the page says why, rather than blaming the gameweek deadline",
-           "window shuts when waivers do" in _closed_page)
+           "shuts a day before each deadline" in _closed_page)
 check_true("and points at the pool, which is still open",
            "free-agent pool is open until kick-off" in _closed_page)
 db.set_trade_status(late, "withdrawn")
@@ -758,6 +758,50 @@ check_true("every trade the app applies is marked as already vetted",
            all(t.get("agreed") for t in
                engine.effective_trades(db.trades())) if db.trades() else True)
 _hold_window_open()
+
+print("\n── Trading moves on when a window shuts ────────────────")
+
+# For the last 24 hours of every round the page offered a round it would
+# refuse a trade for: it named current_gameweek(), whose window had shut,
+# told the reader to propose for the next one, and gave them no way to.
+_here = engine.current_gameweek()
+_next = next(g for g in engine.calendar()
+             if g["gameweek"] == _here["gameweek"] + 1)
+
+engine.waiver_deadline = (lambda g, config=None:
+                          _WINDOW_SHUT if g["gameweek"] == _here["gameweek"]
+                          else _WINDOW_OPEN)
+check("with this round shut, trading moves to the next",
+      engine.trading_gameweek()["gameweek"], _next["gameweek"])
+_moved = flat(c1.get("/trade").text)
+check_true("and the page says which round it is now offering",
+           f"For {_next['name']}" in _moved)
+check_true("and why it differs from the one being picked",
+           "trading has moved on" in _moved)
+
+# The offer must land in the round the page named, not the one being picked.
+_tsq = engine.market(_next["gameweek"], db.trades(), db.transactions())["squads"]
+_t2 = next(k for k in _tsq if k != P1)
+_g = next(p for p in _tsq[P1] if p["position"] == "DEF")
+_t = next(p for p in _tsq[_t2] if p["position"] == "DEF")
+_r = c1.post("/trade/propose", data={"receiver": _t2, "give": str(_g["id"]),
+                                     "take": str(_t["id"]), "points": 0})
+check("an offer is accepted while this round is shut", _r.status_code, 200)
+check("and lands in the round the page offered",
+      db.trades("proposed")[0]["gameweek"], _next["gameweek"])
+with db.connect() as _conn:
+    _conn.execute("DELETE FROM trade WHERE id = ?", (db.trades("proposed")[0]["id"],))
+
+_shut_window()
+check("with nothing open, trading falls back to this round",
+      engine.trading_gameweek()["gameweek"], _here["gameweek"])
+check("and an offer is refused rather than misfiled",
+      c1.post("/trade/propose", data={"receiver": _t2, "give": str(_g["id"]),
+                                      "take": str(_t["id"]), "points": 0}
+              ).status_code, 409)
+_hold_window_open()
+check("with everything open, trading is for the round being picked",
+      engine.trading_gameweek()["gameweek"], _here["gameweek"])
 
 print("\n── The bank ────────────────────────────────────────────")
 

@@ -1202,6 +1202,28 @@ def trade_window(gw, config=None):
     }
 
 
+def trading_gameweek(config=None):
+    """The round a manager can propose a trade for right now.
+
+    Not the same question as `current_gameweek`, which answers "what am I
+    picking a team for" and stays on this round until its deadline passes.
+    The trade window shuts a day before that, so for the last 24 hours of
+    every round the trades page was offering a round it would not accept a
+    trade for — while telling the reader to propose for the next one and
+    giving them no way to. Trading simply moves on when the window shuts.
+
+    Falls back to the current round when nothing ahead is open, so the page
+    always has a round to name and the closed notice still reads correctly.
+    """
+    here = current_gameweek()
+    if here and trade_window(here, config)["open"]:
+        return here
+    later = [g for g in calendar()
+             if here and g["gameweek"] > here["gameweek"]
+             and trade_window(g, config)["open"]]
+    return min(later, key=lambda g: g["gameweek"]) if later else here
+
+
 def market(gameweek, stored_trades=None, transactions=None, season_data=None,
            config=None, for_manager=None):
     """The transfer market as it stands this second.
