@@ -159,6 +159,18 @@ and every route that moves a player is gated on it, including accepting an
 offer — which previously had no clock on it at all and would have applied a
 trade to a round already being played.
 
+**A trade carrying points is agreed but not done, and the page has to say so
+in those words.** It said "agreed", which a manager reads as finished — so the
+squads not having moved looked like a bug rather than the rule working. The
+pending block now states plainly that neither squad changes until it settles,
+when that is, and how many objections would stop it. The points line says
+where the points are going rather than only how many, and **every manager's
+bank is listed on the page**: previously a bank was only ever shown to the
+manager who owned it, so the one number that proves a points trade landed was
+visible to nobody but the recipient. `engine.banks()` computes all fourteen in
+one `apply_transactions` pass, and the suite checks it agrees with the
+per-manager figure.
+
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for
 one in of the same position so a squad stays a legal 2/5/5/3. A take settles

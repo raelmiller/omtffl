@@ -1036,6 +1036,23 @@ def accumulated_points(key, gameweek, season_data):
 
 
 # ── The points bank ────────────────────────────────────────────────────────
+def banks(transactions, drafted=None):
+    """What every manager has banked, in one pass.
+
+    `bank_status` answers for one manager and scores the whole season to do
+    it, so asking it fourteen times to draw a list would score the season
+    fourteen times. This is the same numbers from the same engine call.
+    """
+    base = _read("squads.json")
+    if not base:
+        return {}
+    managers_arg = {k: {"club": v.get("club"), "sacked_from": v.get("sacked_from")}
+                    for k, v in (drafted or {}).items()}
+    _, _, _, bank, _, _ = apply_transactions(
+        base, transactions, 38, managers=managers_arg, opponents=opponents())
+    return bank
+
+
 def bank_status(key, gameweek, transactions, drafted=None):
     """What a manager has banked, and what they've already declared to spend.
 

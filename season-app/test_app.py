@@ -43,8 +43,24 @@ def check_true(name, cond, detail=""):
 # fail after tea. Hold the window open for the whole run; the sections that
 # test what happens once it shuts wind it forward themselves and put it back.
 _real_waiver_deadline = engine.waiver_deadline
-engine.waiver_deadline = lambda g, config=None: (
-    datetime.now(_tz.utc) + timedelta(hours=2)).isoformat(timespec="seconds")
+# Fixed instants, not "now + 2h" evaluated per call: a moving deadline gives
+# the page one timestamp and the assertion checking it another, microseconds
+# apart, and the mismatch looks like a bug in the page.
+_WINDOW_OPEN = (datetime.now(_tz.utc) + timedelta(hours=2)
+                ).isoformat(timespec="seconds")
+_WINDOW_SHUT = (datetime.now(_tz.utc) - timedelta(minutes=5)
+                ).isoformat(timespec="seconds")
+
+
+def _hold_window_open():
+    engine.waiver_deadline = lambda g, config=None: _WINDOW_OPEN
+
+
+def _shut_window():
+    engine.waiver_deadline = lambda g, config=None: _WINDOW_SHUT
+
+
+_hold_window_open()
 
 client = TestClient(app)
 
@@ -465,8 +481,7 @@ check_true("so nobody's squad has moved yet",
                tw_n, db.trades(), db.transactions())["squads"][one]))
 
 # Wind past the waiver deadline — a full day before kick-off.
-engine.waiver_deadline = lambda g, config=None: (
-    datetime.now(_tz.utc) - timedelta(minutes=5)).isoformat(timespec="seconds")
+_shut_window()
 check("once it shuts, an unobjected trade stands",
       engine.trade_outcome(db.trade(paid))["state"], "accepted")
 after_trade = engine.market(tw_n, db.trades(), db.transactions())["squads"]
@@ -502,12 +517,76 @@ check_true("and points at the pool, which is still open",
            "free-agent pool is open until kick-off" in _closed_page)
 db.set_trade_status(late, "withdrawn")
 
-engine.waiver_deadline = lambda g, config=None: (
-    datetime.now(_tz.utc) + timedelta(hours=2)).isoformat(timespec="seconds")
+_hold_window_open()
 check_true("with the window open again, offers are taken as normal",
            tclient.post("/trade/propose", data={
                "receiver": two, "give": str(give["id"]), "take": str(get["id"]),
                "points": 0}).status_code == 200)
+
+print("\n── Saying whether a trade has actually happened ────────")
+
+# Reported from the running app: "it says the trade has gone through, but the
+# player isn't in my team and I can't see the bank of points in the other
+# team". Nothing was broken — the trade carried points, so it was published
+# and genuinely pending — but the page said "agreed" and listed it as theirs,
+# which reads as done, and there was nowhere to see where points had landed.
+_hold_window_open()
+
+pg = engine.current_gameweek(); pn = pg["gameweek"]
+psq = engine.market(pn, db.trades(), db.transactions())["squads"]
+P1 = "RM"
+P2 = next(k for k in psq if k not in (P1, engine.opponents(pn).get(P1)))
+p_give = next(p for p in psq[P1] if p["position"] == "DEF")
+p_take = next(p for p in psq[P2] if p["position"] == "DEF")
+c1 = TestClient(app); c1.get(f"/m/{db.manager_by_key(P1)['token']}")
+c2 = TestClient(app); c2.get(f"/m/{db.manager_by_key(P2)['token']}")
+c1.post("/trade/propose", data={"receiver": P2, "give": str(p_give["id"]),
+                                "take": str(p_take["id"]), "points": 7})
+# db.trades() is newest-first, so [0] is the offer just made. [-1] is the
+# oldest one in the database, which is a different trade entirely.
+ptid = db.trades("proposed")[0]["id"]
+check("the offer just made is the one being accepted",
+      db.trade(ptid)["points"], 7)
+c2.post(f"/trade/{ptid}/accept")
+
+flat = lambda t: re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", t))
+pending_page = flat(c1.get("/trade").text)
+check_true("a pending trade says so before anything else",
+           "Not done yet" in pending_page)
+check_true("and says the squads have not moved",
+           "Neither squad changes until this settles" in pending_page)
+check_true("and where the points will go when it does",
+           f"points reach {db.manager_by_key(P2)['team']}" in pending_page)
+check_true("the heading no longer just says 'agreed'",
+           "nothing has moved yet" in pending_page)
+check_true("and the player really is still theirs, as the page now says",
+           not any(x["id"] == p_take["id"] for x in engine.market(
+               pn, db.trades(), db.transactions())["squads"][P1]))
+
+_shut_window()
+after = engine.market(pn, db.trades(), db.transactions())["squads"]
+check_true("once it settles the player moves", any(x["id"] == p_take["id"]
+                                                   for x in after[P1]))
+settled_page = flat(c1.get("/trade").text)
+check_true("the page stops saying it is pending", "Not done yet" not in settled_page)
+check_true("and shows where the points went",
+           f"banked with {db.manager_by_key(P2)['team']}" in settled_page)
+
+# The whole point of the report: being able to see the other team's bank.
+check_true("every manager's bank is on the page", "Banked points" in settled_page)
+check_true("including the manager who received them",
+           db.manager_by_key(P2)["team"] in settled_page)
+
+# One pass for everyone must agree with the per-manager answer, or the list
+# and the pick-team page would show different numbers for the same thing.
+_tx = db.transactions() + engine.effective_trades(db.trades())
+_all = engine.banks(_tx, db.manager_clubs())
+check("the league-wide banks agree with the one-at-a-time answer",
+      {k: v for k, v in _all.items() if v},
+      {m["key"]: engine.bank_status(m["key"], pn, _tx, db.manager_clubs())["balance"]
+       for m in db.managers()
+       if engine.bank_status(m["key"], pn, _tx, db.manager_clubs())["balance"]})
+_hold_window_open()
 
 print("\n── The bank ────────────────────────────────────────────")
 
@@ -1282,21 +1361,21 @@ pid2 = db.propose_trade(gwp, "RM", mate,
 db.set_trade_status(pid2, "published")
 tpage = wv.get("/trade").text
 check_true("your own open trade is on your own page",
-           "in front of the league" in tpage)
+           'id="mine-open"' in tpage)
 check_true("with the objections it would take to stop it",
-           "of 4 objections" in tpage, tpage[tpage.find("objections") - 60:][:90])
+           "unless 4 managers object" in re.sub(r"\s+", " ", tpage),
+           tpage[tpage.find("object") - 60:][:110])
 other = TestClient(app)
 other.get(f"/m/{db.manager_by_key(mate)['token']}")
 check_true("the other side sees it as theirs too",
-           "in front of the league" in other.get("/trade").text)
+           'id="mine-open"' in other.get("/trade").text)
 third = next(k for k in sqp if k not in ("RM", mate))
 bystander = TestClient(app)
 bystander.get(f"/m/{db.manager_by_key(third)['token']}")
 btext = bystander.get("/trade").text
 check_true("a bystander still sees it as something to object to",
            "Open to objection" in btext)
-check_true("and not as one of theirs",
-           "in front of the league" not in btext)
+check_true("and not as one of theirs", 'id="mine-open"' not in btext)
 
 print("\n── Two windows: waivers, then free agency ──────────────")
 
@@ -1307,8 +1386,7 @@ real_waiver_deadline = engine.waiver_deadline
 
 
 def wind_past_the_run():
-    engine.waiver_deadline = lambda g, config=None: (
-        datetime.now(_tz.utc) - timedelta(minutes=5)).isoformat(timespec="seconds")
+    _shut_window()
 
 
 state = engine.waiver_state(engine.current_gameweek())

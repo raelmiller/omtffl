@@ -1185,3 +1185,13 @@ td.team .pn.tappable { font-weight: 600; }
   .tlabel { min-width: 5.5rem; }
   .bbps { display: none; }
 }
+
+/* A trade that is agreed but not settled. The old copy said "agreed", which
+   reads as done — and the squads genuinely have not moved, so the first thing
+   the card has to say is that nothing has happened yet. */
+.pending {
+  font-size: .88rem; padding: .5rem .65rem; border-radius: 6px;
+  background: var(--warn-dim); border: 1px solid var(--warn);
+  color: var(--text);
+}
+.pending strong { color: var(--warn); font-weight: 700; }

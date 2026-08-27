@@ -37,7 +37,7 @@
       <div class="tside">
         <span class="eyebrow">{{ t.proposer_team }} gives</span>
         {% for p in t.players_out %}<div class="tp">{{ p.name }} <span class="pclub">{{ p.position }}</span></div>{% endfor %}
-        {% if t.points %}<div class="tpoints">+ {{ t.points }} points</div>{% endif %}
+        {% if t.points %}<div class="tpoints">+ {{ t.points }} points to {{ t.receiver_team }}</div>{% endif %}
       </div>
       <div class="tarrow" aria-hidden="true">&rarr;</div>
       <div class="tside">
@@ -60,7 +60,7 @@
 {% endif %}
 
 {% if mine_open %}
-<section>
+<section id="mine-open">
   <div class="sechead">
     <h2>Yours, in front of the league{% call info("Why these are published", "whypublished") %}
       <span class="ip">These carried points, so they were published to the league when they
@@ -69,7 +69,7 @@
       <span class="ip">They stand when the trade window shuts &mdash; a day before
       kick-off &mdash; unless enough managers object before then.</span>
     {% endcall %}</h2>
-    <span class="eyebrow">agreed, not yet settled</span>
+    <span class="eyebrow">agreed &mdash; nothing has moved yet</span>
   </div>
   {% for t in mine_open %}
   <div class="panel trade">
@@ -77,7 +77,7 @@
       <div class="tside">
         <span class="eyebrow">{{ t.proposer_team }} gives</span>
         {% for p in t.players_out %}<div class="tp">{{ p.name }} <span class="pclub">{{ p.position }}</span></div>{% endfor %}
-        {% if t.points %}<div class="tpoints">+ {{ t.points }} points</div>{% endif %}
+        {% if t.points %}<div class="tpoints">+ {{ t.points }} points to {{ t.receiver_team }}</div>{% endif %}
       </div>
       <div class="tarrow" aria-hidden="true">&rarr;</div>
       <div class="tside">
@@ -85,13 +85,17 @@
         {% for p in t.players_in %}<div class="tp">{{ p.name }} <span class="pclub">{{ p.position }}</span></div>{% endfor %}
       </div>
     </div>
+    <p class="pending">
+      <strong>Not done yet.</strong> Neither squad changes until this settles
+      {%- if t.points %}, and the {{ t.points }} points reach
+      {{ t.receiver_team }}&rsquo;s bank at the same moment{% endif %} &mdash;
+      so don&rsquo;t pick for it until it has.
+    </p>
     <p class="tnote">
-      {{ t.outcome.vetoes }} of {{ t.outcome.needed }} objections needed to
-      vote it down.
-      {% if t.outcome.deadline %}
-        Closes <time data-when="{{ t.outcome.deadline }}">{{ t.outcome.deadline }}</time> &mdash;
-        <span class="clock" data-deadline="{{ t.outcome.deadline }}" data-short="1"></span> left.
-      {% endif %}
+      Settles {% if t.outcome.deadline %}<time data-when="{{ t.outcome.deadline }}">{{ t.outcome.deadline }}</time>
+      (<span class="clock" data-deadline="{{ t.outcome.deadline }}" data-short="1"></span>){% else %}when
+      the trade window shuts{% endif %},
+      unless {{ t.outcome.needed }} managers object &mdash; {{ t.outcome.vetoes }} so far.
     </p>
   </div>
   {% endfor %}
@@ -197,7 +201,7 @@
       <div class="tside">
         <span class="eyebrow">you give</span>
         {% for p in t.players_out %}<div class="tp">{{ p.name }}</div>{% endfor %}
-        {% if t.points %}<div class="tpoints">+ {{ t.points }} points</div>{% endif %}
+        {% if t.points %}<div class="tpoints">+ {{ t.points }} points to {{ t.receiver_team }}</div>{% endif %}
       </div>
       <div class="tarrow" aria-hidden="true">&rarr;</div>
       <div class="tside">
@@ -213,18 +217,45 @@
 </section>
 {% endif %}
 
+{% if banks %}
+<section>
+  <div class="sechead">
+    <h2>Banked points{% call info("What a bank is", "whatbank") %}
+      <span class="ip">Points arrive in a bank by accepting a trade that carries
+        them, and only once that trade has settled &mdash; so if a trade of
+        yours is still in front of the league, its points are not here
+        yet.</span>
+      <span class="ip">Banked points can be spent on any later gameweek, in
+        whole or in part, from the pick-your-team page. They are added to that
+        week&rsquo;s score.</span>
+    {% endcall %}</h2>
+    <span class="eyebrow">across the league</span>
+  </div>
+  <div class="panel snake">
+    {% for row in banks %}
+    <span class="slot {% if me and row.key == me.key %}mine{% endif %}">
+      {{ row.team }}<span class="mgr">{{ row.key }}</span>
+      <span class="c">{{ row.points }}</span>
+    </span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 {% if settled %}
 <section>
   <div class="sechead"><h2>Settled</h2></div>
   <div class="panel scroll">
     <table>
-      <thead><tr><th>GW</th><th>Trade</th><th>Points</th><th>Outcome</th></tr></thead>
+      <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Went to</th><th>Outcome</th></tr></thead>
       <tbody>
       {% for t in settled %}
         <tr>
           <td>{{ t.gameweek }}</td>
           <td>{{ t.proposer_team }} &rarr; {{ t.receiver_team }}</td>
           <td class="num">{{ t.points or '—' }}</td>
+          <td>{% if t.points and t.outcome.state == 'accepted' %}
+            banked with {{ t.receiver_team }}{% elif t.points %}&mdash;{% endif %}</td>
           <td>
             {% if t.outcome.state == 'accepted' %}<span class="yes">done</span>
             {% elif t.outcome.state == 'vetoed' %}<span class="no">voted down ({{ t.outcome.vetoes }})</span>

@@ -591,6 +591,13 @@ def _trade_context(request):
         # down to that and every gate below reads the same clock.
         "lock": engine.trade_window(gw),
         "gwlock": engine.deadline_state(gw),
+        # Where the points actually are. Without this there is no way to tell
+        # a trade that has settled from one that only looks like it has.
+        "banks": [{"key": k, "team": ctx["names"].get(k, k), "points": v}
+                  for k, v in sorted(engine.banks(
+                      db.transactions() + engine.effective_trades(records),
+                      db.manager_clubs()).items(),
+                      key=lambda kv: (-kv[1], kv[0])) if v],
         "incoming": [t for t in all_trades
                      if t["receiver"] == me["key"] and t["status"] == "proposed"],
         "outgoing": [t for t in all_trades
