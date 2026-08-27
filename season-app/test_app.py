@@ -37,6 +37,15 @@ def check_true(name, cond, detail=""):
         FAILS.append(name)
 
 
+# The waiver window — and now the trade window with it — closes a fixed number
+# of hours before kick-off, so whether either is open depends on the hour the
+# suite happens to be run at. Left alone, these tests pass in the morning and
+# fail after tea. Hold the window open for the whole run; the sections that
+# test what happens once it shuts wind it forward themselves and put it back.
+_real_waiver_deadline = engine.waiver_deadline
+engine.waiver_deadline = lambda g, config=None: (
+    datetime.now(_tz.utc) + timedelta(hours=2)).isoformat(timespec="seconds")
+
 client = TestClient(app)
 
 print("── Routes ──────────────────────────────────────────────")
@@ -334,6 +343,10 @@ os.environ.pop("ADMIN_KEYS", None)
 
 print("\n── Trades ──────────────────────────────────────────────")
 
+check_true("the trade window is the waiver window, not the gameweek's",
+           engine.trade_window(engine.current_gameweek())["deadline"]
+           < engine.deadline_state(engine.current_gameweek())["deadline"])
+
 os.environ["ADMIN_KEYS"] = "RM"
 a = TestClient(app)
 a.get(f"/m/{db.manager_by_key('RM')['token']}")
@@ -421,6 +434,80 @@ check("enough objections vote it down",
 check_true("so it never reaches the engine",
            not [t for t in engine.effective_trades(db.trades()) if t["points"] == 10])
 os.environ.pop("ADMIN_KEYS", None)
+
+print("\n── Trades close when waivers do ────────────────────────")
+
+# The rule, and the reason for it: a player you trade for has to be pickable
+# for the round you traded him for. On the old clock a published points trade
+# settled at the very instant lineups locked, which delivered a player nobody
+# could play.
+tw_gw = engine.current_gameweek()
+tw_n = tw_gw["gameweek"]
+check_true("the trade window closes before the gameweek does",
+           engine.trade_window(tw_gw)["deadline"]
+           < engine.deadline_state(tw_gw)["deadline"])
+check("and it is the waiver deadline, not a third clock of its own",
+      engine.trade_window(tw_gw)["deadline"],
+      engine.waiver_state(tw_gw)["waiver_deadline"])
+
+tsq = engine.market(tw_n, db.trades(), db.transactions())["squads"]
+one = "RM"
+two = next(k for k in tsq if k not in (one, engine.opponents(tw_n).get(one)))
+give = next(p for p in tsq[one] if p["position"] == "MID")
+get = next(p for p in tsq[two] if p["position"] == "MID")
+paid = db.propose_trade(tw_n, one, two, [give], [get], 10)
+db.set_trade_status(paid, "published")
+
+check("while the window is open it is still open to objection",
+      engine.trade_outcome(db.trade(paid))["state"], "published")
+check_true("so nobody's squad has moved yet",
+           not any(p["id"] == get["id"] for p in engine.market(
+               tw_n, db.trades(), db.transactions())["squads"][one]))
+
+# Wind past the waiver deadline — a full day before kick-off.
+engine.waiver_deadline = lambda g, config=None: (
+    datetime.now(_tz.utc) - timedelta(minutes=5)).isoformat(timespec="seconds")
+check("once it shuts, an unobjected trade stands",
+      engine.trade_outcome(db.trade(paid))["state"], "accepted")
+after_trade = engine.market(tw_n, db.trades(), db.transactions())["squads"]
+check_true("the player has moved", any(p["id"] == get["id"] for p in after_trade[one]))
+check_true("AND THE ROUND IS STILL OPEN, so he can actually be picked",
+           engine.deadline_state(tw_gw)["open"],
+           "this is the whole point of the change")
+
+# The pitch is the real test: he has to be on it, not merely in a dict.
+tclient = TestClient(app)
+tclient.get(f"/m/{db.manager_by_key(one)['token']}")
+pitch = tclient.get("/declare").text
+check_true("and the pick-team page draws him", f'"id": {get["id"]},' in pitch
+           or f'"id":{get["id"]},' in pitch)
+
+# Nothing may move once the window has shut.
+late = db.propose_trade(tw_n, one, two, [get], [give], 0)
+check("a late offer cannot be accepted",
+      tclient.post(f"/trade/{late}/withdraw").status_code, 409)
+other = TestClient(app)
+other.get(f"/m/{db.manager_by_key(two)['token']}")
+check("nor accepted by the other side", other.post(f"/trade/{late}/accept").status_code, 409)
+check("and a new proposal is refused",
+      tclient.post("/trade/propose", data={
+          "receiver": two, "give": str(give["id"]), "take": str(get["id"]),
+          "points": 0}).status_code, 409)
+# Whitespace-normalised: the copy is wrapped across lines in the template,
+# so matching the raw HTML tests the line breaks rather than the words.
+_closed_page = re.sub(r"\s+", " ", tclient.get("/trade").text)
+check_true("the page says why, rather than blaming the gameweek deadline",
+           "window shuts when waivers do" in _closed_page)
+check_true("and points at the pool, which is still open",
+           "free-agent pool is open until kick-off" in _closed_page)
+db.set_trade_status(late, "withdrawn")
+
+engine.waiver_deadline = lambda g, config=None: (
+    datetime.now(_tz.utc) + timedelta(hours=2)).isoformat(timespec="seconds")
+check_true("with the window open again, offers are taken as normal",
+           tclient.post("/trade/propose", data={
+               "receiver": two, "give": str(give["id"]), "take": str(get["id"]),
+               "points": 0}).status_code == 200)
 
 print("\n── The bank ────────────────────────────────────────────")
 

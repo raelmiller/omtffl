@@ -148,6 +148,17 @@ even to discard it: another manager's claim cannot leak from a page it was
 never put on. Nothing about anyone else's claims is shown, including how many
 they have lodged. After the run everybody sees all of it at once.
 
+**Trades close at the same moment**, and for the same reason a manager cares
+about: a player you trade for has to be pickable for the round you traded him
+for. On the old clock — trades open until kick-off — a points trade is
+published for the league to object to and settles when its window shuts, so it
+delivered the player at the very instant lineups locked. He could never play
+for the round he was traded for. Straight swaps were barely better: agreed at
+17:29 for a 17:30 deadline. `engine.trade_window` is now the waiver window,
+and every route that moves a player is gated on it, including accepting an
+offer — which previously had no clock on it at all and would have applied a
+trade to a round already being played.
+
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for
 one in of the same position so a squad stays a legal 2/5/5/3. A take settles
