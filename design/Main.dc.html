@@ -31,7 +31,7 @@
     /* ── Chrome: the one dark band ──────────────────────── */
     .bar {
       display: flex; align-items: center; gap: 16px;
-      padding: 0 24px; height: 56px; background: #12161C; color: #E6E9EE;
+      padding: 0 24px; height: 56px; background: #171122; color: #E9E5F0;
     }
     .mark { font-weight: 800; font-size: 19px; letter-spacing: -.03em;
             display: flex; align-items: baseline; gap: 8px; }
@@ -50,13 +50,25 @@
       transition: border-color .16s ease, background .16s ease;
     }
     .who:hover { border-color: rgba(255,255,255,.34); background: rgba(255,255,255,.1); }
+
+    /* The crest sits in the corner as a badge, not a second wordmark: at
+       34px the ring's lettering reads as texture and the lamb carries it.
+       Its own white ground is the coin — clipped round, ringed to keep it
+       off the aubergine. */
+    .crest { display: block; flex: none; margin-left: 4px; }
+    .crest img {
+      display: block; width: 34px; height: 34px; border-radius: 999px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.2);
+      transition: box-shadow .18s ease, transform .18s ease;
+    }
+    .crest:hover img { box-shadow: 0 0 0 1px var(--a); transform: scale(1.04); }
     .av { width: 22px; height: 22px; border-radius: 999px; display: grid;
           place-items: center; background: var(--a); color: #0A0D06;
           font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 600; }
 
     .rail {
       display: flex; gap: 4px; padding: 0 16px; height: 44px; align-items: stretch;
-      background: #171C24; border-bottom: 1px solid rgba(0,0,0,.1);
+      background: #1E1730; border-bottom: 1px solid rgba(0,0,0,.12);
     }
     .tab {
       position: relative; display: flex; align-items: center; padding: 0 14px;
@@ -155,7 +167,7 @@
     /* ── Side column ────────────────────────────────────── */
     .side { display: flex; flex-direction: column; gap: 16px; }
     .next {
-      padding: 16px; border-radius: 8px; background: #12161C; color: #E6E9EE;
+      padding: 16px; border-radius: 8px; background: #171122; color: #E9E5F0;
       box-shadow: 0 2px 10px rgba(16,24,32,.12);
     }
     .next .lab { color: #97A2B1; margin: 0; }
@@ -205,6 +217,7 @@
     <div class="barright">
       <span class="season">GW2 open</span>
       <div class="who"><span class="av">RM</span>Quantum of Szobos</div>
+      <span class="crest" title="OMTFFL"><img src="logo.png" alt="OMTFFL"></span>
     </div>
   </div>
 

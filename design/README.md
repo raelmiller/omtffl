@@ -24,6 +24,18 @@ both together.
 | `States.dc.html` | Floodlight | Every control in every state: rest, hover, focus, active, loading, empty, error, disabled |
 | `Matchday.dc.html` | Not taken | Direction B — editorial, Bricolage Grotesque on ink-navy |
 | `Terrace.dc.html` | Not taken | Direction C — programme print, Anton caps, signal orange |
+| `logo.png` | — | The league crest, 192×192, sat top-right in the bar |
+
+The crest is the league's own mark — a crowned paschal lamb in deep purple,
+"OMTFFL" set around the ring. It sits furthest right in the top bar, past the
+manager chip, drawn at 34px (30px on the phone) with the image's own white
+ground doing the work of a coin. The chrome moved with it: the bar, tab rail
+and dark-mode grounds shifted from cool slate to aubergine (`#171122`,
+`#1E1730`, `#0D0916`) so the badge belongs to the surface it sits on rather
+than being dropped onto it. Lime on aubergine is a deliberate complementary
+pair, not a new colour in the palette. The left-hand `OMTFFL.` wordmark stays:
+at 34px the crest's ring lettering reads as texture, so the lamb works as a
+badge rather than a second wordmark.
 
 Everything is built from the values already in
 `season-app/app/static/style.css` rather than invented: the same panel radii,

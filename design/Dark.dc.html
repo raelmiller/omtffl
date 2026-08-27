@@ -15,7 +15,7 @@
        it reads on this ground unaided. Nothing else changes. */
     * { box-sizing: border-box; }
     body {
-      margin: 0; background: #080A0D; color: #E6E9EE;
+      margin: 0; background: #0D0916; color: #E9E5F0;
       font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
       font-size: 15px; line-height: 1.5;
       -webkit-font-smoothing: antialiased;
@@ -29,7 +29,7 @@
     .bar {
       display: flex; align-items: center; gap: 16px;
       padding: 0 24px; height: 56px;
-      background: #0E1218; border-bottom: 1px solid rgba(255,255,255,.07);
+      background: #171122; border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .mark {
       font-weight: 800; font-size: 19px; letter-spacing: -.03em;
@@ -50,7 +50,18 @@
       border: 1px solid rgba(255,255,255,.10); background: #151A22;
       transition: border-color .16s ease, background .16s ease;
     }
-    .who:hover { border-color: rgba(255,255,255,.24); background: #1A212B; }
+    .who:hover { border-color: rgba(255,255,255,.28); background: #221A33; }
+    /* The crest sits in the corner as a badge, not a second wordmark: at
+       34px the ring's lettering reads as texture and the lamb carries it.
+       Its own white ground is the coin — clipped round, ringed to keep it
+       off the aubergine. */
+    .crest { display: block; flex: none; margin-left: 4px; }
+    .crest img {
+      display: block; width: 34px; height: 34px; border-radius: 999px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.2);
+      transition: box-shadow .18s ease, transform .18s ease;
+    }
+    .crest:hover img { box-shadow: 0 0 0 1px var(--a); transform: scale(1.04); }
     .av {
       width: 22px; height: 22px; border-radius: 999px; display: grid;
       place-items: center; background: var(--a); color: #0A0D06;
@@ -61,7 +72,7 @@
     .rail {
       display: flex; gap: 4px; padding: 0 16px; height: 44px;
       align-items: stretch;
-      background: #0B0F14; border-bottom: 1px solid rgba(255,255,255,.07);
+      background: #1E1730; border-bottom: 1px solid rgba(255,255,255,.07);
     }
     .tab {
       position: relative; display: flex; align-items: center; padding: 0 14px;
@@ -82,7 +93,7 @@
     /* ── Status strip ───────────────────────────────────── */
     .strip {
       display: flex; align-items: center; gap: 12px;
-      padding: 10px 24px; background: #0A0E13;
+      padding: 10px 24px; background: #120D1C;
       border-bottom: 1px solid rgba(255,255,255,.05);
       font-size: 12px; color: #8C97A6;
     }
@@ -111,7 +122,7 @@
       margin-left: auto;
     }
     .card {
-      background: #10151C; border: 1px solid rgba(255,255,255,.07);
+      background: #15101F; border: 1px solid rgba(255,255,255,.075);
       border-radius: 8px; overflow: hidden;
     }
 
@@ -120,7 +131,7 @@
     thead th {
       font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
       letter-spacing: .14em; text-transform: uppercase; color: #6E7A8A;
-      text-align: right; padding: 10px 8px; background: #0C1117;
+      text-align: right; padding: 10px 8px; background: #120D1C;
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
     thead th.l { text-align: left; }
@@ -130,7 +141,7 @@
     }
     tbody td.l { text-align: left; }
     tbody tr { position: relative; transition: background .14s ease; }
-    tbody tr:hover { background: #161D26; }
+    tbody tr:hover { background: #1D1729; }
     tbody tr td:first-child { position: relative; }
     tbody tr td:first-child::before {
       content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
@@ -161,7 +172,7 @@
     /* ── Side column ────────────────────────────────────── */
     .side { display: flex; flex-direction: column; gap: 16px; }
     .next { padding: 16px; background:
-      linear-gradient(180deg, #141B24 0%, #10151C 100%);
+      linear-gradient(180deg, #1D1730 0%, #15101F 100%);
       border: 1px solid rgba(255,255,255,.08); border-radius: 8px; }
     .vs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin: 14px 0 4px; }
     .vsname { font-size: 15px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
@@ -184,13 +195,13 @@
           border-bottom: 1px solid rgba(255,255,255,.045);
           transition: background .14s ease; }
     .fx:last-child { border-bottom: none; }
-    .fx:hover { background: #161D26; }
+    .fx:hover { background: #1D1729; }
     .fxn { flex: 1; font-size: 13px; font-weight: 600; letter-spacing: -.01em;
            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .fxn.r { text-align: right; }
     .fxn.won { color: var(--a); }
     .sc { font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
-          padding: 3px 8px; border-radius: 4px; background: #0B1016;
+          padding: 3px 8px; border-radius: 4px; background: #100C19;
           border: 1px solid rgba(255,255,255,.09); white-space: nowrap; }
     .bolt { color: var(--a); font-size: 11px; }
 
@@ -207,6 +218,7 @@
     <div class="barright">
       <span class="season">GW2 open</span>
       <div class="who"><span class="av">RM</span>Quantum of Szobos</div>
+      <span class="crest" title="OMTFFL"><img src="logo.png" alt="OMTFFL"></span>
     </div>
   </div>
 
