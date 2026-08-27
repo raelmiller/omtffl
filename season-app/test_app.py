@@ -749,6 +749,14 @@ with db.connect() as _conn:
     _conn.execute("DELETE FROM trade WHERE id = ?", (_rid,))
 check_true("with it gone the warning goes too",
            "could not be applied" not in flat(c1.get("/declare").text))
+
+# A rule binds when the deal is struck. Every trade the app hands the engine
+# went through check_trade at proposal — the same validator, the same caps,
+# the same head-to-head rule — so it must be marked as vetted, or a rule
+# written later silently reverts a squad that settled days ago.
+check_true("every trade the app applies is marked as already vetted",
+           all(t.get("agreed") for t in
+               engine.effective_trades(db.trades())) if db.trades() else True)
 _hold_window_open()
 
 print("\n── The bank ────────────────────────────────────────────")

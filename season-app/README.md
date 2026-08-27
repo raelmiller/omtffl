@@ -190,6 +190,24 @@ rejected offer looks identical to a completed deal is worse than one that says
 less, so the test suite asserts the word `gave` never appears against a vetoed
 trade.
 
+**A rule binds when the deal is struck, not on every page load.** Nothing is
+recorded when a trade settles — the engine re-derives every transaction from
+the draft each time a page is drawn. That is what keeps one source of truth,
+and it meant a rule written on Thursday was applied to a trade agreed on
+Tuesday: the squads silently reverted and a manager went looking for a player
+the league had told them they owned. The head-to-head rule did exactly this.
+
+So `validate_trade` now splits in two. Above the line are facts that must
+still hold — the players owned, the shapes balanced — and objections, which
+keep arriving after acceptance and stay live. Below it are conditions on the
+*deal*: the offer cap, the received cap, the head-to-head rule. A trade
+carrying `agreed` has already passed those, at proposal, through
+`check_trade` — the same validator with the same settings — so they are not
+re-litigated. `engine.effective_trades` sets that flag, because every trade
+the app applies came through `propose`. A caller that has not vetted a trade
+leaves it unset and gets the full check, which is what `shadow/` does on its
+own. **A new rule governs new trades.**
+
 **"Agreed" and "performed" are two different questions, and the page used to
 ask only the first.** `trade_outcome` decides whether a trade stands — its
 status, the objections against it, the clock. Whether it can actually be

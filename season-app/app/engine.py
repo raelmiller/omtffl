@@ -995,6 +995,11 @@ def effective_trades(records, config=None):
             "players_out": record["players_out"],
             "players_in": record["players_in"],
             "points": record["points"],
+            # Every trade here went through check_trade when it was proposed —
+            # the same validator, with the same caps and the same head-to-head
+            # rule. So the engine re-checks only that it is still possible,
+            # not that it would be allowed under whatever the rules say today.
+            "agreed": True,
         })
     return out
 

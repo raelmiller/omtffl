@@ -169,6 +169,12 @@ def validate_trade(tx, squads_now, accumulated=None, received=0, config=None,
     own cap. `config` carries the league's admin settings. `opponent` maps a
     team to whoever it plays in the round the trade lands in, which is what
     the head-to-head rule below is checked against.
+
+    `tx["agreed"]` marks a trade that already passed this check when it was
+    proposed and accepted. It then only has to remain *possible* — the players
+    still owned, the shapes still balanced, no objection carried — and is not
+    re-tested against conditions that were settled when the deal was struck.
+    See the comment at that branch for why.
     """
     a, b = tx["from"], tx["to"]
     for t in (a, b):
@@ -197,6 +203,29 @@ def validate_trade(tx, squads_now, accumulated=None, received=0, config=None,
     pts = tx.get("points", 0)
     if pts < 0:
         return "points offered cannot be negative"
+
+    # Objections are live: the league can vote a published trade down after it
+    # was accepted, so this is re-checked however old the trade is.
+    if pts:
+        threshold = setting(config, "veto_threshold")
+        vetoes = len(tx.get("vetoes") or [])
+        if vetoes >= threshold:
+            return (f"vetoed by the league — {vetoes} objections, "
+                    f"{threshold} required")
+
+    # Everything above is a fact about the squads as they stand, or about
+    # objections that are still arriving, so it is re-checked every time.
+    # Everything below is a condition on the *deal*, true or false at the
+    # moment it was struck — and `agreed` says it was struck and passed them.
+    #
+    # Re-testing those forever means a rule written today voids a trade
+    # accepted last week: the squads silently revert, and a manager goes
+    # looking for a player the league told them they had. A new rule governs
+    # new trades. Callers who have not vetted a trade leave `agreed` unset and
+    # get the full check, which is what the engine does on its own.
+    if tx.get("agreed"):
+        return None
+
     if accumulated is not None and pts > accumulated:
         return (f"offers {pts} points but has only scored {accumulated} this season "
                 "— you can't offer more than you've accumulated")
@@ -204,11 +233,6 @@ def validate_trade(tx, squads_now, accumulated=None, received=0, config=None,
     # A straight swap is between the two managers and nobody else. Points
     # change the league, so a points trade is published and can be voted down.
     if pts:
-        threshold = setting(config, "veto_threshold")
-        vetoes = len(tx.get("vetoes") or [])
-        if vetoes >= threshold:
-            return (f"vetoed by the league — {vetoes} objections, "
-                    f"{threshold} required")
         cap = setting(config, "points_received_cap")
         if cap is not None and received + pts > cap:
             return (f"{b} has already received {received} points this season; "

@@ -91,6 +91,37 @@ check_true("the scoring pass refuses it too",
 check("so no points move",
       apply_transactions(base(A, B), [trade], 10, opponents=facing)[1], {})
 
+# A rule binds when the deal is struck, not on every later page load. The
+# head-to-head rule was written after a trade had already been agreed under
+# the old rules, and re-testing it silently reverted squads that had been
+# settled for days — a manager went looking for a player the league had told
+# them they owned.
+agreed = {**trade, "agreed": True}
+check("a trade agreed before the rule stands",
+      validate_trade(agreed, {"A": A, "B": B}, opponent=facing[5]), None)
+check_true("and actually moves the players",
+           10 in {x["id"] for x in apply_transactions(
+               base(A, B), [agreed], 10, opponents=facing)[0]["A"]})
+
+# It only skips conditions on the deal. Everything that has to remain *true*
+# is re-checked however old the trade is, or an agreed trade would keep
+# applying after its players had gone.
+check_true("but an agreed trade still can't move a player nobody owns",
+           "doesn't own" in (validate_trade(
+               {**agreed, "players_out": [p(99, "FWD")]},
+               {"A": A, "B": B}, opponent=facing[5]) or ""))
+check_true("nor break a squad's shape",
+           "positions don't balance" in (validate_trade(
+               {**agreed, "players_in": [p(11, "MID")]},
+               {"A": A, "B": B}, opponent=facing[5]) or ""))
+check_true("nor survive the league voting it down afterwards",
+           "vetoed" in (validate_trade(
+               {**agreed, "vetoes": ["C", "D", "E", "F"]},
+               {"A": A, "B": B}, opponent=facing[5]) or ""))
+check_true("an unvetted trade still gets the full check",
+           "about to face" in (validate_trade(
+               trade, {"A": A, "B": B}, opponent=facing[5]) or ""))
+
 print("\n── Points bank ─────────────────────────────────────────")
 
 spend = [trade, {"type": "bank_use", "gameweek": 9, "team": "B", "points": 25}]
