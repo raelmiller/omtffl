@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_info.html" import info %}
 {% block title %}Pick your team — Matchweek{% endblock %}
 {% block heading %}{{ gw.name }}{% endblock %}
 {% block subheading %}
@@ -46,7 +47,11 @@
 
   <div class="benchbar">
     <div class="benchhead">
-      <span class="eyebrow">Substitutes</span>
+      <span class="eyebrow">Substitutes{% call info("How substitutes come on", "howsubs") %}
+        <p>A starter who doesn&rsquo;t play at all is replaced by the first
+        substitute who did, as long as the formation stays legal.</p>
+        <p>Keepers only ever replace keepers.</p>
+      {% endcall %}</span>
       <span class="eyebrow dim">in the order they come on</span>
     </div>
     <div class="benchrow" id="benchrow"></div>
@@ -109,10 +114,6 @@
     </div>
   </div>
   {% endif %}
-
-  <p class="note">A starter who doesn&rsquo;t play at all is replaced by the first
-  substitute who did, as long as the formation stays legal. Keepers only ever
-  replace keepers.</p>
 
   <div class="panel namebox" id="namebox" hidden>
     <label class="field">

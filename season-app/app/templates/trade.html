@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_info.html" import info %}
 {% block title %}Trades — Matchweek{% endblock %}
 {% block heading %}Trades{% endblock %}
 {% block subheading %}
@@ -45,11 +46,14 @@
 {% if mine_open %}
 <section>
   <div class="sechead">
-    <h2>Yours, in front of the league</h2>
+    <h2>Yours, in front of the league{% call info("Why these are published", "whypublished") %}
+      <p>These carried points, so they were published to the league when they
+      were accepted. A straight player-for-player swap never is &mdash; that is
+      between the two of you.</p>
+      <p>They stand at the deadline unless enough managers object.</p>
+    {% endcall %}</h2>
     <span class="eyebrow">agreed, not yet settled</span>
   </div>
-  <p class="sub">These carried points, so they were published when they were
-  accepted. They stand at the deadline unless enough managers object.</p>
   {% for t in mine_open %}
   <div class="panel trade">
     <div class="tbody">
@@ -80,11 +84,16 @@
 {% if open_to_veto %}
 <section>
   <div class="sechead">
-    <h2>Open to objection</h2>
+    <h2>Open to objection{% call info("Why you get a vote", "whyobject") %}
+      <p>A straight swap is between the two managers and nobody else&rsquo;s
+      business. These carry points, which is the one thing a friendly pair
+      could use to feed each other a title, so the league can vote them down
+      before the deadline.</p>
+      <p>Objecting is not an accusation &mdash; it costs nothing and it is
+      withdrawable right up to the deadline.</p>
+    {% endcall %}</h2>
     <span class="eyebrow">points changed hands</span>
   </div>
-  <p class="sub">A straight swap is between the two managers. These carry
-  points, so the league can vote them down before the deadline.</p>
   {% for t in open_to_veto %}
   <div class="panel trade">
     <div class="tbody">

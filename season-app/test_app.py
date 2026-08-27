@@ -1269,6 +1269,26 @@ check_true("but the words are still on the page for anyone without scripting",
 check_true("and there is a rule that shows them when there is no scripting",
            "<noscript>" in spy and ".infobtn { display: none; }" in spy)
 
+# Every page that folds rules away, checked the same way: an icon that opens
+# nothing is worse than the paragraph it replaced, and two boxes sharing an id
+# would have the button open the wrong one.
+for path in ("/waivers", "/trade", "/declare", "/stats"):
+    page = wv2.get(path)
+    if page.status_code != 200:
+        continue
+    opens = re.findall(r'aria-controls="([^"]+)"', page.text)
+    boxes = re.findall(r'<span class="infobox" id="([^"]+)"', page.text)
+    check(f"{path}: every icon opens a box that is there",
+          sorted(opens), sorted(boxes))
+    check(f"{path}: and no two boxes share an id", len(boxes), len(set(boxes)))
+    check_true(f"{path}: every box ships shut",
+               all(re.search(r'id="%s"[^>]*\shidden>' % b, page.text) for b in boxes),
+               ", ".join(b for b in boxes
+                         if not re.search(r'id="%s"[^>]*\shidden>' % b, page.text)))
+    check_true(f"{path}: and every icon says what it opens",
+               'aria-label=""' not in page.text
+               and page.text.count('class="infobtn"') == len(boxes))
+
 wind_past_the_run()
 after = engine.market(gw_two, db.trades(), db.transactions(), for_manager="RM")
 check("now the free window is open", after["state"]["phase"], "free_agency")

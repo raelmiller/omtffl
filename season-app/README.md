@@ -146,6 +146,11 @@ anchored to an icon runs off one edge or the other on a 390px screen. The text
 is always in the served HTML, and a `noscript` rule prints it inline — folded
 away, never withheld.
 
+It carries the waiver and free-agency rules, the five stat definitions, why a
+points trade is published and open to objection, and how substitutes come on.
+Each box needs an id unique to its page; the test suite checks every icon opens
+a box that exists, that no two share an id, and that they all ship shut.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

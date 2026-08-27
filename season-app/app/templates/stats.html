@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_info.html" import info %}
 {% block title %}Stats — Matchweek{% endblock %}
 {% block heading %}Stats{% endblock %}
 {% block subheading %}
@@ -26,11 +27,12 @@
   {# ── Form ─────────────────────────────────────────────────────────── #}
   <div class="panelblock" id="panel-form" data-panel="form">
     <div class="sechead">
-      <h2>Form</h2>
+      <h2>Form{% call info("What form means", "whatform") %}
+      <p>Where each team is now, which way it is travelling, and what it has
+      done lately. The arrow compares against five rounds ago.</p>
+      {% endcall %}</h2>
       <span class="eyebrow">last five rounds</span>
     </div>
-    <p class="note">Where each team is now, which way it is travelling, and
-    what it has done lately. The arrow compares against five rounds ago.</p>
     <div class="panel">
       {% for t in stats.teams %}
       <div class="teamrow">
@@ -58,16 +60,17 @@
   {# ── Consistency ──────────────────────────────────────────────────── #}
   <div class="panelblock" id="panel-spread" data-panel="spread" hidden>
     <div class="sechead">
-      <h2>Consistency</h2>
+      <h2>Consistency{% call info("What consistency means", "whatspread") %}
+      <p>How far a team&rsquo;s weekly score wanders from its own average. A
+      low number is a manager you can predict; a high one is a manager who
+      wins big and loses badly.</p>
+      {% endcall %}</h2>
       <span class="eyebrow">standard deviation</span>
     </div>
     {% if stats.played < 2 %}
     <p class="note">A spread needs at least two rounds. Come back after
     gameweek {{ stats.weeks[-1] + 1 }}.</p>
     {% else %}
-    <p class="note">How far a team's weekly score wanders from its own
-    average. A low number is a manager you can predict; a high one is a
-    manager who wins big and loses badly.</p>
     <div class="panel">
       {% for t in stats.teams|sort(attribute='spread', reverse=true) %}
       <div class="barrow">
@@ -86,13 +89,15 @@
   {# ── Luck ─────────────────────────────────────────────────────────── #}
   <div class="panelblock" id="panel-luck" data-panel="luck" hidden>
     <div class="sechead">
-      <h2>Luck</h2>
+      <h2>Luck{% call info("What luck means", "whatluck") %}
+      <p>Expected wins is the share of the league a team outscored each week
+      &mdash; beat everyone and that is a whole win, beat half of them and it
+      is half.</p>
+      <p>The gap to real wins is the fixture list doing the work rather than
+      the manager.</p>
+      {% endcall %}</h2>
       <span class="eyebrow">wins against expected wins</span>
     </div>
-    <p class="note">Expected wins is the share of the league a team outscored
-    each week &mdash; beat everyone and that is a whole win, beat half of them
-    and it is half. The gap to real wins is the fixture list doing the work
-    rather than the manager.</p>
     <div class="panel">
       {% for t in stats.teams|sort(attribute='luck', reverse=true) %}
       <div class="barrow">
@@ -112,12 +117,14 @@
   {# ── Margins ──────────────────────────────────────────────────────── #}
   <div class="panelblock" id="panel-margins" data-panel="margins" hidden>
     <div class="sechead">
-      <h2>Margins</h2>
+      <h2>Margins{% call info("What margins means", "whatmargins") %}
+      <p>A game inside {{ stats.close }} points is close; one of
+      {{ stats.blowout }} or more was never in doubt.</p>
+      <p>A team with more close losses than close wins has been on the wrong
+      side of the coin.</p>
+      {% endcall %}</h2>
       <span class="eyebrow">how games are won and lost</span>
     </div>
-    <p class="note">A game inside {{ stats.close }} points is close; one of
-    {{ stats.blowout }} or more was never in doubt. A team with more close
-    losses than close wins has been on the wrong side of the coin.</p>
     <div class="panel scroll">
       <table>
         <thead>
@@ -147,7 +154,13 @@
   {# ── Returns ──────────────────────────────────────────────────────── #}
   <div class="panelblock" id="panel-returns" data-panel="returns" hidden>
     <div class="sechead">
-      <h2>Returns</h2>
+      <h2>Returns{% call info("What returns means", "whatreturns") %}
+      <p>Credited to the manager who had the player in their eleven that week,
+      not to whoever owns him now &mdash; so a striker bought in January
+      doesn&rsquo;t arrive with someone else&rsquo;s goals.</p>
+      <p>Clean sheets and defensive contributions are counted only where the
+      rules paid for them.</p>
+      {% endcall %}</h2>
       <label class="pickmetric">
         <span class="eyebrow">Showing</span>
         <select id="metric">
@@ -157,11 +170,6 @@
         </select>
       </label>
     </div>
-    <p class="note">Credited to the manager who had the player in their
-    eleven that week, not to whoever owns him now &mdash; so a striker bought
-    in January doesn&rsquo;t arrive with someone else&rsquo;s goals. Clean
-    sheets and defensive contributions are counted only where the rules paid
-    for them.</p>
     {% for key, label, one in stats.returns %}
     <div class="panel metricblock" data-metric="{{ key }}"
          {% if not loop.first %}hidden{% endif %}>

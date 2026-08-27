@@ -245,6 +245,15 @@ p { margin: 0; }
 .infobtn:hover, .infobtn[aria-expanded="true"] {
   color: var(--on-fill); background: var(--fill); border-color: var(--fill);
 }
+/* The bench keeps its own palette whatever the theme is doing, so the icon
+   sitting on it has to as well. */
+.benchhead .infobtn {
+  background: transparent; border-color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.78);
+}
+.benchhead .infobtn:hover, .benchhead .infobtn[aria-expanded="true"] {
+  color: var(--on-fill); background: var(--fill); border-color: var(--fill);
+}
 .infobox {
   position: absolute; z-index: 12; top: calc(100% + .55rem); left: -.6rem;
   width: max-content; max-width: min(32rem, calc(100vw - 2.5rem));
