@@ -875,6 +875,46 @@ def clubs():
     return {int(k): v for k, v in (meta.get("clubs") or {}).items()}
 
 
+@lru_cache(maxsize=8)
+def _club_fixtures(gameweek, version):
+    short = {cid: c.get("short", "") for cid, c in clubs().items()}
+    out = {}
+    for fx in _read("pl_fixtures.json") or []:
+        if fx.get("event") != gameweek:
+            continue
+        for club, other, home in ((fx["team_h"], fx["team_a"], True),
+                                  (fx["team_a"], fx["team_h"], False)):
+            out.setdefault(club, []).append(
+                {"opponent": short.get(other, "?"), "home": home})
+    return out
+
+
+def club_fixtures(gameweek):
+    """Who each club plays in a round, and whether at home.
+
+    A list per club, not one fixture: a club can have two in a double
+    gameweek and none in a blank, and a manager picking a team needs to see
+    both of those. Keyed by club id and cached on the data fingerprint, since
+    the pick-team page asks for all fifteen at once.
+    """
+    return _club_fixtures(gameweek, data_version())
+
+
+def with_fixtures(squad, gameweek):
+    """A squad with each player's opponents for the round attached.
+
+    `fixtures` is a list so a blank is an empty one and a double carries both.
+    The page decides how to show that; the engine only says what it is.
+
+    The club comes from `player_clubs`, not from the squad entry: an entry
+    carries the club its player was at on draft night, so anyone who has moved
+    since would be given their old club's fixture.
+    """
+    by_club = club_fixtures(gameweek)
+    at = player_clubs()
+    return [{**p, "fixtures": by_club.get(at.get(p["id"]), [])} for p in squad]
+
+
 def boost_status(key, gameweek, drafted, used, declared=False):
     """What a boost is worth to this manager this week, and whether it's on.
 

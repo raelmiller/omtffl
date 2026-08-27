@@ -803,6 +803,67 @@ _hold_window_open()
 check("with everything open, trading is for the round being picked",
       engine.trading_gameweek()["gameweek"], _here["gameweek"])
 
+print("\n── Who each player faces this round ────────────────────")
+
+_fgw = engine.current_gameweek()["gameweek"]
+_fx = engine.club_fixtures(_fgw)
+_short = {cid: c.get("short") for cid, c in engine.clubs().items()}
+
+# Both sides of every fixture, and the two sides must agree about which of
+# them is at home — a mirrored pair is the whole content of the feature.
+_raw = [f for f in engine._read("pl_fixtures.json") if f.get("event") == _fgw]
+check("every club playing this round has a fixture",
+      len(_fx), len({c for f in _raw for c in (f["team_h"], f["team_a"])}))
+for _f in _raw[:5]:
+    _h = [x for x in _fx[_f["team_h"]] if x["opponent"] == _short[_f["team_a"]]]
+    _a = [x for x in _fx[_f["team_a"]] if x["opponent"] == _short[_f["team_h"]]]
+    check_true(f"{_short[_f['team_h']]} is at home to {_short[_f['team_a']]}, "
+               "and the away side agrees",
+               bool(_h) and _h[0]["home"] and bool(_a) and not _a[0]["home"])
+
+# The club must come from the player data, not the squad entry: an entry
+# carries the club its player was at on draft night.
+_sq = engine.with_fixtures(engine.refresh_clubs(engine.squad_for("RM")), _fgw)
+_at = engine.player_clubs()
+check_true("every player's fixture is his current club's",
+           all(not p["fixtures"]
+               or p["fixtures"] == _fx.get(_at.get(p["id"]), [])
+               for p in _sq))
+check_true("and matches the club shown beside his name",
+           all(p.get("club") == _short.get(_at.get(p["id"])) for p in _sq
+               if p.get("club")))
+
+# A blank and a double are the two cases the current round cannot show, and
+# both have to survive: a list, never a single fixture.
+_fake = [{"event": 99, "team_h": 1, "team_a": 2, "finished": False},
+         {"event": 99, "team_h": 3, "team_a": 1, "finished": False}]
+_real_read = engine._read
+engine._read = lambda n: _fake if n == "pl_fixtures.json" else _real_read(n)
+engine._club_fixtures.cache_clear()
+try:
+    _d = engine.club_fixtures(99)
+    check("a club with two games this round carries both", len(_d[1]), 2)
+    check_true("one home and one away",
+               sorted(x["home"] for x in _d[1]) == [False, True])
+    check_true("a club with no game is simply absent", 4 not in _d)
+    # A player at a club that isn't in the fake fixtures at all — the blank.
+    _blank_player = next(pid for pid, club in _at.items() if club not in (1, 2, 3))
+    check("and a player there gets an empty list, not a missing key",
+          engine.with_fixtures([{"id": _blank_player, "name": "x"}], 99)[0]
+          ["fixtures"], [])
+finally:
+    engine._read = _real_read
+    engine._club_fixtures.cache_clear()
+
+# And it has to reach the pitch, which builds its chips from this payload.
+_pitch = c1.get("/declare").text
+check_true("the pick-team page ships each player's fixtures",
+           '"fixtures":' in _pitch or '"fixtures" :' in _pitch)
+check_true("and the chip renders an opponent with home or away",
+           "opposition(p)" in _pitch and "f.home ? 'h' : 'a'" in _pitch)
+check_true("with a blank round saying so rather than going empty",
+           "return 'blank'" in _pitch)
+
 print("\n── The bank ────────────────────────────────────────────")
 
 os.environ["ADMIN_KEYS"] = "RM"

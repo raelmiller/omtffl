@@ -140,6 +140,24 @@ Three things make it work:
 **Nothing here feeds the league.** The table is scored from the saved gameweek
 files by the same engine as always; this is a window onto the football.
 
+## Picking a team
+
+Every player on the pitch carries his club and, under it, **who he plays this
+round and whether it is home or away** — `BHA` / `CHE (a)` — so the decision
+is made on the pitch rather than in another tab.
+
+`engine.club_fixtures` keys the round's fixtures by club id and records both
+sides of each one, so the home side and the away side can never disagree about
+which is which. `with_fixtures` attaches them to a squad, and it resolves the
+club through `player_clubs` rather than the squad entry: an entry carries the
+club its player was at on draft night, so anyone who moved in January would
+otherwise be given their old club's fixture.
+
+It is a **list**, never a single fixture. A club can have two games in a double
+gameweek and none in a blank, and both are exactly what a manager needs to see
+before picking — a double shows both opponents, a blank says `blank`. Neither
+case appears in the current round, so the test suite manufactures them.
+
 ## The transfer week
 
 A gameweek has two windows, not one.

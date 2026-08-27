@@ -710,6 +710,16 @@ footer {
   color: rgba(255,255,255,.72);
   text-shadow: 0 1px 3px rgba(0,0,0,.7);
 }
+/* The opponent, under the club. Dimmer than the club so the chip still reads
+   name-first, and a size down again because a double gameweek puts two
+   fixtures on this line. */
+.player .pf {
+  font-family: var(--mono); font-size: clamp(.5rem, 1.6vw, .58rem);
+  color: rgba(255,255,255,.58);
+  text-shadow: 0 1px 3px rgba(0,0,0,.7);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%;
+}
 .player .ord {
   position: absolute; top: .1rem; left: .28rem;
   font-family: var(--mono); font-size: .58rem;

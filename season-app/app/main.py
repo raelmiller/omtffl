@@ -439,6 +439,9 @@ def _declare_context(request, gameweek=None):
     mkt = engine.market(target["gameweek"], db.trades(), db.transactions(),
                         for_manager=me["key"])
     squad = mkt["squads"].get(me["key"]) or engine.squad_for(me["key"])
+    # Who each of them plays this round, so the decision can be made on the
+    # pitch rather than in another tab.
+    squad = engine.with_fixtures(squad, target["gameweek"])
     # If the engine threw one of this manager's transactions out, this page is
     # where they notice — a player they were told they had is not on the
     # pitch. Say why here rather than leaving them to hunt for it.

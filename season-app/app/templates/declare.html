@@ -216,6 +216,15 @@
     render();
   }
 
+  // Who they play this round. A list, not a fixture: a blank gameweek is an
+  // empty one and a double carries both, and a manager picking a team needs
+  // to see either. "(h)" and "(a)" rather than a symbol so it reads aloud.
+  function opposition(p) {
+    const fx = p.fixtures || [];
+    if (!fx.length) return 'blank';
+    return fx.map(f => `${f.opponent} (${f.home ? 'h' : 'a'})`).join(' ');
+  }
+
   function card(id, opts = {}) {
     const p = byId[id];
     const el = document.createElement('button');
@@ -233,7 +242,8 @@
         p.flag ? `<span class="flag ${p.flag.level}" title="${
           p.flag.text.replace(/"/g, '')}"></span>` : ''}</span>
       <span class="pn tappable" title="See ${p.name}'s stats">${p.name}</span>
-      <span class="pc">${p.club || p.position}</span>`;
+      <span class="pc">${p.club || p.position}</span>
+      <span class="pf">${opposition(p)}</span>`;
     el.addEventListener('click', () => choose(id));
     // Tapping the name asks about the player; tapping the shirt picks them.
     el.querySelector('.pn').addEventListener('click', ev => {
