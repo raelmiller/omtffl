@@ -941,7 +941,9 @@ def trade_outcome(record, config=None):
     threshold = setting(config, "veto_threshold")
     target = next((g for g in calendar()
                    if g["gameweek"] == record["gameweek"]), None)
-    window = deadline_state(target) if target else {"open": False}
+    # The objection window is the TRADE window, not the gameweek's. A trade
+    # that only settles at kick-off delivers a player nobody can pick.
+    window = trade_window(target, config) if target else {"open": False}
     count = len(record["vetoes"])
 
     if count >= threshold:
@@ -950,6 +952,8 @@ def trade_outcome(record, config=None):
     if window["open"]:
         return {"state": "published", "open": True, "vetoes": count,
                 "needed": threshold, "deadline": window.get("deadline")}
+    # The window closed without enough objections, so it stands — and it stood
+    # a day before kick-off, in time to be picked.
     # The window closed without enough objections, so it stands.
     return {"state": "accepted", "open": False, "vetoes": count,
             "needed": threshold}
@@ -1124,6 +1128,32 @@ def waiver_state(gw, config=None):
         # What the countdown on the page should be counting down to.
         "next_deadline": shuts if phase == "waivers" else lock.get("deadline"),
         "waiver_seconds": max(0, left),
+    }
+
+
+def trade_window(gw, config=None):
+    """When trades can be made: the same window as waiver claims.
+
+    Trades used to run to the gameweek deadline, which quietly meant a traded
+    player could never play for the round he was traded for. A points trade is
+    published for the league to object to and only settles when its window
+    shuts — so with the gameweek deadline as the window, the player arrived in
+    the squad at the very instant lineups locked. Straight swaps were barely
+    better: agreed at 17:29 for a 17:30 deadline, with a minute to re-pick.
+
+    Closing when waivers close puts a full day between a trade settling and
+    the round starting, which is the whole point of doing it.
+    """
+    state = waiver_state(gw, config)
+    return {
+        "open": state["waivers_open"],
+        "deadline": state["waiver_deadline"],
+        "seconds": state.get("waiver_seconds", 0),
+        "gameweek_deadline": state.get("deadline"),
+        "phase": state["phase"],
+        "reason": None if state["waivers_open"] else
+                  ("the trade window has closed — it shuts when waivers do, so "
+                   "that anyone you take can still be picked"),
     }
 
 

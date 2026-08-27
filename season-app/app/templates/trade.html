@@ -5,9 +5,25 @@
 {% block subheading %}
 <p class="sub">
   For {{ gw.name }} &middot;
-  {% if lock.open %}open until the deadline{% else %}closed &mdash; propose for the next round{% endif %}
+  {% if lock.open %}open until <time data-when="{{ lock.deadline }}">{{ lock.deadline }}</time>
+  {% else %}closed &mdash; propose for the next round{% endif %}
   &middot; you&rsquo;ve received {{ received }} of {{ cap }} trade points this season
+  {% call info("When trades close", "whentrades") %}
+    <span class="ip">Trades follow the same window as waivers, shutting a day
+      before the gameweek deadline rather than at it.</span>
+    <span class="ip">That is so a player you take can actually be picked. A
+      trade carrying points is published for the league to object to and only
+      settles when its window shuts &mdash; on the old clock it settled at the
+      very moment lineups locked, which delivered a player nobody could
+      play.</span>
+    <span class="ip">After it closes the free-agent pool is still open until
+      kick-off, so there is somewhere to go if you miss it.</span>
+  {% endcall %}
 </p>
+{% if lock.open %}
+<p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
+&mdash; anything agreed by then is in your squad in time to be picked.</p>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -50,7 +66,8 @@
       <span class="ip">These carried points, so they were published to the league when they
       were accepted. A straight player-for-player swap never is &mdash; that is
       between the two of you.</span>
-      <span class="ip">They stand at the deadline unless enough managers object.</span>
+      <span class="ip">They stand when the trade window shuts &mdash; a day before
+      kick-off &mdash; unless enough managers object before then.</span>
     {% endcall %}</h2>
     <span class="eyebrow">agreed, not yet settled</span>
   </div>
@@ -88,7 +105,7 @@
       <span class="ip">A straight swap is between the two managers and nobody else&rsquo;s
       business. These carry points, which is the one thing a friendly pair
       could use to feed each other a title, so the league can vote them down
-      before the deadline.</span>
+      before the trade window shuts.</span>
       <span class="ip">Objecting is not an accusation &mdash; it costs nothing and it is
       withdrawable right up to the deadline.</span>
     {% endcall %}</h2>
@@ -124,9 +141,10 @@
 <section>
   <div class="sechead"><h2>Propose a trade</h2></div>
   {% if not lock.open %}
-    <p class="note">The deadline for {{ gw.name }} has passed. Trades proposed
-    now would take effect next round, so this reopens when the next gameweek
-    does.</p>
+    <p class="note">Trades for {{ gw.name }} have closed &mdash; the window
+    shuts when waivers do, so that anyone you take can still be picked. The
+    free-agent pool is open until kick-off, and this reopens with the next
+    gameweek.</p>
   {% else %}
   <form id="proposal" class="proposal">
     <label class="field">

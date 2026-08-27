@@ -587,7 +587,10 @@ def _trade_context(request):
     all_trades = [decorate(r) for r in records]
     ctx.update({
         "gw": gw,
-        "lock": engine.deadline_state(gw),
+        # Trades close when waivers do, not at kick-off, so the page counts
+        # down to that and every gate below reads the same clock.
+        "lock": engine.trade_window(gw),
+        "gwlock": engine.deadline_state(gw),
         "incoming": [t for t in all_trades
                      if t["receiver"] == me["key"] and t["status"] == "proposed"],
         "outgoing": [t for t in all_trades
@@ -638,10 +641,11 @@ def propose(request: Request, receiver: str = Form(...), give: str = Form(""),
     if not me:
         raise HTTPException(401, "sign in first")
     gw = engine.current_gameweek()
-    if not engine.deadline_state(gw)["open"]:
+    if not engine.trade_window(gw)["open"]:
         return JSONResponse({"ok": False, "errors": [
-            "The deadline has passed — propose this for the next gameweek."]},
-            status_code=409)
+            "Trades for this gameweek have closed. The window shuts when "
+            "waivers do, so that anyone you take can still be picked — "
+            "propose this for the next round."]}, status_code=409)
     if receiver == me["key"]:
         return JSONResponse({"ok": False, "errors": ["Pick another manager."]},
                             status_code=422)
@@ -683,6 +687,18 @@ def respond(request: Request, trade_id: int, action: str):
     record = db.trade(trade_id)
     if not record:
         raise HTTPException(404, "no such trade")
+
+    # Everything that MOVES a player is gated on the same window. Without
+    # this an offer could be accepted after kick-off and the engine would
+    # apply it to a round already under way, changing a score after the fact.
+    moves_players = action in ("accept", "decline", "withdraw")
+    if moves_players:
+        target = next((g for g in engine.calendar()
+                       if g["gameweek"] == record["gameweek"]), None)
+        if not engine.trade_window(target)["open"]:
+            raise HTTPException(
+                409, "trades for that gameweek have closed — the window shuts "
+                     "when waivers do, so anyone you take can still be picked")
 
     if action == "accept" and record["receiver"] == me["key"]:
         # A straight swap is between the two of them. Points change the league,
