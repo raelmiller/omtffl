@@ -879,6 +879,20 @@ input[aria-invalid="true"], select[aria-invalid="true"] {
 .tp { font-weight: 600; font-size: .93rem; }
 .tpoints { font-family: var(--mono); font-size: .8rem; color: var(--accent); margin-top: .2rem; }
 .tnote { font-size: .86rem; color: var(--muted); }
+/* Settled history: who gave what. Two lines, each naming its own side, so
+   the row needs no legend and no memory of which column meant which team. */
+.tgave { display: grid; grid-template-columns: auto auto 1fr; gap: .3rem .45rem;
+         align-items: baseline; font-size: .88rem; line-height: 1.5; }
+.tgt { font-weight: 600; white-space: nowrap; }
+.tgv { color: var(--muted); font-size: .78rem; }
+.tgp { color: var(--text); }
+/* Break between names, never inside one: "Pedro Porro" split across two lines
+   reads as two players. */
+.tgn { white-space: nowrap; }
+/* Sits inside td.num, which is mono and right-aligned — this is prose, so it
+   takes the body face back and reads left with the rest of the row. */
+.tdest { display: block; font-family: var(--body); font-size: .72rem;
+         color: var(--muted); white-space: nowrap; }
 .tacts { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .tcount { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin-right: auto; }
 

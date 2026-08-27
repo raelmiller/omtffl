@@ -570,7 +570,19 @@ check_true("once it settles the player moves", any(x["id"] == p_take["id"]
 settled_page = flat(c1.get("/trade").text)
 check_true("the page stops saying it is pending", "Not done yet" not in settled_page)
 check_true("and shows where the points went",
-           f"banked with {db.manager_by_key(P2)['team']}" in settled_page)
+           f"to {db.manager_by_key(P2)['team']}" in settled_page)
+
+# A history that only names the two managers doesn't say what the trade WAS.
+check_true("the settled row names the player who went one way",
+           p_give["name"] in settled_page)
+check_true("and the player who came back",
+           p_take["name"] in settled_page)
+check_true("attributed to the manager who let him go",
+           re.search(rf"{re.escape(db.manager_by_key(P1)['team'])} gave "
+                     rf"{re.escape(p_give['name'])}", settled_page) is not None)
+check_true("and the other side to the other manager",
+           re.search(rf"{re.escape(db.manager_by_key(P2)['team'])} gave "
+                     rf"{re.escape(p_take['name'])}", settled_page) is not None)
 
 # The whole point of the report: being able to see the other team's bank.
 check_true("every manager's bank is on the page", "Banked points" in settled_page)
@@ -586,6 +598,41 @@ check("the league-wide banks agree with the one-at-a-time answer",
       {m["key"]: engine.bank_status(m["key"], pn, _tx, db.manager_clubs())["balance"]
        for m in db.managers()
        if engine.bank_status(m["key"], pn, _tx, db.manager_clubs())["balance"]})
+_hold_window_open()
+
+# A trade that was voted down moved nobody, so the history must not say a
+# manager "gave" anyone. Same two lines, one different verb — the alternative
+# is a settled list where a rejected offer is indistinguishable from a deal.
+vsq = engine.market(pn, db.trades(), db.transactions())["squads"]
+v_give = next(p for p in vsq[P1] if p["position"] == "FWD")
+v_take = next(p for p in vsq[P2] if p["position"] == "FWD")
+c1.post("/trade/propose", data={"receiver": P2, "give": str(v_give["id"]),
+                                "take": str(v_take["id"]), "points": 3})
+vtid = db.trades("proposed")[0]["id"]
+check("the offer about to be voted down is the one just made",
+      db.trade(vtid)["points"], 3)
+c2.post(f"/trade/{vtid}/accept")
+for m in db.managers():
+    if m["key"] in (P1, P2):
+        continue
+    vc = TestClient(app); vc.get(f"/m/{m['token']}")
+    vc.post(f"/trade/{vtid}/veto")
+check("enough managers objected to stop it",
+      engine.trade_outcome(db.trade(vtid))["state"], "vetoed")
+
+_shut_window()
+vetoed_page = flat(c1.get("/trade").text)
+check_true("a voted-down trade still names the players in it",
+           v_give["name"] in vetoed_page and v_take["name"] in vetoed_page)
+check_true("but says they were offered, not given",
+           re.search(rf"{re.escape(db.manager_by_key(P1)['team'])} offered "
+                     rf"{re.escape(v_give['name'])}", vetoed_page) is not None)
+check_true("and nobody is recorded as having given him away",
+           re.search(rf"gave {re.escape(v_give['name'])}", vetoed_page) is None)
+check_true("its points are marked as never sent", "never sent" in vetoed_page)
+check_true("and they really did not move",
+           not any(x["id"] == v_take["id"] for x in engine.market(
+               pn, db.trades(), db.transactions())["squads"][P1]))
 _hold_window_open()
 
 print("\n── The bank ────────────────────────────────────────────")

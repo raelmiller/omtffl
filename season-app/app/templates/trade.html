@@ -247,15 +247,28 @@
   <div class="sechead"><h2>Settled</h2></div>
   <div class="panel scroll">
     <table>
-      <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Went to</th><th>Outcome</th></tr></thead>
+      <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Outcome</th></tr></thead>
       <tbody>
       {% for t in settled %}
+        {# "gave" only if it happened. A vetoed trade moved nobody, and a
+           history that says otherwise is worse than one that says less. #}
+        {% set verb = 'gave' if t.outcome.state == 'accepted' else 'offered' %}
         <tr>
           <td>{{ t.gameweek }}</td>
-          <td>{{ t.proposer_team }} &rarr; {{ t.receiver_team }}</td>
-          <td class="num">{{ t.points or '—' }}</td>
-          <td>{% if t.points and t.outcome.state == 'accepted' %}
-            banked with {{ t.receiver_team }}{% elif t.points %}&mdash;{% endif %}</td>
+          <td>
+            <div class="tgave">
+              <span class="tgt">{{ t.proposer_team }}</span>
+              <span class="tgv">{{ verb }}</span>
+              <span class="tgp">{% if t.players_out %}{% for p in t.players_out %}<span class="tgn">{{ p.name }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
+            </div>
+            <div class="tgave">
+              <span class="tgt">{{ t.receiver_team }}</span>
+              <span class="tgv">{{ verb }}</span>
+              <span class="tgp">{% if t.players_in %}{% for p in t.players_in %}<span class="tgn">{{ p.name }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
+            </div>
+          </td>
+          <td class="num">{{ t.points or '—' }}
+            {%- if t.points %}<span class="tdest">{% if t.outcome.state == 'accepted' %}to {{ t.receiver_team }}{% else %}never sent{% endif %}</span>{% endif %}</td>
           <td>
             {% if t.outcome.state == 'accepted' %}<span class="yes">done</span>
             {% elif t.outcome.state == 'vetoed' %}<span class="no">voted down ({{ t.outcome.vetoes }})</span>

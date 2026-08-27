@@ -171,6 +171,15 @@ visible to nobody but the recipient. `engine.banks()` computes all fourteen in
 one `apply_transactions` pass, and the suite checks it agrees with the
 per-manager figure.
 
+The settled history names the players, one line a side — `Quantum of Szobos
+gave Steele` / `License to Kelleher gave Kelleher` — rather than only the two
+managers, which said a trade happened without ever saying what it was. **The
+verb carries the outcome**: a trade that was voted down moved nobody, so its
+line says `offered` and its points say `never sent`. A history where a
+rejected offer looks identical to a completed deal is worse than one that says
+less, so the test suite asserts the word `gave` never appears against a vetoed
+trade.
+
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for
 one in of the same position so a squad stays a legal 2/5/5/3. A take settles
