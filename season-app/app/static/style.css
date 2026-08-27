@@ -893,6 +893,11 @@ input[aria-invalid="true"], select[aria-invalid="true"] {
    takes the body face back and reads left with the rest of the row. */
 .tdest { display: block; font-family: var(--body); font-size: .72rem;
          color: var(--muted); white-space: nowrap; }
+/* The engine's own sentence for why a trade wasn't performed. Unlike .tdest
+   it wraps — these are full clauses, not two-word labels. */
+.treason { display: block; max-width: 22rem; margin-top: .15rem;
+           font-family: var(--body); font-size: .72rem; color: var(--warn);
+           white-space: normal; }
 .tacts { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .tcount { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin-right: auto; }
 

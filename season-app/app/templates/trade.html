@@ -259,9 +259,11 @@
       <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Outcome</th></tr></thead>
       <tbody>
       {% for t in settled %}
-        {# "gave" only if it happened. A vetoed trade moved nobody, and a
-           history that says otherwise is worse than one that says less. #}
-        {% set verb = 'gave' if t.outcome.state == 'accepted' else 'offered' %}
+        {# "gave" only if it happened. A vetoed trade moved nobody, and nor
+           did one the engine refused — a history that says otherwise is
+           worse than one that says less. #}
+        {% set done = t.outcome.state == 'accepted' and not t.problem %}
+        {% set verb = 'gave' if done else 'offered' %}
         <tr>
           <td>{{ t.gameweek }}</td>
           <td>
@@ -277,9 +279,11 @@
             </div>
           </td>
           <td class="num">{{ t.points or '—' }}
-            {%- if t.points %}<span class="tdest">{% if t.outcome.state == 'accepted' %}to {{ t.receiver_team }}{% else %}never sent{% endif %}</span>{% endif %}</td>
+            {%- if t.points %}<span class="tdest">{% if done %}to {{ t.receiver_team }}{% else %}never sent{% endif %}</span>{% endif %}</td>
           <td>
-            {% if t.outcome.state == 'accepted' %}<span class="yes">done</span>
+            {% if done %}<span class="yes">done</span>
+            {% elif t.problem %}<span class="no">not applied</span>
+              <span class="treason">{{ t.problem }}</span>
             {% elif t.outcome.state == 'vetoed' %}<span class="no">voted down ({{ t.outcome.vetoes }})</span>
             {% else %}<span class="no">{{ t.outcome.state }}</span>{% endif %}
           </td>

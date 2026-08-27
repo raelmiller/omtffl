@@ -190,6 +190,20 @@ rejected offer looks identical to a completed deal is worse than one that says
 less, so the test suite asserts the word `gave` never appears against a vetoed
 trade.
 
+**"Agreed" and "performed" are two different questions, and the page used to
+ask only the first.** `trade_outcome` decides whether a trade stands — its
+status, the objections against it, the clock. Whether it can actually be
+*carried out* only `apply_transactions` knows: a manager may not own the
+player by the time the trade is reached, or the positions may not balance.
+`_settle` has always returned those refusals and `squads_for_gameweek` threw
+them away, so a trade the engine had rejected printed **done** in the history
+while the squads correctly never moved — and the manager went looking for a
+player nobody had sent. `engine.trade_problem` matches each refusal back to
+its trade; a refused one now reads **not applied** with the engine's own
+sentence beside it, and says `offered` rather than `gave`. The pick-team page
+carries the same warning, because that is where a manager notices the player
+is missing.
+
 **The Settled section is always on the page, empty or not.** It used to live
 inside `{% if settled %}`, so a league with nothing settled yet saw no section
 at all — which looks exactly like a page that doesn't list trades, and sent

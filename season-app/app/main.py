@@ -436,8 +436,14 @@ def _declare_context(request, gameweek=None):
     # dealt on draft night: a trade they accepted, a claim the run landed and
     # anyone they picked up in the free period all have to be on the pitch, or
     # they cannot be picked.
-    squad = engine.market(target["gameweek"], db.trades(), db.transactions()
-                          )["squads"].get(me["key"]) or engine.squad_for(me["key"])
+    mkt = engine.market(target["gameweek"], db.trades(), db.transactions(),
+                        for_manager=me["key"])
+    squad = mkt["squads"].get(me["key"]) or engine.squad_for(me["key"])
+    # If the engine threw one of this manager's transactions out, this page is
+    # where they notice — a player they were told they had is not on the
+    # pitch. Say why here rather than leaving them to hunt for it.
+    ctx["refused"] = [p for p in mkt["problems"] if f" {me['key']}→" in p
+                      or f"→{me['key']}:" in p or f" by {me['key']}:" in p]
     saved = db.get_lineup(me["key"], target["gameweek"])
     rolled = None
     if not saved:
@@ -606,7 +612,12 @@ def _trade_context(request):
         return ctx
     gw = engine.current_gameweek()
     records = db.trades()
-    squads = engine.squads_for_gameweek(gw["gameweek"], records)
+    # market() rather than squads_for_gameweek() because it also hands back
+    # what the engine refused to do. Those were being dropped on the floor,
+    # which is how a trade could read "done" on a squad that never moved.
+    mkt = engine.market(gw["gameweek"], records, db.transactions(),
+                        for_manager=me["key"])
+    squads, problems = mkt["squads"], mkt["problems"]
 
     # A trade row stores whatever it was given as JSON, and Jinja prints a
     # missing key as an empty string — so a player without a `name` renders as
@@ -633,6 +644,10 @@ def _trade_context(request):
         r["i_vetoed"] = me["key"] in r["vetoes"]
         r["out_names"] = named(r["players_out"])
         r["in_names"] = named(r["players_in"])
+        # Agreed is not the same as performed. Only ask once it is agreed —
+        # a trade still waiting on a reply was never handed to the engine.
+        r["problem"] = (engine.trade_problem(r, problems)
+                        if r["outcome"]["state"] == "accepted" else None)
         return r
 
     all_trades = [decorate(r) for r in records]

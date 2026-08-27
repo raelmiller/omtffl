@@ -925,6 +925,29 @@ def boost_status(key, gameweek, drafted, used, declared=False):
 
 
 # ── Trades ─────────────────────────────────────────────────────────────────
+def trade_problem(record, problems):
+    """Why the engine refused to apply this trade, if it did.
+
+    `trade_outcome` decides whether a trade is agreed — status, objections,
+    the clock. Whether it can actually be *performed* is a different question
+    and only `apply_transactions` can answer it: a manager may no longer own
+    the player by the time the trade is reached, or the positions may not
+    balance. Those two answers were never compared, so a trade the engine had
+    thrown out still printed "done" while the squads correctly never moved,
+    and the manager was left looking for a player nobody had sent.
+
+    The engine writes one line per refusal, prefixed with the round and the
+    pair. Two trades between the same pair in the same round can't be told
+    apart, which is rare and still names the right reason.
+    """
+    prefix = (f"GW{record['gameweek']} trade "
+              f"{record['proposer']}→{record['receiver']}: ")
+    for p in problems or ():
+        if p.startswith(prefix):
+            return p[len(prefix):]
+    return None
+
+
 def trade_outcome(record, config=None):
     """What a trade's stored status actually means right now.
 

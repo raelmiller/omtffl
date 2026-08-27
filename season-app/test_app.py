@@ -690,6 +690,55 @@ check_true("a player stored without a name still shows one, from the id",
 with db.connect() as _conn:
     _conn.execute("DELETE FROM trade WHERE id = (SELECT MAX(id) FROM trade)")
 
+print("\n── A trade the engine refused must not read as done ────")
+
+# Reported from the running app: the settled history said a trade was done,
+# but the player never arrived and the one given away was still there. Two
+# different answers to "did this happen" — trade_outcome (status, objections,
+# the clock) and apply_transactions (can it actually be performed) — were
+# never compared, and only the first reached the page.
+_shut_window()
+_rsq = engine.market(pn, db.trades(), db.transactions())["squads"]
+_mine = next(p for p in _rsq[P1] if p["position"] == "MID")
+_ghost = next(p for p in _rsq[P2] if p["position"] == "MID")
+with db.connect() as _conn:
+    # Agreed and past its window, but naming a player P2 does not own: the
+    # engine refuses it, exactly as it refuses a player traded away earlier.
+    _conn.execute(
+        "INSERT INTO trade (gameweek, proposer, receiver, players_out,"
+        " players_in, points, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
+        (pn, P1, P2, json.dumps([_mine]),
+         json.dumps([dict(_ghost, id=987654)]), 0, "accepted", db.now()))
+_rid = db.trades()[0]["id"]
+
+_probs = engine.market(pn, db.trades(), db.transactions())["problems"]
+_why = engine.trade_problem(db.trade(_rid), _probs)
+check_true("the engine says why it refused the trade", bool(_why))
+check_true("and names the player nobody owns", "987654" in (_why or ""))
+
+# Unescaped: the engine's sentence contains an apostrophe ("doesn't own"),
+# which Jinja writes as &#39; — stripping tags is not enough to compare prose.
+import html as _html
+_refused_page = _html.unescape(flat(c1.get("/trade").text))
+check_true("the history no longer calls it done", "not applied" in _refused_page)
+check_true("and prints the engine's reason", (_why or "!") in _refused_page)
+check_true("the player was not moved, as the page now agrees",
+           not any(p["id"] == 987654 for p in engine.market(
+               pn, db.trades(), db.transactions())["squads"][P1]))
+check_true("and the one offered is still where he was",
+           any(p["id"] == _mine["id"] for p in engine.market(
+               pn, db.trades(), db.transactions())["squads"][P1]))
+
+# The pick-team page is where a manager notices, so it has to say so too.
+check_true("the team page warns that a transaction was thrown out",
+           "could not be applied" in flat(c1.get("/declare").text))
+
+with db.connect() as _conn:
+    _conn.execute("DELETE FROM trade WHERE id = ?", (_rid,))
+check_true("with it gone the warning goes too",
+           "could not be applied" not in flat(c1.get("/declare").text))
+_hold_window_open()
+
 print("\n── The bank ────────────────────────────────────────────")
 
 os.environ["ADMIN_KEYS"] = "RM"
