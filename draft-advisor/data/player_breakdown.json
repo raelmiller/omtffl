@@ -1,8 +1,8 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-26T05:37:07Z",
+  "fpl_baked_at": "2026-08-27T16:13:36Z",
   "sales": 645,
-  "unique_players": 392,
+  "unique_players": 393,
   "matched_to_fpl": 260
  },
  "players": [
@@ -2517,7 +2517,7 @@
    "display": "Sarr",
    "position": "MID",
    "current_club": "CRY",
-   "status": "d",
+   "status": "i",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -5070,7 +5070,7 @@
    "display": "Georginio",
    "position": "MID",
    "current_club": "BHA",
-   "status": "a",
+   "status": "d",
    "last_season_points": 5,
    "xgi": "0.52",
    "penalties": false,
@@ -5124,7 +5124,7 @@
    "display": "Anderson",
    "position": "MID",
    "current_club": "MCI",
-   "status": "d",
+   "status": "a",
    "last_season_points": 2,
    "xgi": "0.25",
    "penalties": false,
@@ -5797,33 +5797,6 @@
    }
   },
   {
-   "key": "fpl_403",
-   "fpl_id": 403,
-   "display": "Savinho",
-   "position": "MID",
-   "current_club": "TOT",
-   "status": "a",
-   "last_season_points": 0,
-   "xgi": "0.00",
-   "penalties": false,
-   "corners": false,
-   "freekicks": false,
-   "sales": {
-    "2024-25": {
-     "price": 0.0,
-     "buyer": "Simon",
-     "club_then": "MCI",
-     "points_that_season": 106
-    },
-    "2025-26": {
-     "price": 1.0,
-     "buyer": "Richard",
-     "club_then": "MCI",
-     "points_that_season": 43
-    }
-   }
-  },
-  {
    "key": "name_stones",
    "fpl_id": null,
    "display": "Stones",
@@ -5877,7 +5850,7 @@
    "display": "Matheus N.",
    "position": "DEF",
    "current_club": "MCI",
-   "status": "a",
+   "status": "d",
    "last_season_points": 1,
    "xgi": "0.04",
    "penalties": false,
@@ -5931,6 +5904,27 @@
      "buyer": "Ali",
      "club_then": "LIV",
      "points_that_season": 34
+    }
+   }
+  },
+  {
+   "key": "name_savinho",
+   "fpl_id": null,
+   "display": "Savinho",
+   "position": "MID",
+   "current_club": null,
+   "status": null,
+   "last_season_points": null,
+   "xgi": null,
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2025-26": {
+     "price": 1.0,
+     "buyer": "Richard",
+     "club_then": "MCI",
+     "points_that_season": null
     }
    }
   },
@@ -8292,7 +8286,7 @@
    "display": "Chadi Riad",
    "position": "DEF",
    "current_club": "CRY",
-   "status": "d",
+   "status": "i",
    "last_season_points": 1,
    "xgi": "0.01",
    "penalties": false,
@@ -8647,6 +8641,27 @@
    }
   },
   {
+   "key": "fpl_403",
+   "fpl_id": 403,
+   "display": "S\u00e1vio",
+   "position": "MID",
+   "current_club": "TOT",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
+   "penalties": false,
+   "corners": false,
+   "freekicks": false,
+   "sales": {
+    "2024-25": {
+     "price": 0.0,
+     "buyer": "Simon",
+     "club_then": "MCI",
+     "points_that_season": 106
+    }
+   }
+  },
+  {
    "key": "fpl_83",
    "fpl_id": 83,
    "display": "Valdimarsson",
@@ -8873,7 +8888,7 @@
    "fpl_id": 131,
    "display": "Baleba",
    "position": "MID",
-   "current_club": "BHA",
+   "current_club": "MUN",
    "status": "i",
    "last_season_points": 0,
    "xgi": "0.00",

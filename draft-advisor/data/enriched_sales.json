@@ -3428,7 +3428,7 @@
   "club": "MCI",
   "cost": 0.0,
   "fpl_id": 403,
-  "fpl_name": "Savinho",
+  "fpl_name": "S\u00e1vio",
   "points_that_season": 106
  },
  {
@@ -5385,9 +5385,9 @@
   "player": "Savinho",
   "club": "MCI",
   "cost": 1.0,
-  "fpl_id": 403,
-  "fpl_name": "Savinho",
-  "points_that_season": 43
+  "fpl_id": null,
+  "fpl_name": null,
+  "points_that_season": null
  },
  {
   "season": "2025-26",
