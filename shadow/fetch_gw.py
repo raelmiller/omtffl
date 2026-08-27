@@ -138,6 +138,16 @@ def fetch_pl_fixtures():
         })
     played = sum(1 for f in out if f["finished"])
     print(f"  {len(out)} fixtures, {played} played")
+    # The per-fixture stats are not saved — they are what the live scores page
+    # asks FPL for directly, since they change by the minute and committing
+    # them would bloat this file for no gain. Logged so the shape they arrive
+    # in is on the record rather than taken on trust.
+    sample = next((f for f in raw if f.get("stats")), None)
+    if sample:
+        kinds = [s.get("identifier") for s in sample["stats"]]
+        one = next((s for s in sample["stats"] if s.get("h") or s.get("a")), None)
+        print(f"  live stats available per fixture: {kinds}")
+        print(f"  example entry: {one}")
     (DATA / "pl_fixtures.json").write_text(json.dumps(out, separators=(",", ":")))
     return out
 
