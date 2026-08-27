@@ -29,17 +29,20 @@ since the run is out of reach until next week.</p>
 {% if phase.waivers_open %}
 <section>
   <div class="sechead"><h2>How the run works</h2></div>
-  <p class="sub">Claims are processed together at the waiver deadline, from the
+  <p class="sub">Claims are blind. Nobody sees anyone else&rsquo;s until the run
+  has happened, and then everybody sees all of them at once.</p>
+  <p class="sub">They are processed together at the waiver deadline, from the
   bottom of the table upwards. Round two runs the other way, and so on. You get
   one attempt per round &mdash; if someone beats you to a player, your next
   choice waits for the snake to come back to you rather than going straight
   through. After the run, whoever is left is first come, first served until the
   gameweek deadline.</p>
+  <p class="sub">The order below is the table, so you already know where you sit
+  in it. What you cannot know is who anyone is going for.</p>
   <div class="panel snake">
     {% for m in order %}
     <span class="slot {% if me and m.key == me.key %}mine{% endif %}">
       <span class="n">{{ loop.index }}</span>{{ m.team }}<span class="mgr">{{ m.key }}</span>
-      {%- if claim_counts.get(m.team) %} <span class="c">{{ claim_counts[m.team] }}</span>{% endif -%}
     </span>
     {% endfor %}
   </div>
@@ -175,29 +178,6 @@ since the run is out of reach until next week.</p>
   </div>
   {% endif %}
 </section>
-
-{% if preview and phase.waivers_open %}
-<section>
-  <div class="sechead">
-    <h2>If the run happened now</h2>
-    <span class="eyebrow">provisional</span>
-  </div>
-  <div class="panel">
-    {% for r in preview %}
-    <div class="wrow">
-      <span class="mark">{{ '✓' if r.landed else '·' }}</span>
-      <span class="rnd">round {{ r.round }}</span>
-      <span class="wteam">{{ r.team }}</span>
-      <span class="wmove">{{ r.add.name }} for {{ r.drop.name }}</span>
-      {% if not r.landed %}<span class="pclub">{{ r.why }}</span>{% endif %}
-    </div>
-    {% endfor %}
-  </div>
-  <p class="note">This is what the rules would do with the claims in right now.
-  It changes as other managers add theirs, and only the run at the waiver
-  deadline counts.</p>
-</section>
-{% endif %}
 
 <p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/declare">Pick your team</a></p>
 

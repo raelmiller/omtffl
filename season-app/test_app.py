@@ -1235,6 +1235,28 @@ check_true("and taking someone directly is refused until the run has happened",
                     data={"drop": drop_a["id"], "add": add_a["id"]}
                     ).status_code == 409)
 
+# A claim is a blind bid: yours is on your page, nobody else's is anywhere.
+nosy = TestClient(app)
+nosy_key = next(k for k in before["squads"] if k != "RM")
+nosy.get(f"/m/{db.manager_by_key(nosy_key)['token']}")
+spy = nosy.get("/waivers").text
+check_true("your own claim is on your own page",
+           json.loads(re.search(r'id="claims-data"[^>]*>(.*?)</script>',
+                                wv2.get("/waivers").text, re.S).group(1)))
+# The free agent alone proves nothing — he is in everybody's pool by
+# definition. What must not travel is the PAIR: whose claim it is, and the man
+# they are giving up for him. That player is in RM's squad and has no business
+# on anyone else's page at all.
+check_true("but nobody else's claims are on yours",
+           json.loads(re.search(r'id="claims-data"[^>]*>(.*?)</script>',
+                                spy, re.S).group(1)) == [])
+check_true("and the man they would drop for him never leaves their own page",
+           drop_a["name"] not in spy)
+check_true("nor does a resolved run anyone could read it out of",
+           "If the run happened now" not in spy and "provisional" not in spy)
+check_true("the page says why it is empty rather than looking broken",
+           "Claims are blind" in spy)
+
 wind_past_the_run()
 after = engine.market(gw_two, db.trades(), db.transactions(), for_manager="RM")
 check("now the free window is open", after["state"]["phase"], "free_agency")

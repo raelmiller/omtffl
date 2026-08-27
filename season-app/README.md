@@ -79,6 +79,14 @@ manager's own priority order and nothing moves: until the run they are claims,
 not transfers, and the page says so. At the deadline they are resolved in one
 pass, snaking from the bottom of the table upwards.
 
+**Claims are blind, and that is a rule rather than a nicety.** If you could see
+what the manager ahead of you was going for you would simply pick someone else,
+and the whole decision — how to rank bids you might lose — disappears. So while
+the window is open the waivers route never builds a resolved run at all, not
+even to discard it: another manager's claim cannot leak from a page it was
+never put on. Nothing about anyone else's claims is shown, including how many
+they have lodged. After the run everybody sees all of it at once.
+
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for
 one in of the same position so a squad stays a legal 2/5/5/3. A take settles

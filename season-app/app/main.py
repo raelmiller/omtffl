@@ -700,7 +700,11 @@ def waivers(request: Request):
     now = engine.market(gw["gameweek"], trades, txs, for_manager=me["key"])
     squads = now["squads"]
     claims = _claims_from_declarations(gw["gameweek"])
-    run = engine.run_waivers(gw["gameweek"], claims, trades, ctx["season"])
+    # A claim is a blind bid. Nothing resolved is built here while the window
+    # is open — not even to be thrown away — because the only reliable way to
+    # keep another manager's bid off this page is not to put it in the context
+    # in the first place. The order comes from the standings, which are public.
+    order = engine.waiver_order(gw["gameweek"], ctx["season"]) or sorted(squads)
     names = {m["key"]: m["team"] for m in db.managers()}
 
     ctx.update({
@@ -716,13 +720,9 @@ def waivers(request: Request):
             for k, short, _, label in engine.available_metrics()]),
         "squad_json": json.dumps(engine.with_stats(squads.get(me["key"], []))),
         "claims_json": json.dumps(claims.get(me["key"], [])),
-        "order": [{"key": k, "team": names.get(k, k)}
-                  for k in reversed(run["order"] or sorted(squads))],
-        "my_place": (list(reversed(run["order"])).index(me["key"]) + 1
-                     if me["key"] in run["order"] else None),
-        "preview": [{**r, "team": names.get(r["team"], r["team"])}
-                    for r in run["results"]],
-        "claim_counts": {names.get(k, k): len(v) for k, v in claims.items()},
+        "order": [{"key": k, "team": names.get(k, k)} for k in reversed(order)],
+        "my_place": (list(reversed(order)).index(me["key"]) + 1
+                     if me["key"] in order else None),
         # What the run actually did, once it has happened, and who it put out
         # of reach — the pool is short by exactly these players and should
         # say so rather than leaving a manager hunting for a name.
