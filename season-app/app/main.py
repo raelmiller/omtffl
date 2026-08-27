@@ -25,7 +25,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import auth, db, engine, fetcher
+from . import auth, db, engine, fetcher, live
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
@@ -199,6 +199,56 @@ def _next_refresh():
         "next": nxt.isoformat(timespec="seconds") if nxt else None,
         "cron": str(REFRESH_SCHEDULE),
     }
+
+
+# ── Live scores ────────────────────────────────────────────────────────────
+def _live_context(request, gameweek=None):
+    ctx = _context(request)
+    rounds = engine.calendar()
+    target = (next((g for g in rounds if g["gameweek"] == gameweek), None)
+              if gameweek else engine.live_gameweek())
+    if target is None:
+        return ctx, None
+    n = target["gameweek"]
+    me = ctx["me"]
+    # Ownership is the whole point of showing this here rather than on Sky:
+    # every name carries whose team it is in, and the reader's own stand out.
+    squads = engine.market(n, db.trades(), db.transactions())["squads"]
+    ctx.update({
+        "gw": target,
+        "board": live.board(n, squads=squads, me=me["key"] if me else None),
+        "played": sorted(g["gameweek"] for g in rounds
+                         if g.get("deadline") and g["gameweek"] <= n),
+        "next_gw": next((g["gameweek"] for g in sorted(
+            rounds, key=lambda g: g["gameweek"]) if g["gameweek"] > n), None),
+        "prev_gw": n - 1 if n > 1 else None,
+        # Matched to the cache in live.py: polling faster than the cache only
+        # re-renders the same answer, and slower leaves it stale on screen.
+        "refresh_seconds": live.TTL_SECONDS,
+    })
+    return ctx, target
+
+
+@app.get("/live", response_class=HTMLResponse)
+@app.get("/live/{gameweek}", response_class=HTMLResponse)
+def live_scores(request: Request, gameweek: int = None):
+    ctx, target = _live_context(request, gameweek)
+    if target is None:
+        raise HTTPException(404, "no fixture list yet")
+    return templates.TemplateResponse("live.html", ctx)
+
+
+@app.get("/live/{gameweek}/board", response_class=HTMLResponse)
+def live_board(request: Request, gameweek: int):
+    """Just the matches, for the page to swap in while it is left open.
+
+    A fragment rather than JSON so there is one template and no chance of the
+    polled version drifting from the rendered one.
+    """
+    ctx, target = _live_context(request, gameweek)
+    if target is None:
+        raise HTTPException(404, "no fixture list yet")
+    return templates.TemplateResponse("_board.html", ctx)
 
 
 @app.get("/health")

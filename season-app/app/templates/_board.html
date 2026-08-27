@@ -1,0 +1,91 @@
+{% from "_info.html" import info %}
+{#- The matches themselves. A fragment, because the page polls this while it
+    is left open and swaps it in — one template, so what is polled can never
+    drift from what was rendered. -#}
+{% if board.error and not board.matches %}
+  <div class="panel"><p class="empty">Couldn&rsquo;t reach FPL just now.
+  Trying again shortly.</p></div>
+{% elif not board.matches %}
+  <div class="panel"><p class="empty">No matches listed for {{ gw.name }} yet.</p></div>
+{% else %}
+  {% if board.error %}
+  <p class="note doubt">Showing the last scores we got &mdash; FPL didn&rsquo;t
+  answer the most recent check.</p>
+  {% endif %}
+  <div class="games">
+    {% for m in board.matches %}
+    <div class="game panel{{ ' live' if m.started and not m.finished }}{{ ' hasmine' if m.mine }}">
+      <div class="gamehead">
+        <span class="side h">{{ m.home.short or '?' }}</span>
+        <span class="gscore">
+          {%- if m.started %}{{ m.home.score if m.home.score is not none else 0 }}
+            &ndash; {{ m.away.score if m.away.score is not none else 0 }}
+          {%- else %}v{% endif -%}
+        </span>
+        <span class="side a">{{ m.away.short or '?' }}</span>
+        <span class="gstate">
+          {%- if m.finished %}<span class="pill">full time</span>
+          {%- elif m.started %}<span class="pill live">{{ m.minutes }}&rsquo;</span>
+          {%- else %}<time data-when="{{ m.kickoff }}">{{ m.kickoff }}</time>{% endif -%}
+        </span>
+      </div>
+
+      {% if m.mine %}
+      <p class="yours"><span class="eyebrow">Yours involved</span>
+        {{ m.mine|join(', ') }}</p>
+      {% endif %}
+
+      {% if m.events %}
+      <div class="ticker">
+        {% for e in m.events %}
+        <div class="ev {{ e.kind }}{{ ' mine' if e.mine }}">
+          <span class="evclub">{{ m.home.short if e.side == 'h' else m.away.short }}</span>
+          <span class="tlabel">{{ e.label }}</span>
+          <span class="tname">{{ e.name }}</span>
+          <span class="towners">
+            {%- for o in e.owners %}<span class="mgr">{{ o }}</span>{% endfor -%}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% elif m.started %}
+      <p class="nothing">Nothing to report yet.</p>
+      {% endif %}
+
+      {% if m.bonus %}
+      <div class="bonusblock">
+        <div class="bonushead">
+          <span class="eyebrow">
+            Bonus {{ '&mdash; confirmed'|safe if m.bonus_settled else '&mdash; provisional'|safe }}
+          </span>
+          {% if not m.bonus_settled %}{% call info("How bonus is worked out", "bonus" ~ m.id) %}
+            <span class="ip">FPL gives three, two and one bonus point to the best players in
+              each match, ranked on their Bonus Points System score. While a
+              match is on, BPS moves with every touch, so this is
+              <strong>provisional</strong> and can change &mdash; and does,
+              often, in the last ten minutes.</span>
+            <span class="ip">Players level on BPS share the higher place and use up the
+              places below it, so three men tied second take two points each
+              and nobody gets the single point.</span>
+            <span class="ip">FPL confirms bonus after the whistle. Once it does, this shows
+              their figure rather than ours. Either way it is the saved
+              gameweek data that scores your league, never this page.</span>
+          {% endcall %}{% endif %}
+        </div>
+        {% for b in m.bonus %}
+        <div class="brow{{ ' mine' if b.mine }}">
+          <span class="bpts">{{ b.points }}</span>
+          <span class="evclub">{{ m.home.short if b.side == 'h' else m.away.short }}</span>
+          <span class="tname">{{ b.name }}</span>
+          <span class="bbps">{{ b.bps }} bps</span>
+          <span class="towners">
+            {%- for o in b.owners %}<span class="mgr">{{ o }}</span>{% endfor -%}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}

@@ -15,6 +15,8 @@ Positions are FPL's element_type: 1=GK, 2=DEF, 3=MID, 4=FWD.
 """
 from __future__ import annotations
 
+import itertools
+
 GK, DEF, MID, FWD = 1, 2, 3, 4
 POSITION_NAMES = {GK: "GK", DEF: "DEF", MID: "MID", FWD: "FWD"}
 
@@ -264,4 +266,37 @@ def score_gameweek(elements: list[dict], positions: dict[int, int]) -> dict[int,
         if pos is None:
             continue
         out[pid] = score_entry(el, pos)
+    return out
+
+
+def provisional_bonus(bps_by_player: dict[int, int]) -> dict[int, int]:
+    """Bonus points from BPS, the way FPL awards them.
+
+    `bps_by_player` maps player id to their BPS **in one match**. Returns the
+    same keys mapped to 3, 2, 1 or 0.
+
+    Standard competition ranking: everyone level shares the higher place, and
+    together they use up the places below it. So three players tied behind a
+    leader take second, third and fourth between them — they get two points
+    each and the single point is gone, rather than the next man down taking
+    it. That is the case that catches you out, and it is why this is a rank
+    over places rather than over distinct values.
+
+    While a match is being played this is PROVISIONAL: BPS moves with every
+    touch and FPL only settles bonus after the whistle. Nothing here feeds
+    scoring — `score_player` takes bonus as awarded — this exists so the live
+    page can show people what is happening.
+
+    Verified against real data: reproduces FPL's own awards for all 310
+    players who featured in gameweek 1.
+    """
+    out: dict[int, int] = {}
+    place = 1
+    ranked = sorted(bps_by_player.items(), key=lambda kv: -kv[1])
+    for _, tied in itertools.groupby(ranked, key=lambda kv: kv[1]):
+        tied = list(tied)
+        award = {1: 3, 2: 2, 3: 1}.get(place, 0)
+        for pid, _ in tied:
+            out[pid] = award
+        place += len(tied)
     return out

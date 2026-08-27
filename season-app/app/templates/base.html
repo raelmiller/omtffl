@@ -29,6 +29,7 @@
 {% set path = request.url.path %}
 {% set tabs = [
   ("/", "Table", "Table", '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14.5h18M9 9v11"/>', ["/team/", "/gameweek/"]),
+  ("/live", "Live scores", "Live", '<circle cx="12" cy="12" r="3"/><path d="M6.4 6.4a8 8 0 0 0 0 11.2M17.6 17.6a8 8 0 0 0 0-11.2M3.5 3.5a12 12 0 0 0 0 17M20.5 20.5a12 12 0 0 0 0-17"/>', ["/live/"]),
   ("/stats", "Stats", "Stats", '<path d="M4 19V11M9.5 19V5M15 19v-6M20.5 19V8"/>', []),
   ("/declare", "Pick your team", "Team", '<path d="M4 6.5 12 4l8 2.5V11c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V6.5Z"/><path d="M9 12l2 2 4-4"/>', []),
   ("/trade", "Trades", "Trades", '<path d="M4 8h13l-3-3M20 16H7l3 3"/>', []),
@@ -167,9 +168,8 @@
 // pinned box. Only one is ever open, because two overlapping boxes are worse
 // than none.
 (function () {
-  var all = [].slice.call(document.querySelectorAll(".info"));
-  if (!all.length) return;
   var pinned = null;
+  var all = [];
   var box = function (i) { return i.querySelector(".infobox"); };
   var btn = function (i) { return i.querySelector(".infobtn"); };
 
@@ -186,7 +186,10 @@
     all.forEach(function (o) { if (o !== keep) { pinned = null; shut(o); } });
   }
 
-  all.forEach(function (i) {
+  function bind() {
+    all = [].slice.call(document.querySelectorAll(".info"));
+    all.filter(function (i) { return !i.dataset.bound; }).forEach(function (i) {
+    i.dataset.bound = "1";
     i.addEventListener("mouseenter", function () {
       if (pinned) return;
       shutOthers(i); open(i);
@@ -206,7 +209,11 @@
     btn(i).addEventListener("blur", function () {
       if (pinned !== i) shut(i);
     });
-  });
+    });
+  }
+  bind();
+  // The live board replaces its own markup while the page is open.
+  document.addEventListener("page:rebound", bind);
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && pinned) { var p = pinned; pinned = null; shut(p); }
@@ -224,13 +231,17 @@
 // rendered from the ISO string in the attribute, so a page that never runs
 // this still shows something true, just less friendly.
 (function () {
-  document.querySelectorAll("[data-when]").forEach(function (el) {
-    var d = new Date(el.dataset.when);
-    if (!isNaN(d)) el.textContent = d.toLocaleString(undefined, {
-      weekday: "short", day: "numeric", month: "short",
-      hour: "2-digit", minute: "2-digit"
+  function paintWhen() {
+    document.querySelectorAll("[data-when]").forEach(function (el) {
+      var d = new Date(el.dataset.when);
+      if (!isNaN(d)) el.textContent = d.toLocaleString(undefined, {
+        weekday: "short", day: "numeric", month: "short",
+        hour: "2-digit", minute: "2-digit"
+      });
     });
-  });
+  }
+  paintWhen();
+  document.addEventListener("page:rebound", paintWhen);
 
   var clocks = [].slice.call(document.querySelectorAll("[data-deadline]"));
   if (!clocks.length) return;

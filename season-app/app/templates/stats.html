@@ -28,8 +28,8 @@
   <div class="panelblock" id="panel-form" data-panel="form">
     <div class="sechead">
       <h2>Form{% call info("What form means", "whatform") %}
-      <p>Where each team is now, which way it is travelling, and what it has
-      done lately. The arrow compares against five rounds ago.</p>
+      <span class="ip">Where each team is now, which way it is travelling, and what it has
+      done lately. The arrow compares against five rounds ago.</span>
       {% endcall %}</h2>
       <span class="eyebrow">last five rounds</span>
     </div>
@@ -61,9 +61,9 @@
   <div class="panelblock" id="panel-spread" data-panel="spread" hidden>
     <div class="sechead">
       <h2>Consistency{% call info("What consistency means", "whatspread") %}
-      <p>How far a team&rsquo;s weekly score wanders from its own average. A
+      <span class="ip">How far a team&rsquo;s weekly score wanders from its own average. A
       low number is a manager you can predict; a high one is a manager who
-      wins big and loses badly.</p>
+      wins big and loses badly.</span>
       {% endcall %}</h2>
       <span class="eyebrow">standard deviation</span>
     </div>
@@ -90,11 +90,11 @@
   <div class="panelblock" id="panel-luck" data-panel="luck" hidden>
     <div class="sechead">
       <h2>Luck{% call info("What luck means", "whatluck") %}
-      <p>Expected wins is the share of the league a team outscored each week
+      <span class="ip">Expected wins is the share of the league a team outscored each week
       &mdash; beat everyone and that is a whole win, beat half of them and it
-      is half.</p>
-      <p>The gap to real wins is the fixture list doing the work rather than
-      the manager.</p>
+      is half.</span>
+      <span class="ip">The gap to real wins is the fixture list doing the work rather than
+      the manager.</span>
       {% endcall %}</h2>
       <span class="eyebrow">wins against expected wins</span>
     </div>
@@ -118,10 +118,10 @@
   <div class="panelblock" id="panel-margins" data-panel="margins" hidden>
     <div class="sechead">
       <h2>Margins{% call info("What margins means", "whatmargins") %}
-      <p>A game inside {{ stats.close }} points is close; one of
-      {{ stats.blowout }} or more was never in doubt.</p>
-      <p>A team with more close losses than close wins has been on the wrong
-      side of the coin.</p>
+      <span class="ip">A game inside {{ stats.close }} points is close; one of
+      {{ stats.blowout }} or more was never in doubt.</span>
+      <span class="ip">A team with more close losses than close wins has been on the wrong
+      side of the coin.</span>
       {% endcall %}</h2>
       <span class="eyebrow">how games are won and lost</span>
     </div>
@@ -155,11 +155,11 @@
   <div class="panelblock" id="panel-returns" data-panel="returns" hidden>
     <div class="sechead">
       <h2>Returns{% call info("What returns means", "whatreturns") %}
-      <p>Credited to the manager who had the player in their eleven that week,
+      <span class="ip">Credited to the manager who had the player in their eleven that week,
       not to whoever owns him now &mdash; so a striker bought in January
-      doesn&rsquo;t arrive with someone else&rsquo;s goals.</p>
-      <p>Clean sheets and defensive contributions are counted only where the
-      rules paid for them.</p>
+      doesn&rsquo;t arrive with someone else&rsquo;s goals.</span>
+      <span class="ip">Clean sheets and defensive contributions are counted only where the
+      rules paid for them.</span>
       {% endcall %}</h2>
       <label class="pickmetric">
         <span class="eyebrow">Showing</span>

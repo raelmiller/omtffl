@@ -20,13 +20,13 @@
 {% elif phase.free_agency %}
 <p class="sub"><span class="clock" data-deadline="{{ lock.deadline }}">{{ lock.deadline }}</span>
 &mdash; first come, first served, as many moves as you like.{% call info("How the free period works", "howfree") %}
-  <p>The run is done. Whoever is left in the pool is open to everyone until the
+  <span class="ip">The run is done. Whoever is left in the pool is open to everyone until the
   gameweek deadline, taken there and then rather than by priority &mdash; if
-  two of you want the same player, the first to press the button gets him.</p>
-  <p>As many moves as you like, still one out for one in of the same position
-  so your squad stays a legal 2/5/5/3.</p>
-  <p>Anyone dropped since the run is out of reach until next gameweek, though
-  you can always take back someone you let go yourself.</p>
+  two of you want the same player, the first to press the button gets him.</span>
+  <span class="ip">As many moves as you like, still one out for one in of the same position
+  so your squad stays a legal 2/5/5/3.</span>
+  <span class="ip">Anyone dropped since the run is out of reach until next gameweek, though
+  you can always take back someone you let go yourself.</span>
 {% endcall %}</p>
 {% endif %}
 {% endblock %}
@@ -37,17 +37,17 @@
 <section>
   <div class="sechead">
     <h2>Claim order{% call info("How the run works", "howrun") %}
-      <p>Claims are <strong>blind</strong>. Nobody sees anyone else&rsquo;s
+      <span class="ip">Claims are <strong>blind</strong>. Nobody sees anyone else&rsquo;s
       until the run has happened, and then everybody sees all of them at once.
       The order here is the table, so you know where you sit in it &mdash; what
-      you cannot know is who anyone is going for.</p>
-      <p>Claims are processed together at the waiver deadline, from the bottom
+      you cannot know is who anyone is going for.</span>
+      <span class="ip">Claims are processed together at the waiver deadline, from the bottom
       of the table upwards. Round two runs the other way, and so on. You get
       one attempt per round: if someone beats you to a player, your next choice
       waits for the snake to come back to you rather than going straight
-      through.</p>
-      <p>After the run, whoever is left is first come, first served until the
-      gameweek deadline.</p>
+      through.</span>
+      <span class="ip">After the run, whoever is left is first come, first served until the
+      gameweek deadline.</span>
     {% endcall %}</h2>
     <span class="eyebrow">bottom of the table claims first</span>
   </div>
@@ -85,10 +85,10 @@
 <section>
   <div class="sechead">
     <h2>Out of reach this week{% call info("Why these are unavailable", "whyfrozen") %}
-      <p>Dropped since the run went through, so nobody <em>else</em> can pick
-      them up until next gameweek &mdash; they are back in the pool then.</p>
-      <p>Anyone you let go yourself is missing from this list, because you can
-      still take them back.</p>
+      <span class="ip">Dropped since the run went through, so nobody <em>else</em> can pick
+      them up until next gameweek &mdash; they are back in the pool then.</span>
+      <span class="ip">Anyone you let go yourself is missing from this list, because you can
+      still take them back.</span>
     {% endcall %}</h2>
     <span class="eyebrow">{{ frozen|length }} player{{ '' if frozen|length == 1 else 's' }}</span>
   </div>

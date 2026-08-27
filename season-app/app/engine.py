@@ -38,7 +38,7 @@ from mechanics import (                             # noqa: E402
     snake_order, validate_trade,
 )
 from scoring import (contributions, entry_breakdown,  # noqa: E402
-                     score_entry)
+                     provisional_bonus, score_entry)
 
 
 def _read(name):
@@ -753,6 +753,23 @@ def current_gameweek():
     return min(upcoming, key=lambda g: g["gameweek"]) if upcoming else rounds[0]
 
 
+def live_gameweek():
+    """The round whose matches are actually being played.
+
+    Not the same question as `current_gameweek`, which answers "what am I
+    picking for" and moves on the moment a deadline passes. On a Saturday
+    afternoon the round being picked for is next week's; the round on the
+    television is the one whose deadline went by most recently.
+    """
+    rounds = [g for g in calendar() if g.get("deadline")]
+    if not rounds:
+        return None
+    now = datetime.now(timezone.utc)
+    gone = [g for g in rounds if _parse(g["deadline"]) <= now]
+    return (max(gone, key=lambda g: g["gameweek"]) if gone
+            else min(rounds, key=lambda g: g["gameweek"]))
+
+
 def _parse(stamp):
     return datetime.fromisoformat(stamp.replace("Z", "+00:00"))
 
@@ -829,6 +846,27 @@ def suggest_for(key, gameweek, squad=None):
     if not form:
         form = {p["id"]: p.get("price", 0) for p in squad}
     return suggest_lineup(squad, form)
+
+
+@lru_cache(maxsize=1)
+def _people(version):
+    meta = _read("players.json") or {}
+    return ({int(k): v for k, v in (meta.get("names") or {}).items()},
+            {int(k): v for k, v in (meta.get("player_clubs") or {}).items()})
+
+
+def player_names():
+    """Every player id to their name, in one lookup.
+
+    `current_club` re-reads the file on every call, which is fine for a squad
+    of fifteen and wasteful for a page listing every goal in a round.
+    """
+    return _people(data_version())[0]
+
+
+def player_clubs():
+    """Every player id to their club id, in one lookup."""
+    return _people(data_version())[1]
 
 
 def clubs():

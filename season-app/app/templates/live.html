@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "_info.html" import info %}
+{% block title %}Live scores — Matchweek{% endblock %}
+{% block wrapclass %} wide{% endblock %}
+{% block heading %}Live scores{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {{ gw.name }} &middot;
+  {% if board.in_play %}matches on now
+  {% elif board.kicked_off %}all played
+  {% else %}not kicked off yet{% endif %}
+  {% call info("What this page is, and isn't", "whatlive") %}
+    <span class="ip">Real Premier League matches as they happen, with every name badged by
+      whose team it is in &mdash; which the official game will not tell you.
+      Yours are picked out from the rest.</span>
+    <span class="ip">This is a window onto the football, not a second scoreboard for the
+      league. Your table is scored from the saved gameweek data by the same
+      engine as always; nothing here feeds it.</span>
+  {% endcall %}
+</p>
+<div class="tacts roundnav" style="margin-top:.4rem">
+  <span class="savestate" id="livestate">
+    {%- if board.in_play %}Refreshing every {{ refresh_seconds }}s{% endif -%}
+  </span>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<nav class="gwrail" aria-label="Gameweeks">
+  {% for n in played %}
+  <a class="gwchip{{ ' on' if n == gw.gameweek }}" href="/live/{{ n }}">{{ n }}</a>
+  {% endfor %}
+</nav>
+
+<div id="board" data-gw="{{ gw.gameweek }}" data-live="{{ 1 if board.in_play else 0 }}">
+  {% include "_board.html" %}
+</div>
+
+<p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/declare">Pick your team</a></p>
+
+<script>
+// While matches are on, keep the board current without the reader touching
+// anything. A fragment is fetched and swapped in rather than reloading the
+// page, so the info boxes stay open and nothing jumps.
+(function () {
+  const board = document.getElementById('board');
+  if (!board || board.dataset.live !== '1') return;
+  const gw = board.dataset.gw;
+  const state = document.getElementById('livestate');
+  const EVERY = {{ refresh_seconds * 1000 }};
+  let failures = 0;
+
+  async function pull() {
+    try {
+      const res = await fetch(`/live/${gw}/board`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      board.innerHTML = await res.text();
+      failures = 0;
+      if (state) {
+        state.textContent = 'Updated ' + new Date().toLocaleTimeString(
+          undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        state.className = 'savestate ok';
+      }
+      // The swapped-in fragment brings its own times and info icons with it.
+      document.dispatchEvent(new CustomEvent('page:rebound'));
+    } catch (e) {
+      // Three misses before saying anything: one dropped request on a phone
+      // is not worth a warning, and the last scores are still on screen.
+      if (++failures >= 3 && state) {
+        state.textContent = 'Not updating — check your connection';
+        state.className = 'savestate bad';
+      }
+    }
+  }
+  setInterval(pull, EVERY);
+})();
+</script>
+{% endblock %}

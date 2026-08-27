@@ -10,10 +10,16 @@
     is a real button, so it is reachable by keyboard, and without scripting
     the box simply renders inline — see the noscript rule in base.html.
 
+    Use `<span class="ip">` for each paragraph, NOT `<p>`. The box is phrasing
+    content — it lives inside headings and inside `<p class="sub">` — and a
+    browser hoists a real `<p>` straight out of it, which leaves the rules
+    printed on the page and the icon opening an empty box. The served HTML
+    looks perfectly correct when that happens; only the parsed DOM is wrong.
+
     Usage:
         {% from "_info.html" import info %}
         {% call info("How the run works", "howrun") %}
-          <p>...</p>
+          <span class="ip">...</span>
         {% endcall %}
 
     `label` is what a screen reader announces, so name the subject rather

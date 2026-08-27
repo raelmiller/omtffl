@@ -280,8 +280,13 @@ st = engine.boost_status("RM", gwn, db.manager_clubs(), used=0)
 check_true("a club is drafted", st["available"], str(st.get("why")))
 check_true("with a band from the table", st["pct"] in (10.0, 20.0, 30.0, 40.0, 50.0),
            str(st["pct"]))
-check_true("flagged as provisional while no football has been played",
-           st["provisional_position"])
+# The band comes from the club's league position, and before any football
+# there is no table to read it from. Which state the data happens to be in
+# depends on the day, so the test pins the rule rather than the day.
+_pl = engine._read("pl_fixtures.json") or []
+_played_matches = sum(1 for f in _pl if f.get("finished"))
+check("the band is provisional exactly while there is no table yet",
+      bool(st["provisional_position"]), _played_matches == 0)
 
 r = bc.post(f"/declare/{gwn}/boost", data={"on": "1"})
 check("playing a boost is accepted", r.json()["ok"], True)
@@ -1043,8 +1048,14 @@ print("\n── Bringing data in by hand ─────────────
 fresh = engine.freshness()
 check_true("what is on disk is countable", fresh["gameweeks_on_disk"] >= 1)
 check_true("along with how many players we know of", fresh["players"] > 0)
-check_true("an absent availability file reads as unknown, not as nobody hurt",
-           fresh["availability"] is None, str(fresh["availability"]))
+# None and 0 mean different things here and the difference matters: no
+# availability key at all means the file predates the fetcher asking, while
+# zero would mean it asked and nobody is hurt. Report the file, never a guess.
+_raw_av = (engine._read("players.json") or {}).get("availability")
+check("the injury count is read off the file rather than assumed",
+      fresh["availability"], None if _raw_av is None else len(_raw_av))
+check_true("a file that was never asked reads as unknown, not as nobody hurt",
+           (fresh["availability"] is None) == (_raw_av is None))
 
 from app.main import REFRESH_SCHEDULE                       # noqa: E402
 
@@ -1472,6 +1483,106 @@ wf = Path(__file__).resolve().parents[1] / ".github/workflows/shadow-fetch-gw.ym
 cron = re.search(r'cron:\s*"([^"]+)"', wf.read_text()).group(1)
 check("the committed data is refreshed daily, not twice a week", cron, "30 7 * * *")
 
+print("\n── Live scores ─────────────────────────────────────────")
+
+import time as _time                                        # noqa: E402
+from app import live                                        # noqa: E402
+
+# The round on the television is not the round you are picking for: on a
+# Saturday afternoon those are different weeks, and this page wants the former.
+lg, cg = engine.live_gameweek(), engine.current_gameweek()
+check_true("the round being played is the last one whose deadline went by",
+           lg["gameweek"] <= cg["gameweek"], f"{lg['gameweek']} vs {cg['gameweek']}")
+
+# A match in the exact shape FPL returns, verified against the real API.
+live_gw = lg["gameweek"]
+lsquads = engine.market(live_gw, db.trades(), db.transactions())["squads"]
+rm_ids = [p["id"] for p in lsquads["RM"]]
+ch_ids = [p["id"] for p in lsquads["CH"]]
+scorer, helper, sent_off = rm_ids[10], rm_ids[11], ch_ids[3]
+
+
+def _stat(kind, h=(), a=()):
+    return {"identifier": kind,
+            "h": [{"value": v, "element": e} for e, v in h],
+            "a": [{"value": v, "element": e} for e, v in a]}
+
+
+def _fixture(bonus=()):
+    return [{
+        "id": 901, "event": live_gw, "started": True, "finished": False,
+        "minutes": 67, "kickoff_time": "2026-08-29T14:00:00Z",
+        "team_h": 1, "team_a": 6, "team_h_score": 2, "team_a_score": 1,
+        "stats": [
+            _stat("goals_scored", h=[(scorer, 2)]),
+            _stat("assists", h=[(helper, 1)]),
+            _stat("red_cards", a=[(sent_off, 1)]),
+            # Two men level on 28 behind the scorer: they take second and
+            # third between them and the single point goes unawarded.
+            _stat("bps", h=[(scorer, 44), (helper, 28)], a=[(sent_off, 28)]),
+            _stat("bonus", h=bonus),
+        ],
+    }]
+
+
+real_fetch = live.fetch
+live.fetch = lambda gw, force=False: (_fixture() if gw == live_gw else [], None)
+b = live.board(live_gw, squads=lsquads, me="RM")
+m = b["matches"][0]
+
+check("the round is in play", b["in_play"], True)
+check("a brace is two lines, not one",
+      sum(1 for e in m["events"] if e["kind"] == "goal"), 2)
+check("the sending off is there too",
+      [e["label"] for e in m["events"] if e["kind"] == "red"], ["Red card"])
+check_true("every name says who owns it",
+           all(e["owners"] for e in m["events"]), str(m["events"][:1]))
+check_true("and the reader's own are marked out",
+           all(e["mine"] for e in m["events"] if e["kind"] in ("goal", "assist"))
+           and not any(e["mine"] for e in m["events"] if e["kind"] == "red"))
+check("the match lists which of yours are in it", m["mine"],
+       sorted({engine.player_names()[scorer], engine.player_names()[helper]}))
+
+check("bonus is provisional while the match is on", m["bonus_settled"], False)
+check("and follows the rule: 3, then two men sharing second",
+      [(x["id"], x["points"]) for x in m["bonus"]],
+      [(scorer, 3), (helper, 2), (sent_off, 2)])
+
+# Once FPL settles it, their figure is what shows.
+live.fetch = lambda gw, force=False: (
+    _fixture(bonus=[(scorer, 3), (helper, 1)]) if gw == live_gw else [], None)
+settled_board = live.board(live_gw, squads=lsquads, me="RM")["matches"][0]
+check("once confirmed, FPL's own award is used", settled_board["bonus_settled"], True)
+check("even where it differs from ours",
+      [(x["id"], x["points"]) for x in settled_board["bonus"]],
+      [(scorer, 3), (helper, 1)])
+
+# A page that goes blank mid-match is worse than one that is a minute behind.
+live._cache[live_gw] = (_time.time(), _fixture())
+live.fetch = real_fetch
+stale_fixtures, why = live.fetch(live_gw)
+check_true("a cached round is served without going out again", bool(stale_fixtures))
+
+live.fetch = lambda gw, force=False: ([], "URLError: unreachable")
+broke = live.board(live_gw, squads=lsquads, me="RM")
+check("an unreachable FPL is reported rather than hidden",
+      bool(broke["error"]), True)
+check("and the page still renders", broke["matches"], [])
+
+live.fetch = lambda gw, force=False: (_fixture() if gw == live_gw else [], None)
+page = wv2.get("/live")
+check("the live page renders", page.status_code, 200)
+check_true("with the match on it", "2" in page.text and "67" in page.text)
+check_true("and says plainly that bonus is provisional",
+           "provisional" in page.text.lower())
+check_true("it is reachable by gameweek too",
+           wv2.get(f"/live/{live_gw}").status_code == 200)
+frag = wv2.get(f"/live/{live_gw}/board")
+check("the polled fragment is served on its own", frag.status_code, 200)
+check_true("and is a fragment, not a whole page",
+           "<html" not in frag.text and "games" in frag.text)
+live.fetch = real_fetch
+
 print("\n── The chrome ──────────────────────────────────────────")
 
 # The bar and the tab rail are the only navigation there is now, so they get
@@ -1499,7 +1610,7 @@ check("the waivers page marks its own", tab_on(wv.get("/waivers").text), ["/waiv
 check("and the trades page marks its own", tab_on(wv.get("/trade").text), ["/trade"])
 rail_hrefs = re.findall(r'<a class="tab[^"]*" href="([^"]+)"', bar)
 check("the rail carries every section", rail_hrefs,
-      ["/", "/stats", "/declare", "/trade", "/waivers"])
+      ["/", "/live", "/stats", "/declare", "/trade", "/waivers"])
 check_true("and every one of them opens",
            all(wv.get(h).status_code == 200 for h in rail_hrefs),
            ", ".join(f"{h} -> {wv.get(h).status_code}" for h in rail_hrefs
@@ -1511,7 +1622,7 @@ check_true("a manager who is not an admin has no admin tab", ">Admin<" not in ba
 os.environ["ADMIN_KEYS"] = "RM"
 admin_bar = wv.get("/").text
 check_true("an admin does", ">Admin<" in admin_bar)
-check("and it is the last of the six",
+check("and it is the last of them",
       re.findall(r'<a class="tab[^"]*" href="([^"]+)"', admin_bar)[-1], "/admin")
 check("the admin page marks its own tab",
       re.findall(r'<a class="tab on" href="([^"]+)"', wv.get("/admin").text), ["/admin"])

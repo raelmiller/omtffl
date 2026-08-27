@@ -9,7 +9,8 @@ Run: python3 shadow/test_scoring.py
 """
 import sys
 from scoring import (breakdown, contributions, entry_breakdown,
-                     score_entry, score_player, GK, DEF, MID, FWD)
+                     provisional_bonus, score_entry, score_player,
+                     GK, DEF, MID, FWD)
 
 FAILS = []
 
@@ -263,6 +264,74 @@ double = {"fixtures": [s(minutes=90, clean_sheets=1, goals_scored=1),
 check("a double gameweek returns twice",
       (contributions(double, DEF)["clean_sheets"],
        contributions(double, DEF)["goals"]), (2, 1))
+
+
+print("\n── Provisional bonus from BPS ──────────────────────────")
+
+# The ordinary case.
+check("three clear at the top take 3, 2 and 1",
+      provisional_bonus({1: 40, 2: 30, 3: 20, 4: 10}), {1: 3, 2: 2, 3: 1, 4: 0})
+
+# Ties, which is where this is easy to get wrong. Everyone level shares the
+# higher place and together they use up the places below it.
+check("two tied at the top both take 3, and the next takes 1",
+      provisional_bonus({1: 40, 2: 40, 3: 30, 4: 10}), {1: 3, 2: 3, 3: 1, 4: 0})
+check("three tied at the top take 3, and nothing is left",
+      provisional_bonus({1: 40, 2: 40, 3: 40, 4: 30}), {1: 3, 2: 3, 3: 3, 4: 0})
+check("two tied second take 2 each, and the single point is gone",
+      provisional_bonus({1: 40, 2: 30, 3: 30, 4: 20}), {1: 3, 2: 2, 3: 2, 4: 0})
+# The real one, from Forest v Leeds in gameweek 1: Stach 37, three men on 28,
+# Muharemović on 25 and nothing for him.
+check("three tied second fill second, third and fourth between them",
+      provisional_bonus({1: 37, 2: 28, 3: 28, 4: 28, 5: 25}),
+      {1: 3, 2: 2, 3: 2, 4: 2, 5: 0})
+check("two tied third share the single point",
+      provisional_bonus({1: 40, 2: 30, 3: 20, 4: 20}), {1: 3, 2: 2, 3: 1, 4: 1})
+check("everyone level gets 3 and nobody gets anything else",
+      provisional_bonus({1: 5, 2: 5, 3: 5}), {1: 3, 2: 3, 3: 3})
+
+check("an empty match awards nothing", provisional_bonus({}), {})
+check("one player takes the three", provisional_bonus({1: 12}), {1: 3})
+check("negative bps still ranks", provisional_bonus({1: -2, 2: -5}), {1: 3, 2: 2})
+
+# The hard test: FPL's own awards, for every player in a real gameweek.
+import collections, json
+from pathlib import Path
+DATA = Path(__file__).resolve().parent / "data"
+gw = json.loads((DATA / "gw01.json").read_text())
+meta = json.loads((DATA / "players.json").read_text())
+club_of = {int(k): v for k, v in meta["player_clubs"].items()}
+fx = [f for f in json.loads((DATA / "pl_fixtures.json").read_text())
+      if f.get("event") == gw["gameweek"]]
+seen = collections.Counter()
+for f in fx:
+    seen[f["team_h"]] += 1
+    seen[f["team_a"]] += 1
+
+stats = {e["id"]: e["stats"] for e in gw["elements"]}
+matched = missed = 0
+offenders = []
+for f in fx:
+    # Only matches where both clubs played once that round: for a double, the
+    # saved stats are the round's total rather than one match's, and this rule
+    # is per match.
+    if seen[f["team_h"]] > 1 or seen[f["team_a"]] > 1:
+        continue
+    pool = {pid: st for pid, st in stats.items()
+            if club_of.get(pid) in (f["team_h"], f["team_a"])
+            and (st.get("minutes") or 0) > 0}
+    got = provisional_bonus({pid: st.get("bps") or 0 for pid, st in pool.items()})
+    for pid, st in pool.items():
+        if got[pid] == (st.get("bonus") or 0):
+            matched += 1
+        else:
+            missed += 1
+            offenders.append((meta["names"].get(str(pid), pid),
+                              st.get("bps"), got[pid], st.get("bonus")))
+
+check_true(f"reproduces FPL's own bonus for all {matched + missed} players who "
+           f"featured in gameweek {gw['gameweek']}",
+           missed == 0, f"{missed} wrong: {offenders[:4]}")
 
 print()
 if FAILS:

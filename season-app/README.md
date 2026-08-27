@@ -101,6 +101,35 @@ The admin's own link is printed to the deploy log on every start, freshly
 issued, because on a database nobody holds a session for that log line is the
 only way in.
 
+## Live scores
+
+`/live` shows the real Premier League matches in the round being played, with
+goals, assists, red cards and penalties, and **who owns each name** — which
+the official game does not tell you. The reader's own players are marked out
+and each match says which of theirs is in it.
+
+Three things make it work:
+
+- **It fetches on demand.** Everything else reads from disk once a day, which
+  is the wrong shape for live scores, so `live.py` goes to
+  `/api/fixtures/?event=N` when someone opens the page and holds the answer for
+  `TTL_SECONDS`. Fourteen people refreshing is one request a minute, and the
+  page polls a fragment rather than reloading so the explainer boxes stay open.
+- **Attribution is FPL's, not ours.** The stats arrive already grouped per
+  fixture and per side, so nothing has to work out who played where — which
+  cannot be derived from a player's club for anyone who moved in January, and
+  cannot be done at all for a double gameweek.
+- **Bonus is computed from live BPS** by `scoring.provisional_bonus`, and is
+  labelled provisional until FPL settles it, at which point their figure is
+  shown instead. The rule is standard competition ranking: players level on
+  BPS share the higher place and use up the places below it, so three tied
+  second take two each and the single point goes unawarded. It reproduces
+  FPL's own awards for all 310 players who featured in gameweek 1, which the
+  test suite checks.
+
+**Nothing here feeds the league.** The table is scored from the saved gameweek
+files by the same engine as always; this is a window onto the football.
+
 ## The transfer week
 
 A gameweek has two windows, not one.
