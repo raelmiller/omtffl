@@ -9,28 +9,29 @@
 <helmet>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
   <style>
-    /* FLOODLIGHT on a phone. Nav moves to the thumb; the table loses its
-       columns rather than its meaning. 44px minimum hit targets. */
+    /* FLOODLIGHT on a phone, light. Both dark bands — the top bar and the
+       bottom nav — bracket the paper between them. Navigation sits in the
+       thumb's reach; the table loses columns rather than meaning.
+       44px minimum hit targets. */
     * { box-sizing: border-box; }
-    :root { --a: #C8FF3D; }
+    :root { --a: #C8FF3D; --ai: #3E6B12; }
     body {
-      margin: 0; background: #080A0D; color: #E6E9EE;
+      margin: 0; background: #F3F5EF; color: #14181D;
       font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
       font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
     }
-    a { color: var(--a); text-decoration: none; }
-    a:hover { color: #fff; }
+    a { color: var(--ai); text-decoration: none; }
+    a:hover { color: #14181D; }
     .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
             font-variant-numeric: tabular-nums; }
     .lab { font-family: "IBM Plex Mono", monospace; font-size: 9.5px;
-           letter-spacing: .16em; text-transform: uppercase; color: #6E7A8A; }
+           letter-spacing: .16em; text-transform: uppercase; color: #6F7A88; }
 
     .phone { display: flex; flex-direction: column; height: 844px; }
 
-    /* ── Top bar: identity only; navigation is at the bottom ── */
+    /* ── Top bar: identity only ─────────────────────────── */
     .bar { display: flex; align-items: center; gap: 10px; padding: 0 16px;
-           height: 52px; background: #0E1218;
-           border-bottom: 1px solid rgba(255,255,255,.07); flex: none; }
+           height: 52px; background: #12161C; color: #E6E9EE; flex: none; }
     .mark { font-weight: 800; font-size: 16px; letter-spacing: -.03em; }
     .mark i { font-style: normal; color: var(--a); }
     .av { margin-left: auto; width: 30px; height: 30px; border-radius: 999px;
@@ -39,17 +40,18 @@
 
     .scroll { flex: 1; overflow: hidden; }
 
-    /* ── Your week ──────────────────────────────────────── */
+    /* ── Your week: the one dark card, so it reads first ── */
     .your { margin: 12px; padding: 14px; border-radius: 10px;
-            background: linear-gradient(180deg,#141B24,#10151C);
-            border: 1px solid rgba(255,255,255,.08); }
+            background: #12161C; color: #E6E9EE;
+            box-shadow: 0 2px 10px rgba(16,24,32,.14); }
+    .your .lab { color: #97A2B1; }
     .yrow { display: flex; align-items: center; gap: 10px; }
     .clock { margin-left: auto; font-family: "IBM Plex Mono", monospace;
-             font-size: 13px; font-weight: 600; color: var(--a); }
+             font-size: 13px; font-weight: 700; color: var(--a); }
     .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--a);
            animation: pulse 2.4s ease-out infinite; }
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(200,255,61,.5) }
+      0% { box-shadow: 0 0 0 0 rgba(200,255,61,.45) }
       70% { box-shadow: 0 0 0 7px rgba(0,0,0,0) }
       100% { box-shadow: 0 0 0 0 rgba(0,0,0,0) }
     }
@@ -60,53 +62,52 @@
     .cta { width: 100%; height: 46px; margin-top: 14px; border: 0; border-radius: 8px;
            background: var(--a); color: #0A0D06; cursor: pointer;
            font-family: "Archivo", sans-serif; font-size: 15px; font-weight: 700;
-           letter-spacing: -.01em;
-           transition: transform .14s ease, filter .14s ease; }
-    .cta:active { transform: scale(.985); filter: brightness(.94); }
+           letter-spacing: -.01em; transition: transform .14s ease, filter .14s ease; }
+    .cta:active { transform: scale(.985); filter: brightness(.92); }
     .cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
     /* ── Standings, phone shape ─────────────────────────── */
     .head { display: flex; align-items: baseline; gap: 10px; padding: 4px 16px 8px; }
     .head h2 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -.03em; }
     .head .lab { margin-left: auto; }
-    .list { margin: 0 12px; background: #10151C; border: 1px solid rgba(255,255,255,.07);
-            border-radius: 10px; overflow: hidden; }
+    .list { margin: 0 12px; background: #FFFFFF; border: 1px solid rgba(16,24,32,.11);
+            border-radius: 10px; overflow: hidden;
+            box-shadow: 0 1px 2px rgba(16,24,32,.04); }
     .r { display: grid; grid-template-columns: 24px 1fr auto auto; gap: 10px;
          align-items: center; padding: 0 12px; height: 46px; position: relative;
-         border-bottom: 1px solid rgba(255,255,255,.045);
+         border-bottom: 1px solid rgba(16,24,32,.075);
          transition: background .14s ease; }
     .r:last-child { border-bottom: none; }
-    .r:active { background: #161D26; }
+    .r:active { background: #F1F4EC; }
     .r::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px;
-      width: 2px; background: var(--a); border-radius: 0 2px 2px 0;
+      width: 3px; background: var(--a); border-radius: 0 2px 2px 0;
       transform: scaleY(0); transition: transform .18s cubic-bezier(.2,.8,.3,1); }
-    .r.mine { background: rgba(200,255,61,.07); }
+    .r.mine { background: color-mix(in srgb, var(--a) 22%, #FFFFFF); }
     .r.mine::before { transform: scaleY(1); }
-    .rk { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #6E7A8A; }
+    .rk { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #7C8794; }
     .tm { min-width: 0; }
     .tn { font-size: 14px; font-weight: 600; letter-spacing: -.01em;
           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .ts { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #6E7A8A;
+    .ts { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #6F7A88;
           letter-spacing: .06em; }
-    .df { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #B6BFCC;
+    .df { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #454E59;
           text-align: right; width: 34px; }
-    .df.pos { color: var(--a); } .df.neg { color: #FF7A6B; }
+    .df.pos { color: var(--ai); font-weight: 500; } .df.neg { color: #B8342E; }
     .pt { font-family: "IBM Plex Mono", monospace; font-size: 15px; font-weight: 600;
           text-align: right; width: 20px; }
 
     /* ── Bottom navigation ──────────────────────────────── */
     .tabs { flex: none; display: grid; grid-template-columns: repeat(5,1fr);
-            background: #0E1218; border-top: 1px solid rgba(255,255,255,.08);
-            padding-bottom: 6px; }
+            background: #12161C; padding-bottom: 6px; }
     .t { display: flex; flex-direction: column; align-items: center; gap: 4px;
-         padding: 9px 0 5px; color: #6E7A8A; cursor: pointer;
+         padding: 9px 0 5px; color: #7B8695; cursor: pointer;
          font-family: "IBM Plex Mono", monospace; font-size: 9px;
          letter-spacing: .1em; text-transform: uppercase;
          transition: color .15s ease; min-height: 48px; }
-    .t:hover { color: #B6BFCC; }
+    .t:hover { color: #C6CEDA; }
     .t.on { color: var(--a); }
     .t svg { display: block; }
-    .t.on svg { filter: drop-shadow(0 0 6px rgba(200,255,61,.35)); }
+    .t.on svg { filter: drop-shadow(0 0 6px rgba(200,255,61,.4)); }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
