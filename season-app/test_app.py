@@ -1366,6 +1366,60 @@ db.withdraw("RM", gw_two, "waiver")
 check("and the league is left as it was found",
       len(db.free_agent_moves(gameweek=gw_two)), 0)
 
+print("\n── Refreshes actually reaching the page ────────────────")
+
+# The bug this pins: the cache fingerprint watched the gameweek files but not
+# players.json, which between rounds is the ONLY file a refresh rewrites. So
+# the fetch ran, the disk updated, and the app went on serving the injury news
+# it had booted with until something restarted it.
+watched = set(engine.WATCHED)
+check_true("every file a refresh writes is watched for changes",
+           {"players.json", "pl_fixtures.json"} <= watched,
+           f"missing {sorted({'players.json', 'pl_fixtures.json'} - watched)}")
+
+players_file = engine.DATA / "players.json"
+kept = players_file.read_text()
+try:
+    before_flags = len(engine.availability() or {})
+    before_version = engine.data_version()
+    blob = json.loads(kept)
+    blob.setdefault("availability", {})["999999"] = {
+        "status": "i", "chance": 0, "news": "Broken leg"}
+    players_file.write_text(json.dumps(blob, separators=(",", ":")))
+
+    check_true("a write to players.json moves the fingerprint",
+               engine.data_version() != before_version)
+    check_true("so new injury news reaches the app without a restart",
+               engine.availability(999999) is not None)
+    check("and the old flags are still there too",
+          len(engine.availability() or {}), before_flags + 1)
+finally:
+    players_file.write_text(kept)
+check_true("and it goes again when the file does",
+           engine.availability(999999) is None)
+# This section writes to a file that is committed, so say out loud that it put
+# it back. Leaving an "availability" key behind where there was none is the
+# difference between "nobody is hurt" and "we have never asked".
+check("and the committed file is left exactly as it was found",
+      players_file.read_text(), kept)
+
+# Whether a refresh is due, and whether anything is going to run it, are
+# separate questions and /health answers both.
+age = engine.data_age()
+check_true("the data says when it was last written", bool(age and age["written_at"]))
+check_true("and how old that makes it", isinstance(age["hours_ago"], float))
+hp = client.get("/health").json()
+check_true("health reports the refresh schedule", "scheduled" in hp["refresh"])
+sched = hp["refresh"]["scheduled"]
+check("and says plainly when nothing is scheduled", sched["running"], False)
+# The point is that a dead scheduler is never silent. Which reason it gives
+# depends on how the app was started, so the test pins that there IS one
+# rather than which — a stopped scheduler and a disabled one both need saying.
+check_true("and always says why, rather than leaving it to be guessed at",
+           isinstance(sched.get("why"), str) and len(sched["why"]) > 10,
+           str(sched))
+check_true("health carries the data's age", "written" in hp["data"])
+
 print("\n── The chrome ──────────────────────────────────────────")
 
 # The bar and the tab rail are the only navigation there is now, so they get

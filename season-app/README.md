@@ -39,6 +39,29 @@ Refreshes are non-destructive: a failed fetch leaves the last good data alone.
 A table that goes blank because an upstream API had a bad minute is worse than
 one that is a few hours stale.
 
+**Two things have to be true for a refresh to reach a page**, and each has bitten
+once:
+
+1. *Something has to run it.* The in-app job is daily at 07:45 UTC, which only
+   fires if the process is alive at that minute — and it often isn't, because
+   the container is replaced on every deploy. So the app also catches up on
+   boot when the data is older than `STALE_AFTER_HOURS`. `/health` reports
+   `refresh.scheduled`, which says whether anything is scheduled at all and
+   why not if it isn't.
+2. *The cache has to notice.* Scoring is cached on a fingerprint of the data
+   files' mtimes, and **any file the fetcher writes that isn't in
+   `engine.WATCHED` is a file whose new contents never reach a page.**
+   `players.json` was missing from that list, which is the one that matters:
+   between rounds it is the only file that changes, so injury news, suspensions
+   and club transfers went stale until a restart. `/health` reports
+   `data.written`, so "when did this last change" is answerable without
+   guessing at the numbers.
+
+Note that the container's copy of the data is ephemeral — a redeploy resets it
+to whatever is committed, and the Actions workflow only commits on Mondays and
+Tuesdays. Mid-week injury news the app fetched itself does not survive a deploy,
+which the boot catch-up above is what covers.
+
 ## Running it
 
 ```bash

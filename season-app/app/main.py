@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -68,6 +69,20 @@ def startup():
         return
     scheduler.add_job(fetcher.refresh, REFRESH_SCHEDULE,
                       id="refresh", replace_existing=True)
+    # A daily job only fires if the process happens to be alive at that minute,
+    # and this one isn't: the container is replaced on every deploy and recycled
+    # besides. Restart at 08:00 and the next refresh was a whole day away, which
+    # is how the app ends up serving last week's injury news.
+    #
+    # So catch up on boot when the data is older than a refresh cycle. Twenty
+    # seconds out, and on the scheduler's own thread, so it never holds up the
+    # port opening — a slow FPL response must not look like a failed deploy.
+    if engine.stale():
+        scheduler.add_job(
+            fetcher.refresh, "date", id="catchup", replace_existing=True,
+            run_date=datetime.now(timezone.utc) + timedelta(seconds=20))
+        print("[matchweek] data is "
+              f"{engine.data_age()['hours_ago']}h old — catching up on boot")
     scheduler.start()
 
 
@@ -166,6 +181,26 @@ def gameweek(request: Request, number: int):
     return templates.TemplateResponse("gameweek.html", ctx)
 
 
+def _next_refresh():
+    """When the next automatic refresh is due, or why there isn't one.
+
+    Worth reporting plainly: a scheduler that never starts leaves `last`
+    permanently null, which looks the same as a deploy that happened five
+    minutes ago.
+    """
+    if os.environ.get("DISABLE_SCHEDULER"):
+        return {"running": False, "why": "DISABLE_SCHEDULER is set"}
+    if not scheduler.running:
+        return {"running": False, "why": "the scheduler is not running"}
+    job = scheduler.get_job("refresh")
+    nxt = getattr(job, "next_run_time", None) if job else None
+    return {
+        "running": True,
+        "next": nxt.isoformat(timespec="seconds") if nxt else None,
+        "cron": str(REFRESH_SCHEDULE),
+    }
+
+
 @app.get("/health")
 def health():
     """Deployment truth: what's on disk, and whether we can refresh it.
@@ -187,6 +222,7 @@ def health():
             "last": fetcher.STATUS["last_refresh"],
             "ok": fetcher.STATUS["last_refresh_ok"],
             "detail": fetcher.STATUS["last_refresh_detail"],
+            "scheduled": _next_refresh(),
         },
         "data": engine.freshness(),
         "database": db.stats(),

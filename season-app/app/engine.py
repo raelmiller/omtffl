@@ -52,6 +52,17 @@ def gameweek_files():
     return sorted(DATA.glob("gw*.json"))
 
 
+# Everything a refresh can rewrite. This list is the cache's whole notion of
+# "the data changed", so a file the fetcher writes and this misses is a file
+# whose new contents never reach a page: the refresh runs, the disk updates,
+# and the app carries on serving what it had until the process restarts.
+#
+# players.json is the one that bites. Between rounds it is the ONLY thing that
+# changes — injury news, suspensions, a player transferred to another club —
+# which is precisely what the daily refresh exists to pick up.
+WATCHED = ("squads.json", "fixtures.json", "players.json", "pl_fixtures.json")
+
+
 def data_version():
     """A cheap fingerprint of the data on disk, for cache invalidation.
 
@@ -59,7 +70,7 @@ def data_version():
     when the fetcher writes. Keying the cache on file mtimes means a refresh
     is picked up immediately without a restart.
     """
-    files = gameweek_files() + [DATA / "squads.json", DATA / "fixtures.json"]
+    files = gameweek_files() + [DATA / name for name in WATCHED]
     return tuple((f.name, f.stat().st_mtime_ns) for f in files if f.exists())
 
 
@@ -341,6 +352,39 @@ def season(stored=None, transactions=None, drafted=None, names=None):
     return _season(data_version(), len(payload), payload, real, tx, mg, nm)
 
 
+# Longer than the gap between two scheduled refreshes would be, so a single
+# missed run doesn't cry wolf, but short enough that a day of injury news going
+# missing is visible on /health rather than being noticed by a manager.
+STALE_AFTER_HOURS = 30
+
+
+def data_age():
+    """When the data on disk was last written, and how long ago that was.
+
+    Watches everything a refresh can rewrite. Without this the only way to
+    tell a working refresh from a dead one was to know what the numbers ought
+    to say, which is no way to run a deployment.
+    """
+    files = [DATA / name for name in WATCHED] + gameweek_files()
+    stamps = [f.stat().st_mtime for f in files if f.exists()]
+    if not stamps:
+        return None
+    newest = max(stamps)
+    hours = (datetime.now(timezone.utc).timestamp() - newest) / 3600
+    return {
+        "written_at": datetime.fromtimestamp(
+            newest, timezone.utc).isoformat(timespec="seconds"),
+        "hours_ago": round(hours, 1),
+        "stale": hours > STALE_AFTER_HOURS,
+    }
+
+
+def stale():
+    """Has nothing been written for longer than a refresh cycle?"""
+    age = data_age()
+    return bool(age and age["stale"])
+
+
 def freshness():
     """What data is on disk and how settled it is — the health page's job."""
     files = gameweek_files()
@@ -364,6 +408,7 @@ def freshness():
                          if "availability" in meta else None),
         "squads": bool((DATA / "squads.json").exists()),
         "fixtures": bool((DATA / "fixtures.json").exists()),
+        "written": data_age(),
         "shadow_dir": str(SHADOW),
         "checked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
