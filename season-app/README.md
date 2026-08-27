@@ -204,6 +204,13 @@ sentence beside it, and says `offered` rather than `gave`. The pick-team page
 carries the same warning, because that is where a manager notices the player
 is missing.
 
+**The settled table stops being a table below 40rem.** `table` carries a 32rem
+`min-width` and scrolls inside `.scroll`, which on a 390px screen puts Points
+and Outcome off the right edge — so the one cell that says whether a trade was
+performed, and why not, was invisible on a phone unless you thought to swipe a
+table sideways. Stacked, every cell is on screen. The diagnosis being in a
+column nobody can see is the same failure as not printing it at all.
+
 **The Settled section is always on the page, empty or not.** It used to live
 inside `{% if settled %}`, so a league with nothing settled yet saw no section
 at all — which looks exactly like a page that doesn't list trades, and sent

@@ -255,7 +255,7 @@
   above.</p>
   {% else %}
   <div class="panel scroll">
-    <table>
+    <table class="settled">
       <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Outcome</th></tr></thead>
       <tbody>
       {% for t in settled %}
@@ -265,8 +265,8 @@
         {% set done = t.outcome.state == 'accepted' and not t.problem %}
         {% set verb = 'gave' if done else 'offered' %}
         <tr>
-          <td>{{ t.gameweek }}</td>
-          <td>
+          <td class="tc-gw">{{ t.gameweek }}</td>
+          <td class="tc-trade">
             <div class="tgave">
               <span class="tgt">{{ t.proposer_team }}</span>
               <span class="tgv">{{ verb }}</span>
@@ -278,9 +278,9 @@
               <span class="tgp">{% if t.in_names %}{% for n in t.in_names %}<span class="tgn">{{ n }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
             </div>
           </td>
-          <td class="num">{{ t.points or '—' }}
+          <td class="num tc-pts">{% if t.points %}{{ t.points }}{% else %}<span class="pad">&mdash;</span>{% endif %}
             {%- if t.points %}<span class="tdest">{% if done %}to {{ t.receiver_team }}{% else %}never sent{% endif %}</span>{% endif %}</td>
-          <td>
+          <td class="tc-out">
             {% if done %}<span class="yes">done</span>
             {% elif t.problem %}<span class="no">not applied</span>
               <span class="treason">{{ t.problem }}</span>

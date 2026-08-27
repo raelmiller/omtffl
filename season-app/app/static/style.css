@@ -893,6 +893,30 @@ input[aria-invalid="true"], select[aria-invalid="true"] {
    takes the body face back and reads left with the rest of the row. */
 .tdest { display: block; font-family: var(--body); font-size: .72rem;
          color: var(--muted); white-space: nowrap; }
+/* Below 40rem the settled table stops being a table. `table` carries a 32rem
+   min-width and scrolls inside .scroll, which on a 390px screen puts Points
+   and Outcome off the right edge — so the one cell that says whether a trade
+   was actually performed, and why not, was invisible on a phone unless you
+   thought to swipe the table sideways. Stacked, every cell is on screen. */
+@media (max-width: 40rem) {
+  table.settled { min-width: 0; }
+  table.settled thead { display: none; }
+  table.settled, table.settled tbody, table.settled tr, table.settled td {
+    display: block; width: 100%;
+  }
+  table.settled tr { padding: .6rem 0; border-bottom: 1px solid var(--hair); }
+  table.settled tr:last-child { border-bottom: 0; }
+  table.settled td { height: auto; padding: 0; border-bottom: 0; }
+  table.settled .tc-gw { font-family: var(--mono); font-size: .72rem;
+                         color: var(--muted); }
+  table.settled .tc-gw::before { content: "GW"; }
+  table.settled .tc-pts { text-align: left; margin-top: .25rem; }
+  table.settled .tc-pts .tdest { display: inline; margin-left: .3rem; }
+  table.settled .tc-pts .pad { display: none; }  /* an em dash on its own line */
+  table.settled .tc-out { margin-top: .3rem; }
+  table.settled .treason { max-width: none; }
+}
+
 /* The engine's own sentence for why a trade wasn't performed. Unlike .tdest
    it wraps — these are full clauses, not two-word labels. */
 .treason { display: block; max-width: 22rem; margin-top: .15rem;

@@ -733,6 +733,18 @@ check_true("and the one offered is still where he was",
 check_true("the team page warns that a transaction was thrown out",
            "could not be applied" in flat(c1.get("/declare").text))
 
+# `table` carries a 32rem min-width and scrolls inside .scroll, which on a
+# 390px screen pushes Points and Outcome off the right edge — so the cell
+# saying whether a trade happened, and why not, was invisible on a phone.
+_css = (Path(__file__).parent / "app/static/style.css").read_text()
+check_true("the settled table has its own class to hang a phone layout on",
+           'class="settled"' in (Path(__file__).parent
+                                 / "app/templates/trade.html").read_text())
+check_true("and stops being a table on a narrow screen",
+           "table.settled thead { display: none; }" in _css)
+check_true("shedding the min-width that caused the sideways scroll",
+           "table.settled { min-width: 0; }" in _css)
+
 with db.connect() as _conn:
     _conn.execute("DELETE FROM trade WHERE id = ?", (_rid,))
 check_true("with it gone the warning goes too",
