@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap">
+  <style>
+    /* TERRACE — matchday programme. Condensed poster display, bone on
+       near-black, signal orange. Rules not radii; bands not cards. */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: #0F0F10; color: #EDE8DF;
+      font-family: "Spline Sans", ui-sans-serif, system-ui, sans-serif;
+      font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
+    a { color: #FF5A1F; text-decoration: none; }
+    a:hover { color: #FF8354; }
+    .anton { font-family: "Anton", "Arial Narrow", sans-serif;
+             font-weight: 400; letter-spacing: .01em; text-transform: uppercase; }
+    .mono { font-family: "Spline Sans Mono", ui-monospace, Menlo, monospace;
+            font-variant-numeric: tabular-nums; }
+    .lab { font-family: "Spline Sans Mono", monospace; font-size: 10px;
+           letter-spacing: .2em; text-transform: uppercase; color: #8A857C; }
+
+    /* ── Masthead band ──────────────────────────────────── */
+    .top { display: flex; align-items: center; gap: 16px;
+           padding: 14px 32px; border-bottom: 2px solid #EDE8DF; }
+    .mark { font-family: "Anton", sans-serif; font-size: 26px;
+            letter-spacing: .02em; text-transform: uppercase; line-height: 1; }
+    .mark span { color: #FF5A1F; }
+    .badge { font-family: "Spline Sans Mono", monospace; font-size: 10px;
+             letter-spacing: .18em; text-transform: uppercase;
+             background: #FF5A1F; color: #0F0F10; padding: 4px 7px; }
+    .who { margin-left: auto; display: flex; align-items: center; gap: 10px;
+           font-size: 13px; font-weight: 600; }
+    .av { width: 26px; height: 26px; display: grid; place-items: center;
+          border: 2px solid #EDE8DF; font-family: "Spline Sans Mono", monospace;
+          font-size: 10px; }
+
+    /* ── Tabs as a ticket strip ─────────────────────────── */
+    .rail { display: flex; border-bottom: 1px solid rgba(237,232,223,.18); }
+    .tab { padding: 11px 20px; font-family: "Anton", sans-serif;
+           font-size: 14px; letter-spacing: .06em; text-transform: uppercase;
+           color: #8A857C; cursor: pointer; position: relative;
+           border-right: 1px solid rgba(237,232,223,.12);
+           transition: color .15s ease, background .15s ease; }
+    .tab:hover { color: #EDE8DF; background: rgba(237,232,223,.05); }
+    .tab.on { color: #0F0F10; background: #FF5A1F; }
+
+    /* ── Scoreboard band ────────────────────────────────── */
+    .board {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 32px;
+      align-items: center; padding: 26px 32px;
+      border-bottom: 2px solid #EDE8DF; background: #141415;
+    }
+    .gw { font-family: "Anton", sans-serif; font-size: 76px; line-height: .82;
+          letter-spacing: -.01em; color: #FF5A1F; }
+    .gwsub { margin-top: 6px; }
+    .headline { font-family: "Anton", sans-serif; font-size: 34px; line-height: 1;
+                letter-spacing: .01em; text-transform: uppercase; text-wrap: balance; }
+    .headline b { color: #FF5A1F; font-weight: 400; }
+    .cdown { text-align: right; }
+    .cnum { font-family: "Anton", sans-serif; font-size: 40px; line-height: 1;
+            letter-spacing: .01em; }
+    .cta {
+      display: inline-flex; align-items: center; margin-top: 12px;
+      height: 40px; padding: 0 22px; border: 2px solid #FF5A1F; background: #FF5A1F;
+      color: #0F0F10; font-family: "Anton", sans-serif; font-size: 15px;
+      letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+      transition: background .14s ease, color .14s ease, box-shadow .14s ease;
+    }
+    .cta:hover { background: transparent; color: #FF5A1F;
+                 box-shadow: 4px 4px 0 rgba(255,90,31,.35); }
+    .cta:active { box-shadow: 0 0 0 rgba(255,90,31,0); }
+    .cta:focus-visible { outline: 2px solid #EDE8DF; outline-offset: 3px; }
+
+    /* ── Ledger ─────────────────────────────────────────── */
+    .page { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(0,1fr);
+            gap: 0; align-items: start; }
+    .col { padding: 24px 32px 32px; }
+    .col + .col { border-left: 1px solid rgba(237,232,223,.14); }
+    h2 { margin: 0; font-family: "Anton", sans-serif; font-size: 22px;
+         letter-spacing: .04em; text-transform: uppercase; }
+    .sect { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+    .sect .lab { margin-left: auto; }
+
+    .lg { border-top: 2px solid #EDE8DF; }
+    .lrow {
+      display: grid; grid-template-columns: 30px 1fr 46px 46px 34px;
+      gap: 12px; align-items: center; padding: 9px 6px;
+      border-bottom: 1px solid rgba(237,232,223,.13);
+      transition: background .14s ease, color .14s ease;
+    }
+    .lrow:hover { background: #1B1B1C; }
+    .lrow.mine { background: rgba(255,90,31,.12);
+                 box-shadow: inset 3px 0 0 #FF5A1F; }
+    .lrk { font-family: "Anton", sans-serif; font-size: 17px; color: #6E6A63; }
+    .lrow.mine .lrk, .lrow.first .lrk { color: #FF5A1F; }
+    .lnm { font-size: 15px; font-weight: 600; letter-spacing: -.005em;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lnm em { font-style: normal; font-family: "Spline Sans Mono", monospace;
+              font-size: 10px; color: #8A857C; margin-left: 8px; letter-spacing: .08em; }
+    .lfig { font-family: "Spline Sans Mono", monospace; font-size: 12px;
+            text-align: right; color: #B3ACA1; }
+    .lfig.up { color: #EDE8DF; }
+    .lfig.dn { color: #C8563A; }
+    .lp { font-family: "Anton", sans-serif; font-size: 19px; text-align: right; }
+
+    /* ── Results as programme entries ───────────────────── */
+    .res { border-top: 2px solid #EDE8DF; }
+    .r {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px;
+      align-items: center; padding: 11px 4px;
+      border-bottom: 1px solid rgba(237,232,223,.13);
+      transition: background .14s ease;
+    }
+    .r:hover { background: #1B1B1C; }
+    .rn { font-size: 13px; font-weight: 500; overflow: hidden;
+          text-overflow: ellipsis; white-space: nowrap; color: #8A857C; }
+    .rn.r2 { text-align: right; }
+    .rn.w { color: #EDE8DF; font-weight: 700; }
+    .rs { font-family: "Anton", sans-serif; font-size: 16px; letter-spacing: .04em;
+          padding: 2px 8px; border: 1px solid rgba(237,232,223,.2); white-space: nowrap; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</helmet>
+
+<div>
+  <div class="top">
+    <span class="mark">OMTFFL<span>.</span></span>
+    <span class="badge">2026/27</span>
+    <div class="who"><span class="av">RM</span>Quantum of Szobos</div>
+  </div>
+
+  <div class="rail">
+    <span class="tab on">Table</span>
+    <span class="tab">Stats</span>
+    <span class="tab">Pick your team</span>
+    <span class="tab">Trades</span>
+    <span class="tab">Waivers</span>
+  </div>
+
+  <div class="board">
+    <div>
+      <div class="gw">02</div>
+      <div class="lab gwsub">Gameweek</div>
+    </div>
+    <div>
+      <div class="headline">You play <b>ThunderBijol</b><br>and you haven&rsquo;t picked a team.</div>
+      <div class="lab" style="margin-top:10px">Placeholder eleven rolls over from GW1 &middot; 36 pts</div>
+    </div>
+    <div class="cdown">
+      <div class="lab">Closes Fri 18:30</div>
+      <div class="cnum">2d 04h</div>
+      <button class="cta">Pick your team</button>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="col">
+      <div class="sect">
+        <h2>The table</h2>
+        <span class="lab">After GW1</span>
+      </div>
+      <div class="lg">
+        <div class="lrow first">
+          <span class="lrk">1</span>
+          <span class="lnm">You HallWhite mate?<em>CH</em></span>
+          <span class="lfig up">59</span><span class="lfig dn">32</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">2</span>
+          <span class="lnm">Isakly<em>YG</em></span>
+          <span class="lfig up">37</span><span class="lfig dn">22</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">3</span>
+          <span class="lnm">For Beto o For Wirtz<em>SG</em></span>
+          <span class="lfig up">30</span><span class="lfig dn">20</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">4</span>
+          <span class="lnm">ThunderBijol<em>CCP</em></span>
+          <span class="lfig up">42</span><span class="lfig dn">33</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">5</span>
+          <span class="lnm">Meet me on the Roefs<em>AJ</em></span>
+          <span class="lfig up">44</span><span class="lfig dn">36</span><span class="lp">3</span>
+        </div>
+        <div class="lrow mine">
+          <span class="lrk">6</span>
+          <span class="lnm">Quantum of Szobos<em>RM</em></span>
+          <span class="lfig up">36</span><span class="lfig dn">32</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">7</span>
+          <span class="lnm">The Gyokfather<em>EE</em></span>
+          <span class="lfig up">34</span><span class="lfig dn">30</span><span class="lp">3</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">8</span>
+          <span class="lnm">Joao and Silent Bobb<em>TM</em></span>
+          <span class="lfig up">32</span><span class="lfig dn">36</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">9</span>
+          <span class="lnm">Palmer Sutra<em>DP</em></span>
+          <span class="lfig up">30</span><span class="lfig dn">34</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">10</span>
+          <span class="lnm">License to Kelleher<em>AF</em></span>
+          <span class="lfig up">36</span><span class="lfig dn">44</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">11</span>
+          <span class="lnm">Brobbey&rsquo;sGonnaGetYa!<em>OD</em></span>
+          <span class="lfig up">33</span><span class="lfig dn">42</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">12</span>
+          <span class="lnm">Becker Call Saul<em>LG</em></span>
+          <span class="lfig up">20</span><span class="lfig dn">30</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">13</span>
+          <span class="lnm">Quantum of Tzolis<em>RF</em></span>
+          <span class="lfig up">22</span><span class="lfig dn">37</span><span class="lp">0</span>
+        </div>
+        <div class="lrow">
+          <span class="lrk">14</span>
+          <span class="lnm">La Prima Dimwit<em>LRC</em></span>
+          <span class="lfig up">32</span><span class="lfig dn">59</span><span class="lp">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sect">
+        <h2>Gameweek 1</h2>
+        <span class="lab">In progress</span>
+      </div>
+      <div class="res">
+        <div class="r">
+          <span class="rn r2">Joao and Silent Bobb</span>
+          <span class="rs">32&ndash;36</span>
+          <span class="rn w">Quantum of Szobos</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">You HallWhite mate?</span>
+          <span class="rs">59&ndash;32</span>
+          <span class="rn">La Prima Dimwit</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">For Beto o For Wirtz</span>
+          <span class="rs">30&ndash;20</span>
+          <span class="rn">Becker Call Saul</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">Isakly</span>
+          <span class="rs">37&ndash;22</span>
+          <span class="rn">Quantum of Tzolis</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">The Gyokfather</span>
+          <span class="rs">34&ndash;30</span>
+          <span class="rn">Palmer Sutra</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">Meet me on the Roefs</span>
+          <span class="rs">44&ndash;36</span>
+          <span class="rn">License to Kelleher</span>
+        </div>
+        <div class="r">
+          <span class="rn r2 w">ThunderBijol</span>
+          <span class="rs">42&ndash;33</span>
+          <span class="rn">Brobbey&rsquo;sGonnaGetYa!</span>
+        </div>
+      </div>
+      <div class="lab" style="margin-top:14px; line-height:1.7">
+        Not settled &mdash; FPL revises stats for a day or two after the final
+        whistle, so these can still move.
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

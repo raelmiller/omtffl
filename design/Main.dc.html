@@ -1,0 +1,420 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <style>
+    /* FLOODLIGHT — broadcast desk. One accent, deep slate, dense data.
+       4px spatial grid. Type scale 10/12/13/15/19/24/34/48. */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: #080A0D; color: #E6E9EE;
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-size: 15px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--a); text-decoration: none; }
+    a:hover { color: #fff; }
+    .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+            font-variant-numeric: tabular-nums; }
+
+    /* ── Chrome ─────────────────────────────────────────── */
+    .bar {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 24px; height: 56px;
+      background: #0E1218; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .mark {
+      font-weight: 800; font-size: 19px; letter-spacing: -.03em;
+      display: flex; align-items: baseline; gap: 8px;
+    }
+    .mark i { font-style: normal; color: var(--a); }
+    .season {
+      font-family: "IBM Plex Mono", monospace; font-size: 10px;
+      letter-spacing: .14em; text-transform: uppercase; color: #7C8797;
+      border: 1px solid rgba(255,255,255,.14); border-radius: 3px;
+      padding: 3px 6px;
+    }
+    .barright { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .who {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600;
+      padding: 5px 8px 5px 5px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10); background: #151A22;
+      transition: border-color .16s ease, background .16s ease;
+    }
+    .who:hover { border-color: rgba(255,255,255,.24); background: #1A212B; }
+    .av {
+      width: 22px; height: 22px; border-radius: 999px; display: grid;
+      place-items: center; background: var(--a); color: #0A0D06;
+      font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 600;
+    }
+
+    /* ── Tab rail ───────────────────────────────────────── */
+    .rail {
+      display: flex; gap: 4px; padding: 0 16px; height: 44px;
+      align-items: stretch;
+      background: #0B0F14; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .tab {
+      position: relative; display: flex; align-items: center; padding: 0 14px;
+      font-size: 13px; font-weight: 600; color: #8C97A6; cursor: pointer;
+      transition: color .16s ease;
+    }
+    .tab::after {
+      content: ""; position: absolute; left: 10px; right: 10px; bottom: 0;
+      height: 2px; background: var(--a); border-radius: 2px 2px 0 0;
+      transform: scaleX(0); transform-origin: 50% 100%;
+      transition: transform .22s cubic-bezier(.2,.8,.3,1);
+    }
+    .tab:hover { color: #D6DCE5; }
+    .tab:hover::after { transform: scaleX(.55); }
+    .tab.on { color: #fff; }
+    .tab.on::after { transform: scaleX(1); }
+
+    /* ── Status strip ───────────────────────────────────── */
+    .strip {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 24px; background: #0A0E13;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: 12px; color: #8C97A6;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 999px; background: var(--a);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--a) 55%, transparent);
+      animation: pulse 2.4s ease-out infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--a) 50%, transparent); }
+      70% { box-shadow: 0 0 0 7px rgba(0,0,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+    }
+    .clock { color: var(--a); font-weight: 600; }
+
+    /* ── Layout: asymmetric, not centred ────────────────── */
+    .page {
+      display: grid; grid-template-columns: minmax(0,1.62fr) minmax(0,1fr);
+      gap: 24px; padding: 24px; align-items: start;
+    }
+    .head { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 12px; }
+    .h2 { font-size: 24px; font-weight: 800; letter-spacing: -.03em; margin: 0; }
+    .lab {
+      font-family: "IBM Plex Mono", monospace; font-size: 10px;
+      letter-spacing: .16em; text-transform: uppercase; color: #6E7A8A;
+      margin-left: auto;
+    }
+    .card {
+      background: #10151C; border: 1px solid rgba(255,255,255,.07);
+      border-radius: 8px; overflow: hidden;
+    }
+
+    /* ── Standings ──────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
+      letter-spacing: .14em; text-transform: uppercase; color: #6E7A8A;
+      text-align: right; padding: 10px 8px; background: #0C1117;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    thead th.l { text-align: left; }
+    tbody td {
+      padding: 0 8px; height: 40px; font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,.045); text-align: right;
+    }
+    tbody td.l { text-align: left; }
+    tbody tr { position: relative; transition: background .14s ease; }
+    tbody tr:hover { background: #161D26; }
+    tbody tr td:first-child { position: relative; }
+    tbody tr td:first-child::before {
+      content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
+      background: var(--a); border-radius: 0 2px 2px 0;
+      transform: scaleY(0); transform-origin: 50% 50%;
+      transition: transform .18s cubic-bezier(.2,.8,.3,1);
+    }
+    tbody tr:hover td:first-child::before { transform: scaleY(1); }
+    tbody tr.mine { background: color-mix(in srgb, var(--a) 7%, transparent); }
+    tbody tr.mine td:first-child::before { transform: scaleY(1); }
+    tbody tr:last-child td { border-bottom: none; }
+    .rk { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #6E7A8A; width: 34px; padding-left: 14px; }
+    .tm { font-weight: 600; letter-spacing: -.01em; }
+    .tm:hover { color: var(--a); }
+    .mgr {
+      font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #7C8797;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 3px;
+      padding: 1px 4px; margin-left: 6px; letter-spacing: .04em;
+    }
+    .wdl { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #7C8797; letter-spacing: .06em; }
+    .wdl b { color: #C3CBD6; font-weight: 500; }
+    .num { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #B6BFCC; }
+    .pos { color: var(--a); }
+    .neg { color: #FF7A6B; }
+    .pts { font-family: "IBM Plex Mono", monospace; font-size: 14px; font-weight: 600; color: #fff; width: 46px; padding-right: 14px; }
+    .promo td { box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--a) 30%, transparent); }
+
+    /* ── Side column ────────────────────────────────────── */
+    .side { display: flex; flex-direction: column; gap: 16px; }
+    .next { padding: 16px; background:
+      linear-gradient(180deg, #141B24 0%, #10151C 100%);
+      border: 1px solid rgba(255,255,255,.08); border-radius: 8px; }
+    .vs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin: 14px 0 4px; }
+    .vsname { font-size: 15px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
+    .vsr { text-align: right; }
+    .vsmid { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #6E7A8A; letter-spacing: .1em; }
+    .cta {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; margin-top: 14px; height: 38px; border-radius: 6px;
+      background: var(--a); color: #0A0D06; border: 0;
+      font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 700;
+      letter-spacing: -.01em; cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
+    }
+    .cta:hover { transform: translateY(-1px); filter: brightness(1.06);
+      box-shadow: 0 6px 18px color-mix(in srgb, var(--a) 22%, transparent); }
+    .cta:active { transform: translateY(0); filter: brightness(.94); }
+    .cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+    .fx { display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+          border-bottom: 1px solid rgba(255,255,255,.045);
+          transition: background .14s ease; }
+    .fx:last-child { border-bottom: none; }
+    .fx:hover { background: #161D26; }
+    .fxn { flex: 1; font-size: 13px; font-weight: 600; letter-spacing: -.01em;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fxn.r { text-align: right; }
+    .fxn.won { color: var(--a); }
+    .sc { font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+          padding: 3px 8px; border-radius: 4px; background: #0B1016;
+          border: 1px solid rgba(255,255,255,.09); white-space: nowrap; }
+    .bolt { color: var(--a); font-size: 11px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</helmet>
+
+<div style="--a: {{accent}}">
+  <div class="bar">
+    <div class="mark">OMTFFL<i>.</i></div>
+    <span class="season">2026/27</span>
+    <div class="barright">
+      <span class="season">GW2 open</span>
+      <div class="who"><span class="av">RM</span>Quantum of Szobos</div>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="tab on">Table</div>
+    <div class="tab">Stats</div>
+    <div class="tab">Pick your team</div>
+    <div class="tab">Trades</div>
+    <div class="tab">Waivers</div>
+  </div>
+
+  <div class="strip">
+    <span class="dot"></span>
+    <span>Gameweek 2 closes Fri 28 Aug, 18:30</span>
+    <span class="clock mono">2d 04h 12m</span>
+    <span style="margin-left:auto">1 of 38 rounds scored &middot; league average 34 a week</span>
+  </div>
+
+  <div class="page">
+    <div>
+      <div class="head">
+        <h2 class="h2">The table</h2>
+        <span class="lab">After gameweek 1</span>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th class="l" style="padding-left:14px">#</th>
+              <th class="l">Team</th>
+              <th class="l">W&ndash;D&ndash;L</th>
+              <th>For</th><th>Ag</th><th>Diff</th>
+              <th style="padding-right:14px">Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="promo">
+              <td class="l rk">1</td>
+              <td class="l"><span class="tm">You HallWhite mate?</span><span class="mgr">CH</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">59</td><td class="num">32</td>
+              <td class="num pos">+27</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">2</td>
+              <td class="l"><span class="tm">Isakly</span><span class="mgr">YG</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">37</td><td class="num">22</td>
+              <td class="num pos">+15</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">3</td>
+              <td class="l"><span class="tm">For Beto o For Wirtz</span><span class="mgr">SG</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">30</td><td class="num">20</td>
+              <td class="num pos">+10</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">4</td>
+              <td class="l"><span class="tm">ThunderBijol</span><span class="mgr">CCP</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">42</td><td class="num">33</td>
+              <td class="num pos">+9</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">5</td>
+              <td class="l"><span class="tm">Meet me on the Roefs</span><span class="mgr">AJ</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">44</td><td class="num">36</td>
+              <td class="num pos">+8</td><td class="pts">3</td>
+            </tr>
+            <tr class="mine">
+              <td class="l rk">6</td>
+              <td class="l"><span class="tm">Quantum of Szobos</span><span class="mgr">RM</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">36</td><td class="num">32</td>
+              <td class="num pos">+4</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">7</td>
+              <td class="l"><span class="tm">The Gyokfather</span><span class="mgr">EE</span></td>
+              <td class="l wdl"><b>1</b>&ndash;0&ndash;0</td>
+              <td class="num">34</td><td class="num">30</td>
+              <td class="num pos">+4</td><td class="pts">3</td>
+            </tr>
+            <tr>
+              <td class="l rk">8</td>
+              <td class="l"><span class="tm">Joao and Silent Bobb</span><span class="mgr">TM</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">32</td><td class="num">36</td>
+              <td class="num neg">&minus;4</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">9</td>
+              <td class="l"><span class="tm">Palmer Sutra</span><span class="mgr">DP</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">30</td><td class="num">34</td>
+              <td class="num neg">&minus;4</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">10</td>
+              <td class="l"><span class="tm">License to Kelleher</span><span class="mgr">AF</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">36</td><td class="num">44</td>
+              <td class="num neg">&minus;8</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">11</td>
+              <td class="l"><span class="tm">Brobbey&rsquo;sGonnaGetYa!</span><span class="mgr">OD</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">33</td><td class="num">42</td>
+              <td class="num neg">&minus;9</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">12</td>
+              <td class="l"><span class="tm">Becker Call Saul</span><span class="mgr">LG</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">20</td><td class="num">30</td>
+              <td class="num neg">&minus;10</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">13</td>
+              <td class="l"><span class="tm">Quantum of Tzolis</span><span class="mgr">RF</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">22</td><td class="num">37</td>
+              <td class="num neg">&minus;15</td><td class="pts">0</td>
+            </tr>
+            <tr>
+              <td class="l rk">14</td>
+              <td class="l"><span class="tm">La Prima Dimwit</span><span class="mgr">LRC</span></td>
+              <td class="l wdl">0&ndash;0&ndash;<b>1</b></td>
+              <td class="num">32</td><td class="num">59</td>
+              <td class="num neg">&minus;27</td><td class="pts">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="next">
+        <span class="lab" style="margin:0">Your gameweek 2</span>
+        <div class="vs">
+          <div>
+            <div class="vsname">Quantum of Szobos</div>
+            <div class="vsmid" style="margin-top:4px">RM &middot; 6th</div>
+          </div>
+          <div class="vsmid">V</div>
+          <div class="vsr">
+            <div class="vsname">ThunderBijol</div>
+            <div class="vsmid" style="margin-top:4px">4th &middot; CCP</div>
+          </div>
+        </div>
+        <button class="cta">Pick your team</button>
+      </div>
+
+      <div>
+        <div class="head">
+          <h2 class="h2" style="font-size:19px">Gameweek 1</h2>
+          <span class="lab">In progress</span>
+        </div>
+        <div class="card">
+          <div class="fx">
+            <span class="fxn r">Joao and Silent Bobb</span>
+            <span class="sc">32 &ndash; 36</span>
+            <span class="fxn won">Quantum of Szobos <span class="bolt">&#9889;</span></span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">You HallWhite mate?</span>
+            <span class="sc">59 &ndash; 32</span>
+            <span class="fxn">La Prima Dimwit</span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">For Beto o For Wirtz</span>
+            <span class="sc">30 &ndash; 20</span>
+            <span class="fxn">Becker Call Saul</span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">Isakly</span>
+            <span class="sc">37 &ndash; 22</span>
+            <span class="fxn">Quantum of Tzolis</span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">The Gyokfather</span>
+            <span class="sc">34 &ndash; 30</span>
+            <span class="fxn">Palmer Sutra</span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">Meet me on the Roefs</span>
+            <span class="sc">44 &ndash; 36</span>
+            <span class="fxn">License to Kelleher</span>
+          </div>
+          <div class="fx">
+            <span class="fxn r won">ThunderBijol</span>
+            <span class="sc">42 &ndash; 33</span>
+            <span class="fxn">Brobbey&rsquo;sGonnaGetYa!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#C8FF3D","options":["#C8FF3D","#7FFFB2","#FFB020","#5AA9FF"],"section":"Theme"},"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#C8FF3D' };
+  }
+}
+</script>
+</body>
+</html>

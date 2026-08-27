@@ -1,0 +1,330 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <style>
+    /* FLOODLIGHT — control vocabulary. Every state drawn, not implied.
+       The first specimen in each row is live: hover and tab into it. */
+    * { box-sizing: border-box; }
+    :root { --a: #C8FF3D; --bg: #080A0D; --card: #10151C; --line: rgba(255,255,255,.075); }
+    body {
+      margin: 0; background: var(--bg); color: #E6E9EE;
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--a); text-decoration: none; }
+    a:hover { color: #fff; }
+    .lab { font-family: "IBM Plex Mono", monospace; font-size: 10px;
+           letter-spacing: .16em; text-transform: uppercase; color: #6E7A8A; }
+    .cap { font-family: "IBM Plex Mono", monospace; font-size: 9.5px;
+           letter-spacing: .1em; text-transform: uppercase; color: #5C6875;
+           margin-top: 8px; }
+    .cap.live { color: var(--a); }
+
+    .sheet { padding: 28px 32px 36px; }
+    h1 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -.03em; }
+    .intro { color: #8C97A6; font-size: 14px; margin-top: 6px; max-width: 62ch; }
+    .grp { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .grptitle { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+    .grptitle h2 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+    .specs { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+    .spec { display: flex; flex-direction: column; align-items: flex-start; }
+
+    /* ── Buttons ────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 38px; padding: 0 18px; border-radius: 6px; border: 1px solid var(--a);
+      background: var(--a); color: #0A0D06; cursor: pointer;
+      font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 700;
+      letter-spacing: -.01em;
+      transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
+    }
+    .btn:hover, .btn.is-hover { transform: translateY(-1px); filter: brightness(1.06);
+      box-shadow: 0 6px 18px rgba(200,255,61,.22); }
+    .btn:active, .btn.is-active { transform: translateY(0); filter: brightness(.9); box-shadow: none; }
+    .btn.is-focus { outline: 2px solid #fff; outline-offset: 2px; }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .btn[disabled] { opacity: .32; cursor: not-allowed; transform: none;
+                     box-shadow: none; filter: none; }
+    .btn.ghost { background: transparent; color: #D6DCE5; border-color: rgba(255,255,255,.18); }
+    .btn.ghost:hover, .btn.ghost.is-hover { background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.4); color: #fff; box-shadow: none; }
+    .btn.danger { background: transparent; color: #FF7A6B; border-color: rgba(255,122,107,.45); }
+    .btn.danger:hover { background: rgba(255,122,107,.1); border-color: #FF7A6B; box-shadow: none; }
+    .spin { width: 13px; height: 13px; border-radius: 999px;
+            border: 2px solid rgba(10,13,6,.28); border-top-color: #0A0D06;
+            animation: rot .7s linear infinite; }
+    @keyframes rot { to { transform: rotate(360deg) } }
+
+    /* ── Inputs ─────────────────────────────────────────── */
+    .fld { display: flex; flex-direction: column; gap: 6px; width: 216px; }
+    .inp {
+      height: 38px; padding: 0 12px; border-radius: 6px; width: 100%;
+      background: #0B1016; color: #E6E9EE; font-family: "Archivo", sans-serif;
+      font-size: 14px; border: 1px solid rgba(255,255,255,.14);
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .inp::placeholder { color: #5C6875; }
+    .inp:hover, .inp.is-hover { border-color: rgba(255,255,255,.3); }
+    .inp:focus, .inp.is-focus { outline: none; border-color: var(--a);
+      box-shadow: 0 0 0 3px rgba(200,255,61,.16); background: #0D131A; }
+    .inp.is-error { border-color: #FF7A6B; box-shadow: 0 0 0 3px rgba(255,122,107,.14); }
+    .inp[disabled] { opacity: .4; cursor: not-allowed; background: #0A0E13; }
+    .err { display: flex; align-items: center; gap: 6px; color: #FF7A6B;
+           font-size: 12px; }
+    .err svg { flex: none; }
+
+    /* ── Rows ───────────────────────────────────────────── */
+    .rows { width: 380px; background: var(--card); border: 1px solid var(--line);
+            border-radius: 8px; overflow: hidden; }
+    .row { display: grid; grid-template-columns: 26px 1fr 44px 34px; gap: 10px;
+           align-items: center; padding: 0 12px; height: 40px; font-size: 13px;
+           border-bottom: 1px solid rgba(255,255,255,.045); position: relative;
+           transition: background .14s ease; }
+    .row:last-child { border-bottom: none; }
+    .row::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px;
+      width: 2px; background: var(--a); border-radius: 0 2px 2px 0;
+      transform: scaleY(0); transition: transform .18s cubic-bezier(.2,.8,.3,1); }
+    .row:hover, .row.is-hover { background: #161D26; }
+    .row:hover::before, .row.is-hover::before { transform: scaleY(1); }
+    .row.is-mine { background: rgba(200,255,61,.07); }
+    .row.is-mine::before { transform: scaleY(1); }
+    .row .rk { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #6E7A8A; }
+    .row .tm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row .n { font-family: "IBM Plex Mono", monospace; font-size: 12px;
+              color: #B6BFCC; text-align: right; }
+    .row .p { font-family: "IBM Plex Mono", monospace; font-size: 14px;
+              font-weight: 600; text-align: right; }
+
+    /* ── Chips, pills, tags ─────────────────────────────── */
+    .chip { min-width: 34px; text-align: center; font-family: "IBM Plex Mono", monospace;
+            font-size: 12px; padding: 6px 8px; border-radius: 6px;
+            border: 1px solid rgba(255,255,255,.14); background: #0B1016; color: #8C97A6;
+            cursor: pointer; transition: border-color .14s ease, color .14s ease,
+            background .14s ease, transform .14s ease; }
+    .chip:hover { border-color: var(--a); color: #E6E9EE; transform: translateY(-1px); }
+    .chip.done { background: #151A22; color: #C3CBD6; }
+    .chip.on { background: var(--a); border-color: var(--a); color: #0A0D06; font-weight: 600; }
+    .pill { font-family: "IBM Plex Mono", monospace; font-size: 10px;
+            letter-spacing: .12em; text-transform: uppercase; padding: 4px 7px;
+            border-radius: 3px; border: 1px solid rgba(255,255,255,.16); color: #8C97A6; }
+    .pill.live { color: var(--a); border-color: var(--a); background: rgba(200,255,61,.1); }
+    .pill.arch { border-style: dashed; }
+    .tag { font-family: "IBM Plex Mono", monospace; font-size: 11px; padding: 2px 6px;
+           border-radius: 4px; border: 1px solid rgba(255,255,255,.16); color: #8C97A6; }
+    .tag.up { color: var(--a); border-color: var(--a); }
+    .tag.down { color: #FF7A6B; border-color: #FF7A6B; }
+
+    /* ── Shirts ─────────────────────────────────────────── */
+    .kits { display: flex; gap: 18px; }
+    .kit { position: relative; width: 34px; height: 34px; border-radius: 5px 5px 7px 7px;
+           border: 1px solid rgba(0,0,0,.3); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+    .kit .pts { position: absolute; inset: 0; display: grid; place-items: center;
+                font-family: "IBM Plex Mono", monospace; font-size: 12px;
+                font-weight: 600; color: #fff; z-index: 2;
+                text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+    .kit .plaque { position: absolute; inset: 22% 18%; border-radius: 4px;
+                   background: rgba(6,12,9,.72); z-index: 1; }
+    .flag { position: absolute; top: -3px; right: -4px; z-index: 3;
+            width: 0; height: 0; border-left: 5px solid transparent;
+            border-right: 5px solid transparent; border-bottom: 9px solid #FF4D4D;
+            filter: drop-shadow(0 0 1.2px #fff); }
+    .flag.amber { border-bottom-color: #E8A33D; }
+
+    /* ── Empty / loading / error blocks ─────────────────── */
+    .block { width: 380px; background: var(--card); border: 1px solid var(--line);
+             border-radius: 8px; padding: 24px; }
+    .empty { text-align: center; color: #6E7A8A; font-size: 13px; }
+    .empty svg { margin-bottom: 10px; }
+    .sk { height: 12px; border-radius: 3px; margin-bottom: 10px;
+          background: linear-gradient(90deg, #161C24 0%, #1E262F 50%, #161C24 100%);
+          background-size: 200% 100%; animation: sh 1.4s ease-in-out infinite; }
+    @keyframes sh { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+    .banner { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px;
+              border-radius: 6px; border: 1px solid rgba(255,122,107,.4);
+              background: rgba(255,122,107,.08); font-size: 13px; color: #FFC2B9; }
+    .banner svg { flex: none; margin-top: 1px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</helmet>
+
+<div class="sheet">
+  <h1>Floodlight &mdash; controls and states</h1>
+  <p class="intro">Every interactive control, in every state it can reach. The
+    first specimen in each row is live &mdash; hover it, or tab to it for the
+    focus ring. The rest are pinned so the states can be compared side by side.</p>
+
+  <!-- Buttons -->
+  <div class="grp">
+    <div class="grptitle"><h2>Primary action</h2><span class="lab">Save, pick your team, add claim</span></div>
+    <div class="specs">
+      <div class="spec"><button class="btn">Pick your team</button><span class="cap live">Rest &middot; live</span></div>
+      <div class="spec"><button class="btn is-hover">Pick your team</button><span class="cap">Hover</span></div>
+      <div class="spec"><button class="btn is-focus">Pick your team</button><span class="cap">Focus</span></div>
+      <div class="spec"><button class="btn is-active">Pick your team</button><span class="cap">Active</span></div>
+      <div class="spec"><button class="btn"><span class="spin"></span>Saving</button><span class="cap">Loading</span></div>
+      <div class="spec"><button class="btn" disabled>Pick your team</button><span class="cap">Disabled</span></div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="grptitle"><h2>Secondary &amp; destructive</h2><span class="lab">Cancel, withdraw, sign out</span></div>
+    <div class="specs">
+      <div class="spec"><button class="btn ghost">Cancel</button><span class="cap live">Rest &middot; live</span></div>
+      <div class="spec"><button class="btn ghost is-hover">Cancel</button><span class="cap">Hover</span></div>
+      <div class="spec"><button class="btn ghost is-focus">Cancel</button><span class="cap">Focus</span></div>
+      <div class="spec"><button class="btn ghost" disabled>Cancel</button><span class="cap">Disabled</span></div>
+      <div class="spec"><button class="btn danger">Sign out everywhere</button><span class="cap live">Destructive &middot; live</span></div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="grp">
+    <div class="grptitle"><h2>Text field</h2><span class="lab">Team name, search, points offered</span></div>
+    <div class="specs">
+      <div class="spec"><div class="fld"><span class="lab">Team name</span>
+        <input class="inp" value="Quantum of Szobos"></div><span class="cap live">Rest &middot; live</span></div>
+      <div class="spec"><div class="fld"><span class="lab">Team name</span>
+        <input class="inp is-focus" value="Quantum of Szobos"></div><span class="cap">Focus</span></div>
+      <div class="spec"><div class="fld"><span class="lab">Team name</span>
+        <input class="inp" placeholder="Name your team"></div><span class="cap">Empty</span></div>
+      <div class="spec"><div class="fld"><span class="lab">Team name</span>
+        <input class="inp is-error" value="">
+        <span class="err"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v6M12 16.5v.01"/></svg>A team needs a name.</span>
+        </div><span class="cap">Error</span></div>
+      <div class="spec"><div class="fld"><span class="lab">Team name</span>
+        <input class="inp" value="Quantum of Szobos" disabled></div><span class="cap">Disabled</span></div>
+    </div>
+  </div>
+
+  <!-- Rows -->
+  <div class="grp">
+    <div class="grptitle"><h2>Table row</h2><span class="lab">Standings, fixtures, the scouting table</span></div>
+    <div class="specs">
+      <div class="spec">
+        <div class="rows">
+          <div class="row"><span class="rk">4</span><span class="tm">ThunderBijol</span>
+            <span class="n">+9</span><span class="p">3</span></div>
+          <div class="row is-hover"><span class="rk">5</span><span class="tm">Meet me on the Roefs</span>
+            <span class="n">+8</span><span class="p">3</span></div>
+          <div class="row is-mine"><span class="rk">6</span><span class="tm">Quantum of Szobos</span>
+            <span class="n">+4</span><span class="p">3</span></div>
+          <div class="row"><span class="rk">7</span><span class="tm">The Gyokfather</span>
+            <span class="n">+4</span><span class="p">3</span></div>
+        </div>
+        <span class="cap live">Rest &middot; hover &middot; yours &middot; rest &nbsp;(top row live)</span>
+      </div>
+      <div class="spec">
+        <div class="block">
+          <div class="sk" style="width:70%"></div>
+          <div class="sk" style="width:92%"></div>
+          <div class="sk" style="width:84%"></div>
+          <div class="sk" style="width:60%; margin-bottom:0"></div>
+        </div>
+        <span class="cap">Loading</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chips and tags -->
+  <div class="grp">
+    <div class="grptitle"><h2>Gameweek rail &amp; markers</h2><span class="lab">Round picker, data mode, boost, bank</span></div>
+    <div class="specs">
+      <div class="spec">
+        <div style="display:flex; gap:6px">
+          <span class="chip done">1</span><span class="chip on">2</span>
+          <span class="chip">3</span><span class="chip">4</span><span class="chip">5</span>
+        </div>
+        <span class="cap live">Scored &middot; current &middot; upcoming &nbsp;(all live)</span>
+      </div>
+      <div class="spec">
+        <div style="display:flex; gap:8px; align-items:center">
+          <span class="pill live">Live data</span><span class="pill arch">Archive data</span>
+          <span class="pill">In progress</span>
+        </div>
+        <span class="cap">Data mode &amp; round state</span>
+      </div>
+      <div class="spec">
+        <div style="display:flex; gap:8px; align-items:center">
+          <span class="tag up">&#9889;7</span><span class="tag">&#9889;</span>
+          <span class="tag down">&minus;25</span><span class="tag up">+15</span>
+        </div>
+        <span class="cap">Boost paid &middot; boost lost &middot; traded &middot; banked</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shirts -->
+  <div class="grp">
+    <div class="grptitle"><h2>Player shirt</h2><span class="lab">Club kit, score, availability</span></div>
+    <div class="specs">
+      <div class="spec">
+        <div class="kits">
+          <div class="kit" style="background:#ef0107; background-image:linear-gradient(90deg,#fff 0 18%,#ef0107 18% 82%,#fff 82% 100%)">
+            <span class="plaque"></span><span class="pts">11</span></div>
+          <div class="kit" style="background:#0057b8; background-image:repeating-linear-gradient(90deg,#0057b8 0 12.5%,#fff 12.5% 25%)">
+            <span class="plaque"></span><span class="pts">6</span></div>
+          <div class="kit" style="background:#8ff232"><span class="plaque"></span><span class="pts">7</span></div>
+        </div>
+        <span class="cap">Sleeves &middot; stripes &middot; keeper</span>
+      </div>
+      <div class="spec">
+        <div class="kits">
+          <div class="kit" style="background:#c8102e"><span class="flag amber"></span></div>
+          <div class="kit" style="background:#241f20; background-image:repeating-linear-gradient(90deg,#241f20 0 12.5%,#fff 12.5% 25%)">
+            <span class="flag"></span></div>
+          <div class="kit" style="background:#6cabdd"></div>
+        </div>
+        <span class="cap">Doubtful &middot; out &middot; available</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty and error -->
+  <div class="grp">
+    <div class="grptitle"><h2>Nothing there, or something wrong</h2><span class="lab">Empty and error</span></div>
+    <div class="specs">
+      <div class="spec">
+        <div class="block">
+          <div class="empty">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3E4A57"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 5v14"/></svg>
+            <div>No claims yet. Pick someone to drop and someone<br>to claim, then add it.</div>
+          </div>
+        </div>
+        <span class="cap">Empty</span>
+      </div>
+      <div class="spec">
+        <div class="block" style="padding:14px">
+          <div class="banner">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v6M12 16.5v.01"/></svg>
+            <div>RM plays CCP this round &mdash; points can&rsquo;t be traded with
+              the team you&rsquo;re about to face, only players.</div>
+          </div>
+        </div>
+        <span class="cap">Error</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

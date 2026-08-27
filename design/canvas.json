@@ -1,0 +1,22 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",     "x": 0,    "y": 0,    "w": 1280, "h": 1000, "title": "A — Floodlight" },
+    { "file": "Matchday.dc.html", "x": 1360, "y": 0,    "w": 1280, "h": 1000, "title": "B — Matchday" },
+    { "file": "Terrace.dc.html",  "x": 2720, "y": 0,    "w": 1280, "h": 1000, "title": "C — Terrace" },
+    { "file": "Mobile.dc.html",   "x": 0,    "y": 1140, "w": 390,  "h": 844,  "title": "A on a phone" },
+    { "file": "States.dc.html",   "x": 520,  "y": 1140, "w": 1280, "h": 1180, "title": "A — controls & states" }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0, "y": -150, "w": 620,
+      "text": "Three directions toward a matchday product, all built on Matchweek's real tokens.\nTop row: pick one. Bottom row: direction A carried through to a phone and to every control state.\nNone of these copy Premier League branding — same genre, original design."
+    },
+    {
+      "id": "note-a",
+      "x": 1880, "y": 1140, "w": 300,
+      "text": "Hover the first specimen in each row — it's live. The rest are pinned so the states sit side by side."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}
