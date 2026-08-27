@@ -672,6 +672,24 @@ del os.environ["RAILWAY_GIT_COMMIT_SHA"], os.environ["RAILWAY_GIT_BRANCH"]
 check("and off Railway it reports no commit rather than a wrong one",
       _m.build()["commit"], None)
 
+# Jinja prints a missing key as an empty string, so a stored player without a
+# `name` would render as nothing at all — "X gave" followed by a blank, with
+# no way to tell a broken row from an empty one. Write both bad shapes
+# straight into the database and check the page still names somebody.
+_lookup = engine.player_names()
+_pid = next(iter(_lookup))
+with db.connect() as _conn:
+    _conn.execute(
+        "INSERT INTO trade (gameweek, proposer, receiver, players_out,"
+        " players_in, points, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
+        (pn, P1, P2, json.dumps([{"id": _pid, "position": "MID"}]),
+         json.dumps([{"id": _pid, "position": "MID"}]), 0, "accepted", db.now()))
+_odd = flat(c1.get("/trade").text)
+check_true("a player stored without a name still shows one, from the id",
+           _lookup[_pid] in _odd)
+with db.connect() as _conn:
+    _conn.execute("DELETE FROM trade WHERE id = (SELECT MAX(id) FROM trade)")
+
 print("\n── The bank ────────────────────────────────────────────")
 
 os.environ["ADMIN_KEYS"] = "RM"

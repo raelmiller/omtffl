@@ -608,12 +608,31 @@ def _trade_context(request):
     records = db.trades()
     squads = engine.squads_for_gameweek(gw["gameweek"], records)
 
+    # A trade row stores whatever it was given as JSON, and Jinja prints a
+    # missing key as an empty string — so a player without a `name` renders as
+    # nothing at all, leaving "X gave" with a blank after it and no hint why.
+    # Resolve to a display name here instead, falling back to the id lookup and
+    # finally to the raw id, so a name can be wrong but never silently absent.
+    lookup = engine.player_names()
+
+    def named(players):
+        out = []
+        for p in players or []:
+            if isinstance(p, dict):
+                out.append(p.get("name") or lookup.get(p.get("id"))
+                           or f"player {p.get('id', '?')}")
+            else:
+                out.append(lookup.get(p) or f"player {p}")
+        return out
+
     def decorate(r):
         r = dict(r)
         r["outcome"] = engine.trade_outcome(r)
         r["proposer_team"] = (db.manager_by_key(r["proposer"]) or {}).get("team")
         r["receiver_team"] = (db.manager_by_key(r["receiver"]) or {}).get("team")
         r["i_vetoed"] = me["key"] in r["vetoes"]
+        r["out_names"] = named(r["players_out"])
+        r["in_names"] = named(r["players_in"])
         return r
 
     all_trades = [decorate(r) for r in records]

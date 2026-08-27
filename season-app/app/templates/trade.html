@@ -268,12 +268,12 @@
             <div class="tgave">
               <span class="tgt">{{ t.proposer_team }}</span>
               <span class="tgv">{{ verb }}</span>
-              <span class="tgp">{% if t.players_out %}{% for p in t.players_out %}<span class="tgn">{{ p.name }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
+              <span class="tgp">{% if t.out_names %}{% for n in t.out_names %}<span class="tgn">{{ n }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
             </div>
             <div class="tgave">
               <span class="tgt">{{ t.receiver_team }}</span>
               <span class="tgv">{{ verb }}</span>
-              <span class="tgp">{% if t.players_in %}{% for p in t.players_in %}<span class="tgn">{{ p.name }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
+              <span class="tgp">{% if t.in_names %}{% for n in t.in_names %}<span class="tgn">{{ n }}</span>{{ ", " if not loop.last }}{% endfor %}{% else %}&mdash;{% endif %}</span>
             </div>
           </td>
           <td class="num">{{ t.points or '—' }}
