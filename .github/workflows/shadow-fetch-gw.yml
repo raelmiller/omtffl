@@ -23,9 +23,17 @@ on:
         required: false
         default: false
   schedule:
-    # Monday and Tuesday mornings — after a weekend's matches and after FPL
-    # has usually finalised bonus and stat corrections.
-    - cron: "30 7 * * 1,2"
+    # Daily. Monday and Tuesday used to be enough, when the only thing worth
+    # having was a settled weekend result — but the app reads this data, and
+    # between rounds it is injury news and suspensions that move, which a
+    # manager picks a team against on a Friday.
+    #
+    # It is also what keeps the deployed app current. The container's own copy
+    # of the data is wiped on every redeploy, so the committed files are the
+    # floor it falls back to: leave them three days old and the app reverts to
+    # three days old with them. Committing daily pushes that floor up, and the
+    # push redeploys the app with the new data in it.
+    - cron: "30 7 * * *"
 
 permissions:
   contents: write

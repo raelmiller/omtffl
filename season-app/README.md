@@ -30,10 +30,16 @@ sandbox has no route to `fantasy.premierleague.com`. Whether the host has one
 is the open question this phase answers, so the app probes it at boot and
 reports the result on `/health`:
 
-- **live** — the host can reach the API, so data refreshes on a schedule
-  (Monday and Tuesday mornings, matching the Actions workflow).
+- **live** — the host can reach the API, so data refreshes daily, matching the
+  Actions workflow.
 - **archive** — it can't, so the committed files stand and Actions keeps them
   current. The header says `archive data` and nothing breaks.
+
+Both paths take **every round that has kicked off**, not only finished ones: a
+gameweek in progress is fetched with the scores it has so far, and the page
+says "in progress" rather than pretending it is settled. A round FPL has marked
+`data_checked` is never pulled again, so a settled result cannot move under
+anyone. `fetch_gw.should_fetch` is that rule, on its own and tested.
 
 Refreshes are non-destructive: a failed fetch leaves the last good data alone.
 A table that goes blank because an upstream API had a bad minute is worse than
@@ -57,10 +63,13 @@ once:
    `data.written`, so "when did this last change" is answerable without
    guessing at the numbers.
 
-Note that the container's copy of the data is ephemeral — a redeploy resets it
-to whatever is committed, and the Actions workflow only commits on Mondays and
-Tuesdays. Mid-week injury news the app fetched itself does not survive a deploy,
-which the boot catch-up above is what covers.
+The container's copy of the data is ephemeral — a redeploy resets it to
+whatever is committed — so **the committed files are the floor the app falls
+back to, and how often they are refreshed is how stale the app can get.** That
+is why the Actions workflow runs daily rather than twice a week: it commits to
+the default branch, which redeploys the app with the new data already in it.
+Leave that on a Monday schedule and the app reverts to Monday every time
+anything redeploys.
 
 ## Running it
 

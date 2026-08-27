@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pull one or more finished gameweeks from the FPL API.
+"""Pull gameweek data from the FPL API.
 
 Uses `event/{gw}/live/`, which returns every player's stats for that gameweek
 in a single request — far cheaper than ~600 element-summary calls, and it also
@@ -11,7 +11,8 @@ fantasy.premierleague.com, but Actions does (same arrangement as players-feed).
 
 Usage
 -----
-    python3 shadow/fetch_gw.py            # every finished gameweek not yet saved
+    python3 shadow/fetch_gw.py            # every round that has kicked off,
+                                          # skipping any FPL has marked final
     python3 shadow/fetch_gw.py 1 2 3      # specific gameweeks
     python3 shadow/fetch_gw.py --refetch  # re-pull even if already saved,
                                           # which is how stat corrections land
@@ -59,9 +60,9 @@ def gameweek_states(bootstrap):
 
     `finished` means all matches are played; `data_checked` means FPL
     considers the stats final. A gameweek that has started but is neither is
-    still worth fetching when asked for explicitly — the live endpoint's
-    numbers are real, just not yet settled — which is how you can sanity-check
-    the engine mid-round instead of waiting for Tuesday.
+    fetched anyway: the live endpoint's numbers are real, just not settled, and
+    a table that shows nothing at all until Tuesday is worse than one that says
+    plainly it is still being played.
     """
     out = {}
     for e in bootstrap.get("events", []):
@@ -141,6 +142,41 @@ def fetch_pl_fixtures():
     return out
 
 
+def should_fetch(gw, by_id, path, refetch=False):
+    """Whether to pull a gameweek, and why — in words, for the log.
+
+    Two rules, and the second is the one that matters to anyone reading a
+    table:
+
+    A round that has KICKED OFF is worth having even though it is unfinished.
+    This used to take finished rounds only, to keep the repo from churning
+    with half-played ones, and that was the wrong trade: it meant a gameweek
+    in progress showed no result at all until FPL declared it over, so the
+    table sat on last week's news for the whole weekend.
+
+    A round FPL has marked `data_checked` is never pulled again. Bonus and
+    assists move for a day or two after the whistle, so anything short of
+    final is re-fetched until it settles — but once it has settled it is
+    finished with, and no later run can move a result out from under anyone.
+    """
+    if gw not in by_id:
+        return False, "hasn't kicked off yet — skipping"
+    live = not by_id[gw]["finished"]
+    if not path.exists():
+        return True, ("in progress — fetching provisional data" if live
+                      else "finished and not yet saved — fetching")
+    if refetch:
+        return True, "re-fetching, because --refetch was asked for"
+    try:
+        existing = json.loads(path.read_text())
+    except Exception:
+        return True, "saved copy is unreadable — fetching again"
+    if existing.get("data_checked"):
+        return False, "already saved and final — skipping"
+    return True, ("in progress — re-fetching for the latest scores" if live
+                  else "saved but not final — re-fetching")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     refetch = "--refetch" in sys.argv
@@ -189,28 +225,15 @@ def main():
     finished = sorted(g for g, m in by_id.items() if m["finished"])
     print(f"  started: {sorted(by_id)} | finished: {finished}")
 
-    # Unattended runs only take finished gameweeks, so the repo doesn't churn
-    # with half-played rounds. Ask for one by number to pull it in progress.
-    wanted = [int(a) for a in args] if args else finished
+    wanted = [int(a) for a in args] if args else sorted(by_id)
 
     written = 0
     for gw in wanted:
-        if gw not in by_id:
-            print(f"Gameweek {gw} hasn't started — skipping.")
+        verdict, why = should_fetch(gw, by_id, DATA / f"gw{gw:02d}.json", refetch)
+        print(f"Gameweek {gw}: {why}")
+        if not verdict:
             continue
-        if not by_id[gw]["finished"]:
-            print(f"Gameweek {gw} is still in progress — fetching provisional data.")
         out = DATA / f"gw{gw:02d}.json"
-        if out.exists() and not refetch:
-            # Re-pull anything FPL hasn't finalised, since those stats move.
-            try:
-                existing = json.loads(out.read_text())
-                if existing.get("data_checked"):
-                    print(f"Gameweek {gw} already saved and final — skipping.")
-                    continue
-                print(f"Gameweek {gw} saved but not final — re-fetching.")
-            except Exception:
-                pass
         data = fetch_gameweek(gw, by_id[gw])
         out.write_text(json.dumps(data, separators=(",", ":")))
         print(f"  wrote {out.name} ({out.stat().st_size / 1024:.0f} KB)")

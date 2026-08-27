@@ -1420,6 +1420,58 @@ check_true("and always says why, rather than leaving it to be guessed at",
            str(sched))
 check_true("health carries the data's age", "written" in hp["data"])
 
+print("\n── Which rounds a refresh brings in ────────────────────")
+
+# The rule the daily fetch runs on. Two things have to hold: a round being
+# played is worth having before it ends, and a round that has settled must
+# never move again.
+import fetch_gw                                             # noqa: E402
+import tempfile                                             # noqa: E402
+
+LIVE = {2: {"finished": False, "data_checked": False}}
+DONE = {2: {"finished": True, "data_checked": False}}
+FINAL = {2: {"finished": True, "data_checked": True}}
+missing = Path(tempfile.gettempdir()) / "no-such-gameweek-file.json"
+if missing.exists():
+    missing.unlink()
+
+
+def saved(**flags):
+    """A gameweek file already on disk, in whatever state."""
+    f = Path(tempfile.mkdtemp()) / "gw02.json"
+    f.write_text(json.dumps({"gameweek": 2, **flags}))
+    return f
+
+
+check("a round in progress is fetched, not waited on",
+      fetch_gw.should_fetch(2, LIVE, missing)[0], True)
+check("a finished round nobody has saved is fetched",
+      fetch_gw.should_fetch(2, DONE, missing)[0], True)
+check("a round that hasn't kicked off is left alone",
+      fetch_gw.should_fetch(9, LIVE, missing)[0], False)
+
+# The one that matters: results stay put once they are final.
+check("a saved round FPL calls final is never pulled again",
+      fetch_gw.should_fetch(2, FINAL, saved(data_checked=True))[0], False)
+check_true("and the log says why",
+           "final" in fetch_gw.should_fetch(2, FINAL, saved(data_checked=True))[1])
+check("but one that is finished and not yet final still is — bonus moves",
+      fetch_gw.should_fetch(2, DONE, saved(data_checked=False))[0], True)
+check("and one still being played is re-pulled for the latest scores",
+      fetch_gw.should_fetch(2, LIVE, saved(data_checked=False))[0], True)
+check("--refetch overrides even a final round, since that is what it is for",
+      fetch_gw.should_fetch(2, FINAL, saved(data_checked=True), refetch=True)[0], True)
+corrupt = Path(tempfile.mkdtemp()) / "gw02.json"
+corrupt.write_text("{ not json")
+check("a corrupt saved file is replaced rather than trusted",
+      fetch_gw.should_fetch(2, DONE, corrupt)[0], True)
+
+# The committed data is the floor the deployed app falls back to on every
+# redeploy, so how often it is refreshed IS how stale the app can get.
+wf = Path(__file__).resolve().parents[1] / ".github/workflows/shadow-fetch-gw.yml"
+cron = re.search(r'cron:\s*"([^"]+)"', wf.read_text()).group(1)
+check("the committed data is refreshed daily, not twice a week", cron, "30 7 * * *")
+
 print("\n── The chrome ──────────────────────────────────────────")
 
 # The bar and the tab rail are the only navigation there is now, so they get
