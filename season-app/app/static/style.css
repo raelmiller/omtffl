@@ -1,98 +1,286 @@
-/* Matchweek — shared with the league dashboard's identity: Syne for display,
-   DM Mono for data, a mint accent on near-black. */
+/* FLOODLIGHT — light by default, and light again whenever the device has no
+   opinion. The chrome stays night-dark and the body is lit paper: the
+   direction is the contrast between the two rather than a palette that flips
+   wholesale, which is why the dark toggle only has to move the body.
+
+   The accent does two jobs and they are separate tokens, because one colour
+   cannot do both:
+
+     --fill    the lime. A FILL, always carrying ink text (--on-fill). It
+               reads on paper and on slate alike, so a button, an active chip
+               or the row that is yours needs no light/dark variant.
+     --accent  the accent as INK. On paper it is a deep grass green so it can
+               carry text; after dark it goes back to being the lime, which
+               reads on slate unaided.
+
+   4px spatial grid. Type scale 10/12/13/15/19/24/26. */
 :root {
-  --bg: #f6f8f5; --surface: #fff; --surface-2: #ecefea;
-  --border: rgba(13,32,22,.11); --border-2: rgba(13,32,22,.20);
-  --text: #12151a; --muted: #586270;
-  --accent: #0b8f52; --accent-dim: rgba(11,143,82,.13);
-  --warn: #b8342e; --warn-dim: rgba(184,52,46,.11);
+  --bg: #F3F5EF; --surface: #FFFFFF; --surface-2: #EEF1EA;
+  --border: rgba(16,24,32,.11); --border-2: rgba(16,24,32,.20);
+  --hair: rgba(16,24,32,.075); --hover: #F1F4EC;
+  --text: #14181D; --text-2: #454E59; --muted: #6F7A88;
+
+  --fill: #C8FF3D; --on-fill: #0A0D06;
+  --accent: #3E6B12;
+  --accent-dim: color-mix(in srgb, var(--fill) 20%, var(--surface));
+  --warn: #B8342E; --warn-dim: rgba(184,52,46,.08); --amber: #C77B10;
+
   --pitch-a: #2e8b52; --pitch-b: #2a8049;
   --pitch-edge: rgba(13,32,22,.22); --bench-bg: #24663f;
-  --display: "Syne", ui-sans-serif, system-ui, sans-serif;
-  --body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --mono: "DM Mono", ui-monospace, Menlo, monospace;
+
+  --display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+/* The chrome is the same aubergine in both themes — the crest is a deep
+   purple and the bar is the surface it sits on, not a ground that moves
+   under it. Named separately so nothing below can flip them by accident. */
+:root {
+  --chrome: #171122; --chrome-2: #1E1730; --chrome-3: #120D1C;
+  --chrome-ink: #E9E5F0; --chrome-muted: #97A2B1;
+  --chrome-line: rgba(255,255,255,.14);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d0f12; --surface: #141720; --surface-2: #1c2030;
-    --border: rgba(255,255,255,.09); --border-2: rgba(255,255,255,.17);
-    --text: #e8eaf0; --muted: #8b93a7;
-    --accent: #7fffb2; --accent-dim: rgba(127,255,178,.13);
-    --warn: #ff6b6b; --warn-dim: rgba(255,107,107,.13);
+    --bg: #0D0916; --surface: #15101F; --surface-2: #120D1C;
+    --border: rgba(255,255,255,.075); --border-2: rgba(255,255,255,.17);
+    --hair: rgba(255,255,255,.045); --hover: #1D1729;
+    --text: #E9E5F0; --text-2: #B6BFCC; --muted: #7C8797;
+    --accent: #C8FF3D;
+    --accent-dim: color-mix(in srgb, var(--fill) 11%, var(--surface));
+    --warn: #FF7A6B; --warn-dim: rgba(255,122,107,.11); --amber: #E8A33D;
     --pitch-a: #1d5c37; --pitch-b: #1a5433;
     --pitch-edge: rgba(255,255,255,.10); --bench-bg: #14301f;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d0f12; --surface: #141720; --surface-2: #1c2030;
-  --border: rgba(255,255,255,.09); --border-2: rgba(255,255,255,.17);
-  --text: #e8eaf0; --muted: #8b93a7;
-  --accent: #7fffb2; --accent-dim: rgba(127,255,178,.13);
-  --warn: #ff6b6b; --warn-dim: rgba(255,107,107,.13);
+  --bg: #0D0916; --surface: #15101F; --surface-2: #120D1C;
+  --border: rgba(255,255,255,.075); --border-2: rgba(255,255,255,.17);
+  --hair: rgba(255,255,255,.045); --hover: #1D1729;
+  --text: #E9E5F0; --text-2: #B6BFCC; --muted: #7C8797;
+  --accent: #C8FF3D;
+  --accent-dim: color-mix(in srgb, var(--fill) 11%, var(--surface));
+  --warn: #FF7A6B; --warn-dim: rgba(255,122,107,.11); --amber: #E8A33D;
   --pitch-a: #1d5c37; --pitch-b: #1a5433;
   --pitch-edge: rgba(255,255,255,.10); --bench-bg: #14301f;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
-  font-family: var(--body); font-size: 16px; line-height: 1.6;
+  font-family: var(--body); font-size: 15px; line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
-.wrap.wide { max-width: 78rem; }
+.wrap.wide { max-width: 82rem; }
 .wrap {
-  max-width: 58rem; margin: 0 auto;
-  padding: clamp(1.75rem,5vw,3.5rem) clamp(1rem,4vw,2.5rem) 5rem;
-  display: flex; flex-direction: column; gap: 2.25rem;
+  max-width: 62rem; margin: 0 auto;
+  padding: 1.5rem clamp(1rem,4vw,1.5rem) 4rem;
+  display: flex; flex-direction: column; gap: 1.75rem;
 }
-a { color: var(--accent); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+/* A link inside data is still data. Fourteen accent-coloured team names read
+   as fourteen highlights rather than fourteen teams, so a link in a table, a
+   fixture or a round heading is ink and only turns on hover — the pointer is
+   already saying it is clickable. */
+td a, .match a.name, .roundhead h2 a, .teamrow a, .wrow a {
+  color: inherit; text-decoration: none;
+}
+td a:hover, .match a.name:hover, .roundhead h2 a:hover,
+.teamrow a:hover, .wrow a:hover { color: var(--accent); text-decoration: none; }
 h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; }
-h1 { font-size: clamp(2.2rem,7vw,3.4rem); font-weight: 800; letter-spacing: -.035em; line-height: .95; }
-h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; }
+h1 { font-size: clamp(1.5rem,4.5vw,1.65rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
+h2 { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
 p { margin: 0; }
 .eyebrow {
-  font-family: var(--mono); font-size: .68rem; text-transform: uppercase;
+  font-family: var(--mono); font-size: .63rem; text-transform: uppercase;
   letter-spacing: .16em; color: var(--muted);
 }
-header { display: flex; flex-direction: column; gap: .7rem; }
-.topline { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
-.themebtn {
-  margin-left: auto; cursor: pointer;
-  font-family: var(--mono); font-size: .66rem; text-transform: uppercase;
-  letter-spacing: .12em; padding: .26rem .55rem; border-radius: 4px;
-  background: transparent; color: var(--muted);
-  border: 1px solid var(--border-2);
+.sub { color: var(--muted); font-size: .92rem; }
+.pagehead { display: flex; flex-direction: column; gap: .5rem; }
+
+/* Anything before the page itself is chrome, so give the keyboard a way past
+   the bar and the six tabs in one press. */
+.skip {
+  position: absolute; left: .5rem; top: -3rem; z-index: 20;
+  background: var(--fill); color: var(--on-fill); font-weight: 700;
+  padding: .5rem .8rem; border-radius: 6px; font-size: .85rem;
+  transition: top .15s ease;
 }
-.themebtn:hover { color: var(--text); border-color: var(--text); }
-.themebtn[data-auto="1"] { border-style: dashed; }
+.skip:focus { top: .5rem; }
+
+/* ── The bar ─────────────────────────────────────────── */
+/* Full-bleed and dark in both themes. Identity on the left, the manager and
+   the crest on the right, in that order so the crest is furthest out. */
+.topbar {
+  display: flex; align-items: center; gap: .75rem;
+  padding: 0 clamp(.75rem,3vw,1.5rem); min-height: 56px;
+  background: var(--chrome); color: var(--chrome-ink);
+}
+.topbar .mark {
+  font-weight: 800; font-size: 1.2rem; letter-spacing: -.03em;
+  color: var(--chrome-ink); text-decoration: none;
+}
+.topbar .mark:hover { color: #fff; text-decoration: none; }
+.topbar .mark i { font-style: normal; color: var(--fill); }
+.topbarright { margin-left: auto; display: flex; align-items: center; gap: .6rem; }
+/* Chips on the bar are read against slate, so they carry their own colours
+   rather than the paper ones .pill uses further down the page. */
+.topbar .chip {
+  font-family: var(--mono); font-size: .62rem; text-transform: uppercase;
+  letter-spacing: .14em; padding: .2rem .4rem; border-radius: 3px;
+  border: 1px solid var(--chrome-line); color: var(--chrome-muted);
+}
+.topbar .chip.live { color: var(--fill); border-color: color-mix(in srgb, var(--fill) 45%, transparent); }
+.topbar .chip.archive { border-style: dashed; }
+.topbar .themebtn {
+  cursor: pointer; font-family: var(--mono); font-size: .62rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  padding: .3rem .5rem; border-radius: 4px;
+  background: transparent; color: var(--chrome-muted);
+  border: 1px solid var(--chrome-line);
+  transition: color .16s ease, border-color .16s ease, background .16s ease;
+}
+.topbar .themebtn:hover { color: #fff; border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.07); }
+/* Dashed while it is the device deciding, solid once a manager has chosen. */
+.topbar .themebtn[data-auto="1"] { border-style: dashed; }
+.topbar .who {
+  display: flex; align-items: center; gap: .5rem; max-width: 15rem;
+  font-size: .82rem; font-weight: 600; color: var(--chrome-ink);
+  text-decoration: none; padding: .3rem .5rem .3rem .3rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);
+  transition: border-color .16s ease, background .16s ease;
+}
+.topbar .who:hover {
+  border-color: rgba(255,255,255,.34); background: rgba(255,255,255,.1);
+  color: #fff; text-decoration: none;
+}
+.topbar .whoname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar .av {
+  flex: none; min-width: 1.4rem; height: 1.4rem; padding: 0 .22rem;
+  border-radius: 999px; display: grid; place-items: center;
+  background: var(--fill); color: var(--on-fill);
+  font-family: var(--mono); font-size: .6rem; font-weight: 600;
+}
+/* The crest's own white ground is the coin: clipped round and ringed so it
+   keeps its edge against the aubergine. */
+.crest { display: block; flex: none; margin-left: .25rem; }
+.crest img {
+  display: block; width: 34px; height: 34px; border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.2);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.crest:hover img { box-shadow: 0 0 0 1px var(--fill); transform: scale(1.04); }
+
+/* ── The tab rail ────────────────────────────────────── */
+.rail {
+  display: flex; gap: .25rem; padding: 0 clamp(.5rem,3vw,1rem);
+  min-height: 44px; align-items: stretch;
+  background: var(--chrome-2); border-bottom: 1px solid rgba(0,0,0,.12);
+  overflow-x: auto; scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.tab {
+  position: relative; display: flex; align-items: center; gap: .4rem;
+  padding: 0 .85rem; white-space: nowrap; text-decoration: none;
+  font-size: .84rem; font-weight: 600; color: #98A3B2;
+  transition: color .16s ease;
+}
+.tab svg { display: none; width: 19px; height: 19px; }
+.tab .short { display: none; }
+/* An underline that grows from the middle: halfway on hover, all the way on
+   the section you are actually in. */
+.tab::after {
+  content: ""; position: absolute; left: .6rem; right: .6rem; bottom: 0;
+  height: 2px; background: var(--fill); border-radius: 2px 2px 0 0;
+  transform: scaleX(0); transform-origin: 50% 100%;
+  transition: transform .22s cubic-bezier(.2,.8,.3,1);
+}
+.tab:hover { color: #DDE3EA; text-decoration: none; }
+.tab:hover::after { transform: scaleX(.55); }
+.tab.on { color: #fff; }
+.tab.on::after { transform: scaleX(1); }
+.tab:focus-visible { outline: 2px solid var(--fill); outline-offset: -3px; border-radius: 3px; }
+
+/* On a phone the sections move into the thumb's reach and the labels shorten
+   to fit. 48px targets, and the page is padded so nothing hides behind it. */
+@media (max-width: 40rem) {
+  .rail {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 15;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+    gap: 0; padding: 0 0 env(safe-area-inset-bottom, 0px);
+    background: var(--chrome); border-bottom: none;
+    border-top: 1px solid rgba(255,255,255,.08); overflow: visible;
+  }
+  .tab {
+    flex-direction: column; justify-content: center; gap: .2rem;
+    padding: .5rem .1rem .4rem; min-height: 52px;
+    font-family: var(--mono); font-size: .56rem; letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .tab svg { display: block; }
+  .tab .full { display: none; }
+  .tab .short { display: block; }
+  .tab::after { left: 25%; right: 25%; bottom: auto; top: 0; border-radius: 0 0 2px 2px; }
+  .tab.on { color: var(--fill); }
+  .tab.on svg { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--fill) 40%, transparent)); }
+  .wrap { padding-bottom: 5.5rem; }
+  .topbar .whoname { display: none; }
+  .topbar .themebtn { padding: .3rem .4rem; }
+}
+
 .pill {
-  font-family: var(--mono); font-size: .66rem; text-transform: uppercase;
-  letter-spacing: .12em; padding: .22rem .5rem; border-radius: 3px;
+  font-family: var(--mono); font-size: .63rem; text-transform: uppercase;
+  letter-spacing: .12em; padding: .22rem .45rem; border-radius: 3px;
   border: 1px solid var(--border-2); color: var(--muted);
 }
 .pill.live { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
 .pill.archive { color: var(--muted); border-style: dashed; }
-.sub { color: var(--muted); font-size: .95rem; }
-section { display: flex; flex-direction: column; gap: .9rem; }
-.sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-.panel { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
-.scroll { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: .92rem; min-width: 32rem; }
-th, td { padding: .6rem .8rem; text-align: left; border-bottom: 1px solid var(--border); }
-thead th {
-  font-family: var(--mono); font-size: .64rem; text-transform: uppercase;
-  letter-spacing: .12em; color: var(--muted); background: var(--surface-2);
-  font-weight: 500; white-space: nowrap;
+section { display: flex; flex-direction: column; gap: .8rem; }
+.sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--border); }
+.panel {
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  background: var(--surface); box-shadow: 0 1px 2px rgba(16,24,32,.04);
 }
+:root[data-theme="dark"] .panel { box-shadow: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .panel { box-shadow: none; }
+}
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .82rem; min-width: 32rem; }
+th, td { padding: 0 .5rem; height: 40px; text-align: left; border-bottom: 1px solid var(--hair); }
+thead th {
+  font-family: var(--mono); font-size: .62rem; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--muted); background: var(--surface-2);
+  font-weight: 500; white-space: nowrap; height: 34px;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr { transition: background .14s ease; }
+tbody tr:hover { background: var(--hover); }
 tbody tr:last-child td { border-bottom: none; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: .86rem; }
-td.rank { font-family: var(--mono); color: var(--muted); width: 2.5rem; font-size: .82rem; }
-td.team { font-weight: 600; }
-td.pts { font-weight: 700; font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+/* A hairline that swings out of the left edge on hover — the row you are on,
+   without a colour change loud enough to be mistaken for a state. */
+tbody td:first-child { position: relative; }
+tbody td:first-child::before {
+  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+  background: var(--fill); border-radius: 0 2px 2px 0;
+  transform: scaleY(0); transition: transform .18s cubic-bezier(.2,.8,.3,1);
+}
+tbody tr:hover td:first-child::before { transform: scaleY(1); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: .76rem; color: var(--text-2); }
+td.rank { font-family: var(--mono); color: var(--muted); width: 2.6rem; font-size: .76rem; padding-left: .85rem; }
+td.team { font-weight: 600; letter-spacing: -.01em; font-size: .82rem; }
+td.pts { font-weight: 600; font-family: var(--mono); font-size: .88rem; text-align: right; font-variant-numeric: tabular-nums; padding-right: .85rem; }
+/* The leader gets a line under the row rather than a coloured number: it
+   marks the boundary the way a league table does. */
+tbody tr.top td { box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--fill) 70%, transparent); }
 tbody tr.top td.rank { color: var(--accent); }
+tbody tr.top td:first-child::before { transform: scaleY(1); }
 .match {
   display: grid; grid-template-columns: 1fr auto 1fr; gap: .75rem;
-  align-items: center; padding: .7rem .9rem; border-bottom: 1px solid var(--border);
+  align-items: center; padding: .65rem .85rem; border-bottom: 1px solid var(--hair);
+  transition: background .14s ease;
 }
+.match:hover { background: var(--hover); }
 .match:last-child { border-bottom: none; }
 .match .home { text-align: right; }
 /* Team names are unbroken strings like "Brobbey'sGonnaGetYa!" — without
@@ -189,6 +377,8 @@ h1 .mgr, .sub .mgr { vertical-align: middle; }
 /* Your own players sitting in the pool table, so a claim can be weighed
    against the man it would replace. Tinted, and never mistaken for a claim. */
 tr.mine td { background: var(--surface-2); }
+tbody tr.mine:hover td { background: var(--hover); }
+tbody tr.mine td:first-child::before { transform: scaleY(1); }
 tr.mine.chosen td { background: var(--accent-dim); }
 tr.mine .mgr { text-transform: uppercase; }
 
@@ -203,7 +393,7 @@ tr.mine .mgr { text-transform: uppercase; }
   border-right: .32rem solid transparent;
   border-bottom: .55rem solid var(--warn);
 }
-.flag.amber { border-bottom-color: #e8a33d; }
+.flag.amber { border-bottom-color: var(--amber); }
 .player .shirt .flag {
   position: absolute; z-index: 3; top: -3px; right: -4px; margin: 0;
   /* A red triangle on a red shirt needs an edge of its own. */
@@ -212,7 +402,7 @@ tr.mine .mgr { text-transform: uppercase; }
 .note.doubt {
   border-left-color: var(--warn); color: var(--text); font-weight: 500;
 }
-.note.doubt.amber { border-left-color: #e8a33d; }
+.note.doubt.amber { border-left-color: var(--amber); }
 
 /* A deadline anyone can act on: the clock counts down, the time next to it
    says when in the reader's own timezone. */
@@ -230,7 +420,7 @@ tr.mine .mgr { text-transform: uppercase; }
   border-radius: 3px; font-family: var(--mono); font-size: .62rem;
   font-weight: 600; color: var(--bg);
 }
-.res.W { background: var(--accent); }
+.res.W { background: var(--fill); color: var(--on-fill); }
 .res.D { background: var(--muted); }
 .res.L { background: var(--warn); }
 td .up { color: var(--accent); }
@@ -243,11 +433,13 @@ td .dim { color: var(--muted); }
 }
 .match .score {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
-  font-size: .95rem; white-space: nowrap; padding: .12rem .5rem;
-  border: 1px solid var(--border); border-radius: 5px; background: var(--surface-2);
+  font-size: .8rem; font-weight: 500; white-space: nowrap; padding: .18rem .5rem;
+  border: 1px solid var(--border); border-radius: 4px; background: var(--surface-2);
+  color: var(--text-2);
 }
-.match .name { font-weight: 600; font-size: .95rem; }
-.match .won { color: var(--accent); }
+.match .name { font-weight: 600; font-size: .88rem; color: var(--text-2); }
+.match .won { color: var(--text); }
+.match a.name:hover { color: var(--accent); }
 .rounds { display: flex; flex-direction: column; gap: 1.1rem; }
 .roundhead { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
 .roundhead .stats { font-family: var(--mono); font-size: .7rem; color: var(--muted); }
@@ -268,10 +460,14 @@ td .dim { color: var(--muted); }
 }
 .gwchip.done { color: var(--text); background: var(--surface-2); }
 .gwchip.on {
-  color: #06130c; background: var(--accent); border-color: var(--accent);
+  color: var(--on-fill); background: var(--fill); border-color: var(--fill);
   font-weight: 700;
 }
-.gwchip:hover { border-color: var(--accent); }
+.gwchip {
+  transition: border-color .14s ease, color .14s ease, transform .14s ease;
+}
+.gwchip:hover { border-color: var(--accent); color: var(--text); transform: translateY(-1px); }
+.gwchip.on:hover { color: var(--on-fill); }
 .roundnav { justify-content: space-between; }
 .roundnav .btn[disabled] { opacity: .35; cursor: default; }
 .note {
@@ -284,14 +480,10 @@ footer {
   font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 1.7;
 }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+/* The chrome is dark in both themes, so a deep-green ring would be lost on
+   it — up there the ring is the lime. */
+.topbar :focus-visible, .rail :focus-visible { outline-color: var(--fill); }
 
-/* ── Nav ─────────────────────────────────────────────── */
-.nav { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; font-size: .9rem; }
-.nav .who {
-  margin-left: auto; font-family: var(--mono); font-size: .72rem;
-  color: var(--muted); text-decoration: none;
-}
-.nav .who:hover { color: var(--accent); }
 /* A word that behaves like a link but does something on the page. */
 .linkish {
   background: none; border: 0; padding: 0; cursor: pointer;
@@ -323,13 +515,48 @@ footer {
   color: var(--warn); font-size: .98rem; font-family: var(--body); font-weight: 600;
 }
 .hint { font-size: .85rem; color: var(--muted); margin-bottom: .6rem; }
+
+/* ── Buttons ─────────────────────────────────────────── */
+/* One shape, three jobs. The primary is the lime fill on ink text, which
+   needs no light/dark variant; the ghost is the same box with the fill taken
+   out; the destructive one only earns colour when you reach for it. Hover
+   lifts a pixel and throws a shadow the colour of the button, so the motion
+   says "this is the thing" rather than just "this is hoverable". */
 .btn {
-  font-family: var(--body); font-weight: 600; font-size: .9rem;
-  padding: .5rem .95rem; border-radius: 7px; cursor: pointer;
-  background: var(--accent); color: #06130c; border: 1px solid var(--accent);
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  font-family: var(--body); font-weight: 700; font-size: .85rem;
+  letter-spacing: -.01em; height: 38px; padding: 0 1.1rem;
+  border-radius: 6px; cursor: pointer;
+  background: var(--fill); color: var(--on-fill); border: 1px solid var(--fill);
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
 }
-.btn:disabled { opacity: .4; cursor: not-allowed; }
-.btn.small { padding: .3rem .6rem; font-size: .78rem; }
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px); filter: brightness(1.05);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--fill) 34%, transparent);
+}
+.btn:active:not(:disabled) { transform: translateY(0); filter: brightness(.9); box-shadow: none; }
+.btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.btn:disabled {
+  opacity: .38; cursor: not-allowed;
+  transform: none; box-shadow: none; filter: none;
+}
+.btn.small { height: 30px; padding: 0 .65rem; font-size: .76rem; font-weight: 600; }
+/* A button waiting on the server says so, rather than sitting there looking
+   clickable. Add `is-busy` and the disc spins in front of the label. */
+.btn.is-busy::before {
+  content: ""; width: 13px; height: 13px; border-radius: 999px; flex: none;
+  border: 2px solid color-mix(in srgb, var(--on-fill) 25%, transparent);
+  border-top-color: var(--on-fill); animation: btnspin .7s linear infinite;
+}
+.btn.ghost.is-busy::before {
+  border-color: var(--border-2); border-top-color: var(--text);
+}
+@keyframes btnspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .btn, .gwchip, .crest img, .tab::after, tbody td:first-child::before,
+  tbody tr, .match, .pick, .inp, .themebtn { transition: none !important; }
+  .btn.is-busy::before { animation: none; }
+}
 .savestate { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
 .savestate.ok { color: var(--accent); }
 .savestate.bad { color: var(--warn); }
@@ -508,12 +735,54 @@ code.link { font-size: .74rem; word-break: break-all; }
 }
 .viewing a { color: var(--warn); font-weight: 600; }
 .acts { display: flex; gap: .4rem; flex-wrap: wrap; }
-.btn.ghost { background: transparent; color: var(--text); border-color: var(--border-2); }
+.btn.ghost {
+  background: transparent; color: var(--text-2); border-color: var(--border-2);
+}
+.btn.ghost:hover:not(:disabled) {
+  background: var(--surface-2); border-color: var(--text); color: var(--text);
+  box-shadow: none;
+}
+/* Withdrawing a claim, cancelling a trade, signing out everywhere — quiet
+   until it is being reached for, then plainly the colour of a warning. */
+.btn.danger {
+  background: transparent; color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+}
+.btn.danger:hover:not(:disabled) {
+  background: var(--warn-dim); border-color: var(--warn); box-shadow: none;
+}
 
-select, input[type="text"] {
-  font-family: var(--body); font-size: .84rem; padding: .3rem .45rem;
-  border-radius: 5px; background: var(--surface); color: var(--text);
+/* ── Form controls ───────────────────────────────────── */
+/* One field treatment, whatever the input is for. The focus ring is the ink
+   accent so it reads on paper, and it is a ring rather than a border swap so
+   nothing shifts by a pixel when you tab into it. */
+select, input[type="text"], input[type="search"], input[type="number"] {
+  font-family: var(--body); font-size: .84rem;
+  border-radius: 6px; background: var(--surface); color: var(--text);
   border: 1px solid var(--border-2);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+select, input[type="text"] { padding: .35rem .5rem; }
+select:hover, input[type="text"]:hover,
+input[type="search"]:hover, input[type="number"]:hover { border-color: var(--text-2); }
+select:focus, input[type="text"]:focus,
+input[type="search"]:focus, input[type="number"]:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+select:disabled, input:disabled {
+  opacity: .5; cursor: not-allowed; background: var(--surface-2);
+}
+input::placeholder { color: var(--muted); }
+/* A field the server rejected. `aria-invalid` rather than a class, so the
+   screen reader and the border are saying the same thing. */
+input[aria-invalid="true"], select[aria-invalid="true"] {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--warn) 14%, transparent);
+}
+.fielderr {
+  display: flex; align-items: center; gap: .35rem;
+  color: var(--warn); font-size: .78rem;
 }
 
 /* ── Manager boost ───────────────────────────────────── */
@@ -559,7 +828,9 @@ select, input[type="text"] {
   background: transparent; border: 1px solid transparent; color: var(--text);
   font-family: var(--body);
 }
-.pick:hover { border-color: var(--border-2); background: var(--surface-2); }
+.pick { transition: background .14s ease, border-color .14s ease; }
+.pick:hover { border-color: var(--border-2); background: var(--hover); }
+.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
 .tick {
   width: 1.05rem; height: 1.05rem; border-radius: 4px; flex: none;
   border: 1.5px solid var(--border-2); background: var(--surface);
@@ -569,15 +840,13 @@ select, input[type="text"] {
   content: "✓"; font-size: .78rem; font-weight: 700; line-height: 1;
   color: transparent;
 }
-.pick.on { background: var(--accent); border-color: var(--accent); color: #06130c; }
-.pick.on .pclub { color: rgba(6, 19, 12, .7); }
-.pick.on .tick { background: #06130c; border-color: #06130c; }
-.pick.on .tick::after { color: var(--accent); }
+.pick.on { background: var(--fill); border-color: var(--fill); color: var(--on-fill); }
+.pick.on .pclub { color: color-mix(in srgb, var(--on-fill) 70%, transparent); }
+.pick.on .tick { background: var(--on-fill); border-color: var(--on-fill); }
+.pick.on .tick::after { color: var(--fill); }
 .pn2 { font-weight: 600; font-size: .88rem; }
 input[type="number"] {
-  font-family: var(--mono); font-size: .9rem; padding: .35rem .5rem; width: 7rem;
-  border-radius: 5px; background: var(--surface); color: var(--text);
-  border: 1px solid var(--border-2);
+  font-family: var(--mono); font-size: .88rem; padding: .35rem .5rem; width: 7rem;
 }
 
 /* ── Waivers ─────────────────────────────────────────── */
@@ -605,9 +874,8 @@ input[type="number"] {
 .wrow .wmove { font-size: .9rem; }
 .moretxt { font-size: .78rem; color: var(--muted); padding: .5rem .55rem; }
 input[type="search"] {
-  width: 100%; font-family: var(--body); font-size: .86rem;
-  padding: .38rem .5rem; margin-top: .35rem; border-radius: 6px;
-  background: var(--surface); color: var(--text); border: 1px solid var(--border-2);
+  width: 100%; font-family: var(--body); font-size: .84rem;
+  padding: .4rem .5rem; margin-top: .35rem;
 }
 
 /* ── Free-agent pool ─────────────────────────────────── */
@@ -625,13 +893,13 @@ input[type="search"] {
   width: 100%; min-width: 0; margin-top: 0;
   text-overflow: ellipsis;
 }
-table.pool { min-width: 44rem; font-size: .86rem; }
+table.pool { min-width: 44rem; font-size: .8rem; }
 table.pool tbody tr { cursor: pointer; }
 table.pool tbody tr:hover { background: var(--surface-2); }
 table.pool tbody tr.chosen { background: var(--accent-dim); }
-table.pool tbody tr.chosen .tick { background: var(--accent); border-color: var(--accent); }
-table.pool tbody tr.chosen .tick::after { color: #06130c; }
-table.pool td, table.pool th { padding: .42rem .6rem; }
+table.pool tbody tr.chosen .tick { background: var(--fill); border-color: var(--fill); }
+table.pool tbody tr.chosen .tick::after { color: var(--on-fill); }
+table.pool td, table.pool th { padding: .42rem .6rem; height: auto; }
 th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
 th.sortable:hover { color: var(--text); }
 th.active { color: var(--accent); }
@@ -654,6 +922,8 @@ td.active { color: var(--text); font-weight: 600; }
   }
   table.pool tr:last-child { border-bottom: none; }
   table.pool td { padding: 0; border: none; }
+  /* A card has no first column to run a marker down. */
+  table.pool tbody td:first-child::before { display: none; }
   table.pool td.cpick { position: absolute; left: .7rem; top: .62rem; }
   table.pool td.team { font-size: .95rem; font-weight: 600; }
   table.pool td.cpos, table.pool td.cclub {
@@ -720,12 +990,18 @@ dialog.pcard::backdrop { background: rgba(0, 0, 0, .55); }
   gap: 1rem; margin-bottom: .9rem;
 }
 .pcard-head h2 { font-size: 1.4rem; }
+/* The grid lines are drawn by each cell rather than by the gap showing a
+   coloured ground through it — ten stats rarely fill the last row, and an
+   empty track was painting itself grey. */
 .pc-stats {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(5.2rem, 1fr));
-  gap: 1px; background: var(--border);
-  border: 1px solid var(--border); border-radius: 9px; overflow: hidden;
+  gap: 1px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
 }
-.pc-stat { background: var(--surface); padding: .5rem .6rem; }
+.pc-stat {
+  background: var(--surface); padding: .5rem .6rem;
+  box-shadow: 0 0 0 1px var(--border);
+}
 .pc-stat dt {
   font-family: var(--mono); font-size: .58rem; text-transform: uppercase;
   letter-spacing: .11em; color: var(--muted); margin-bottom: .12rem;
@@ -734,8 +1010,8 @@ dialog.pcard::backdrop { background: rgba(0, 0, 0, .55); }
   margin: 0; font-family: var(--display); font-weight: 700; font-size: 1.05rem;
   font-variant-numeric: tabular-nums;
 }
-table.pc-table { min-width: 26rem; font-size: .84rem; }
-table.pc-table td, table.pc-table th { padding: .34rem .55rem; }
+table.pc-table { min-width: 26rem; font-size: .8rem; }
+table.pc-table td, table.pc-table th { padding: .34rem .55rem; height: auto; }
 /* The points breakdown is three narrow columns — it fits a phone as it is,
    so it doesn't take the history table's minimum width. */
 table.pc-table.makeup { min-width: 0; width: 100%; }

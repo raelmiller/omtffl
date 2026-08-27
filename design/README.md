@@ -4,7 +4,17 @@ Working files for the season app's UI directions. Each `.dc.html` is one
 artboard on a shared canvas; `canvas.json` places them and picks the opening
 view.
 
-**Floodlight** is the chosen direction, light by default. The chrome stays
+**Floodlight is the chosen direction, and it is now the app.** These artboards
+are the reference, not the implementation — `season-app/app/static/style.css`
+and the templates carry it, and that file's own header comment plus the "How it
+looks" section of `season-app/README.md` are what a change should be checked
+against. Two things the mockups show that the app does differently, on purpose:
+the table page is one column rather than the artboard's asymmetric grid, since
+the app's standings and fixtures are already stacked; and there is no status
+strip, which would need a line of new data plumbed into every page to say
+anything true.
+
+Floodlight is light by default. The chrome stays
 night-dark and the body is lit paper: the direction is the contrast between
 the two rather than a palette that flips wholesale, which is also why the
 dark toggle costs the app nothing structural — only the body moves.

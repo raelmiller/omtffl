@@ -6,11 +6,12 @@
 <title>{% block title %}Matchweek{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/static/style.css?v={{ asset_version }}">
 <script>
 // Apply a saved theme before the first paint. Doing this in the body would
-// show a flash of the wrong one on every page load.
+// show a flash of the wrong one on every page load. Nothing stored means the
+// device decides, and a device that has never said falls to light.
 (function () {
   try {
     var t = localStorage.getItem("matchweek-theme");
@@ -18,41 +19,84 @@
   } catch (e) { /* private browsing, or storage blocked — the OS setting stands */ }
 })();
 </script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f12'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='19' font-weight='700' fill='%237fffb2' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/static/logo.png?v={{ asset_version }}">
+<link rel="apple-touch-icon" href="/static/logo.png?v={{ asset_version }}">
+<meta name="theme-color" content="#171122">
 </head>
 <body>
-<div class="wrap{% block wrapclass %}{% endblock %}">
+{#- Sections, once. Each is (href, label, short label for the phone bar, the
+    icon's inner markup, and any other paths that belong to it). -#}
+{% set path = request.url.path %}
+{% set tabs = [
+  ("/", "Table", "Table", '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14.5h18M9 9v11"/>', ["/team/", "/gameweek/"]),
+  ("/stats", "Stats", "Stats", '<path d="M4 19V11M9.5 19V5M15 19v-6M20.5 19V8"/>', []),
+  ("/declare", "Pick your team", "Team", '<path d="M4 6.5 12 4l8 2.5V11c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V6.5Z"/><path d="M9 12l2 2 4-4"/>', []),
+  ("/trade", "Trades", "Trades", '<path d="M4 8h13l-3-3M20 16H7l3 3"/>', []),
+  ("/waivers", "Waivers", "Waivers", '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>', []),
+] %}
+{% if me and me.is_admin %}
+  {% set tabs = tabs + [("/admin", "Admin", "Admin", '<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.2M12 18.8V21M4.2 7.5l1.9 1.1M17.9 15.4l1.9 1.1M4.2 16.5l1.9-1.1M17.9 8.6l1.9-1.1"/>', [])] %}
+{% endif %}
+
+<a class="skip" href="#main">Skip to the page</a>
+
+<header class="topbar">
+  <a class="mark" href="/">OMTFFL<i>.</i></a>
+  {% if mode == "live" %}
+    <span class="chip live" title="Reading live FPL data">live</span>
+  {% elif mode == "archive" %}
+    <span class="chip archive" title="Reading last season's saved data">archive</span>
+  {% endif %}
+  <div class="topbarright">
+    <button id="theme" class="themebtn" type="button"
+            title="Switch between light and dark">
+      <span class="tlabel"></span>
+    </button>
+    {% if me %}
+    <a class="who" href="/account" title="Your sign-in and devices">
+      <span class="av">{{ me.key }}</span>
+      <span class="whoname">{{ me.team }}</span>
+    </a>
+    {% endif %}
+    {#- The crest is a badge, not a second wordmark: at 34px the ring's
+        lettering reads as texture and the lamb carries it. -#}
+    <span class="crest" title="OMTFFL"><img
+      src="/static/logo.png?v={{ asset_version }}" alt="" width="34" height="34"></span>
+  </div>
+</header>
+
+{#- Which section the current path belongs to. /team/RM/3 and /gameweek/3 are
+    both the table's, so a manager reading a result still sees where they are. -#}
+{% set here = namespace(tab=none) %}
+{% for href, label, short, icon, also in tabs %}
+  {% if path == href %}{% set here.tab = href %}{% endif %}
+  {% for prefix in also %}
+    {% if path.startswith(prefix) %}{% set here.tab = href %}{% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% if me %}
+<nav class="rail" aria-label="Sections">
+  {% for href, label, short, icon, also in tabs %}
+    <a class="tab{{ ' on' if href == here.tab }}" href="{{ href }}"
+       {% if href == here.tab %}aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ icon|safe }}</svg>
+      <span class="full">{{ label }}</span><span class="short">{{ short }}</span>
+    </a>
+  {% endfor %}
+</nav>
+{% endif %}
+
+<div class="wrap{% block wrapclass %}{% endblock %}" id="main">
   {% if me and me.viewed_by %}
   <div class="viewing">
     Viewing as <strong>{{ me.team }}</strong> &mdash; anything you save is saved
     as them. <a href="/stop-viewing">Back to {{ me.viewed_by }}</a>
   </div>
   {% endif %}
-  <header>
-    <div class="topline">
-      <span class="eyebrow">OMTFFL</span>
-      <button id="theme" class="themebtn" type="button"
-              title="Switch between light and dark">
-        <span class="tlabel"></span>
-      </button>
-      {% if mode == "live" %}
-        <span class="pill live">live data</span>
-      {% elif mode == "archive" %}
-        <span class="pill archive">archive data</span>
-      {% endif %}
-    </div>
+  <header class="pagehead">
     <h1>{% block heading %}Matchweek{% endblock %}</h1>
-    {% if me %}
-    <nav class="nav">
-      <a href="/">Table</a>
-      <a href="/stats">Stats</a>
-      <a href="/declare">Pick your team</a>
-      <a href="/trade">Trades</a>
-      <a href="/waivers">Waivers</a>
-      {% if me.is_admin %}<a href="/admin">Admin</a>{% endif %}
-      <a class="who" href="/account" title="Your sign-in and devices">{{ me.team }}</a>
-    </nav>
-    {% endif %}
     {% block subheading %}{% endblock %}
   </header>
 

@@ -69,6 +69,36 @@ The admin's own link is printed to the deploy log on every start, freshly
 issued, because on a database nobody holds a session for that log line is the
 only way in.
 
+## How it looks
+
+The UI is **Floodlight**, drawn in `design/` and applied here. Two things are
+worth knowing before editing `static/style.css`.
+
+**Light is the default and the fallback.** The light palette is defined on a
+bare `:root`, so a device that has never expressed a preference gets it. Dark
+is reached two ways and two ways only: `prefers-color-scheme: dark` (guarded
+by `:root:not([data-theme="light"])` so a manager's explicit "light" wins), and
+`:root[data-theme="dark"]` from the toggle in the bar. The toggle stores
+`matchweek-theme`; right-click or long-press it to hand control back to the
+device. The two dark blocks must define the same tokens as each other and as
+the light block — a token light sets and dark forgets keeps its light value
+against a dark ground, which is how you get black text on a black panel. The
+test suite checks this.
+
+**The accent is two tokens, because one colour cannot do both jobs.** `--fill`
+is the lime; it is only ever a background, always carrying `--on-fill` ink, and
+it needs no light/dark variant because it reads on paper and on slate alike.
+`--accent` is the accent as ink — a deep grass green on paper, the lime again
+after dark — and it is what carries text: links, positive numbers, the
+countdown. Reaching for `--fill` as a text colour on a light ground will not
+read. The lime is also rationed: it marks the one primary action on a page, so
+a per-row action is `.btn.ghost`, not a fourteenth highlight.
+
+The chrome — the bar and the tab rail — is aubergine in both themes and has
+its own `--chrome-*` tokens, because the crest is a deep purple and the bar is
+the surface it sits on rather than a ground that moves under it. Below 40rem
+the rail becomes a bottom navigation bar in the thumb's reach.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

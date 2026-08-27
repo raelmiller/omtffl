@@ -1193,6 +1193,86 @@ check_true("a bystander still sees it as something to object to",
 check_true("and not as one of theirs",
            "in front of the league" not in btext)
 
+print("\n── The chrome ──────────────────────────────────────────")
+
+# The bar and the tab rail are the only navigation there is now, so they get
+# the same treatment as anything else that would strand a manager if it broke.
+sheet = open("app/static/style.css").read()
+
+bar = wv.get("/").text
+check_true("the bar carries the crest", 'src="/static/logo.png' in bar)
+check("and the crest is actually served", wv.get("/static/logo.png").status_code, 200)
+check_true("the manager's initials sit next to their team",
+           '<span class="av">RM</span>' in bar)
+check_true("and the team name with them", "Quantum of Szobos" in bar)
+
+# The current section, including the pages that belong to one without being it.
+def tab_on(html):
+    return re.findall(r'<a class="tab on" href="([^"]+)"', html)
+
+check("the table page marks the table tab", tab_on(bar), ["/"])
+check("a team's gameweek belongs to the table too",
+      tab_on(wv.get("/team/RM").text), ["/"])
+gw_now = engine.season()["rounds"][0]["gameweek"]
+check("and so does a round",
+      tab_on(wv.get(f"/gameweek/{gw_now}").text), ["/"])
+check("the waivers page marks its own", tab_on(wv.get("/waivers").text), ["/waivers"])
+check("and the trades page marks its own", tab_on(wv.get("/trade").text), ["/trade"])
+rail_hrefs = re.findall(r'<a class="tab[^"]*" href="([^"]+)"', bar)
+check("the rail carries every section", rail_hrefs,
+      ["/", "/stats", "/declare", "/trade", "/waivers"])
+check_true("and every one of them opens",
+           all(wv.get(h).status_code == 200 for h in rail_hrefs),
+           ", ".join(f"{h} -> {wv.get(h).status_code}" for h in rail_hrefs
+                     if wv.get(h).status_code != 200))
+
+# Admin is a section, not a secret: it is only on the rail for an admin, and
+# the page itself is what actually stops anyone else.
+check_true("a manager who is not an admin has no admin tab", ">Admin<" not in bar)
+os.environ["ADMIN_KEYS"] = "RM"
+admin_bar = wv.get("/").text
+check_true("an admin does", ">Admin<" in admin_bar)
+check("and it is the last of the six",
+      re.findall(r'<a class="tab[^"]*" href="([^"]+)"', admin_bar)[-1], "/admin")
+check("the admin page marks its own tab",
+      re.findall(r'<a class="tab on" href="([^"]+)"', wv.get("/admin").text), ["/admin"])
+os.environ.pop("ADMIN_KEYS", None)
+check_true("and the tab goes with the rights", ">Admin<" not in wv.get("/").text)
+check_true("a signed-out visitor has no rail at all",
+           '<nav class="rail"' not in client.get("/").text)
+
+# The thing that was actually asked for: light unless the device says dark.
+light = sheet[:sheet.find("@media (prefers-color-scheme: dark)")]
+check_true("the light palette is defined on a bare :root, so it is the fallback",
+           "--bg: #F3F5EF" in light and "--accent: #3E6B12" in light)
+check_true("dark is only reached by the device asking for it",
+           "@media (prefers-color-scheme: dark)" in sheet
+           and ':root:not([data-theme="light"])' in sheet)
+check_true("or by the toggle asking for it",
+           ':root[data-theme="dark"]' in sheet)
+check_true("and the toggle can still be handed back to the device",
+           'removeItem("matchweek-theme")' in bar)
+
+# Throwing the toggle swaps one block of tokens for another. Anything the
+# light block names and the dark block forgets keeps its light value against a
+# dark ground, which is how you get black text on a black panel — so the two
+# have to name exactly the same things.
+def token_names(block):
+    return set(re.findall(r"(--[a-z0-9-]+):", block))
+
+dark = sheet[sheet.find(':root[data-theme="dark"]'):]
+dark = dark[:dark.find("\n}")]
+chrome = {"--chrome", "--chrome-2", "--chrome-3", "--chrome-ink",
+          "--chrome-muted", "--chrome-line", "--fill", "--on-fill",
+          "--display", "--body", "--mono"}
+missing = (token_names(light) - chrome) - token_names(dark)
+check_true("dark redefines every token light sets, bar the ones that never move",
+           not missing, ", ".join(sorted(missing)))
+check_true("and the media-query block agrees with the toggle",
+           token_names(dark) == token_names(
+               sheet[sheet.find('@media (prefers-color-scheme: dark)'):
+                     sheet.find(':root[data-theme="dark"]')]))
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: {', '.join(FAILS)}")
