@@ -105,6 +105,29 @@ page.</p>
 
 <section>
   <div class="sechead">
+    <h2>Build</h2>
+    <span class="eyebrow">what code is running</span>
+  </div>
+  <p class="note">
+    {% if build.commit %}Serving <strong>{{ build.commit }}</strong>{% if build.branch %}
+      on {{ build.branch }}{% endif %}{% if build.message %} &mdash;
+      &ldquo;{{ build.message|truncate(72) }}&rdquo;{% endif %}, built
+    {% else %}This container was built{% endif %}
+    <time data-when="{{ build.built }}">{{ build.built }}</time>
+    and started <time data-when="{{ build.started }}">{{ build.started }}</time>.
+    {% if not build.commit %}
+      Railway did not inject a commit, so the build time is the only marker
+      &mdash; that happens outside Railway or when the service is not linked
+      to the repository.
+    {% endif %}
+    If a change you just pushed isn&rsquo;t on a page, check this first: a
+    redeploy takes a few minutes, and until it lands the old code is still
+    serving.
+  </p>
+</section>
+
+<section>
+  <div class="sechead">
     <h2>Data</h2>
     <span class="eyebrow">
       {% if mode == "live" %}this host can reach FPL

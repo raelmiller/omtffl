@@ -63,6 +63,16 @@ once:
    `data.written`, so "when did this last change" is answerable without
    guessing at the numbers.
 
+**Which code is running is reported too**, on `/health` under `build` and in a
+panel at the top of `/admin`. Data freshness was answerable and code freshness
+wasn't, which makes "the change isn't on the page" impossible to diagnose from
+outside: a bug and a container still serving the previous image look identical.
+Railway injects `RAILWAY_GIT_COMMIT_SHA`, so the app reports the commit,
+branch and message it was built from; off Railway those are absent and it
+falls back to the mtime of `app/`, which the Dockerfile copies in as its last
+layer and is therefore the image's build time. Check it before hunting a bug —
+a redeploy takes a few minutes.
+
 The container's copy of the data is ephemeral — a redeploy resets it to
 whatever is committed — so **the committed files are the floor the app falls
 back to, and how often they are refreshed is how stale the app can get.** That
@@ -179,6 +189,14 @@ line says `offered` and its points say `never sent`. A history where a
 rejected offer looks identical to a completed deal is worse than one that says
 less, so the test suite asserts the word `gave` never appears against a vetoed
 trade.
+
+**The Settled section is always on the page, empty or not.** It used to live
+inside `{% if settled %}`, so a league with nothing settled yet saw no section
+at all — which looks exactly like a page that doesn't list trades, and sent
+someone hunting for a bug that wasn't there. It now says "nothing has settled
+yet" and where a trade goes when it does. The same reasoning as `/health`
+reporting the truth rather than the intent: an absent thing and an empty thing
+have to look different.
 
 **Free agency** runs from then until the gameweek deadline. Whoever is left is
 first come, first served, as many moves as a manager likes, still one out for

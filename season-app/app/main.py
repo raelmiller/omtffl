@@ -29,6 +29,7 @@ from . import auth, db, engine, fetcher, live
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
+STARTED = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
 def asset_version():
@@ -181,6 +182,36 @@ def gameweek(request: Request, number: int):
     return templates.TemplateResponse("gameweek.html", ctx)
 
 
+def build():
+    """Which code is actually running.
+
+    `/health` has always reported how fresh the *data* is and never how fresh
+    the *app* is, which makes "I can't see the change you just made" an
+    unanswerable question: nobody can tell a bug from a container still
+    serving last week's image. Railway injects the commit it built from, so
+    the running app can simply say.
+
+    `built` is the fallback that needs nothing injected: the Dockerfile copies
+    `app/` in as its last layer, so that directory's mtime is when this image
+    was built. It survives running outside Railway, where the git variables
+    are absent.
+    """
+    sha = os.environ.get("RAILWAY_GIT_COMMIT_SHA") or None
+    try:
+        built = datetime.fromtimestamp(
+            HERE.stat().st_mtime, timezone.utc).isoformat(timespec="seconds")
+    except OSError:
+        built = None
+    return {
+        "commit": sha[:7] if sha else None,
+        "branch": os.environ.get("RAILWAY_GIT_BRANCH") or None,
+        "message": os.environ.get("RAILWAY_GIT_COMMIT_MESSAGE") or None,
+        "deployment": os.environ.get("RAILWAY_DEPLOYMENT_ID") or None,
+        "built": built,
+        "started": STARTED,
+    }
+
+
 def _next_refresh():
     """When the next automatic refresh is due, or why there isn't one.
 
@@ -262,6 +293,7 @@ def health():
     season = engine.season()
     body = {
         "ok": bool(season.get("ready")),
+        "build": build(),
         "mode": fetcher.mode(),
         "fpl_api": {
             "reachable": fetcher.STATUS["reachable"],
@@ -980,6 +1012,7 @@ def admin(request: Request):
     ctx["signed_in"] = {m["key"]: len(db.sessions_for(m["key"]))
                         for m in ctx["managers"]}
     ctx["data"] = engine.freshness()
+    ctx["build"] = build()
     ctx["refresh"] = dict(fetcher.STATUS)
     job = scheduler.get_job("refresh") if scheduler.running else None
     ctx["next_refresh"] = (job.next_run_time.isoformat()

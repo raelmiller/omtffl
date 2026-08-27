@@ -242,9 +242,18 @@
 </section>
 {% endif %}
 
-{% if settled %}
 <section>
-  <div class="sechead"><h2>Settled</h2></div>
+  <div class="sechead"><h2>Settled</h2>
+    <span class="eyebrow">the whole league</span></div>
+  {# The section is always here, even empty. Hidden, "nothing has settled yet"
+     and "this page doesn't do that" look identical, and a manager cannot tell
+     which they are looking at. #}
+  {% if not settled %}
+  <p class="note">Nothing has settled yet. A trade lands here once it is
+  done &mdash; a straight swap the moment it is accepted, a points trade when
+  the window shuts without enough objections. Anything still waiting is
+  above.</p>
+  {% else %}
   <div class="panel scroll">
     <table>
       <thead><tr><th>GW</th><th>Trade</th><th class="num">Points</th><th>Outcome</th></tr></thead>
@@ -279,8 +288,8 @@
       </tbody>
     </table>
   </div>
+  {% endif %}
 </section>
-{% endif %}
 
 <p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/declare">Pick your team</a></p>
 

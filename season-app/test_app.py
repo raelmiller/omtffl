@@ -635,6 +635,43 @@ check_true("and they really did not move",
                pn, db.trades(), db.transactions())["squads"][P1]))
 _hold_window_open()
 
+print("\n── Telling an empty list from a missing feature ────────")
+
+# "That isn't showing in the view." The settled table was inside {% if
+# settled %}, so a league with nothing settled yet got no section at all —
+# indistinguishable from a page that simply doesn't list trades.
+check_true("the Settled section is on the page even when it has rows",
+           "Settled" in flat(c1.get("/trade").text))
+
+_empty = TestClient(app)
+_empty.get(f"/m/{db.manager_by_key(P1)['token']}")
+import app.main as _m
+_real_settled = _m.db.trades
+try:
+    _m.db.trades = lambda *a, **k: []          # a league that has traded nothing
+    _blank = flat(_empty.get("/trade").text)
+finally:
+    _m.db.trades = _real_settled
+check_true("with nothing settled the section is still there",
+           "Settled" in _blank)
+check_true("and says so in words rather than vanishing",
+           "Nothing has settled yet" in _blank)
+
+# Which code is running was unanswerable, so "I can't see your change" and
+# "the container is still on the old image" looked the same from outside.
+_b = _m.build()
+check_true("the build reports when the image was made", bool(_b["built"]))
+check_true("and when this process started", bool(_b["started"]))
+check("health carries it", "build" in c1.get("/health").json(), True)
+
+os.environ["RAILWAY_GIT_COMMIT_SHA"] = "0123456789abcdef0123456789abcdef01234567"
+os.environ["RAILWAY_GIT_BRANCH"] = "main"
+check("a Railway commit is reported short", _m.build()["commit"], "0123456")
+check("with its branch", _m.build()["branch"], "main")
+del os.environ["RAILWAY_GIT_COMMIT_SHA"], os.environ["RAILWAY_GIT_BRANCH"]
+check("and off Railway it reports no commit rather than a wrong one",
+      _m.build()["commit"], None)
+
 print("\n── The bank ────────────────────────────────────────────")
 
 os.environ["ADMIN_KEYS"] = "RM"
