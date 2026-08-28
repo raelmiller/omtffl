@@ -361,11 +361,8 @@ this is the same server-rendered pages in a window without an address bar.
   always read 0, and installed to a home screen the rail sat under the
   iPhone's home indicator.
 
-The honest limits: on iOS installing is Safari-only, via Share → Add to Home
-Screen, which is obscure enough to be worth a sentence of instruction. And an
-installed app is a **separate cookie jar** from Safari and from any messaging
-app's in-app browser — so a sign-in link tapped in WhatsApp does not sign you
-in inside the installed app. See below for why that matters.
+The honest limit: on iOS installing is Safari-only, via Share → Add to Home
+Screen, which is obscure enough to be worth a sentence of instruction.
 
 Push notifications are not here yet. They are the reason to do this at all —
 a deadline in an hour, a trade offered, the run finished — and they need a
@@ -385,6 +382,23 @@ it.
 
 Links expire on their own too — a week for one an admin hands out, fifteen
 minutes for one a manager mints for their own second device from `/account`.
+
+**A link cannot sign in a second app, and a code can.** Installed to a home
+screen the app has its own cookie jar and no address bar: a link tapped in a
+messaging app opens in *that* app's browser, signs it in, and leaves the
+installed one signed out with nowhere to paste anything. A second browser has
+the same problem. So `/account` mints an eight-character code, read off one
+screen and typed into the other — the app's front door, shaped to fit through
+a doorway a link cannot.
+
+It is worth being plain that this is **exactly as powerful as a sign-in link**
+and is not a second factor. What keeps it proportionate: single use, five
+minutes, only one live per manager (minting retires the last), and only the
+hash is stored. The alphabet is Crockford's base32 — no I, L, O or U — so 32⁸
+against a five-minute window is out of reach of guessing without leaning on
+rate limiting, and the characters that get misread aren't in it. Input is
+normalised the other way too: `O` becomes `0`, lowercase and the displayed
+hyphen are forgiven, because the code is being copied by eye.
 
 The cookie carries a session secret whose hash is all the database keeps, so a
 copy of the database is not a set of working logins. Sessions are listed on

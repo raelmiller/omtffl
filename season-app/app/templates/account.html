@@ -7,6 +7,34 @@
 
 {% block content %}
 
+{#- Deliberately above "Another device": for anyone with the app installed
+    this is the one that works, and a link is the thing that quietly won't. -#}
+<section>
+  <div class="sechead">
+    <h2>Sign in another app</h2>
+    <span class="eyebrow">good once, for {{ pair_minutes }} minutes</span>
+  </div>
+  <p class="sub">For the app added to your home screen, or any other browser.
+  A <em>link</em> can&rsquo;t sign those in &mdash; tapped in WhatsApp it opens
+  in WhatsApp&rsquo;s own browser and signs that in instead, and the installed
+  app has no address bar to paste it into. Read this code off here and type it
+  on the other one.</p>
+
+  <div class="tacts">
+    <button id="mkcode" class="btn">Make a code</button>
+    <span id="cstatus" class="savestate"></span>
+  </div>
+  <div class="panel" id="codebox" hidden style="margin-top:.7rem">
+    <div class="linkrow">
+      <code class="paircode" id="codeout"></code>
+      <button id="copycode" class="btn small ghost" type="button">Copy</button>
+    </div>
+  </div>
+  <p class="note">On the other app, open it, tap <strong>Sign in</strong> and
+  type the code. It works once and lasts {{ pair_minutes }} minutes. Anyone
+  holding it is you until it is used, exactly like a sign-in link.</p>
+</section>
+
 <section>
   <div class="sechead">
     <h2>Another device</h2>
@@ -106,6 +134,71 @@
     } catch (e) {
       // Clipboard access is refused often enough that selecting the text is
       // the fallback worth having, rather than an error nobody can act on.
+      var r = document.createRange();
+      r.selectNodeContents(code);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(r);
+      out.textContent = 'selected — copy it yourself';
+    }
+  });
+})();
+
+(function () {
+  var btn = document.getElementById('mkcode');
+  var out = document.getElementById('cstatus');
+  var box = document.getElementById('codebox');
+  var code = document.getElementById('codeout');
+  if (!btn) return;
+
+  // Hyphenated for reading aloud and for typing without losing your place.
+  // The server strips whatever punctuation comes back, so this is display
+  // only and the two do not have to agree about where the break goes.
+  var pretty = function (s) { return s.slice(0, 4) + '-' + s.slice(4); };
+  var ticking = null;
+
+  btn.addEventListener('click', async function () {
+    btn.disabled = true;
+    out.textContent = 'making one…';
+    out.className = 'savestate';
+    try {
+      var res = await fetch('/account/pair', { method: 'POST' });
+      var body = await res.json();
+      if (!body.ok) throw new Error(body.detail || 'refused');
+      code.textContent = pretty(body.code);
+      box.hidden = false;
+      out.className = 'savestate ok';
+      // Counting down rather than stating the minutes: the code is being
+      // typed on another device, and "expired" arriving mid-type is the
+      // confusing part worth pre-empting.
+      var until = new Date(body.expires).getTime();
+      clearInterval(ticking);
+      var tick = function () {
+        var left = Math.round((until - Date.now()) / 1000);
+        if (left <= 0) {
+          clearInterval(ticking);
+          out.textContent = 'expired — make another';
+          out.className = 'savestate bad';
+          box.hidden = true;
+          return;
+        }
+        out.textContent = 'good for ' + Math.floor(left / 60) + 'm ' +
+                          String(left % 60).padStart(2, '0') + 's, once';
+      };
+      tick();
+      ticking = setInterval(tick, 1000);
+    } catch (e) {
+      out.textContent = 'could not make one: ' + e;
+      out.className = 'savestate bad';
+    }
+    btn.disabled = false;
+  });
+
+  document.getElementById('copycode').addEventListener('click', async function () {
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      out.textContent = 'copied';
+      out.className = 'savestate ok';
+    } catch (e) {
       var r = document.createRange();
       r.selectNodeContents(code);
       window.getSelection().removeAllRanges();

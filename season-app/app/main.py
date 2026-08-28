@@ -451,6 +451,7 @@ def account(request: Request):
     ctx["sessions"] = db.sessions_for(me["key"], request.cookies.get(auth.COOKIE))
     ctx["link_minutes"] = db.LINK_MINUTES
     ctx["session_days"] = db.SESSION_DAYS
+    ctx["pair_minutes"] = db.PAIR_MINUTES
     return templates.TemplateResponse("account.html", ctx)
 
 
@@ -468,6 +469,43 @@ def new_device_link(request: Request):
     return JSONResponse({"ok": True,
                          "link": f"{str(request.base_url).rstrip('/')}/m/{token}",
                          "minutes": db.LINK_MINUTES})
+
+
+@app.post("/account/pair")
+def pair_code(request: Request):
+    """Mint a short code for signing the installed app in.
+
+    A link cannot do this job. Installed to a home screen the app has its own
+    cookie jar and no address bar, so a link tapped in a messaging app signs
+    that app's browser in and leaves the installed one with nowhere to paste
+    anything. A code is read off one screen and typed into the other.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    code, expires = db.pair_code(me["key"])
+    return JSONResponse({"ok": True, "code": code, "expires": expires,
+                         "minutes": db.PAIR_MINUTES})
+
+
+@app.post("/pair")
+def use_pair_code(request: Request, code: str = Form("")):
+    """Spend a pairing code and sign this app in.
+
+    Worth being clear about the power of this: it is exactly a sign-in link,
+    with the same reach and the same single use. It is not a second factor
+    and does not pretend to be — it is the same front door, shaped so it fits
+    through a doorway a link cannot.
+    """
+    key = db.spend_pair_code(code)
+    if not key:
+        ctx = _context(request)
+        ctx["pair_error"] = ("That code has expired or isn't right. Codes last "
+                             f"{db.PAIR_MINUTES} minutes and work once — make "
+                             "a fresh one and try again.")
+        return templates.TemplateResponse("signin.html", ctx, status_code=400)
+    return auth.sign_in(RedirectResponse("/", status_code=303),
+                        db.start_session(key))
 
 
 @app.post("/account/signout-all")

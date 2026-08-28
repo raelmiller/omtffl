@@ -7,6 +7,36 @@
     <p class="sub" style="margin-top:.6rem">Rael sends one link per manager.
     Bookmark it once and it keeps you signed in all season.</p>
   </div></div>
-  <p class="sub"><a href="/">&larr; The table</a></p>
 </section>
+
+{#- The installed app has its own cookie jar and no address bar, so a link
+    cannot reach it: one tapped in a messaging app signs that app's browser
+    in and leaves this one with nowhere to paste anything. A code crosses
+    that gap. Shown to everyone, not only when running installed — a second
+    browser has exactly the same problem and no obvious way out of it. -#}
+<section>
+  <div class="sechead">
+    <h2>Already signed in somewhere else?</h2>
+    <span class="eyebrow">use a code</span>
+  </div>
+  {% if pair_error %}<p class="pending">{{ pair_error }}</p>{% endif %}
+  <p class="sub">On the device where you&rsquo;re already signed in, open
+  <strong>Account</strong> and tap <strong>Sign in another app</strong>. Type
+  the code it gives you here.</p>
+  <form method="post" action="/pair" class="proposal">
+    <label class="field">
+      <span class="eyebrow">Code</span>
+      <input type="text" name="code" id="paircode" required
+             autocomplete="one-time-code" autocapitalize="characters"
+             autocorrect="off" spellcheck="false" inputmode="text"
+             maxlength="20" placeholder="XXXX-XXXX">
+    </label>
+    <div class="tacts"><button type="submit" class="btn">Sign in</button></div>
+  </form>
+  <p class="note">The code works once and lasts a few minutes. Anyone holding
+  it is you until it is used, exactly like a sign-in link &mdash; so read it
+  off your own screen rather than sending it anywhere.</p>
+</section>
+
+<p class="sub"><a href="/">&larr; The table</a></p>
 {% endblock %}

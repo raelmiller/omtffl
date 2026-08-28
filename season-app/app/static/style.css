@@ -804,6 +804,13 @@ footer {
 
 /* ── Admin ───────────────────────────────────────────── */
 code.link { font-size: .74rem; word-break: break-all; }
+/* Big, spaced and unbreakable: this is read off one screen and typed into
+   another, so every character has to be unmistakable at arm's length. */
+.paircode {
+  flex: 1 1 auto; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(1.25rem, 7vw, 1.75rem); letter-spacing: .12em;
+  white-space: nowrap; color: var(--text);
+}
 .yes { color: var(--accent); font-family: var(--mono); font-size: .72rem; }
 .no { color: var(--muted); font-family: var(--mono); font-size: .72rem; }
 

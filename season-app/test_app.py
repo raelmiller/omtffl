@@ -864,6 +864,89 @@ check_true("and the chip renders an opponent with home or away",
 check_true("with a blank round saying so rather than going empty",
            "return 'blank'" in _pitch)
 
+print("\n── Signing a second app in ─────────────────────────────")
+
+# Installed to a home screen the app has its own cookie jar and no address
+# bar, so a sign-in link cannot reach it: one tapped in a messaging app signs
+# THAT app's browser in and leaves the installed one with nowhere to paste
+# anything. A code read off one screen and typed into another crosses it.
+_signed_in = TestClient(app)
+_signed_in.get(f"/m/{db.manager_by_key(P1)['token']}")
+_r = _signed_in.post("/account/pair")
+check("a signed-in manager can mint a code", _r.status_code, 200)
+_code = _r.json()["code"]
+check("the code is the length the page formats for", len(_code), db.PAIR_LENGTH)
+check_true("and avoids the characters that get misread",
+           not set(_code) & set("ILOU"))
+
+# The whole point: a browser with no cookie at all becomes that manager.
+_fresh = TestClient(app)
+check("a fresh app is signed out to begin with", _fresh.get("/account").status_code, 401)
+check("the code signs it in", _fresh.post("/pair", data={"code": _code},
+                                          follow_redirects=False).status_code, 303)
+check("as the manager who minted it",
+      db.session_manager(_fresh.cookies.get(auth.COOKIE))["key"], P1)
+check("and it can now reach its own account page",
+      _fresh.get("/account").status_code, 200)
+
+# Single use, or a code read over someone's shoulder stays good.
+_again = TestClient(app)
+check("the same code cannot be used twice",
+      _again.post("/pair", data={"code": _code}).status_code, 400)
+check_true("and the page says why rather than just refusing",
+           "expired" in _again.post("/pair", data={"code": _code}).text)
+
+# Read off a screen, so a misread character must not cost a round trip.
+_r2 = _signed_in.post("/account/pair").json()["code"]
+_typo = (_r2.replace("0", "O").replace("1", "I")).lower()
+_c3 = TestClient(app)
+check("O for zero and lowercase are forgiven",
+      _c3.post("/pair", data={"code": _typo}, follow_redirects=False).status_code, 303)
+_r3 = _signed_in.post("/account/pair").json()["code"]
+_c4 = TestClient(app)
+check("and so is the hyphen the page displays",
+      _c4.post("/pair", data={"code": _r3[:4] + "-" + _r3[4:]},
+               follow_redirects=False).status_code, 303)
+
+# Minting replaces, so only one code per manager is ever live.
+_old = _signed_in.post("/account/pair").json()["code"]
+_new = _signed_in.post("/account/pair").json()["code"]
+check("minting a code retires the one before it",
+      TestClient(app).post("/pair", data={"code": _old}).status_code, 400)
+check("while the newest one works",
+      TestClient(app).post("/pair", data={"code": _new},
+                           follow_redirects=False).status_code, 303)
+
+# Expiry is enforced server-side, not by the countdown on the page.
+_stale = _signed_in.post("/account/pair").json()["code"]
+with db.connect() as _conn:
+    _conn.execute("UPDATE pair_code SET expires_at = ?",
+                  ((datetime.now(_tz.utc) - timedelta(minutes=1))
+                   .isoformat(timespec="seconds"),))
+check("an expired code is refused",
+      TestClient(app).post("/pair", data={"code": _stale}).status_code, 400)
+check_true("and is dropped rather than left lying in the table",
+           db.spend_pair_code(_stale) is None)
+
+check("a code nobody minted is refused",
+      TestClient(app).post("/pair", data={"code": "ZZZZZZZZ"}).status_code, 400)
+check("and so is an empty one",
+      TestClient(app).post("/pair", data={"code": ""}).status_code, 400)
+check("signing out is still required to mint one",
+      TestClient(app).post("/account/pair").status_code, 401)
+
+# Only the hash is stored, for the same reason sessions only keep theirs.
+_kept = _signed_in.post("/account/pair").json()["code"]
+with db.connect() as _conn:
+    _stored = [dict(r) for r in _conn.execute("SELECT * FROM pair_code")]
+check_true("the code itself is never written down",
+           all(_kept not in str(v) for r in _stored for v in r.values()))
+
+check_true("the sign-in page offers somewhere to type one",
+           'action="/pair"' in TestClient(app).get("/account").text)
+check_true("and the account page explains why a link won't do",
+           "Sign in another app" in _signed_in.get("/account").text)
+
 print("\n── Installing it to a home screen ──────────────────────")
 
 # PNG width and height live at a fixed offset in the header, so the size of an

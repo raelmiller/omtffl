@@ -126,6 +126,20 @@ CREATE TABLE IF NOT EXISTS trade_veto (
     PRIMARY KEY (trade_id, manager)
 );
 
+-- A short code for signing a second app in. Installed to a home screen the
+-- app has its own cookie jar and no address bar, so a link cannot reach it:
+-- one tapped in a messaging app opens in that app's browser, signs THAT in,
+-- and leaves the installed one signed out with nowhere to paste anything.
+-- A code read off one screen and typed into another crosses that gap.
+-- Only the hash is kept, for the same reason sessions only keep theirs.
+CREATE TABLE IF NOT EXISTS pair_code (
+    id          TEXT PRIMARY KEY,        -- sha256 of the normalised code
+    manager     TEXT NOT NULL REFERENCES manager(key) ON DELETE CASCADE,
+    created_at  TEXT NOT NULL,
+    expires_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS pair_code_manager ON pair_code(manager);
+
 CREATE TABLE IF NOT EXISTS lineup (
     manager     TEXT NOT NULL REFERENCES manager(key),
     gameweek    INTEGER NOT NULL,
@@ -345,6 +359,63 @@ SESSION_DAYS = 90       # how long a browser can go unused before it is dropped
 
 def _fingerprint(secret):
     return hashlib.sha256(secret.encode()).hexdigest()
+
+
+# ── Pairing a second app ───────────────────────────────────────────────────
+PAIR_MINUTES = 5        # you are reading it off one screen and typing it into
+                        # another on the same phone; it does not need longer
+# Crockford's base32: no I, L, O or U. The first three are misread as 1, 1 and
+# 0, and dropping U means a code can never spell anything unfortunate. Eight
+# characters is 32^8 — a shade over a trillion — which against a five-minute
+# window is far out of reach of guessing without any rate limiting to lean on.
+PAIR_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+PAIR_LENGTH = 8
+# Whatever the reader thought they saw. The characters left out above are the
+# ones that get misread, so map them back rather than rejecting a good-faith
+# typo, and ignore whatever spacing or hyphens they typed.
+_PAIR_FIXES = str.maketrans({"I": "1", "L": "1", "O": "0", "U": "V"})
+
+
+def _normalise_code(raw):
+    text = "".join(c for c in (raw or "").upper() if c.isalnum())
+    return text.translate(_PAIR_FIXES)
+
+
+def pair_code(key):
+    """Mint a short code that signs another app in as this manager.
+
+    Replaces whatever code that manager had, so only one is ever live: a code
+    they have forgotten about is a code nobody can account for.
+    """
+    code = "".join(secrets.choice(PAIR_ALPHABET) for _ in range(PAIR_LENGTH))
+    expires = (datetime.now(timezone.utc) + timedelta(minutes=PAIR_MINUTES)
+               ).isoformat(timespec="seconds")
+    with connect() as conn:
+        conn.execute("DELETE FROM pair_code WHERE manager = ?", (key,))
+        conn.execute(
+            "INSERT INTO pair_code (id, manager, created_at, expires_at)"
+            " VALUES (?, ?, ?, ?)",
+            (_fingerprint(_normalise_code(code)), key, now(), expires))
+    return code, expires
+
+
+def spend_pair_code(raw):
+    """Who a code belongs to, spending it. None if it is wrong or too late.
+
+    Single use and deleted on sight, including when it has expired — a code
+    that has been offered once has been read off a screen, and there is no
+    reason to leave it lying in the table afterwards.
+    """
+    code = _normalise_code(raw)
+    if len(code) != PAIR_LENGTH:
+        return None
+    with connect() as conn:
+        row = conn.execute("SELECT * FROM pair_code WHERE id = ?",
+                           (_fingerprint(code),)).fetchone()
+        if not row:
+            return None
+        conn.execute("DELETE FROM pair_code WHERE id = ?", (_fingerprint(code),))
+        return row["manager"] if row["expires_at"] > now() else None
 
 
 def start_session(key):
