@@ -973,6 +973,59 @@ check_true("the sign-in page offers somewhere to type one",
 check_true("and the account page explains why a link won't do",
            "Sign in another app" in _signed_in.get("/account").text)
 
+print("\n── A boost on a match still being played ───────────────")
+
+# Reported from the app: a manager boosted Man City, watched them go 1-0 up,
+# and the page said "They didn't play, so nothing was paid and the use wasn't
+# spent." Paying nothing yet is correct — the result can still change — but
+# the words describe a blank gameweek, so it read as a boost thrown away.
+# engine puts shadow/ on sys.path itself, so this is top-level.
+from mechanics import boost_value as _bv                       # noqa: E402
+
+_bfx = [{"event": 40, "finished": False, "team_h": 1, "team_a": 2,
+         "team_h_score": 0, "team_a_score": 1}]
+_pts, _det = _bv(100, club_id=2, gameweek=40, pl_fixtures=_bfx)
+check("a live match pays nothing yet", _pts, 0)
+check_true("and is marked pending rather than absent",
+           _det["pending"] and not _det["played"])
+_pts2, _det2 = _bv(100, club_id=2, gameweek=40,
+                   pl_fixtures=[dict(_bfx[0], finished=True)])
+check_true("and pays as soon as it is final", _pts2 > 0, str(_pts2))
+
+# The three states have to read differently on the page, or the fix is only
+# in the data. Driven through the real route by patching what the engine
+# reports for the boost, rather than rendering the template by hand: the page
+# extends base.html and needs a live request, and a hand-rendered copy would
+# stop tracking the file it is meant to be testing.
+_real_tg = engine.team_gameweek
+_bteam = TestClient(app)
+_bteam.get(f"/m/{db.manager_by_key(P1)['token']}")
+
+
+def _boost_page(**boost):
+    engine.team_gameweek = lambda *a, **k: {
+        **(_real_tg(P1, 1, db.all_lineups(), db.transactions(),
+                    db.manager_clubs()) or {"key": P1, "rows": []}),
+        "boost": {"club": "Man City", "points": 0, "position": 3,
+                  "pct": 60, "result": None, **boost},
+    }
+    try:
+        return flat(_bteam.get(f"/team/{P1}/1").text)
+    finally:
+        engine.team_gameweek = _real_tg
+
+
+_settled_bar = _boost_page(played=True, pending=False, points=12, result="W")
+check_true("a settled boost shows what it paid", "12" in _settled_bar)
+_live_bar = _boost_page(played=False, pending=True)
+check_true("a live one says it is still to come",
+           "Still playing" in _live_bar, _live_bar[-300:])
+check_true("and does not claim they didn't play",
+           "didn" not in _live_bar.split("Manager boost")[-1][:300])
+_blank_bar = _boost_page(played=False, pending=False)
+check_true("a blank gameweek still says they didn't play",
+           "didn" in _blank_bar.split("Manager boost")[-1][:300])
+
 print("\n── Refreshing while the games are on ───────────────────")
 
 from datetime import datetime as _dt                      # noqa: E402
@@ -1425,7 +1478,13 @@ check_true("nobody in the pool is owned",
 print("\n── A team's gameweek ───────────────────────────────────")
 
 vc = TestClient(app)
-gwv = engine.season()["rounds"][0]["gameweek"]
+# A settled round, not simply the newest one. rounds[0] is the latest, which
+# on a Saturday afternoon is a match twenty minutes old: every player has one
+# line of minutes and nobody has scored, so assertions about what a good week
+# looks like fail on data that is merely early rather than wrong.
+_rounds = engine.season()["rounds"]
+gwv = next((r["gameweek"] for r in _rounds if r.get("state") == "final"),
+           _rounds[0]["gameweek"])
 detail = engine.team_gameweek("RM", gwv, db.all_lineups(), db.transactions(),
                               db.manager_clubs())
 check_true("a team's round can be read back", detail is not None)
@@ -1499,7 +1558,11 @@ scorer = max((p for _, players in detail["lines"] for p in players),
              key=lambda p: p["points"])
 detail_p = engine.player_detail(scorer["id"])
 pid = scorer["id"]
-week = detail_p["history"][-1]
+# The round this scorer was picked FROM, not whichever is latest. history[-1]
+# is the newest round on record, and mid-Saturday that is a match twenty
+# minutes old whose breakdown is one line of minutes — so this asserted "a
+# good week has several lines" against a week that had barely started.
+week = next(h for h in detail_p["history"] if h["gameweek"] == gwv)
 check_true("the latest round is itemised", bool(week["breakdown"]),
            str(week["breakdown"]))
 check("and the items add up to the score",
@@ -1510,8 +1573,11 @@ check_true("a scorer's week is more than one line",
            len(week["breakdown"]) > 1, str(week["breakdown"]))
 check_true("starting with the minutes they played",
            week["breakdown"][0]["what"] == "Minutes")
+# Same round on both sides. history[-1] is the newest, which is not the round
+# `week` came from once a later one has kicked off.
+_api_hist = vc.get(f"/api/player/{pid}").json()["history"]
 check("the popup serves it too",
-      vc.get(f"/api/player/{pid}").json()["history"][-1]["breakdown"],
+      next(h["breakdown"] for h in _api_hist if h["gameweek"] == gwv),
       week["breakdown"])
 
 print("\n── Whose team is that ──────────────────────────────────")

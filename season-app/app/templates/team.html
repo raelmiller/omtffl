@@ -119,6 +119,9 @@ document.querySelectorAll('[data-player]').forEach(el =>
           {{ detail.boost.position }}th &middot; {{ detail.boost.pct|round|int }}% &middot;
           {{ detail.boost.result }} &rarr;
           {{ '+' ~ detail.boost.points if detail.boost.points else 'nothing — a defeat pays nothing' }}
+        {% elif detail.boost.pending %}
+          Still playing &mdash; this pays once the match is final, and the use
+          isn&rsquo;t spent until it does.
         {% else %}
           They didn&rsquo;t play, so nothing was paid and the use wasn&rsquo;t spent.
         {% endif %}

@@ -560,6 +560,27 @@ check("a draw pays half the multiplier", d["multiplier"], 0.5)
 pts, detail = boost_value(100, club_id=99, gameweek=1, pl_fixtures=FIX)
 check("blank gameweek pays nothing", pts, 0)
 check("and flags that the club didn't play", detail["played"], False)
+check("and that there is nothing still to come", detail["pending"], False)
+
+# Kicked off but not finished. Reported from the app: a manager watched their
+# boosted club win 1-0 while the page told them "they didn't play, so nothing
+# was paid" — which reads as a boost thrown away rather than one not yet
+# settled. Paying nothing yet is right, since the result can still change;
+# saying they didn't play is not.
+LIVE_FIX = FIX + [{"event": 9, "finished": False, "team_h": 1, "team_a": 2,
+                   "team_h_score": 0, "team_a_score": 1}]
+pts, detail = boost_value(100, club_id=2, gameweek=9, pl_fixtures=LIVE_FIX)
+check("a match still being played pays nothing yet", pts, 0)
+check("and is not settled", detail["played"], False)
+check_true("but is pending, not blank", detail["pending"])
+
+# Same club, same round, once FPL marks it final: the boost pays in full.
+FINAL_FIX = FIX + [{"event": 9, "finished": True, "team_h": 1, "team_a": 2,
+                    "team_h_score": 0, "team_a_score": 1}]
+pts, detail = boost_value(100, club_id=2, gameweek=9, pl_fixtures=FINAL_FIX)
+check_true("and pays once the match is final", pts > 0, str(pts))
+check("with nothing left pending", detail["pending"], False)
+check("having won it", detail["result"], "W")
 
 print()
 if FAILS:

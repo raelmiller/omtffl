@@ -174,6 +174,15 @@ gameweek and none in a blank, and both are exactly what a manager needs to see
 before picking — a double shows both opponents, a blank says `blank`. Neither
 case appears in the current round, so the test suite manufactures them.
 
+**A boost on a match still being played pays nothing *yet*, and says so.**
+`boost_value` returns `played: False` in two situations that mean opposite
+things to a manager: the club had no fixture at all, or the fixture has kicked
+off and is not final. Both used to render as "they didn't play, so nothing was
+paid" — so someone watching their boosted club win 1–0 was told their boost
+had been thrown away. The `pending` flag separates them. Paying nothing until
+the match is final is right, since the result can still change; the boost pays
+in full, and the use is consumed, the moment FPL marks it settled.
+
 ## The transfer week
 
 A gameweek has two windows, not one.

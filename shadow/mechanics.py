@@ -647,8 +647,16 @@ def club_result(pl_fixtures, club_id, gameweek):
 def boost_value(xi_points, club_id, gameweek, pl_fixtures):
     """What a boost is worth, and why.
 
-    Returns (points, detail). Zero points and `played=False` means the club
-    had no fixture, in which case the caller should not consume a use.
+    Returns (points, detail). Zero points and `played=False` means nothing has
+    been paid and the caller should not consume a use.
+
+    `pending` separates the two ways that happens, because they mean opposite
+    things to a manager. **No fixture** is final: a blank gameweek pays
+    nothing, ever. **Kicked off but not finished** pays nothing *yet* — the
+    result can still change, so settling it now would be guessing, and the
+    boost pays in full the moment the match is marked final. Reporting both as
+    "they didn't play" tells someone watching their club win that their boost
+    has been thrown away.
     """
     results = club_result(pl_fixtures, club_id, gameweek)
     table = league_table(pl_fixtures, gameweek)
@@ -656,12 +664,15 @@ def boost_value(xi_points, club_id, gameweek, pl_fixtures):
     pct = boost_pct(position)
 
     if not results:
-        return 0, {"played": False, "position": position, "pct": pct,
-                   "result": None, "multiplier": 0.0}
+        pending = any(f.get("event") == gameweek
+                      and club_id in (f.get("team_h"), f.get("team_a"))
+                      for f in pl_fixtures)
+        return 0, {"played": False, "pending": pending, "position": position,
+                   "pct": pct, "result": None, "multiplier": 0.0}
 
     multiplier = sum(BOOST_RESULT[r] for r in results) / len(results)
     points = round(xi_points * (pct / 100.0) * multiplier)
     return points, {
-        "played": True, "position": position, "pct": pct,
+        "played": True, "pending": False, "position": position, "pct": pct,
         "result": "/".join(results), "multiplier": multiplier,
     }

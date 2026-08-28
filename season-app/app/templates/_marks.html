@@ -4,7 +4,7 @@
 {% macro marks(boost, move) -%}
   {%- if boost -%}
     <span class="tag boost{{ ' paid' if boost.points }}"
-          title="Boost on {{ boost.club }}{% if boost.played %} &mdash; {{ boost.position }}th, {{ boost.pct|round|int }}%, {{ boost.result }}{% else %} &mdash; they didn't play{% endif %}"
+          title="Boost on {{ boost.club }}{% if boost.played %} &mdash; {{ boost.position }}th, {{ boost.pct|round|int }}%, {{ boost.result }}{% elif boost.pending %} &mdash; still playing, pays when final{% else %} &mdash; they didn't play{% endif %}"
     >&#9889;{% if boost.points %}{{ boost.points }}{% endif %}</span>
   {%- endif -%}
   {%- if move -%}
