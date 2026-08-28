@@ -140,6 +140,33 @@ CREATE TABLE IF NOT EXISTS pair_code (
 );
 CREATE INDEX IF NOT EXISTS pair_code_manager ON pair_code(manager);
 
+-- One row per app a manager has allowed notifications on, which is not the
+-- same as one per manager: the installed app and the browser it was installed
+-- from are different subscriptions, and both are legitimate.
+CREATE TABLE IF NOT EXISTS push_subscription (
+    endpoint    TEXT PRIMARY KEY,        -- the push service's URL for this app
+    manager     TEXT NOT NULL REFERENCES manager(key) ON DELETE CASCADE,
+    p256dh      TEXT NOT NULL,           -- that app's public key
+    auth        TEXT NOT NULL,           -- shared secret the service never sees
+    created_at  TEXT NOT NULL,
+    last_ok     TEXT,
+    last_error  TEXT
+);
+CREATE INDEX IF NOT EXISTS push_subscription_manager
+    ON push_subscription(manager);
+
+-- What has already been sent, so a job that runs every few minutes cannot
+-- send the same reminder twice. Keyed by what makes a notice unique rather
+-- than by when it went: "the gameweek 3 deadline warning for RM" happens
+-- once whether the job runs four times or forty.
+CREATE TABLE IF NOT EXISTS notice_sent (
+    kind        TEXT NOT NULL,
+    gameweek    INTEGER NOT NULL,
+    manager     TEXT NOT NULL,
+    sent_at     TEXT NOT NULL,
+    PRIMARY KEY (kind, gameweek, manager)
+);
+
 CREATE TABLE IF NOT EXISTS lineup (
     manager     TEXT NOT NULL REFERENCES manager(key),
     gameweek    INTEGER NOT NULL,
@@ -811,3 +838,71 @@ def unveto_trade(trade_id, manager):
     with connect() as conn:
         conn.execute("DELETE FROM trade_veto WHERE trade_id = ? AND manager = ?",
                      (trade_id, manager))
+
+
+# ── Push subscriptions ─────────────────────────────────────────────────────
+def subscribe_push(key, endpoint, p256dh, auth):
+    """Record an app's permission to notify this manager.
+
+    Keyed on the endpoint, so re-subscribing the same app updates rather than
+    duplicates — browsers hand back the same subscription on every load, and
+    without the upsert a manager would collect one row per visit and then get
+    a notification per row.
+    """
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO push_subscription"
+            " (endpoint, manager, p256dh, auth, created_at)"
+            " VALUES (?, ?, ?, ?, ?)"
+            " ON CONFLICT(endpoint) DO UPDATE SET"
+            "  manager = excluded.manager, p256dh = excluded.p256dh,"
+            "  auth = excluded.auth",
+            (endpoint, key, p256dh, auth, now()))
+
+
+def unsubscribe_push(endpoint):
+    with connect() as conn:
+        cur = conn.execute("DELETE FROM push_subscription WHERE endpoint = ?",
+                           (endpoint,))
+        return cur.rowcount
+
+
+def push_subscriptions(key=None):
+    sql = "SELECT * FROM push_subscription"
+    args = []
+    if key:
+        sql += " WHERE manager = ?"
+        args.append(key)
+    with connect() as conn:
+        return [dict(r) for r in conn.execute(sql + " ORDER BY created_at", args)]
+
+
+def mark_push(endpoint, ok, detail=None):
+    """Remember how the last send to this app went, so /account can show it."""
+    with connect() as conn:
+        if ok:
+            conn.execute("UPDATE push_subscription SET last_ok = ?,"
+                         " last_error = NULL WHERE endpoint = ?",
+                         (now(), endpoint))
+        else:
+            conn.execute("UPDATE push_subscription SET last_error = ?"
+                         " WHERE endpoint = ?", (detail, endpoint))
+
+
+def notice_already_sent(kind, gameweek, key):
+    with connect() as conn:
+        return conn.execute(
+            "SELECT 1 FROM notice_sent WHERE kind = ? AND gameweek = ?"
+            " AND manager = ?", (kind, gameweek, key)).fetchone() is not None
+
+
+def record_notice(kind, gameweek, key):
+    """Claim a notice before sending it.
+
+    Written first and on its own: a send that fails half way is better than a
+    reminder that arrives every fifteen minutes until the deadline passes.
+    """
+    with connect() as conn:
+        conn.execute("INSERT OR IGNORE INTO notice_sent"
+                     " (kind, gameweek, manager, sent_at) VALUES (?, ?, ?, ?)",
+                     (kind, gameweek, key, now()))

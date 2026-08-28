@@ -65,6 +65,14 @@
   --pitch-edge: rgba(255,255,255,.10); --bench-bg: #14301f;
 }
 * { box-sizing: border-box; }
+/* `hidden` has to actually hide. The UA stylesheet says [hidden]{display:none},
+   but that is beaten by any author rule setting display — .btn is inline-flex,
+   so a button with the hidden attribute stayed on screen. This is the one
+   place !important is the right tool rather than a shortcut: the whole point
+   is to outrank every display rule in the file. Two per-class patches existed
+   for the same reason and are folded into it. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0; background: var(--bg); color: var(--text);
   font-family: var(--body); font-size: 15px; line-height: 1.55;
@@ -266,7 +274,6 @@ p { margin: 0; }
   line-height: 1.5; letter-spacing: 0; text-align: left; text-transform: none;
   white-space: normal;
 }
-.infobox[hidden] { display: none; }
 /* A caret, so it reads as belonging to the icon rather than floating near it. */
 .infobox::before {
   content: ""; position: absolute; top: -5px; left: .85rem;
@@ -389,7 +396,6 @@ h1 .mgr, .sub .mgr { vertical-align: middle; }
 .gwchip.wide { min-width: 0; padding: .32rem .6rem; font-size: .7rem; }
 .panelblock { display: flex; flex-direction: column; gap: .8rem; }
 /* A class that sets display beats the hidden attribute, so say it again. */
-.panelblock[hidden] { display: none; }
 
 /* A bar per team, drawn as a share of the widest in the set. On a phone the
    label and the numbers stack above the bar rather than squeezing it. */

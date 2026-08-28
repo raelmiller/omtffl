@@ -7,6 +7,24 @@
 
 {% block content %}
 
+<section id="pushbox" hidden>
+  <div class="sechead">
+    <h2>Notifications</h2>
+    <span class="eyebrow" id="pushstate">checking…</span>
+  </div>
+  <p class="sub">Three things only: the deadline when you haven&rsquo;t picked,
+  the waiver window closing when you have claims in, and a trade offered to
+  you. Nothing about results &mdash; the table isn&rsquo;t going anywhere.</p>
+
+  <div class="tacts">
+    <button id="pushon" class="btn" hidden>Turn on</button>
+    <button id="pushoff" class="btn small ghost" hidden>Turn off</button>
+    <button id="pushtest" class="btn small ghost" hidden>Send a test</button>
+    <span id="pstatus" class="savestate"></span>
+  </div>
+  <p class="note" id="pushwhy"></p>
+</section>
+
 {#- Deliberately above "Another device": for anyone with the app installed
     this is the one that works, and a link is the thing that quietly won't. -#}
 <section>
@@ -206,6 +224,137 @@
       out.textContent = 'selected — copy it yourself';
     }
   });
+})();
+
+(function () {
+  var box = document.getElementById('pushbox');
+  var state = document.getElementById('pushstate');
+  var why = document.getElementById('pushwhy');
+  var on = document.getElementById('pushon');
+  var off = document.getElementById('pushoff');
+  var test = document.getElementById('pushtest');
+  var out = document.getElementById('pstatus');
+  if (!box) return;
+
+  // Base64url to the Uint8Array the subscribe call insists on. It will not
+  // take the string, and the error it gives if you pass one says nothing.
+  function keyBytes(b64) {
+    var pad = '='.repeat((4 - b64.length % 4) % 4);
+    var raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from(raw, function (c) { return c.charCodeAt(0); });
+  }
+
+  var installed = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+  var supported = 'serviceWorker' in navigator && 'PushManager' in window
+    && 'Notification' in window;
+
+  function show(label, note) {
+    state.textContent = label;
+    why.textContent = note || '';
+  }
+
+  async function refresh() {
+    box.hidden = false;
+    if (!supported) {
+      // iOS only exposes push to a home-screen app, so the honest message
+      // depends on whether they are in one — "not supported" would be wrong
+      // and would stop them doing the one thing that fixes it.
+      show('not available here', installed
+        ? 'This browser does not support notifications.'
+        : 'On iPhone, add the app to your home screen first (Share → Add to '
+          + 'Home Screen), open it from there, and this will appear.');
+      return;
+    }
+    var key = await fetch('/push/key').then(function (r) { return r.json(); });
+    if (!key.configured) {
+      show('not set up', 'The server has no notification key yet.');
+      return;
+    }
+    var reg = await navigator.serviceWorker.ready;
+    var sub = await reg.pushManager.getSubscription();
+    if (Notification.permission === 'denied') {
+      show('blocked', 'Notifications are blocked for this app in your '
+        + 'settings. That has to be undone there before this can ask again.');
+      return;
+    }
+    on.hidden = !!sub;
+    off.hidden = !sub;
+    test.hidden = !sub;
+    show(sub ? 'on for this app' : 'off for this app',
+         sub ? 'Each app you use needs turning on separately — this one is '
+             + 'done.' : '');
+    return { reg: reg, key: key.key };
+  }
+
+  on.addEventListener('click', async function () {
+    on.disabled = true;
+    out.textContent = 'asking…';
+    out.className = 'savestate';
+    try {
+      var ctx = await refresh();
+      // Must be inside the click: a permission prompt raised outside a
+      // gesture is refused outright by every browser worth naming.
+      var granted = await Notification.requestPermission();
+      if (granted !== 'granted') throw new Error('you said no');
+      var sub = await ctx.reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: keyBytes(ctx.key),
+      });
+      var res = await fetch('/push/subscribe', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub),
+      });
+      if (!res.ok) throw new Error('the server would not take it');
+      out.textContent = 'on';
+      out.className = 'savestate ok';
+    } catch (e) {
+      out.textContent = 'not turned on: ' + e.message;
+      out.className = 'savestate bad';
+    }
+    on.disabled = false;
+    refresh();
+  });
+
+  off.addEventListener('click', async function () {
+    var reg = await navigator.serviceWorker.ready;
+    var sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      // Tell the server first: unsubscribing locally and failing to say so
+      // leaves a row that fails on every send until the service expires it.
+      await fetch('/push/unsubscribe', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: sub.endpoint }),
+      }).catch(function () {});
+      await sub.unsubscribe();
+    }
+    out.textContent = 'off';
+    out.className = 'savestate';
+    refresh();
+  });
+
+  test.addEventListener('click', async function () {
+    test.disabled = true;
+    out.textContent = 'sending…';
+    out.className = 'savestate';
+    try {
+      var body = await fetch('/account/push-test', { method: 'POST' })
+        .then(function (r) { return r.json(); });
+      // The raw status, not "sent": the whole point of the button is to find
+      // out what a push service actually says the first time it is asked.
+      var first = (body.results || [])[0] || {};
+      out.textContent = body.ok
+        ? 'sent — ' + first.service + ' said ' + first.status
+        : 'refused — ' + (first.status || '') + ' ' + (first.detail || body.detail);
+      out.className = 'savestate ' + (body.ok ? 'ok' : 'bad');
+    } catch (e) {
+      out.textContent = 'could not send: ' + e;
+      out.className = 'savestate bad';
+    }
+    test.disabled = false;
+  });
+
+  refresh();
 })();
 </script>
 {% endblock %}

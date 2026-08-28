@@ -17,6 +17,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -26,7 +27,7 @@ from fastapi.responses import (HTMLResponse, JSONResponse, RedirectResponse,
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import auth, db, engine, fetcher, live
+from . import auth, db, engine, fetcher, live, notify, push
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
@@ -71,6 +72,12 @@ def startup():
         return
     scheduler.add_job(fetcher.refresh, REFRESH_SCHEDULE,
                       id="refresh", replace_existing=True)
+    # Deadline reminders. Every ten minutes, because a warning is only useful
+    # while there is still time to act on it and a warning that is an hour
+    # late is worse than none. Sending is idempotent — each notice is claimed
+    # in the database before it goes — so running often costs nothing.
+    scheduler.add_job(notify.deadlines_due, "interval", minutes=10,
+                      id="notices", replace_existing=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
     # besides. Restart at 08:00 and the next refresh was a whole day away, which
@@ -338,9 +345,106 @@ def service_worker():
         "self.addEventListener('install', () => self.skipWaiting());\n"
         "self.addEventListener('activate', e => e.waitUntil(clients.claim()));\n"
         "// Network only, on purpose — see the docstring in main.py.\n"
-        "self.addEventListener('fetch', () => {});\n",
+        "self.addEventListener('fetch', () => {});\n"
+        "\n"
+        "// A notification arrived. showNotification is not optional: the\n"
+        "// subscription was made with userVisibleOnly, and a push that shows\n"
+        "// nothing has the browser revoke permission after a few offences.\n"
+        "self.addEventListener('push', event => {\n"
+        "  let m = {};\n"
+        "  try { m = event.data ? event.data.json() : {}; } catch (e) { m = {}; }\n"
+        "  event.waitUntil(self.registration.showNotification(\n"
+        "    m.title || 'OMTFFL', {\n"
+        "      body: m.body || '',\n"
+        "      icon: '/static/icon-192.png',\n"
+        "      badge: '/static/icon-192.png',\n"
+        "      // Same tag replaces rather than stacks, so a reminder sent\n"
+        "      // twice is one notification, not a pile of them.\n"
+        "      tag: m.tag || 'omtffl',\n"
+        "      data: { url: m.url || '/' },\n"
+        "    }));\n"
+        "});\n"
+        "\n"
+        "// Tapping it should land on the page it is about, and reuse a window\n"
+        "// that is already open rather than starting a second copy of the app.\n"
+        "self.addEventListener('notificationclick', event => {\n"
+        "  event.notification.close();\n"
+        "  const url = (event.notification.data && event.notification.data.url) || '/';\n"
+        "  event.waitUntil(clients.matchAll({ type: 'window',\n"
+        "      includeUncontrolled: true }).then(list => {\n"
+        "    for (const c of list) {\n"
+        "      if ('focus' in c) { c.navigate(url); return c.focus(); }\n"
+        "    }\n"
+        "    return clients.openWindow(url);\n"
+        "  }));\n"
+        "});\n",
         media_type="application/javascript",
         headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"})
+
+
+@app.get("/push/key")
+def push_key():
+    """The public half a browser needs to subscribe. Safe to hand to anyone."""
+    return JSONResponse({"key": push.public_key(),
+                         "configured": push.configured()})
+
+
+@app.post("/push/subscribe")
+async def push_subscribe(request: Request):
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    body = await request.json()
+    keys = body.get("keys") or {}
+    if not body.get("endpoint") or not keys.get("p256dh") or not keys.get("auth"):
+        raise HTTPException(422, "not a push subscription")
+    db.subscribe_push(me["key"], body["endpoint"], keys["p256dh"], keys["auth"])
+    return JSONResponse({"ok": True})
+
+
+@app.post("/push/unsubscribe")
+async def push_unsubscribe(request: Request):
+    body = await request.json()
+    # No sign-in check on purpose: this only ever deletes, and the endpoint is
+    # the browser's own. A manager clearing notifications from a device they
+    # have since been signed out of should still succeed.
+    return JSONResponse({"ok": True,
+                         "removed": db.unsubscribe_push(body.get("endpoint", ""))})
+
+
+@app.post("/account/push-test")
+def push_test(request: Request):
+    """Send yourself one, and report exactly what the push service said.
+
+    Nothing in this app has ever reached a real push service — it was written
+    somewhere that cannot — so this is the first proof that any of it works,
+    and it is worth showing the raw status rather than "sent".
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    subscriptions = db.push_subscriptions(me["key"])
+    if not subscriptions:
+        return JSONResponse({"ok": False,
+                             "detail": "no apps are subscribed for you yet"},
+                            status_code=409)
+    results = []
+    for sub in subscriptions:
+        status, detail = push.send(sub, {
+            "title": "OMTFFL", "body": "Notifications are working.",
+            "url": "/", "tag": "test"})
+        if status in (404, 410):
+            db.unsubscribe_push(sub["endpoint"])
+        else:
+            db.mark_push(sub["endpoint"], 200 <= status < 300,
+                         None if 200 <= status < 300 else f"{status} {detail}")
+        results.append({"status": status, "detail": detail,
+                        "service": urlparse(sub["endpoint"]).netloc})
+    return JSONResponse({"ok": any(200 <= r["status"] < 300 for r in results),
+                         "results": results})
+
+
+@app.get("/health")
 
 
 @app.get("/health")
@@ -368,6 +472,8 @@ def health():
             "scheduled": _next_refresh(),
         },
         "data": engine.freshness(),
+        "push": {**push.status(),
+                 "subscriptions": len(db.push_subscriptions())},
         "database": db.stats(),
         "admin": {
             "configured": bool(auth.admin_keys()),
@@ -855,8 +961,13 @@ def propose(request: Request, receiver: str = Form(...), give: str = Form(""),
     if problem:
         return JSONResponse({"ok": False, "errors": [problem]}, status_code=422)
 
-    db.propose_trade(gw["gameweek"], me["key"], receiver, out, back, points,
-                     note.strip() or None)
+    trade_id = db.propose_trade(gw["gameweek"], me["key"], receiver, out, back,
+                                points, note.strip() or None)
+    # An offer nobody looks at expires when the window shuts, which is the one
+    # failure the receiver cannot do anything about after the fact.
+    notify.trade_offered({"id": trade_id, "receiver": receiver,
+                          "players_out": out, "players_in": back,
+                          "points": points}, me["team"])
     return JSONResponse({"ok": True})
 
 

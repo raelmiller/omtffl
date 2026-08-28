@@ -4,3 +4,9 @@ jinja2==3.1.5
 # Required by FastAPI to read posted form fields (the Declare page).
 python-multipart==0.0.20
 apscheduler==3.11.0
+# Web push encryption (RFC 8291) and the VAPID signature. Ships wheels, so
+# it does not need a compiler at build time — unlike pywebpush's http-ece,
+# whose setup.py no longer builds against a current setuptools. app/push.py
+# imports it defensively: without it push turns itself off and nothing else
+# in the app notices.
+cryptography>=42

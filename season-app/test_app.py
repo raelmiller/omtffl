@@ -7,6 +7,7 @@ degrades honestly when data or the FPL API is missing.
 
 Run: python3 season-app/test_app.py
 """
+import contextlib
 import json
 import re
 import sys
@@ -61,6 +62,29 @@ def _shut_window():
 
 
 _hold_window_open()
+
+@contextlib.contextmanager
+def _real_clock():
+    """Measure the calendar's real shape, not the held-open one.
+
+    Most of the suite pins the waiver deadline to a fixed instant so the
+    routes behave predictably. But a few assertions are about the genuine
+    relationship between the two windows — that waivers really do shut a day
+    before the gameweek — and those have to see the real function.
+
+    Pinning them to `now + 2h` made them pass only while that instant happened
+    to fall before the next deadline. Run the suite within two hours of a
+    deadline and they failed, which looks like a broken app rather than a
+    broken clock.
+    """
+    patched = engine.waiver_deadline
+    engine.waiver_deadline = _real_waiver_deadline
+    try:
+        yield
+    finally:
+        engine.waiver_deadline = patched
+
+
 
 client = TestClient(app)
 
@@ -359,9 +383,10 @@ os.environ.pop("ADMIN_KEYS", None)
 
 print("\n── Trades ──────────────────────────────────────────────")
 
-check_true("the trade window is the waiver window, not the gameweek's",
-           engine.trade_window(engine.current_gameweek())["deadline"]
-           < engine.deadline_state(engine.current_gameweek())["deadline"])
+with _real_clock():
+    check_true("the trade window is the waiver window, not the gameweek's",
+               engine.trade_window(engine.current_gameweek())["deadline"]
+               < engine.deadline_state(engine.current_gameweek())["deadline"])
 
 os.environ["ADMIN_KEYS"] = "RM"
 a = TestClient(app)
@@ -459,9 +484,10 @@ print("\n── Trades close when waivers do ───────────�
 # could play.
 tw_gw = engine.current_gameweek()
 tw_n = tw_gw["gameweek"]
-check_true("the trade window closes before the gameweek does",
-           engine.trade_window(tw_gw)["deadline"]
-           < engine.deadline_state(tw_gw)["deadline"])
+with _real_clock():
+    check_true("the trade window closes before the gameweek does",
+               engine.trade_window(tw_gw)["deadline"]
+               < engine.deadline_state(tw_gw)["deadline"])
 check("and it is the waiver deadline, not a third clock of its own",
       engine.trade_window(tw_gw)["deadline"],
       engine.waiver_state(tw_gw)["waiver_deadline"])
@@ -946,6 +972,121 @@ check_true("the sign-in page offers somewhere to type one",
            'action="/pair"' in TestClient(app).get("/account").text)
 check_true("and the account page explains why a link won't do",
            "Sign in another app" in _signed_in.get("/account").text)
+
+print("\n── Notifications ───────────────────────────────────────")
+
+from app import notify, push                        # noqa: E402
+
+if not push.AVAILABLE:
+    print(f"SKIP  cryptography is not importable here ({push.UNAVAILABLE_BECAUSE})")
+else:
+    from cryptography.hazmat.primitives.asymmetric import ec        # noqa: E402
+    from cryptography.hazmat.primitives import hashes, serialization  # noqa: E402
+    from cryptography.hazmat.primitives.asymmetric.utils import (     # noqa: E402
+        encode_dss_signature)
+
+    # The encryption is written from RFC 8291 rather than taken from a
+    # library, so it is checked against something other than its own author's
+    # reading of the spec: it must round-trip, and the block must be laid out
+    # exactly as RFC 8188 §2.1 says. (The stronger check — byte-identical
+    # output to http_ece, an independent implementation — is run separately,
+    # since http_ece will not install alongside a current setuptools.)
+    _ua = ec.generate_private_key(ec.SECP256R1())
+    _ua_pub = _ua.public_key().public_bytes(
+        serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+    _auth = os.urandom(16)
+    _plain = b"When I grow up, I want to be a watermelon"
+    _block = push.encrypt(_plain, _ua_pub, _auth)
+
+    check("the receiver can read it back", push.decrypt(_block, _ua, _auth), _plain)
+    check("the salt is the first sixteen bytes", len(_block[:16]), 16)
+    check("the record size field says what we send",
+          int.from_bytes(_block[16:20], "big"), push.RECORD_SIZE)
+    check("the sender's key is declared at full length", _block[20], 65)
+    check_true("and is an uncompressed point", _block[21] == 0x04)
+    check_true("a fresh salt is used every time",
+               push.encrypt(_plain, _ua_pub, _auth)[:16] != _block[:16])
+    # The auth secret is what the push service never sees, so it must matter.
+    _wrong = os.urandom(16)
+    try:
+        push.decrypt(_block, _ua, _wrong)
+        check_true("the wrong auth secret cannot decrypt", False)
+    except Exception:
+        check_true("the wrong auth secret cannot decrypt", True)
+
+    # VAPID. A DER signature is the classic way to get a 401 that explains
+    # nothing, so the raw r||s pair is worth pinning.
+    _k = ec.generate_private_key(ec.SECP256R1())
+    os.environ["VAPID_PRIVATE_KEY"] = push.b64(
+        _k.private_numbers().private_value.to_bytes(32, "big"))
+    check_true("with a key set, push reports itself configured", push.configured())
+    _pub = push.public_key()
+    check("the advertised key is an uncompressed point",
+          (len(push.unb64(_pub)), push.unb64(_pub)[0]), (65, 4))
+
+    _h = push.headers("https://fcm.googleapis.com/fcm/send/abc")
+    check("the body is declared as aes128gcm", _h["Content-Encoding"], "aes128gcm")
+    _tok = _h["Authorization"].split("t=")[1].split(",")[0]
+    _head, _claims, _sig = _tok.split(".")
+    check("the token is ES256", json.loads(push.unb64(_head))["alg"], "ES256")
+    check("the audience is the push service's origin, not the full endpoint",
+          json.loads(push.unb64(_claims))["aud"], "https://fcm.googleapis.com")
+    check("the signature is a raw r||s pair, not DER", len(push.unb64(_sig)), 64)
+    _raw = push.unb64(_sig)
+    ec.EllipticCurvePublicKey.from_encoded_point(
+        ec.SECP256R1(), push.unb64(_pub)).verify(
+        encode_dss_signature(int.from_bytes(_raw[:32], "big"),
+                             int.from_bytes(_raw[32:], "big")),
+        f"{_head}.{_claims}".encode(), ec.ECDSA(hashes.SHA256()))
+    check_true("and verifies against the key we advertise", True)
+
+    # Subscriptions.
+    _pc = TestClient(app)
+    _pc.get(f"/m/{db.manager_by_key(P1)['token']}")
+    _sub = {"endpoint": "https://push.example/abc",
+            "keys": {"p256dh": push.b64(_ua_pub), "auth": push.b64(_auth)}}
+    check("an app can subscribe", _pc.post("/push/subscribe", json=_sub).status_code, 200)
+    check("it is recorded once", len(db.push_subscriptions(P1)), 1)
+    check("subscribing again updates rather than duplicates",
+          (_pc.post("/push/subscribe", json=_sub),
+           len(db.push_subscriptions(P1)))[1], 1)
+    check("signing in is required to subscribe",
+          TestClient(app).post("/push/subscribe", json=_sub).status_code, 401)
+    check("a body that isn't a subscription is refused",
+          _pc.post("/push/subscribe", json={"endpoint": "x"}).status_code, 422)
+    check("the public key is served to anyone",
+          TestClient(app).get("/push/key").json()["configured"], True)
+
+    # Notices must not repeat, however often the sweep runs.
+    _gwn = engine.current_gameweek()["gameweek"]
+    check_true("a manager with no app subscribed is not marked as warned",
+               not notify.once("deadline", _gwn, P2, "t", "b")
+               and not db.notice_already_sent("deadline", _gwn, P2))
+    check_true("a notice sends the first time",
+               notify.once("deadline", _gwn, P1, "t", "b"))
+    check_true("and never a second time",
+               not notify.once("deadline", _gwn, P1, "t", "b"))
+    check_true("the claim is written before the send, not after",
+               db.notice_already_sent("deadline", _gwn, P1))
+    check_true("a different round is a different notice",
+               notify.once("deadline", _gwn + 1, P1, "t", "b"))
+
+    # A dead subscription is dropped rather than left to fail forever.
+    _calls = []
+    _real_send = push.send
+    push.send = lambda sub, msg, subject=None: (_calls.append(sub) or (410, "gone"))
+    notify.to_manager(P1, "t", "b", background=False)
+    check("a 410 unsubscribes the app", len(db.push_subscriptions(P1)), 0)
+    push.send = _real_send
+
+    check_true("the service worker handles a push", "'push'" in c1.get("/sw.js").text)
+    check_true("and a tap on it opens the page it is about",
+               "notificationclick" in c1.get("/sw.js").text)
+    check_true("health reports whether push is working",
+               "push" in c1.get("/health").json())
+    del os.environ["VAPID_PRIVATE_KEY"]
+    check_true("with no key, push turns itself off rather than erroring",
+               not push.configured() and push.send({}, {})[0] == 0)
 
 print("\n── Installing it to a home screen ──────────────────────")
 
@@ -1808,9 +1949,11 @@ def wind_past_the_run():
 
 state = engine.waiver_state(engine.current_gameweek())
 check("before it, the waiver window is what's open", state["phase"], "waivers")
+with _real_clock():
+    real_state = engine.waiver_state(engine.current_gameweek())
 check_true("and it shuts a day before the gameweek does",
-           state["waiver_deadline"] < state["deadline"],
-           f"{state['waiver_deadline']} vs {state['deadline']}")
+           real_state["waiver_deadline"] < real_state["deadline"],
+           f"{real_state['waiver_deadline']} vs {real_state['deadline']}")
 
 wv2 = TestClient(app)
 wv2.get(f"/m/{db.manager_by_key('RM')['token']}")

@@ -364,10 +364,54 @@ this is the same server-rendered pages in a window without an address bar.
 The honest limit: on iOS installing is Safari-only, via Share → Add to Home
 Screen, which is obscure enough to be worth a sentence of instruction.
 
-Push notifications are not here yet. They are the reason to do this at all —
-a deadline in an hour, a trade offered, the run finished — and they need a
-VAPID key pair, a subscriptions table, and a decision about which events are
-worth interrupting someone for.
+## Notifications
+
+Three things, and deliberately only three: **the deadline** when you haven't
+picked, **the waiver window closing** when you have claims in, and **a trade
+offered to you**. Nothing about results — the table isn't going anywhere —
+nothing about other people's transactions, and nothing you did yourself. Every
+notification beyond the ones a manager would be annoyed to have missed spends
+the goodwill that keeps the useful ones switched on.
+
+**Set `VAPID_PRIVATE_KEY`** to turn it on; `python3 tools/vapid_keys.py`
+generates one, and `VAPID_SUBJECT` should be a mailto: some push service can
+use to reach you. The key has to stay the same for the life of the league:
+every subscription is bound to its public half, so changing it silently
+unsubscribes everybody and the only symptom is notifications quietly stopping.
+`/health` reports whether push is available, configured, and how many apps are
+subscribed.
+
+**The encryption is written here rather than taken from a library.** The
+obvious choice, `pywebpush`, pulls in `http-ece`, whose `setup.py` no longer
+builds against a current setuptools — a dependency that fails to build is a
+deploy that fails at the worst possible moment. `app/push.py` implements
+RFC 8291 and RFC 8292 on `cryptography`, which ships wheels, and imports it
+defensively so a broken crypto install turns push off rather than taking the
+app down.
+
+That is only a defensible trade because the result is checked against
+something other than its author's reading of the spec: the same inputs given
+to `http_ece`, an independent implementation, produce a **byte-identical**
+block, and each decrypts the other's output. The suite also pins the header
+layout, that the salt is fresh per message, that the wrong `auth` secret
+cannot decrypt, and that the VAPID signature is a raw r‖s pair rather than
+DER — a DER signature is accepted by nothing and rejected with a 401 that
+explains nothing.
+
+**Sending is idempotent.** A notice is claimed in `notice_sent` before it is
+sent, keyed by what makes it unique — "the gameweek 3 deadline warning for
+RM" — so the sweep running every ten minutes and running once an hour produce
+the same notifications. A manager with no app subscribed is *not* claimed,
+because otherwise turning notifications on ten minutes later would silently
+consume a warning about a deadline still hours away. A push service answering
+404 or 410 means the app is gone, and the subscription is dropped rather than
+left to fail on every future send.
+
+**Nothing here has ever spoken to a real push service.** This was written
+somewhere that cannot reach `fcm.googleapis.com` or `web.push.apple.com`, so
+the first real send is the first proof — which is why `/account` has a **Send
+a test** button that reports the push service's raw status rather than
+"sent".
 
 ## Signing in
 
