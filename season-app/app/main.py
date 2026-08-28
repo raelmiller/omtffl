@@ -59,6 +59,30 @@ scheduler = BackgroundScheduler(timezone="UTC")
 # and gone before anyone is awake to look at it.
 REFRESH_SCHEDULE = CronTrigger(hour=7, minute=45)
 
+# And every few minutes while the football is actually on. The daily job is
+# right for injury news and prices, which move slowly; it is useless for a
+# table on a Saturday afternoon, which is exactly when anyone is looking.
+LIVE_REFRESH_MINUTES = 5
+
+
+def refresh_if_live():
+    """Pull fresh gameweek data, but only while matches are being played.
+
+    Guarded rather than simply scheduled often, so this costs nothing at four
+    in the morning: `matches_in_progress` reads the fixture list already on
+    disk, so deciding not to fetch needs no fetch. The guard is the same one
+    the match-event notifications use — one answer to "is there football on",
+    not two that can disagree.
+
+    `fetch_gw.should_fetch` decides what actually gets pulled, and it will
+    re-fetch a round in progress and never re-fetch one FPL has marked final.
+    So this cannot churn settled results however often it runs.
+    """
+    if not engine.matches_in_progress():
+        return {"refreshed": False, "why": "no match in progress"}
+    ok = fetcher.refresh()
+    return {"refreshed": bool(ok), "why": fetcher.STATUS.get("last_refresh_detail")}
+
 
 @app.on_event("startup")
 def startup():
@@ -83,6 +107,14 @@ def startup():
     # cheap no-op at four in the morning and a real poll on a Saturday.
     scheduler.add_job(notify.match_events, "interval", minutes=1,
                       id="events", replace_existing=True)
+    # The table and the fixtures, while the games are on. max_instances=1 so a
+    # slow fetch is skipped rather than stacked — two copies of fetch_gw.py
+    # writing the same file is the one way this could make things worse — and
+    # coalesce so a container that was asleep runs it once on waking, not once
+    # for every interval it missed.
+    scheduler.add_job(refresh_if_live, "interval",
+                      minutes=LIVE_REFRESH_MINUTES, id="live-refresh",
+                      replace_existing=True, max_instances=1, coalesce=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
     # besides. Restart at 08:00 and the next refresh was a whole day away, which
@@ -238,10 +270,22 @@ def _next_refresh():
         return {"running": False, "why": "the scheduler is not running"}
     job = scheduler.get_job("refresh")
     nxt = getattr(job, "next_run_time", None) if job else None
+    live = scheduler.get_job("live-refresh")
+    live_next = getattr(live, "next_run_time", None) if live else None
+    playing = engine.matches_in_progress()
     return {
         "running": True,
         "next": nxt.isoformat(timespec="seconds") if nxt else None,
         "cron": str(REFRESH_SCHEDULE),
+        # Which cadence is actually in force. "The table isn't moving" has a
+        # different answer depending on whether the app thinks football is on,
+        # and that is not otherwise visible from outside.
+        "live": {
+            "every_minutes": LIVE_REFRESH_MINUTES,
+            "matches_in_progress": playing,
+            "next": live_next.isoformat(timespec="seconds") if live_next else None,
+            "why": None if playing else "no match in progress — daily only",
+        },
     }
 
 

@@ -770,6 +770,36 @@ def live_gameweek():
             else min(rounds, key=lambda g: g["gameweek"]))
 
 
+# How long after kick-off a match is still worth watching: ninety minutes, a
+# long half-time and generous stoppage. Beyond it the numbers still move, but
+# they are corrections rather than football, and the daily refresh collects
+# those without anyone waiting on them.
+MATCH_WINDOW_HOURS = 2.5
+
+
+def matches_in_progress(now=None):
+    """Whether a Premier League match is being played right now.
+
+    The one question two different jobs need — how often to refresh the saved
+    data, and whether to look for goals to notify about — so it is answered
+    once, here, rather than twice with two slightly different windows.
+
+    Deliberately based on kick-off times rather than on FPL's `finished` flag:
+    the flag lags the final whistle, and a fixture list on disk is something
+    this can answer without a network call, which is the point. Asking FPL
+    whether to ask FPL is not a saving.
+    """
+    now = now or datetime.now(timezone.utc)
+    for fixture in _read("pl_fixtures.json") or []:
+        stamp = fixture.get("kickoff_time")
+        if not stamp:
+            continue
+        kick = _parse(stamp)
+        if kick <= now <= kick + timedelta(hours=MATCH_WINDOW_HOURS):
+            return True
+    return False
+
+
 def _parse(stamp):
     return datetime.fromisoformat(stamp.replace("Z", "+00:00"))
 

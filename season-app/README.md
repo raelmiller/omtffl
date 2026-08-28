@@ -45,6 +45,22 @@ Refreshes are non-destructive: a failed fetch leaves the last good data alone.
 A table that goes blank because an upstream API had a bad minute is worse than
 one that is a few hours stale.
 
+**During matches it refreshes every few minutes instead.** A daily job is
+right for injury news and prices, which move slowly, and useless for a table
+on a Saturday afternoon — which is exactly when anyone is looking at it. So a
+second job runs every `LIVE_REFRESH_MINUTES` and asks
+`engine.matches_in_progress()` first: that reads the fixture list already on
+disk, so deciding *not* to fetch costs nothing and the app is silent overnight.
+It is the same question the goal notifications ask, answered in one place
+rather than two that could disagree.
+
+Running often is safe because the rule about what to pull lives in
+`fetch_gw.should_fetch`, not in the caller: a round in progress is re-fetched
+every time, and a round FPL has marked `data_checked` is never pulled again.
+No cadence can move a settled result. `/health` reports which cadence is in
+force and whether the app currently thinks football is on, because "the table
+isn't moving" has a different answer depending on that.
+
 **Two things have to be true for a refresh to reach a page**, and each has bitten
 once:
 

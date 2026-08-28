@@ -163,29 +163,16 @@ WATCHED_EVENTS = [
     ("own_goals", "Own goal"),
     ("red_cards", "Red card"),
 ]
-# How long after kick-off to keep polling a fixture. Two hours covers ninety
-# minutes, a long half-time and generous stoppage; beyond that the stats are
-# revisions rather than events.
-MATCH_WINDOW_HOURS = 2.5
 
 
 def _kicked_off():
-    """Whether any match in the live round is plausibly in progress.
+    """Whether any match is in progress — the engine's answer, not a second one.
 
     The point is to not ask FPL for fixtures at four in the morning. A round
     with nothing on gets no request at all, which is the difference between
-    polling a minute and polling a minute *during matches*.
+    polling every minute and polling every minute *during matches*.
     """
-    from datetime import datetime, timedelta, timezone
-    now = datetime.now(timezone.utc)
-    for fixture in engine._read("pl_fixtures.json") or []:
-        stamp = fixture.get("kickoff_time")
-        if not stamp:
-            continue
-        kick = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
-        if kick <= now <= kick + timedelta(hours=MATCH_WINDOW_HOURS):
-            return True
-    return False
+    return engine.matches_in_progress()
 
 
 def _events_now(fixtures):

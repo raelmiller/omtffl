@@ -973,6 +973,80 @@ check_true("the sign-in page offers somewhere to type one",
 check_true("and the account page explains why a link won't do",
            "Sign in another app" in _signed_in.get("/account").text)
 
+print("\n── Refreshing while the games are on ───────────────────")
+
+from datetime import datetime as _dt                      # noqa: E402
+import app.main as _mn                                    # noqa: E402
+from app import notify                                    # noqa: E402
+
+# The daily refresh is right for injury news and useless for a table on a
+# Saturday afternoon, which is exactly when anyone is watching it.
+_fx_now = _dt.now(_tz.utc)
+_real_read_fx = engine._read
+
+
+def _fixtures_at(hours_ago):
+    """Pretend the only fixture kicked off `hours_ago` hours ago."""
+    kick = (_fx_now - timedelta(hours=hours_ago)).isoformat().replace("+00:00", "Z")
+    return lambda name: ([{"id": 1, "kickoff_time": kick}]
+                         if name == "pl_fixtures.json" else _real_read_fx(name))
+
+
+try:
+    engine._read = _fixtures_at(0.5)
+    check_true("half an hour in, a match is in progress",
+               engine.matches_in_progress())
+    engine._read = _fixtures_at(2.0)
+    check_true("and still is two hours in, for stoppage and a long half-time",
+               engine.matches_in_progress())
+    engine._read = _fixtures_at(4.0)
+    check_true("four hours later it is not", not engine.matches_in_progress())
+    engine._read = _fixtures_at(-1.0)
+    check_true("nor an hour before kick-off", not engine.matches_in_progress())
+
+    # The guard has to come before the fetch, or "cheap when nothing is on"
+    # is not true and the app hammers FPL through the night.
+    _fetches = []
+    _real_refresh = fetcher.refresh
+    fetcher.refresh = lambda *a, **k: (_fetches.append(1), True)[1]
+    try:
+        engine._read = _fixtures_at(9.0)
+        check("with nothing on, FPL is not called at all",
+              (_mn.refresh_if_live()["refreshed"], len(_fetches)), (False, 0))
+        engine._read = _fixtures_at(1.0)
+        check("mid-match it refreshes",
+              (_mn.refresh_if_live()["refreshed"], len(_fetches)), (True, 1))
+    finally:
+        fetcher.refresh = _real_refresh
+finally:
+    engine._read = _real_read_fx
+
+# Both jobs must agree about whether football is on, or one of them is wrong.
+check_true("the notifier and the refresher ask the same question",
+           notify._kicked_off() == engine.matches_in_progress())
+
+# The safety net is in the fetcher, not here: however often this runs, a
+# round FPL has settled is never pulled again and cannot move under anyone.
+# Written against files made here rather than against whatever the repo
+# happens to hold, so it tests the rule instead of testing the season — an
+# earlier version pointed at a filename that does not exist and skipped
+# silently, which is the worst outcome for a safety net.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shadow"))
+import fetch_gw as _fg                                    # noqa: E402
+
+_tmp = Path(os.environ.get("DB_PATH", ".")).parent / "_gwcheck.json"
+_tmp.write_text(json.dumps({"data_checked": True, "finished": True}))
+_go, _why = _fg.should_fetch(1, {1: {"finished": True}}, _tmp)
+check("a settled round is never re-fetched, however often we ask", _go, False)
+check_true("and says so in the log", "final" in _why, _why)
+
+_tmp.write_text(json.dumps({"data_checked": False, "finished": False}))
+_go, _why = _fg.should_fetch(1, {1: {"finished": False}}, _tmp)
+check("but a round in progress is pulled again every time", _go, True)
+check_true("which is the whole point of the live cadence",
+           "in progress" in _why, _why)
+_tmp.unlink()
+
 print("\n── Notifications ───────────────────────────────────────")
 
 from app import notify, push                        # noqa: E402
