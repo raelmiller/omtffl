@@ -21,7 +21,8 @@ from pathlib import Path
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import (HTMLResponse, JSONResponse, RedirectResponse,
+                               Response)
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -280,6 +281,66 @@ def live_board(request: Request, gameweek: int):
     if target is None:
         raise HTTPException(404, "no fixture list yet")
     return templates.TemplateResponse("_board.html", ctx)
+
+
+# ── Installing it ──────────────────────────────────────────────────────────
+# The colours here are the light palette's --bg and the chrome aubergine, and
+# they are duplicated from style.css on purpose: a manifest cannot read CSS
+# custom properties, and the splash screen is painted before any stylesheet
+# loads. If the palette moves, move these with it.
+MANIFEST = {
+    "id": "/",
+    "name": "OMTFFL Matchweek",
+    "short_name": "OMTFFL",
+    "description": "The OMTFFL league table, team sheet and transfer market.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#F3F5EF",
+    "theme_color": "#171122",
+    "icons": [
+        {"src": "/static/icon-192.png", "sizes": "192x192", "type": "image/png",
+         "purpose": "any"},
+        {"src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png",
+         "purpose": "any"},
+        {"src": "/static/icon-maskable-512.png", "sizes": "512x512",
+         "type": "image/png", "purpose": "maskable"},
+    ],
+}
+
+
+@app.get("/manifest.webmanifest")
+def manifest():
+    """What a phone needs to install this to a home screen.
+
+    Served as a route rather than a static file so the media type is certainly
+    right — some servers guess `.webmanifest` wrong, and a manifest served as
+    plain text is silently ignored, which looks exactly like not having one.
+    """
+    return JSONResponse(MANIFEST, media_type="application/manifest+json")
+
+
+@app.get("/sw.js")
+def service_worker():
+    """The service worker, served from the root so its scope is the whole app.
+
+    At `/static/sw.js` it could only control `/static/*`, which is not enough
+    for Chrome to treat the app as installable.
+
+    It deliberately caches **nothing**. Every page here is a live answer — the
+    table, the pitch, who owns whom — and a cached shell would show a manager
+    yesterday's squad with no sign it was stale. Chrome wants a fetch handler
+    before it offers to install; it does not require that handler to do
+    anything, so this one passes everything straight through. If offline
+    support is ever wanted it should start from the data, not from the HTML.
+    """
+    return Response(
+        "self.addEventListener('install', () => self.skipWaiting());\n"
+        "self.addEventListener('activate', e => e.waitUntil(clients.claim()));\n"
+        "// Network only, on purpose — see the docstring in main.py.\n"
+        "self.addEventListener('fetch', () => {});\n",
+        media_type="application/javascript",
+        headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"})
 
 
 @app.get("/health")

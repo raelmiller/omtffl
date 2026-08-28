@@ -330,6 +330,48 @@ points trade is published and open to objection, and how substitutes come on.
 Each box needs an id unique to its page; the test suite checks every icon opens
 a box that exists, that no two share an id, and that they all ship shut.
 
+## Installing it to a home screen
+
+It is a PWA, so a manager can add it to their home screen and get an icon that
+opens full-screen with no browser chrome. Nothing about how it works changes —
+this is the same server-rendered pages in a window without an address bar.
+
+- **The manifest is a route, not a static file.** A manifest served as
+  `text/plain` is silently ignored, which is indistinguishable from not having
+  one, and `.webmanifest` is exactly the extension servers guess wrong.
+- **The Apple tags are not duplicates of it.** iOS reads almost none of the
+  manifest: without `apple-mobile-web-app-capable` it opens in Safari with its
+  chrome, which is the whole thing being avoided. `apple-touch-icon` must be a
+  real 180px square — iOS neither scales nor rounds it.
+- **Two icon shapes.** `any` is the crest cropped to its own ink, shown as
+  given. `maskable` is the same crest at 70% on white, because Android crops
+  an icon to a circle, a squircle or a rounded square depending on the
+  launcher and only the central 80% is guaranteed — an `any` icon used as
+  maskable gets its ring shaved off. `tools/make_icons.py` generates all of
+  them from `tools/crest-1024.png`, so they can be regenerated rather than
+  being blobs nobody can change. The Dockerfile copies `app/` only, so the
+  source never reaches the image.
+- **The service worker caches nothing, deliberately.** Registering one is what
+  makes Chrome offer to install; it is not obliged to do anything. Every page
+  here is a live answer, and a cached shell would show a manager yesterday's
+  squad with no sign it was stale. It is served from `/sw.js` rather than
+  `/static/` because a worker's scope is its own directory.
+- **`viewport-fit=cover`** is what makes `env(safe-area-inset-*)` report
+  anything. The bottom rail already padded itself by that inset; until this it
+  always read 0, and installed to a home screen the rail sat under the
+  iPhone's home indicator.
+
+The honest limits: on iOS installing is Safari-only, via Share → Add to Home
+Screen, which is obscure enough to be worth a sentence of instruction. And an
+installed app is a **separate cookie jar** from Safari and from any messaging
+app's in-app browser — so a sign-in link tapped in WhatsApp does not sign you
+in inside the installed app. See below for why that matters.
+
+Push notifications are not here yet. They are the reason to do this at all —
+a deadline in an hour, a trade offered, the run finished — and they need a
+VAPID key pair, a subscriptions table, and a decision about which events are
+worth interrupting someone for.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

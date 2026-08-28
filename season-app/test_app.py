@@ -864,6 +864,64 @@ check_true("and the chip renders an opponent with home or away",
 check_true("with a blank round saying so rather than going empty",
            "return 'blank'" in _pitch)
 
+print("\n── Installing it to a home screen ──────────────────────")
+
+# PNG width and height live at a fixed offset in the header, so the size of an
+# icon can be checked without making Pillow a dependency of the app.
+def _png_size(raw):
+    assert raw[:8] == b"\x89PNG\r\n\x1a\n", "not a PNG"
+    return (int.from_bytes(raw[16:20], "big"), int.from_bytes(raw[20:24], "big"))
+
+_mf = c1.get("/manifest.webmanifest")
+check("the manifest is served", _mf.status_code, 200)
+# A manifest served as text/plain is silently ignored, which looks exactly
+# like not having one — so the media type is the assertion, not a detail.
+check_true("as a manifest, not as plain text",
+           _mf.headers["content-type"].startswith("application/manifest+json"))
+_m = _mf.json()
+for _k in ("name", "short_name", "start_url", "scope", "icons"):
+    check_true(f"it carries {_k}", bool(_m.get(_k)))
+check("it opens without browser chrome", _m["display"], "standalone")
+
+# The icons are the half that rots: the manifest keeps promising a file and a
+# size long after either has changed, and nothing complains at runtime.
+_sizes = {i["sizes"] for i in _m["icons"]}
+check_true("it offers both sizes a phone asks for",
+           {"192x192", "512x512"} <= _sizes)
+check_true("including one that survives being masked to a circle",
+           any(i.get("purpose") == "maskable" for i in _m["icons"]))
+for _i in _m["icons"]:
+    _r = c1.get(_i["src"])
+    check(f'{_i["src"]} is really there', _r.status_code, 200)
+    _w, _h = _png_size(_r.content)
+    check(f'{_i["src"]} is the size the manifest claims', f"{_w}x{_h}", _i["sizes"])
+
+# Scope: at /static/sw.js a worker can only control /static/*, which is not
+# enough for the app to be installable.
+_sw = c1.get("/sw.js")
+check("the service worker is served from the root", _sw.status_code, 200)
+check("with the whole app in scope", _sw.headers.get("Service-Worker-Allowed"), "/")
+check_true("and caches nothing, since every page here is a live answer",
+           "caches" not in _sw.text and "cache" not in _sw.text.lower()
+           or "no-cache" in _sw.headers.get("Cache-Control", ""))
+
+_home = c1.get("/").text
+check_true("the page links the manifest", '<link rel="manifest"' in _home)
+# iOS reads almost none of the manifest; without these it opens in Safari.
+for _tag in ("apple-mobile-web-app-capable", "apple-mobile-web-app-title",
+             "apple-mobile-web-app-status-bar-style"):
+    check_true(f"and carries {_tag} for iOS", _tag in _home)
+check_true("with a real 180px touch icon, which iOS will not scale for you",
+           "icon-180.png" in _home)
+check("and that icon is 180 square",
+      _png_size(c1.get("/static/icon-180.png").content), (180, 180))
+# The rail already pads itself by env(safe-area-inset-bottom); that reports 0
+# unless the viewport opts in, and the rail then sits under the home indicator.
+check_true("the viewport opts into the safe-area insets the rail relies on",
+           "viewport-fit=cover" in _home)
+check_true("which the rail is written to use",
+           "env(safe-area-inset-bottom" in _css)
+
 print("\n── The bank ────────────────────────────────────────────")
 
 os.environ["ADMIN_KEYS"] = "RM"

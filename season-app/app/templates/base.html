@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{#- viewport-fit=cover is what makes env(safe-area-inset-*) report anything.
+    The bottom rail already pads itself by that inset; without this it always
+    read 0, and installed to a home screen the rail sat under the iPhone's
+    home indicator. -#}
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{% block title %}Matchweek{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +24,19 @@
 })();
 </script>
 <link rel="icon" href="/static/logo.png?v={{ asset_version }}">
-<link rel="apple-touch-icon" href="/static/logo.png?v={{ asset_version }}">
+{#- Installing it to a home screen. iOS reads almost none of the manifest, so
+    the three apple- tags below are not duplicates of it: without them the
+    app opens in Safari with its chrome, which is the whole thing being
+    avoided. The touch icon must be a real 180px square — iOS neither scales
+    nor rounds it for you. -#}
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/icon-180.png?v={{ asset_version }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OMTFFL">
+{#- black-translucent would run the page under the notch; the bar is the
+    aubergine chrome and should stop where the chrome stops. -#}
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#171122">
 </head>
 <body>
@@ -371,6 +387,18 @@
   // Clicking the backdrop closes it, the same as pressing Escape.
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 })();
+</script>
+
+<script>
+// Registering a service worker is what makes Chrome offer to install the app.
+// It caches nothing (see /sw.js), so there is no stale-page risk in adding it.
+// Wrapped because the API is absent over plain HTTP and in some private modes,
+// and a throw here would take the rest of the page's scripts with it.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
