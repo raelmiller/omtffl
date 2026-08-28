@@ -12,9 +12,19 @@ Set VAPID_SUBJECT too — a mailto: or https: URL a push service can use to
 reach whoever runs this. Some services refuse a token without one.
 """
 import base64
+import sys
 
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ec
+try:
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+except ImportError:
+    # The one dependency, and the one thing likely to be missing on a laptop
+    # that has never run this app. A traceback here reads as "the script is
+    # broken" rather than "you need one package".
+    sys.exit("This needs the `cryptography` package:\n\n"
+             "    pip install cryptography\n\n"
+             "(or `pip3 install cryptography`, or `py -m pip install "
+             "cryptography` on Windows) and then run this again.")
 
 
 def b64(raw):
