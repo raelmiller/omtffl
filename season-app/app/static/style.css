@@ -945,6 +945,15 @@ input[aria-invalid="true"], select[aria-invalid="true"] {
 .treason { display: block; max-width: 22rem; margin-top: .15rem;
            font-family: var(--body); font-size: .72rem; color: var(--warn);
            white-space: normal; }
+.prefrow {
+  display: flex; gap: .6rem; align-items: flex-start;
+  padding: .65rem .85rem; border-bottom: 1px solid var(--hair);
+  font-size: .9rem; cursor: pointer;
+}
+.prefrow:last-child { border-bottom: 0; }
+.prefrow input { margin-top: .2rem; flex: none; }
+.prefrow .pclub { display: block; margin-top: .15rem; }
+
 .tacts { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .tcount { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin-right: auto; }
 

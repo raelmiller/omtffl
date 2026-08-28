@@ -366,12 +366,39 @@ Screen, which is obscure enough to be worth a sentence of instruction.
 
 ## Notifications
 
-Three things, and deliberately only three: **the deadline** when you haven't
-picked, **the waiver window closing** when you have claims in, and **a trade
-offered to you**. Nothing about results — the table isn't going anywhere —
-nothing about other people's transactions, and nothing you did yourself. Every
-notification beyond the ones a manager would be annoyed to have missed spends
-the goodwill that keeps the useful ones switched on.
+Two kinds, chosen per device, because they are completely different
+appetites — and a bad Saturday must not be why someone turns off the reminder
+that stops them missing a deadline.
+
+**Deadlines and trades**, on by default: the deadline when you haven't picked,
+the waiver window closing when you have claims in, and a trade offered to you.
+A handful a week. Nothing about results, nothing about other people's
+transactions, nothing you did yourself.
+
+**What your players are doing**, off by default: goals, assists, red cards
+and penalties, for the **whole fifteen** rather than the eleven — a bench
+forward scoring is news, both because substitutes come on and because owning
+him is what makes it interesting. Bonus is deliberately excluded: it moves all
+match and settles long after, so it would notify repeatedly and be wrong most
+of those times.
+
+**FPL reports cumulative totals, not events.** `goals_scored` says Salah has
+two, and says it again on every poll for the rest of the match. Turning that
+into "Salah's second" is the whole feature: the count is part of the key each
+notice is claimed under, so a goal already reported is never re-sent and a
+second goal is a new one. Get that wrong and you have either silence or a
+notification every sixty seconds.
+
+**Sends are batched per poll.** Two things in the same minute are one
+notification listing both, not two a few seconds apart. Fifteen players on a
+busy Saturday is otherwise a phone that will not stop.
+
+The poll checks whether anything has actually kicked off before asking FPL for
+anything, so it is a free no-op overnight and a real request only while
+matches are on. Two honest limits: FPL updates a minute or two after the
+event, so if you are watching, your phone buzzes after you have already
+celebrated — it earns its keep when you are *not* watching. And provisional
+stats get revised, so a goal reassigned an hour later cannot be un-sent.
 
 **Set `VAPID_PRIVATE_KEY`** to turn it on; `python3 tools/vapid_keys.py`
 generates one, and `VAPID_SUBJECT` should be a mailto: some push service can

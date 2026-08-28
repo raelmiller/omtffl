@@ -1079,6 +1079,92 @@ else:
     check("a 410 unsubscribes the app", len(db.push_subscriptions(P1)), 0)
     push.send = _real_send
 
+    # ── Match events ───────────────────────────────────────────────────────
+    # FPL reports cumulative totals, not events: "Salah has one" arrives again
+    # on every poll for the rest of the match. Diffing that into "Salah's
+    # first" is the whole feature, and getting it wrong means either silence
+    # or a notification every sixty seconds.
+    _ev_gw = engine.live_gameweek()["gameweek"]
+    _ev_squad = engine.market(_ev_gw, db.trades(), db.transactions())["squads"][P1]
+    _scorer = _ev_squad[0]["id"]
+    _other = _ev_squad[1]["id"]
+
+    def _fx(goals=0, assists=0, who=None):
+        """One fixture, shaped exactly as /api/fixtures/ returns it."""
+        stats = []
+        if goals:
+            stats.append({"identifier": "goals_scored",
+                          "h": [{"element": who or _scorer, "value": goals}], "a": []})
+        if assists:
+            stats.append({"identifier": "assists",
+                          "h": [{"element": _other, "value": assists}], "a": []})
+        return [{"id": 900, "stats": stats}]
+
+    _sent = []
+    _real_to = notify.to_manager
+    notify.to_manager = (lambda key, title, body, **kw:
+                         _sent.append((key, title, body, kw)))
+    _real_kicked = notify._kicked_off
+    notify._kicked_off = lambda: True
+    _real_fetch = notify.live.fetch
+    try:
+        # Nobody wants events yet, so a goal notifies nobody.
+        notify.live.fetch = lambda gw, force=False: (_fx(goals=1), None)
+        notify.match_events()
+        check("a device that didn't ask for events gets none", len(_sent), 0)
+
+        _pc.post("/push/subscribe", json=dict(_sub, want_events=True))
+        notify.match_events()
+        check("once asked for, a goal notifies", len(_sent), 1)
+        check_true("naming the player",
+                   engine.player_names()[_scorer] in _sent[0][2], _sent[0][2])
+        check_true("and sending them to the live page", _sent[0][3]["url"] == "/live")
+
+        # The same total, polled again, is not news.
+        notify.match_events()
+        notify.match_events()
+        check("the same goal is not reported twice", len(_sent), 1)
+
+        # A second goal for the same player is.
+        notify.live.fetch = lambda gw, force=False: (_fx(goals=2), None)
+        notify.match_events()
+        check("but his second goal is", len(_sent), 2)
+        check_true("and says which one it was", "(2)" in _sent[1][2], _sent[1][2])
+
+        # Two things at once are one notification, not two.
+        _sent.clear()
+        notify.live.fetch = lambda gw, force=False: (_fx(goals=3, assists=1), None)
+        notify.match_events()
+        check("two events in one poll are batched into one send", len(_sent), 1)
+        check_true("with both in the body",
+                   "·" in _sent[0][2] and _sent[0][1].startswith("2 "), _sent[0][2])
+
+        # A player nobody in this league owns is nobody's business.
+        _sent.clear()
+        notify.live.fetch = lambda gw, force=False: (_fx(goals=1, who=99999), None)
+        notify.match_events()
+        check("a goal by an unowned player notifies nobody", len(_sent), 0)
+
+        # And nothing is asked of FPL when there is no football on.
+        notify._kicked_off = lambda: False
+        _asked = []
+        notify.live.fetch = lambda gw, force=False: (_asked.append(1), ([], None))[1]
+        check("with no match on, FPL is not called at all",
+              (notify.match_events()["why"], len(_asked)), ("no match in progress", 0))
+    finally:
+        notify.to_manager = _real_to
+        notify._kicked_off = _real_kicked
+        notify.live.fetch = _real_fetch
+
+    check("preferences are per device, not per manager",
+          sorted(db.push_subscriptions(P1)[0])[:2], ["auth", "created_at"])
+    check_true("and a device can be set to deadlines only",
+               db.set_push_prefs(_sub["endpoint"], want_events=False) == 1
+               and not db.push_subscriptions(P1, wanting="want_events"))
+    check("someone else's endpoint cannot be reconfigured",
+          TestClient(app).post("/push/prefs",
+                               json={"endpoint": _sub["endpoint"]}).status_code, 401)
+
     check_true("the service worker handles a push", "'push'" in c1.get("/sw.js").text)
     check_true("and a tap on it opens the page it is about",
                "notificationclick" in c1.get("/sw.js").text)

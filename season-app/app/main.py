@@ -78,6 +78,11 @@ def startup():
     # in the database before it goes — so running often costs nothing.
     scheduler.add_job(notify.deadlines_due, "interval", minutes=10,
                       id="notices", replace_existing=True)
+    # Match events, while matches are on. The job itself checks whether
+    # anything has kicked off before asking FPL for anything, so this is a
+    # cheap no-op at four in the morning and a real poll on a Saturday.
+    scheduler.add_job(notify.match_events, "interval", minutes=1,
+                      id="events", replace_existing=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
     # besides. Restart at 08:00 and the next refresh was a whole day away, which
@@ -399,6 +404,29 @@ async def push_subscribe(request: Request):
     if not body.get("endpoint") or not keys.get("p256dh") or not keys.get("auth"):
         raise HTTPException(422, "not a push subscription")
     db.subscribe_push(me["key"], body["endpoint"], keys["p256dh"], keys["auth"])
+    # Preferences ride along when the page sends them, so turning goal alerts
+    # on is one request rather than a subscribe followed by an update that
+    # might not arrive.
+    db.set_push_prefs(body["endpoint"],
+                      want_deadlines=body.get("want_deadlines"),
+                      want_events=body.get("want_events"))
+    return JSONResponse({"ok": True})
+
+
+@app.post("/push/prefs")
+async def push_prefs(request: Request):
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    body = await request.json()
+    endpoint = body.get("endpoint", "")
+    # Only your own devices: an endpoint is unguessable, but a stolen one
+    # should not let anyone else change what it receives.
+    mine = {s["endpoint"] for s in db.push_subscriptions(me["key"])}
+    if endpoint not in mine:
+        raise HTTPException(404, "not one of your apps")
+    db.set_push_prefs(endpoint, want_deadlines=body.get("want_deadlines"),
+                      want_events=body.get("want_events"))
     return JSONResponse({"ok": True})
 
 

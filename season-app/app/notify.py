@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import threading
 
-from . import db, engine, push
+from . import db, engine, live, push
 
 # How long before a deadline to warn. Long enough to do something about it
 # from wherever you are, short enough that "later" doesn't mean "forgotten".
@@ -41,7 +41,8 @@ def _deliver(subscriptions, message):
     return sent
 
 
-def to_manager(key, title, body, url="/", tag=None, background=True):
+def to_manager(key, title, body, url="/", tag=None, background=True,
+               wanting="want_deadlines"):
     """Notify one manager on every app they have allowed.
 
     Sent on a thread by default. A push service having a slow minute must
@@ -49,7 +50,7 @@ def to_manager(key, title, body, url="/", tag=None, background=True):
     the caller could usefully do with the result anyway — delivery is the push
     service's problem the moment it takes the message.
     """
-    subscriptions = db.push_subscriptions(key)
+    subscriptions = db.push_subscriptions(key, wanting=wanting)
     if not subscriptions or not push.configured():
         return 0
     message = {"title": title, "body": body, "url": url, "tag": tag or url}
@@ -74,7 +75,7 @@ def once(kind, gameweek, key, title, body, url="/"):
     # a manager who turns notifications on ten minutes later has already
     # "had" the warning and silently never gets it, while the deadline it
     # was about is still hours away.
-    if not db.push_subscriptions(key):
+    if not db.push_subscriptions(key, wanting="want_deadlines"):
         return False
     db.record_notice(kind, gameweek, key)
     to_manager(key, title, body, url=url, tag=f"{kind}-{gameweek}")
@@ -147,4 +148,134 @@ def deadlines_due():
 
     # Notices raised, not notifications delivered — delivery is the push
     # service's business the moment it takes the message.
+    return {"notices": sent, "gameweek": number}
+
+
+# ── What your players are doing, while they are doing it ───────────────────
+# Only the events that move points enough to be worth a buzz. Bonus is
+# deliberately absent: it moves all match and is not settled until well after
+# full time, so it would notify repeatedly and be wrong most of those times.
+WATCHED_EVENTS = [
+    ("goals_scored", "Goal"),
+    ("assists", "Assist"),
+    ("penalties_saved", "Penalty saved"),
+    ("penalties_missed", "Penalty missed"),
+    ("own_goals", "Own goal"),
+    ("red_cards", "Red card"),
+]
+# How long after kick-off to keep polling a fixture. Two hours covers ninety
+# minutes, a long half-time and generous stoppage; beyond that the stats are
+# revisions rather than events.
+MATCH_WINDOW_HOURS = 2.5
+
+
+def _kicked_off():
+    """Whether any match in the live round is plausibly in progress.
+
+    The point is to not ask FPL for fixtures at four in the morning. A round
+    with nothing on gets no request at all, which is the difference between
+    polling a minute and polling a minute *during matches*.
+    """
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone.utc)
+    for fixture in engine._read("pl_fixtures.json") or []:
+        stamp = fixture.get("kickoff_time")
+        if not stamp:
+            continue
+        kick = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        if kick <= now <= kick + timedelta(hours=MATCH_WINDOW_HOURS):
+            return True
+    return False
+
+
+def _events_now(fixtures):
+    """Every event in the round as (player, label, count, fixture).
+
+    FPL reports cumulative totals, not events: `goals_scored` says Salah has
+    two, and says it again on the next poll. So this returns the running
+    count and the caller decides which counts it has not seen — "Salah has
+    two" is not news, "Salah's second" is.
+    """
+    out = []
+    for fixture in fixtures:
+        stats = {s.get("identifier"): s for s in (fixture.get("stats") or [])}
+        for identifier, label in WATCHED_EVENTS:
+            block = stats.get(identifier) or {}
+            for side in ("h", "a"):
+                for row in block.get(side) or []:
+                    if "element" in row and (row.get("value") or 0) > 0:
+                        out.append((row["element"], label, row["value"],
+                                    fixture.get("id")))
+    return out
+
+
+def match_events():
+    """Tell each manager what their squad has just done. Batched, once each.
+
+    Runs on a timer during matches. Every event is claimed in `notice_sent`
+    under a key naming the fixture, the player and *which* goal it was, so a
+    poll that repeats an event it has already reported sends nothing — which
+    is every poll after the first, since FPL keeps reporting the total.
+
+    Batched on purpose: two things in the same minute are one notification,
+    not two a few seconds apart. A manager owns fifteen players and a busy
+    Saturday would otherwise be a phone that will not stop.
+    """
+    if not push.configured():
+        return {"notices": 0, "why": "push not configured"}
+    if not _kicked_off():
+        return {"notices": 0, "why": "no match in progress"}
+
+    gw = engine.live_gameweek()
+    if not gw:
+        return {"notices": 0, "why": "no live gameweek"}
+    number = gw["gameweek"]
+
+    fixtures, error = live.fetch(number)
+    if error and not fixtures:
+        return {"notices": 0, "why": error}
+
+    events = _events_now(fixtures)
+    if not events:
+        return {"notices": 0, "gameweek": number}
+
+    names = engine.player_names()
+    squads = engine.market(number, db.trades(), db.transactions())["squads"]
+    sent = 0
+
+    for key, squad in squads.items():
+        # The whole squad, not the eleven: a manager wants to know their bench
+        # forward scored, both because substitutes come on and because owning
+        # him is the thing that makes it interesting.
+        owned = {p["id"] for p in squad}
+        if not db.push_subscriptions(key, wanting="want_events"):
+            continue
+
+        fresh = []
+        for player, label, count, fixture in events:
+            if player not in owned:
+                continue
+            # The count is part of the key, so a second goal is a new notice
+            # and the first one is not re-sent.
+            kind = f"ev:{fixture}:{player}:{label}:{count}"
+            if db.notice_already_sent(kind, number, key):
+                continue
+            db.record_notice(kind, number, key)
+            fresh.append((player, label, count))
+
+        if not fresh:
+            continue
+
+        lines = []
+        for player, label, count in fresh:
+            who = names.get(player, f"player {player}")
+            # "Goal" for the first, "2nd goal" after that — the number is the
+            # news once there has already been one.
+            nth = "" if count == 1 else f" ({count})"
+            lines.append(f"{who} — {label}{nth}")
+        title = lines[0] if len(lines) == 1 else f"{len(lines)} for your squad"
+        to_manager(key, title, " · ".join(lines), url="/live",
+                   tag=f"events-{number}", wanting="want_events")
+        sent += 1
+
     return {"notices": sent, "gameweek": number}

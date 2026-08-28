@@ -12,15 +12,31 @@
     <h2>Notifications</h2>
     <span class="eyebrow" id="pushstate">checking…</span>
   </div>
-  <p class="sub">Three things only: the deadline when you haven&rsquo;t picked,
-  the waiver window closing when you have claims in, and a trade offered to
-  you. Nothing about results &mdash; the table isn&rsquo;t going anywhere.</p>
+  <p class="sub">Two kinds, and you choose. Nothing about results either way
+  &mdash; the table isn&rsquo;t going anywhere.</p>
 
   <div class="tacts">
     <button id="pushon" class="btn" hidden>Turn on</button>
     <button id="pushoff" class="btn small ghost" hidden>Turn off</button>
     <button id="pushtest" class="btn small ghost" hidden>Send a test</button>
     <span id="pstatus" class="savestate"></span>
+  </div>
+
+  <div class="panel" id="prefbox" hidden style="margin-top:.7rem">
+    <label class="prefrow">
+      <input type="checkbox" id="wantdeadlines" checked>
+      <span><strong>Deadlines and trades</strong>
+        <span class="pclub">the deadline when you haven&rsquo;t picked, the
+        waiver window closing when you have claims in, and a trade offered to
+        you &mdash; a handful a week</span></span>
+    </label>
+    <label class="prefrow">
+      <input type="checkbox" id="wantevents">
+      <span><strong>When your players do something</strong>
+        <span class="pclub">goals, assists, red cards and penalties, for all
+        fifteen &mdash; batched, so several at once is one buzz. A busy
+        Saturday is still a busy Saturday.</span></span>
+    </label>
   </div>
   <p class="note" id="pushwhy"></p>
 </section>
@@ -234,7 +250,27 @@
   var off = document.getElementById('pushoff');
   var test = document.getElementById('pushtest');
   var out = document.getElementById('pstatus');
+  var wantDeadlines = document.getElementById('wantdeadlines');
+  var wantEvents = document.getElementById('wantevents');
   if (!box) return;
+
+  async function savePrefs() {
+    var reg = await navigator.serviceWorker.ready;
+    var sub = await reg.pushManager.getSubscription();
+    if (!sub) return;
+    out.textContent = 'saving…';
+    out.className = 'savestate';
+    var res = await fetch('/push/prefs', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: sub.endpoint,
+        want_deadlines: wantDeadlines.checked,
+        want_events: wantEvents.checked }),
+    }).catch(function () { return { ok: false }; });
+    out.textContent = res.ok ? 'saved' : 'could not save that';
+    out.className = 'savestate ' + (res.ok ? 'ok' : 'bad');
+  }
+  wantDeadlines.addEventListener('change', savePrefs);
+  wantEvents.addEventListener('change', savePrefs);
 
   // Base64url to the Uint8Array the subscribe call insists on. It will not
   // take the string, and the error it gives if you pass one says nothing.
@@ -281,10 +317,11 @@
     on.hidden = !!sub;
     off.hidden = !sub;
     test.hidden = !sub;
+    document.getElementById('prefbox').hidden = !sub;
     show(sub ? 'on for this app' : 'off for this app',
          sub ? 'Each app you use needs turning on separately — this one is '
              + 'done.' : '');
-    return { reg: reg, key: key.key };
+    return { reg: reg, key: key.key, sub: sub };
   }
 
   on.addEventListener('click', async function () {
@@ -301,9 +338,14 @@
         userVisibleOnly: true,
         applicationServerKey: keyBytes(ctx.key),
       });
+      // The preferences go with the subscription, so turning it on is one
+      // request rather than a subscribe and a follow-up that might not land.
       var res = await fetch('/push/subscribe', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sub),
+        body: JSON.stringify(Object.assign(JSON.parse(JSON.stringify(sub)), {
+          want_deadlines: wantDeadlines.checked,
+          want_events: wantEvents.checked,
+        })),
       });
       if (!res.ok) throw new Error('the server would not take it');
       out.textContent = 'on';

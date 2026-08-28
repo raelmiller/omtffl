@@ -150,7 +150,15 @@ CREATE TABLE IF NOT EXISTS push_subscription (
     auth        TEXT NOT NULL,           -- shared secret the service never sees
     created_at  TEXT NOT NULL,
     last_ok     TEXT,
-    last_error  TEXT
+    last_error  TEXT,
+    -- What this device wants. Kept per subscription rather than per manager
+    -- because a subscription IS a device, and wanting a buzz for every goal
+    -- on a phone but not on a work laptop is an ordinary thing to want.
+    -- Deadlines default on and match events default off: someone who turns
+    -- notifications on is asking not to miss a deadline, and has not asked
+    -- to be interrupted nine times on a Saturday.
+    want_deadlines INTEGER NOT NULL DEFAULT 1,
+    want_events    INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS push_subscription_manager
     ON push_subscription(manager);
@@ -224,6 +232,13 @@ def _migrate(conn):
     have = {r["name"] for r in conn.execute("PRAGMA table_info(manager)")}
     if "token_expires" not in have:
         conn.execute("ALTER TABLE manager ADD COLUMN token_expires TEXT")
+    subs = {r["name"] for r in conn.execute("PRAGMA table_info(push_subscription)")}
+    if subs and "want_deadlines" not in subs:
+        conn.execute("ALTER TABLE push_subscription ADD COLUMN"
+                     " want_deadlines INTEGER NOT NULL DEFAULT 1")
+    if subs and "want_events" not in subs:
+        conn.execute("ALTER TABLE push_subscription ADD COLUMN"
+                     " want_events INTEGER NOT NULL DEFAULT 0")
 
 
 def init():
@@ -867,14 +882,39 @@ def unsubscribe_push(endpoint):
         return cur.rowcount
 
 
-def push_subscriptions(key=None):
+def push_subscriptions(key=None, wanting=None):
+    """Subscribed apps, optionally only those that want a kind of notice.
+
+    `wanting` is a column name — "want_deadlines" or "want_events" — because
+    a device that asked only for deadlines must not be sent a goal, and the
+    filter belongs next to the rows rather than in every caller.
+    """
     sql = "SELECT * FROM push_subscription"
-    args = []
+    where, args = [], []
     if key:
-        sql += " WHERE manager = ?"
-        args.append(key)
+        where.append("manager = ?"); args.append(key)
+    if wanting:
+        if wanting not in ("want_deadlines", "want_events"):
+            raise ValueError(f"unknown preference {wanting}")
+        where.append(f"{wanting} = 1")
+    if where:
+        sql += " WHERE " + " AND ".join(where)
     with connect() as conn:
         return [dict(r) for r in conn.execute(sql + " ORDER BY created_at", args)]
+
+
+def set_push_prefs(endpoint, want_deadlines=None, want_events=None):
+    sets, args = [], []
+    if want_deadlines is not None:
+        sets.append("want_deadlines = ?"); args.append(1 if want_deadlines else 0)
+    if want_events is not None:
+        sets.append("want_events = ?"); args.append(1 if want_events else 0)
+    if not sets:
+        return 0
+    args.append(endpoint)
+    with connect() as conn:
+        return conn.execute("UPDATE push_subscription SET " + ", ".join(sets)
+                            + " WHERE endpoint = ?", args).rowcount
 
 
 def mark_push(endpoint, ok, detail=None):
