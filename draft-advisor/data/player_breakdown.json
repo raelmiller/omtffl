@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-08-27T16:13:36Z",
+  "fpl_baked_at": "2026-08-28T17:13:35Z",
   "sales": 645,
   "unique_players": 393,
-  "matched_to_fpl": 260
+  "matched_to_fpl": 261
  },
  "players": [
   {
@@ -488,7 +488,7 @@
    "xgi": "0.52",
    "penalties": false,
    "corners": false,
-   "freekicks": false,
+   "freekicks": true,
    "sales": {
     "2023-24": {
      "price": 7.0,
@@ -704,7 +704,7 @@
    "fpl_id": 167,
    "display": "Delap",
    "position": "FWD",
-   "current_club": "CHE",
+   "current_club": "NFO",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
@@ -881,13 +881,13 @@
    "fpl_id": 401,
    "display": "Marmoush",
    "position": "MID",
-   "current_club": "MCI",
+   "current_club": "TOT",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2025-26": {
      "price": 12.0,
@@ -1362,7 +1362,7 @@
    "display": "Gibbs-White",
    "position": "MID",
    "current_club": "NFO",
-   "status": "d",
+   "status": "a",
    "last_season_points": 2,
    "xgi": "0.19",
    "penalties": false,
@@ -2154,7 +2154,7 @@
    "display": "Amad",
    "position": "MID",
    "current_club": "MUN",
-   "status": "d",
+   "status": "i",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -4877,7 +4877,7 @@
    "fpl_id": 91,
    "display": "Pinnock",
    "position": "DEF",
-   "current_club": "BRE",
+   "current_club": "COV",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
@@ -5260,14 +5260,14 @@
    }
   },
   {
-   "key": "name_diouf",
-   "fpl_id": null,
+   "key": "fpl_620",
+   "fpl_id": 620,
    "display": "Diouf",
    "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "BRE",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -5276,7 +5276,7 @@
      "price": 1.5,
      "buyer": "Gav",
      "club_then": "WHU",
-     "points_that_season": null
+     "points_that_season": 104
     }
    }
   },
