@@ -2654,16 +2654,18 @@ def tab_on(html):
     return re.findall(r'<a class="tab on" href="([^"]+)"', html)
 
 check("the table page marks the table tab", tab_on(bar), ["/"])
-check("a team's gameweek belongs to the table too",
-      tab_on(wv.get("/team/RM").text), ["/"])
+# A team's week belongs to This week; a whole round belongs to the Table.
+check("a team's gameweek belongs to This week",
+      tab_on(wv.get("/team/RM").text), ["/week"])
 gw_now = engine.season()["rounds"][0]["gameweek"]
-check("and so does a round",
+check("while a whole round belongs to the table",
       tab_on(wv.get(f"/gameweek/{gw_now}").text), ["/"])
+check("and This week marks its own", tab_on(wv.get("/week").text), ["/week"])
 check("the waivers page marks its own", tab_on(wv.get("/waivers").text), ["/waivers"])
 check("and the trades page marks its own", tab_on(wv.get("/trade").text), ["/trade"])
 rail_hrefs = re.findall(r'<a class="tab[^"]*" href="([^"]+)"', bar)
-check("the rail carries every section", rail_hrefs,
-      ["/", "/live", "/stats", "/declare", "/trade", "/waivers"])
+check("the rail carries every section, This week first", rail_hrefs,
+      ["/week", "/", "/live", "/stats", "/declare", "/trade", "/waivers"])
 check_true("and every one of them opens",
            all(wv.get(h).status_code == 200 for h in rail_hrefs),
            ", ".join(f"{h} -> {wv.get(h).status_code}" for h in rail_hrefs

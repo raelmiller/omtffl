@@ -10,6 +10,7 @@ anything depends on them.
 
 | Route | |
 |---|---|
+| `/week` | your own points for the round being played — the first tab |
 | `/` | the head-to-head table and every round's results |
 | `/gameweek/N` | one round in detail |
 | `/health` | what data is on disk, how settled it is, and whether this host can reach the FPL API |
@@ -224,6 +225,20 @@ rather than exotic (a 20% band on a draw is a tenth of the XI, and twenty of
 them turn up in the first 200 points of XI score), so which way they went was
 decided by the parity of the number below — not a rule anyone could hold in
 their head, and a bad one to lose a fixture to.
+
+**`/week` is the first tab, and it is `/team/<you>` without the hunting.**
+The one number a manager checks most often during a gameweek was three steps
+away: open the table, find your own row, click it. The route resolves *you*
+and the latest scored round itself, so the tab means the same thing every week
+and a bookmark of it never goes stale. It renders the team page from the same
+`_team_context` the team route uses, rather than a second view that looks like
+it — two builds of the same page is how they drift apart, and this one carries
+the boost, the substitutions and the rest of the league's scores.
+
+A team's week (`/team/RM/3`) now lights that tab; a whole round
+(`/gameweek/3`) still belongs to the Table. Eight tabs fit the bottom bar
+without clipping or sideways scroll from 320px up, which was measured rather
+than hoped.
 
 ## The transfer week
 

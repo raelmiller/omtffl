@@ -1085,10 +1085,14 @@ def respond(request: Request, trade_id: int, action: str):
     return RedirectResponse("/trade", status_code=303)
 
 
-@app.get("/team/{key}", response_class=HTMLResponse)
-@app.get("/team/{key}/{gameweek}", response_class=HTMLResponse)
-def team_page(request: Request, key: str, gameweek: int = None):
-    """How one team's gameweek went, laid out the way they picked it."""
+def _team_context(request, key, gameweek=None):
+    """Everything the team page needs, for whichever team and round.
+
+    Factored out so "this week" is the same page rather than a second one
+    that looks like it: two routes rendering the same view from two builds of
+    the context is how they drift apart, and this one carries the boost, the
+    substitutions and the rest of the league's scores.
+    """
     ctx = _context(request)
     season = ctx["season"]
     played = [r["gameweek"] for r in season.get("rounds", [])]
@@ -1128,7 +1132,34 @@ def team_page(request: Request, key: str, gameweek: int = None):
         "prev_gw": max(earlier) if earlier else None,
         "next_gw": min(later) if later else None,
     })
-    return templates.TemplateResponse("team.html", ctx)
+    return ctx
+
+
+@app.get("/team/{key}", response_class=HTMLResponse)
+@app.get("/team/{key}/{gameweek}", response_class=HTMLResponse)
+def team_page(request: Request, key: str, gameweek: int = None):
+    """How one team's gameweek went, laid out the way they picked it."""
+    return templates.TemplateResponse(
+        "team.html", _team_context(request, key, gameweek))
+
+
+@app.get("/week", response_class=HTMLResponse)
+def this_week(request: Request):
+    """Your own points for the round being played, in one tap.
+
+    The same view as `/team/<you>`, which was previously reachable only by
+    opening the table, finding your own row and clicking it — three steps to
+    the one number a manager checks most often during a gameweek.
+
+    No gameweek in the path on purpose: this is always the latest round that
+    has been scored, so the tab means the same thing every week and a
+    bookmark of it never goes stale.
+    """
+    me = auth.current(request)
+    if not me:
+        return templates.TemplateResponse("signin.html", _context(request),
+                                          status_code=401)
+    return templates.TemplateResponse("team.html", _team_context(request, me["key"]))
 
 
 @app.get("/api/player/{player_id}")
