@@ -185,6 +185,23 @@ gameweek and none in a blank, and both are exactly what a manager needs to see
 before picking — a double shows both opponents, a blank says `blank`. Neither
 case appears in the current round, so the test suite manufactures them.
 
+**A result is known at the whistle, not when FPL finishes checking it.** The
+fixtures endpoint carries two flags hours apart: `finished_provisional` goes
+up at full time, `finished` waits until bonus is added and the stats checked —
+which on a Friday night match can still be false the next morning. Reading
+only `finished` meant a boost sat on "still playing" twelve hours after the
+match ended, on data that had been refreshed two minutes earlier. Goals do not
+change in between, so `mechanics.decided()` takes either flag, and both the
+boost and the Premier League table that sets its band use it. The refresh
+cadence still waits for `finished`, because bonus is exactly what it is
+collecting. Files written before the field existed fall back to `finished`.
+
+**A round still being played has no result, and the header must not claim
+one.** It read "lost to ThunderBijol" beside its own "in progress" pill, for a
+gameweek whose matches had not all kicked off. Past tense now needs
+`final` or `provisional` — the football being over — and anything earlier says
+*ahead of*, *behind* or *level with*.
+
 **A boost on a match still being played pays nothing *yet*, and says so.**
 `boost_value` returns `played: False` in two situations that mean opposite
 things to a manager: the club had no fixture at all, or the fixture has kicked

@@ -582,6 +582,23 @@ def squads_at(base_squads, transactions, gameweek):
 
 
 # ── Manager boosts ─────────────────────────────────────────────────────────
+def decided(fixture):
+    """Whether a fixture's result is known.
+
+    FPL sets two flags and they are hours apart. `finished_provisional` goes
+    up at the final whistle; `finished` waits until the stats have been
+    checked and bonus added, which on a Friday night game can still be false
+    the following morning. Goals do not change in between, so the result — the
+    only thing a boost and the Premier League table need — is settled at the
+    whistle, and waiting for the later flag left a manager's boost reading
+    "still playing" twelve hours after the match ended.
+
+    Tolerant of the older files, which only carry `finished`: those simply
+    fall back to it until the next fetch adds the other.
+    """
+    return bool(fixture.get("finished") or fixture.get("finished_provisional"))
+
+
 def league_table(pl_fixtures, upto_gameweek):
     """Premier League standings from results before `upto_gameweek`.
 
@@ -590,7 +607,7 @@ def league_table(pl_fixtures, upto_gameweek):
     """
     stats = {}
     for f in pl_fixtures:
-        if not f["finished"] or f["event"] is None or f["event"] >= upto_gameweek:
+        if not decided(f) or f["event"] is None or f["event"] >= upto_gameweek:
             continue
         h, a = f["team_h"], f["team_a"]
         hs, as_ = f["team_h_score"], f["team_a_score"]
@@ -633,7 +650,7 @@ def club_result(pl_fixtures, club_id, gameweek):
     """
     results = []
     for f in pl_fixtures:
-        if f["event"] != gameweek or not f["finished"]:
+        if f["event"] != gameweek or not decided(f):
             continue
         hs, as_ = f["team_h_score"], f["team_a_score"]
         if hs is None or as_ is None:

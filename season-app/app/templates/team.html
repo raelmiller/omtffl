@@ -17,7 +17,15 @@ document.querySelectorAll('[data-player]').forEach(el =>
 <p class="sub">
   {{ round_name }} &middot; <span class="pill">{{ detail.state }}</span>
   {% if opponent %}
-    &middot; {{ 'beat' if detail.total > opponent.total else 'lost to' if detail.total < opponent.total else 'drew with' }}
+    {#- A round still being played has no result yet, so the verb has to be
+        present tense. "lost to" beside an "in progress" pill told a manager
+        they had lost a fixture whose matches had not all kicked off. Only
+        "final" is past tense: "provisional" means the football is over but
+        bonus is still moving, which is settled enough to name a winner. -#}
+    {% set over = detail.state in ('final', 'provisional') %}
+    &middot; {% if detail.total > opponent.total %}{{ 'beat' if over else 'ahead of' }}
+    {% elif detail.total < opponent.total %}{{ 'lost to' if over else 'behind' }}
+    {% else %}{{ 'drew with' if over else 'level with' }}{% endif %}
     <a href="/team/{{ opponent.key }}/{{ detail.gameweek }}">{{ opponent.team }}</a><span class="mgr">{{ opponent.key }}</span>
     {{ detail.total }}&ndash;{{ opponent.total }}
   {% endif %}

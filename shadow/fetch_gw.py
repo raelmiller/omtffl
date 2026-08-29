@@ -130,14 +130,20 @@ def fetch_pl_fixtures():
             "id": f.get("id"),
             "event": f.get("event"),
             "finished": bool(f.get("finished")),
+            # The whistle, as against `finished` which waits for bonus and
+            # the stat check. The result is known at the whistle, and the
+            # boost and the PL table need only the result — see
+            # mechanics.decided for why both are kept rather than one.
+            "finished_provisional": bool(f.get("finished_provisional")),
             "kickoff_time": f.get("kickoff_time"),
             "team_h": f.get("team_h"),
             "team_a": f.get("team_a"),
             "team_h_score": f.get("team_h_score"),
             "team_a_score": f.get("team_a_score"),
         })
-    played = sum(1 for f in out if f["finished"])
-    print(f"  {len(out)} fixtures, {played} played")
+    played = sum(1 for f in out if f["finished"] or f["finished_provisional"])
+    settled = sum(1 for f in out if f["finished"])
+    print(f"  {len(out)} fixtures, {played} played, {settled} fully settled")
     # The per-fixture stats are not saved — they are what the live scores page
     # asks FPL for directly, since they change by the minute and committing
     # them would bloat this file for no gain. Logged so the shape they arrive

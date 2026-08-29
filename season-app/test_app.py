@@ -1021,6 +1021,49 @@ finally:
 # plain equality. Worth an assertion rather than an assurance: a fraction
 # surviving here would turn draws into wins by a fifth of a point, in a table
 # that shows whole numbers and so would never show why.
+# A round still being played has no result. The header said "lost to
+# ThunderBijol" beside its own "IN PROGRESS" pill, for a gameweek whose
+# matches had not all kicked off — telling a manager they had lost a fixture
+# that was still going on.
+_wc = TestClient(app)
+_wc.get(f"/m/{db.manager_by_key(P1)['token']}")
+_real_tg2 = engine.team_gameweek
+
+
+def _header(state, mine):
+    base = _real_tg2(P1, 1, db.all_lineups(), db.transactions(),
+                     db.manager_clubs()) or {"key": P1, "rows": []}
+    engine.team_gameweek = lambda *a, **k: {**base, "state": state,
+                                            "total": mine, "gameweek": 1}
+    try:
+        html = _wc.get(f"/team/{P1}/1").text
+        # The subheading only, not the whole page: "lost to" and "behind"
+        # are ordinary enough words to appear in explainer copy elsewhere.
+        m = re.search(r'<p class="sub">(.*?)</p>', html, re.S)
+        return flat(m.group(1)) if m else "(no subheading found)"
+    finally:
+        engine.team_gameweek = _real_tg2
+
+
+# The opponent's total comes from the real season, so pick ours relative to
+# theirs rather than asserting against numbers invented here.
+_theirs = int(re.search(r"&ndash;(\d+)", _header("final", 0)).group(1))
+
+_ip_behind = _header("in progress", _theirs - 1)
+check_true("a round in progress says behind, not lost to",
+           "behind" in _ip_behind and "lost to" not in _ip_behind, _ip_behind)
+_ip_ahead = _header("in progress", _theirs + 1)
+check_true("and ahead of, not beat",
+           "ahead of" in _ip_ahead and "beat" not in _ip_ahead, _ip_ahead)
+_ip_level = _header("in progress", _theirs)
+check_true("and level with, not drew with",
+           "level with" in _ip_level and "drew with" not in _ip_level, _ip_level)
+check_true("a final round still says lost to",
+           "lost to" in _header("final", _theirs - 1))
+check_true("and beat when ahead", "beat" in _header("final", _theirs + 1))
+check_true("and a provisional one is past tense too, the football being over",
+           "lost to" in _header("provisional", _theirs - 1))
+
 _season_now = engine.season(db.all_lineups() or None,
                             db.transactions() + engine.effective_trades(db.trades()),
                             db.manager_clubs())

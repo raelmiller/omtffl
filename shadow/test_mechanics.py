@@ -604,6 +604,35 @@ if abs(_exact5 % 1 - 0.5) < 1e-9:
     check("a half pays up rather than to the even neighbour",
           _five, _math.floor(_exact5 + 0.5))
 
+# FPL sets two flags hours apart: `finished_provisional` at the whistle, and
+# `finished` once bonus is added and the stats checked. Waiting for the later
+# one left a boost reading "still playing" the morning after a Friday night
+# match — the data was fresh, the flag simply had not moved.
+WHISTLE = [{"id": 1, "event": 8, "finished": False, "finished_provisional": True,
+            "team_h": 1, "team_a": 2, "team_h_score": 0, "team_a_score": 1}]
+pts, detail = boost_value(30, club_id=2, gameweek=8, pl_fixtures=WHISTLE)
+check_true("a boost pays at the whistle, not when FPL finishes checking",
+           pts > 0 and detail["played"], f"{pts}, played={detail['played']}")
+check("and the win is read correctly from it", detail["result"], "W")
+
+PLAYING = [dict(WHISTLE[0], finished_provisional=False)]
+check("with neither flag up it is still pending",
+      boost_value(30, club_id=2, gameweek=8, pl_fixtures=PLAYING)[1]["pending"], True)
+
+# Files written before the field existed carry only `finished`. They must fall
+# back to it rather than reading a missing key as "played".
+OLDER = [{k: v for k, v in WHISTLE[0].items() if k != "finished_provisional"}]
+check("an older file without the field falls back to `finished`",
+      boost_value(30, club_id=2, gameweek=8, pl_fixtures=OLDER)[1]["played"], False)
+check("and the same file with `finished` set does pay",
+      boost_value(30, club_id=2, gameweek=8,
+                  pl_fixtures=[dict(OLDER[0], finished=True)])[1]["played"], True)
+
+# The PL table that sets the band reads the same way, or a club could be
+# boosted on a table that ignored the match it had just won.
+check_true("the table counts a match decided at the whistle",
+           league_table(WHISTLE, upto_gameweek=9).get(2) is not None)
+
 # Kicked off but not finished. Reported from the app: a manager watched their
 # boosted club win 1-0 while the page told them "they didn't play, so nothing
 # was paid" — which reads as a boost thrown away rather than one not yet
