@@ -191,6 +191,24 @@ def _context(request):
 
 
 @app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    """The week for a manager, the table for a visitor.
+
+    A signed-in manager opening the app wants their own score, which is why
+    it is also the first tab. A signed-out one has no rail and no team, so
+    the league table is the only thing the root can usefully be — and it
+    stays public, which it has always been.
+
+    Rendered rather than redirected: a redirect would bounce the wordmark and
+    every bookmark through a second request, and leave `/` matching no tab.
+    """
+    if auth.current(request):
+        return templates.TemplateResponse("team.html", _team_context(
+            request, auth.current(request)["key"]))
+    return table(request)
+
+
+@app.get("/table", response_class=HTMLResponse)
 def table(request: Request):
     ctx = _context(request)
     season = ctx["season"]

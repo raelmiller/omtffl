@@ -1015,6 +1015,63 @@ finally:
 
 # And the ordering the manager actually cares about: the boost is priced on
 # the eleven, before points paid away in a trade are taken off.
+# A pick rolls over until it is changed, so a manager whose team is already
+# how they want it has done nothing wrong. The pages used to say "No eleven
+# was submitted for this round", which reads as an omission — and the table
+# went further and counted that score as the best available XI, which it was
+# not: it came from a team its manager chose, in an earlier week.
+_pages = {p: flat(TestClient(app).get(p).text) for p in ("/table",)}
+_signed = TestClient(app)
+_signed.get(f"/m/{db.manager_by_key(P1)['token']}")
+for _p in ("/", "/week", f"/team/{P1}", "/declare"):
+    _pages[_p] = flat(_signed.get(_p).text)
+for _p, _html in _pages.items():
+    check_true(f"{_p} does not say an eleven was not submitted",
+               "was submitted" not in _html and "haven't picked" not in _html
+               and "haven’t picked" not in _html, _p)
+
+# The count behind the table's summary: a rolled-over pick is the manager's
+# own, and only a stand-in eleven is not.
+_ssn = engine.season(db.all_lineups() or None,
+                     db.transactions() + engine.effective_trades(db.trades()),
+                     db.manager_clubs())
+_srcs = [s for r in _ssn["rounds"] for m in r["matches"]
+         for s in (m["home_source"], m["away_source"]) if s]
+_own = sum(1 for s in _srcs if s not in ("best available", "placeholder"))
+check("the table counts a chosen team as chosen",
+      _ssn["submitted_share"][0], _own)
+
+# Manufactured, because a fresh database has no rollover in it and an
+# assertion over an empty set proves nothing. Pick for the earliest round
+# only, and the next one must carry it forward and count as the manager's.
+_rounds_asc = sorted(r["gameweek"] for r in _ssn["rounds"])
+if len(_rounds_asc) >= 2:
+    _first, _second = _rounds_asc[0], _rounds_asc[1]
+    _sq = engine.squads_for_gameweek(_first, db.trades())[P1]
+    _xi, _bench = engine.suggest_for(P1, _first, _sq)
+    db.save_lineup(P1, _first, [p["id"] for p in _xi], [p["id"] for p in _bench])
+    _ssn2 = engine.season(db.all_lineups(),
+                          db.transactions() + engine.effective_trades(db.trades()),
+                          db.manager_clubs())
+    _src2 = None
+    for m in next(r for r in _ssn2["rounds"] if r["gameweek"] == _second)["matches"]:
+        if m["home_key"] == P1:
+            _src2 = m["home_source"]
+        elif m["away_key"] == P1:
+            _src2 = m["away_source"]
+    check_true("a round with no pick of its own rolls the last one forward",
+               _src2 and _src2.startswith("rolled over"), str(_src2))
+    _own2 = sum(1 for r in _ssn2["rounds"] for m in r["matches"]
+                for s in (m["home_source"], m["away_source"])
+                if s and s not in ("best available", "placeholder"))
+    check("and the rollover counts as the manager's own team",
+          _ssn2["submitted_share"][0], _own2)
+    check_true("which is more than were picked outright",
+               _own2 >= 2, f"{_own2} slots from a chosen team")
+    with db.connect() as _c:
+        _c.execute("DELETE FROM lineup WHERE manager = ? AND gameweek = ?",
+                   (P1, _first))
+
 # Asked directly: if a boost made one score 40.2 and the other 40, is that a
 # draw? It cannot arise — the boost is rounded to a whole number before it is
 # added, so no fraction ever reaches a total and 40 against 40 is a draw by
@@ -2653,19 +2710,26 @@ check_true("and the team name with them", "Quantum of Szobos" in bar)
 def tab_on(html):
     return re.findall(r'<a class="tab on" href="([^"]+)"', html)
 
-check("the table page marks the table tab", tab_on(bar), ["/"])
+check("the table page marks the table tab",
+      tab_on(wv.get("/table").text), ["/table"])
+# The root is a manager's own week, so it lights This week -- and a bare "/"
+# in a tab's extra paths must mean the root alone, not every path in the app.
+check("the root marks This week for a signed-in manager",
+      tab_on(wv.get("/").text), ["/week"])
+check("and a prefix of / does not light it everywhere",
+      tab_on(wv.get("/waivers").text), ["/waivers"])
 # A team's week belongs to This week; a whole round belongs to the Table.
 check("a team's gameweek belongs to This week",
       tab_on(wv.get("/team/RM").text), ["/week"])
 gw_now = engine.season()["rounds"][0]["gameweek"]
 check("while a whole round belongs to the table",
-      tab_on(wv.get(f"/gameweek/{gw_now}").text), ["/"])
+      tab_on(wv.get(f"/gameweek/{gw_now}").text), ["/table"])
 check("and This week marks its own", tab_on(wv.get("/week").text), ["/week"])
 check("the waivers page marks its own", tab_on(wv.get("/waivers").text), ["/waivers"])
 check("and the trades page marks its own", tab_on(wv.get("/trade").text), ["/trade"])
 rail_hrefs = re.findall(r'<a class="tab[^"]*" href="([^"]+)"', bar)
 check("the rail carries every section, This week first", rail_hrefs,
-      ["/week", "/", "/live", "/stats", "/declare", "/trade", "/waivers"])
+      ["/week", "/table", "/live", "/stats", "/declare", "/trade", "/waivers"])
 check_true("and every one of them opens",
            all(wv.get(h).status_code == 200 for h in rail_hrefs),
            ", ".join(f"{h} -> {wv.get(h).status_code}" for h in rail_hrefs

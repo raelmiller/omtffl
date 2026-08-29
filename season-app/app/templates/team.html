@@ -30,9 +30,17 @@ document.querySelectorAll('[data-player]').forEach(el =>
     {{ detail.total }}&ndash;{{ opponent.total }}
   {% endif %}
 </p>
-{% if detail.source and detail.source != 'submitted' %}
-<p class="note">No eleven was submitted for this round, so this is
-{{ 'the best available team — which flatters the total, since nobody picks perfectly' if detail.source == 'best available' else detail.source }}.</p>
+{#- A pick rolls over until it is changed, so carrying one forward is the
+    system working rather than something a manager failed to do. Only a
+    stand-in eleven — one nobody ever picked — is worth a notice, because
+    that one really does flatter the total. -#}
+{% if detail.source in ('best available', 'placeholder') %}
+<p class="note">Nobody has picked for this team yet, so this is the best
+available eleven &mdash; which flatters the total, since nobody picks
+perfectly.</p>
+{% elif detail.source and detail.source.startswith('rolled over') %}
+<p class="note">Your team from {{ detail.source.split('from ')[-1] }}, carried
+forward.</p>
 {% endif %}
 <script>
 document.querySelectorAll('[data-player]').forEach(el =>
@@ -155,7 +163,7 @@ document.querySelectorAll('[data-player]').forEach(el =>
     {% endfor %}
   </div>
 
-  <p class="sub"><a href="/">&larr; The table</a></p>
+  <p class="sub"><a href="/table">&larr; The table</a></p>
 </section>
 <script>
 document.querySelectorAll('[data-player]').forEach(el =>

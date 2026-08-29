@@ -11,13 +11,13 @@
         price so there was something to score &mdash; they are a placeholder,
         not anyone&rsquo;s selection.
       {% elif sub == 0 %}
-        No lineups submitted yet, so every score is the best available XI &mdash;
-        which flatters everyone equally.
+        Nobody has picked a team yet, so every score is the best available XI
+        &mdash; which flatters everyone equally.
       {% elif sub < total %}
-        {{ sub }} of {{ total }} scores are from a submitted XI; the rest use the
-        best available.
+        {{ sub }} of {{ total }} scores are from a team its manager picked; the
+        rest stand in with the best available XI.
       {% else %}
-        Every score is the XI its manager actually picked.
+        Every score is the XI its manager picked.
       {% endif %}
     </p>
   {% endif %}

@@ -128,6 +128,22 @@ def validate(entry, squad, deadline=None):
 
 
 # ── Choosing which lineup applies ──────────────────────────────────────────
+def lineup_source_gameweek(team, gameweek, lineups):
+    """Which round the eleven applying to `gameweek` was actually picked in.
+
+    The same fallback `effective_lineup` walks — this round if there is a pick
+    for it, otherwise the most recent earlier one — exposed on its own so a
+    caller can ask *whether a human chose this team* without parsing the
+    sentence `effective_lineup` writes for the page.
+
+    Returns None when nobody has ever picked for this team.
+    """
+    if lineups.get(gameweek, {}).get(team) is not None:
+        return gameweek
+    earlier = [gw for gw in sorted(lineups) if gw < gameweek and team in lineups[gw]]
+    return earlier[-1] if earlier else None
+
+
 def effective_lineup(team, gameweek, lineups, squad):
     """The XI and bench that actually apply, and how we got there.
 

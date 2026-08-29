@@ -29,6 +29,7 @@ from h2h import WIN, DRAW, gameweek_scores          # noqa: E402
 from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
     apply_autosubs, effective_lineup, form_before, legal_formation,
+    lineup_source_gameweek,
     load_lineups, minutes_from_gameweek, suggest_lineup,
     validate as validate_lineup,
 )
@@ -203,9 +204,14 @@ def _season(version, lineup_key, lineups_json, real_keys,
             roster = squads_at.get(key, team["squad"])
             picked, bench, how = effective_lineup(key, n, lineups, roster)
             if picked:
-                if (n, key) not in real:
-                    # Resolved from the placeholder file, not from anything a
-                    # manager actually chose.
+                # Was this eleven chosen by a person? Ask of the round it was
+                # actually picked in, not of this one. A pick rolls over until
+                # it is changed, so a manager who set a team in gameweek one
+                # and left it alone has a real team in every round after —
+                # checking only this round called all of those a placeholder,
+                # which told them their score came from a made-up eleven.
+                from_gw = lineup_source_gameweek(key, n, lineups)
+                if from_gw is None or (from_gw, key) not in real:
                     how = "placeholder"
                 final_xi, _ = apply_autosubs(picked, bench, minutes)
                 scores[key] = sum(pts.get(p["id"], 0) for p in final_xi)
@@ -291,9 +297,15 @@ def _season(version, lineup_key, lineups_json, real_keys,
         row["rank"] = i
         row["diff"] = row["PF"] - row["PA"]
 
+    # Scores that came from a team its manager actually chose — including one
+    # picked in an earlier round and left alone since. A pick rolls over until
+    # it is changed, so counting a rollover as "not submitted" both scolded
+    # managers who had nothing to change and, worse, said their score came
+    # from the best available XI when it had not.
+    STAND_IN = ("best available", "placeholder")
     submitted = sum(1 for r in rounds for m in r["matches"]
-                    for k in (m["home_key"], m["away_key"])
-                    if (r["gameweek"], k) in real)
+                    for src in (m["home_source"], m["away_source"])
+                    if src and src not in STAND_IN)
     # The placeholder label belongs on the page for as long as the rounds on
     # show are still standing on it — a team saved for a future gameweek
     # doesn't change what gameweek 1 was scored from.

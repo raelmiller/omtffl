@@ -119,8 +119,13 @@ def deadlines_due():
     # all_lineups is {gameweek: {manager: ...}}, the shape the engine reads.
     picked = set(db.all_lineups().get(number, {}))
 
-    # The team sheet. Only to managers who have not picked — a reminder to do
-    # something you have already done is the fastest way to be muted.
+    # The team sheet. Only to managers who have not changed anything this
+    # round — a reminder to do something you have already done is the fastest
+    # way to be muted.
+    #
+    # The wording matters: a pick rolls over until it is changed, so not
+    # touching it is a decision rather than an omission. This says the team
+    # stands and offers a reason to look, instead of implying a lapse.
     hours = (lock.get("seconds") or 0) / 3600
     if lock.get("open") and 0 < hours <= DEADLINE_WARNING_HOURS:
         for manager in db.managers():
@@ -129,8 +134,8 @@ def deadlines_due():
             sent += once(
                 "deadline", number, manager["key"],
                 f"{gw['name']} deadline in {round(hours)}h",
-                "You haven't picked a team yet. Last year's XI rolls over if "
-                "you don't.", url="/declare")
+                "Your team stands as it is. Worth a look if anyone is injured "
+                "or hasn't got a game.", url="/declare")
 
     # The waiver window, which shuts a day earlier and is the one people
     # forget exists. Only to managers with claims in, since it is a reminder

@@ -14,8 +14,8 @@
   {% endif %}
 </p>
 {% if rolled_from and lock.open %}
-<p class="note">You haven&rsquo;t picked for this round yet, so this is
-{{ rolled_from }}. It plays as-is unless you change it.</p>
+<p class="note">This is {{ rolled_from }}, and it plays as-is. Change it if
+you want to &mdash; a team stands until you do.</p>
 {% endif %}
 {% if refused %}
 <p class="pending"><strong>One of your transactions could not be applied.</strong>
@@ -138,7 +138,7 @@
     </div>
   </div>
 
-  <p class="sub"><a href="/">&larr; The table</a> &middot; <a href="/account">Your sign-in</a></p>
+  <p class="sub"><a href="/table">&larr; The table</a> &middot; <a href="/account">Your sign-in</a></p>
 </section>
 
 <script id="squad-data" type="application/json">{{ squad_json|safe }}</script>

@@ -10,8 +10,9 @@ anything depends on them.
 
 | Route | |
 |---|---|
-| `/week` | your own points for the round being played — the first tab |
-| `/` | the head-to-head table and every round's results |
+| `/` | your own points for the round being played, or the table when signed out |
+| `/week` | the same page, at a stable path — the first tab |
+| `/table` | the head-to-head table and every round's results |
 | `/gameweek/N` | one round in detail |
 | `/health` | what data is on disk, how settled it is, and whether this host can reach the FPL API |
 | `POST /admin/refresh` | pull new gameweek data by hand |
@@ -226,7 +227,26 @@ them turn up in the first 200 points of XI score), so which way they went was
 decided by the parity of the number below — not a rule anyone could hold in
 their head, and a bad one to lose a fixture to.
 
-**`/week` is the first tab, and it is `/team/<you>` without the hunting.**
+**The root is your week.** A signed-in manager opening the app wants their own
+score; a signed-out visitor has no team, so the root serves them the league
+table, which it has always done publicly. Rendered rather than redirected — a
+redirect would bounce the wordmark and every bookmark through a second request
+and leave `/` matching no tab. A bare `/` in a tab's extra paths therefore
+means the root *and only* the root: `startswith("/")` is true of every path
+there has ever been.
+
+**A pick rolls over until it is changed, and nothing should call that a
+failure.** The pages said "No eleven was submitted for this round", which
+reads as an omission when it is usually a decision — a squad already set up
+the way you want needs no weekly ceremony. Worse, the engine agreed with the
+wording: it asked whether *this* round had a database row and, finding none,
+labelled the score a **placeholder** — so a manager who picked in gameweek one
+and left it alone was told every later score came from a made-up eleven, and
+the table counted those slots as "best available". `lineup_source_gameweek`
+now answers which round the eleven was actually picked in, and the placeholder
+label belongs only to an eleven no human ever chose.
+
+**`/week` is `/team/<you>` without the hunting.**
 The one number a manager checks most often during a gameweek was three steps
 away: open the table, find your own row, click it. The route resolves *you*
 and the latest scored round itself, so the tab means the same thing every week
