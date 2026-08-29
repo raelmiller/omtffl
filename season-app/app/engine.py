@@ -98,6 +98,16 @@ def state(gw: dict) -> str:
     return "in progress"
 
 
+def concluded(gw_state: str) -> bool:
+    """Whether a round's games are over, whatever is left to double-check.
+
+    "provisional" counts: every match has been played and the score is the
+    score, bar a late bonus adjustment. Waiting for "final" would leave any
+    retrospective read of the season several days behind the football.
+    """
+    return gw_state in ("final", "provisional")
+
+
 def merge_lineups(stored):
     """Real submissions laid over the committed placeholder file.
 
@@ -197,6 +207,11 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 pts[el["id"]] = score_entry(el, pos)
                 elements[el["id"]] = el
         minutes = minutes_from_gameweek(gw)
+        # Goals and the rest are only banked once the round is over. Half a
+        # gameweek's returns are not a smaller version of the full week's,
+        # they are a different week — so the stats page waits rather than
+        # ranking managers on who happened to kick off first.
+        count_returns = concluded(state(gw))
 
         scores, sources, boosts, moves = {}, {}, {}, {}
         for team in squads["teams"]:
@@ -216,7 +231,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 final_xi, _ = apply_autosubs(picked, bench, minutes)
                 scores[key] = sum(pts.get(p["id"], 0) for p in final_xi)
                 sources[key] = how
-                for player in final_xi:
+                for player in final_xi if count_returns else ():
                     el = elements.get(player["id"])
                     pos = positions.get(player["id"])
                     if el is None or pos is None:
@@ -563,6 +578,24 @@ CLOSE_MARGIN = 3        # a game decided by a substitute's late goal
 BLOWOUT_MARGIN = 20     # a game that was never in doubt
 
 
+def _nothing_yet(names, live=None):
+    """The full analytics shape with nothing in it.
+
+    Before the first round finishes there is genuinely nothing to say, and
+    the page still has to render — returning a short dict would leave the
+    template reaching into keys that aren't there.
+    """
+    return {
+        "played": 0, "through": None, "live": live,
+        "weeks": [], "teams": [], "names": names,
+        "close": CLOSE_MARGIN, "blowout": BLOWOUT_MARGIN,
+        "league_average": 0.0, "max_spread": 0, "max_luck": 0,
+        "max_margin": 0, "max_average": 0,
+        "returns": RETURN_METRICS,
+        "max_return": {m: 0 for m, _, _ in RETURN_METRICS},
+    }
+
+
 def analytics(season_data):
     """The season read sideways: form, volatility, luck and margins.
 
@@ -573,12 +606,22 @@ def analytics(season_data):
     Every section says how many rounds it has to work with. A standard
     deviation over one gameweek is not a fact about a manager, and the page
     has to be able to say so rather than print 0.0 and look authoritative.
+
+    A round still being played is left out entirely. Every figure here is a
+    verdict on a completed week — form, consistency, luck, margins — and a
+    round two thirds of the way through supplies none of that: a team whose
+    players kick off on Monday reads as a 0, which is not a bad week, it is
+    a week that hasn't happened. The table goes on updating live; this page
+    stops at the last round that finished and says which one that was.
     """
-    rounds = list(reversed(season_data.get("rounds") or []))   # oldest first
+    every = list(reversed(season_data.get("rounds") or []))   # oldest first
+    rounds = [r for r in every if concluded(r["state"])]
+    unfinished = [r["gameweek"] for r in every if not concluded(r["state"])]
+    live = unfinished[-1] if unfinished else None
     table = season_data.get("table") or []
     names = {r["key"]: r["team"] for r in table}
     if not rounds or not table:
-        return {"played": 0, "teams": [], "names": names}
+        return _nothing_yet(names, live)
 
     weeks = [r["gameweek"] for r in rounds]
     scores, results, margins = {}, {}, {}
@@ -646,7 +689,10 @@ def analytics(season_data):
         won = [m for m in margins[key] if m > 0]
         lost = [-m for m in margins[key] if m < 0]
         teams.append({
-            "key": key, "team": row["team"], "rank": row["rank"],
+            # Where the team stood when the last counted round ended, not
+            # where a half-played round has it now — otherwise the arrow
+            # measures a live position against a settled one.
+            "key": key, "team": row["team"], "rank": ranks[key][-1],
             "played": len(mine),
             "scores": mine,
             "results": results[key],
@@ -671,10 +717,16 @@ def analytics(season_data):
             "returns": {**blank, **got.get(key, {})},
         })
 
+    teams.sort(key=lambda t: t["rank"])
+
     # Bars are drawn as a share of the widest, so the scale travels with the
     # data rather than being guessed at in the template.
     return {
         "played": len(rounds),
+        # The last round counted, and the one being played that isn't — the
+        # page has to be able to name both rather than quietly drop a week.
+        "through": weeks[-1],
+        "live": live,
         "weeks": weeks,
         "teams": teams,
         "names": names,

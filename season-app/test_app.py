@@ -9,12 +9,30 @@ Run: python3 season-app/test_app.py
 """
 import contextlib
 import json
+import os
 import re
+import shutil
 import sys
+import tempfile
 from datetime import datetime, timedelta, timezone as _tz
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+# These tests save teams, play boosts, propose trades and settle them. Run
+# against the working database they leave every one of those behind, and the
+# debris is not inert: eight leftover boosts spend the season's allowance, and
+# a pile of trades in one gameweek starts refusing each other for players an
+# earlier leftover already moved. Both happened, and both read as product bugs
+# until you go looking. So the suite runs on a COPY — real managers, real
+# squads, real lineups, every assertion still against real data, and nothing
+# it does survives the run. Set before app.db is imported: it reads DB_PATH
+# once, at import.
+_WORKING_DB = Path(__file__).resolve().parent / "matchweek.db"
+_SANDBOX = Path(tempfile.mkdtemp(prefix="matchweek-test-"))
+if _WORKING_DB.exists():
+    shutil.copy2(_WORKING_DB, _SANDBOX / "matchweek.db")
+os.environ["DB_PATH"] = str(_SANDBOX / "matchweek.db")
 
 from fastapi.testclient import TestClient          # noqa: E402
 
@@ -165,12 +183,26 @@ gw = engine.current_gameweek()
 check_true("the round on offer is still open", engine.deadline_state(gw)["open"],
            f"GW{gw['gameweek']} closes {gw['deadline']}")
 
-squad = engine.squad_for("RM")
+def squad_now(key, gameweek):
+    """The fifteen a manager owns in that round, not the fifteen drafted.
+
+    Trades and waivers move players, and every save validates against the
+    squad as it stands that gameweek. A test picking from the draft-night
+    fifteen starts failing the moment a real trade lands — which is a broken
+    test, not a bug, and one that hides real ones behind it.
+    """
+    owned = engine.market(gameweek, db.trades(), db.transactions(),
+                          for_manager=key)["squads"].get(key)
+    return owned or engine.squad_for(key)
+
+
+squad = squad_now("RM", gw["gameweek"])
 by = {}
 for pl in squad:
     by.setdefault(pl["position"], []).append(pl["id"])
 legal = by["GK"][:1] + by["DEF"][:4] + by["MID"][:4] + by["FWD"][:2]
 bench = [pl["id"] for pl in squad if pl["id"] not in legal]
+check("the round's squad is fifteen", len(squad), 15)
 
 def post(gameweek, xi, bench_ids):
     return signed.post(f"/declare/{gameweek}",
@@ -198,11 +230,15 @@ check("so is a back three that isn't", r.status_code, 422)
 closed = [g for g in engine.calendar()
           if not engine.deadline_state(g)["open"]]
 if closed:
+    # Once the season is under way there IS a team stored for a closed round.
+    # What matters is that the refused save doesn't touch it — asserting the
+    # record is absent only held while nobody had ever picked a team.
+    kept = db.get_lineup("RM", closed[0]["gameweek"])
     r = post(closed[0]["gameweek"], legal, bench)
     check("a passed deadline refuses the save", r.status_code, 409)
     check_true("and says why", "deadline" in r.json()["errors"][0].lower())
-    check_true("leaving the old team alone",
-               db.get_lineup("RM", closed[0]["gameweek"]) is None)
+    check("leaving the old team exactly as it was",
+          db.get_lineup("RM", closed[0]["gameweek"]), kept)
 
 print("\n── A save can't rewrite a played round ─────────────────")
 
@@ -213,8 +249,16 @@ after = engine.season(db.all_lineups())["rounds"][-1]["matches"][0]
 check("gameweek 1 scores the same either way",
       (after["home_score"], after["away_score"]),
       (before["home_score"], before["away_score"]))
-check_true("and is still labelled a placeholder",
-           engine.season(db.all_lineups())["seeded_lineups"])
+# Not "the whole league is still on placeholders" — that stopped being true
+# the first time anyone picked a team. The point is narrower and permanent:
+# layering real saves on top must not evict the committed file from a round
+# it was standing in for, or gameweek one silently loses its elevens.
+_merged = engine.merge_lineups(db.all_lineups())
+_first = engine.season()["rounds"][-1]["gameweek"]
+check("the placeholder still covers every team in gameweek one",
+      len(_merged.get(_first, {})), len(db.managers()))
+check_true("and the file itself is still the committed example",
+           engine._lineups_are_seeded())
 
 print("\n── Admin ───────────────────────────────────────────────")
 
@@ -250,12 +294,12 @@ check_true("and a banner says whose it is", "Viewing as" in page.text)
 check("no admin page while viewing as someone else",
       boss.get("/admin").status_code, 404)
 
-squad = engine.squad_for(other["key"])
+gwn = engine.current_gameweek()["gameweek"]
+squad = squad_now(other["key"], gwn)
 by = {}
 for pl in squad:
     by.setdefault(pl["position"], []).append(pl["id"])
 xi = by["GK"][:1] + by["DEF"][:4] + by["MID"][:4] + by["FWD"][:2]
-gwn = engine.current_gameweek()["gameweek"]
 saved = boss.post(f"/declare/{gwn}", data={"xi": ",".join(map(str, xi)), "bench": ""})
 check("a team saved while viewing lands on their record", saved.status_code, 200)
 check_true("stored against them, not the admin",
@@ -325,6 +369,12 @@ bc.get(f"/m/{db.manager_by_key('RM')['token']}")
 bc.post("/admin/assign-clubs")
 gwn = engine.current_gameweek()["gameweek"]
 
+# This section turns a real boost on and off in the real database, for a real
+# manager, in the round they are currently picking. Whatever it finds has to
+# be put back — a test must not play someone's boost, and must not withdraw
+# one they played.
+_boost_was = db.declaration("RM", gwn, "boost")
+
 st = engine.boost_status("RM", gwn, db.manager_clubs(), used=0)
 check_true("a club is drafted", st["available"], str(st.get("why")))
 check_true("with a band from the table", st["pct"] in (10.0, 20.0, 30.0, 40.0, 50.0),
@@ -350,13 +400,21 @@ bc.post(f"/declare/{gwn}/boost", data={"on": "1"})
 from mechanics import BOOST_USES_PER_SEASON
 # Eight in *other* gameweeks, so the allowance is spent without counting the
 # one already declared for this round.
-for extra in range(1, BOOST_USES_PER_SEASON + 1):
-    db.declare("RM", gwn + extra, "boost")
-used = sum(1 for d in db.declarations("boost", "RM") if d["gameweek"] != gwn)
-st = engine.boost_status("RM", gwn, db.manager_clubs(), used)
-check(f"{BOOST_USES_PER_SEASON} used leaves none", st["left"], 0)
-check_true("and it stops being available", not st["available"])
-check_true("with a reason", "used this season" in st["why"], st["why"])
+_spent = [gwn + extra for extra in range(1, BOOST_USES_PER_SEASON + 1)]
+for extra_gw in _spent:
+    db.declare("RM", extra_gw, "boost")
+try:
+    used = sum(1 for d in db.declarations("boost", "RM") if d["gameweek"] != gwn)
+    st = engine.boost_status("RM", gwn, db.manager_clubs(), used)
+    check(f"{BOOST_USES_PER_SEASON} used leaves none", st["left"], 0)
+    check_true("and it stops being available", not st["available"])
+    check_true("with a reason", "used this season" in st["why"], st["why"])
+finally:
+    # These go into the real database. Left behind they spend the season's
+    # allowance for good, and the next run's first boost is refused for a
+    # reason that has nothing to do with the code.
+    for extra_gw in _spent:
+        db.withdraw("RM", extra_gw, "boost")
 
 r = bc.post(f"/declare/{gwn + 40}/boost", data={"on": "1"})
 check("a gameweek that doesn't exist is refused", r.status_code, 404)
@@ -379,6 +437,13 @@ closed = [g for g in engine.calendar() if not engine.deadline_state(g)["open"]]
 if closed:
     r = bc.post(f"/declare/{closed[0]['gameweek']}/boost", data={"on": "1"})
     check("a passed deadline refuses a boost", r.status_code, 409)
+
+if _boost_was is None:
+    db.withdraw("RM", gwn, "boost")
+else:
+    db.declare("RM", gwn, "boost", json.loads(_boost_was.get("payload") or "{}"))
+check("the boost is left as it was found",
+      db.declaration("RM", gwn, "boost") is None, _boost_was is None)
 os.environ.pop("ADMIN_KEYS", None)
 
 print("\n── Trades ──────────────────────────────────────────────")
@@ -392,7 +457,10 @@ os.environ["ADMIN_KEYS"] = "RM"
 a = TestClient(app)
 a.get(f"/m/{db.manager_by_key('RM')['token']}")
 gwt = engine.current_gameweek()["gameweek"]
-sq = engine.squads_for_gameweek(gwt, [])
+# Squads as they stand after every settled trade, not as they were drafted:
+# proposing a player you traded away last week is refused, correctly, and a
+# test built on the draft-night fifteen would read that as a broken endpoint.
+sq = engine.squads_for_gameweek(gwt, db.trades())
 mine = [p for p in sq["RM"] if p["position"] == "FWD"][0]
 hers = [p for p in sq["AF"] if p["position"] == "FWD"][0]
 
@@ -1049,8 +1117,14 @@ if len(_rounds_asc) >= 2:
     _first, _second = _rounds_asc[0], _rounds_asc[1]
     _sq = engine.squads_for_gameweek(_first, db.trades())[P1]
     _xi, _bench = engine.suggest_for(P1, _first, _sq)
-    db.save_lineup(P1, _first, [p["id"] for p in _xi], [p["id"] for p in _bench])
-    _ssn2 = engine.season(db.all_lineups(),
+    # Handed to the engine rather than written to the database. Saving for
+    # real proved nothing once managers had picked teams of their own — the
+    # second round had its own eleven and there was no rollover to see — and
+    # it meant deleting a live row afterwards to clean up.
+    _rollover = {_first: {P1: {"xi": [p["id"] for p in _xi],
+                               "bench": [p["id"] for p in _bench],
+                               "submitted_at": "2026-08-01T00:00:00+00:00"}}}
+    _ssn2 = engine.season(_rollover,
                           db.transactions() + engine.effective_trades(db.trades()),
                           db.manager_clubs())
     _src2 = None
@@ -1068,9 +1142,6 @@ if len(_rounds_asc) >= 2:
           _ssn2["submitted_share"][0], _own2)
     check_true("which is more than were picked outright",
                _own2 >= 2, f"{_own2} slots from a chosen team")
-    with db.connect() as _c:
-        _c.execute("DELETE FROM lineup WHERE manager = ? AND gameweek = ?",
-                   (P1, _first))
 
 # Asked directly: if a boost made one score 40.2 and the other 40, is that a
 # draw? It cannot arise — the boost is rounded to a whole number before it is
@@ -1325,6 +1396,15 @@ else:
                              int.from_bytes(_raw[32:], "big")),
         f"{_head}.{_claims}".encode(), ec.ECDSA(hashes.SHA256()))
     check_true("and verifies against the key we advertise", True)
+
+    # Every assertion below is "the first time versus the second", which only
+    # means anything from a known-empty start. The copy carries whatever the
+    # league has really sent and subscribed — a real deadline notice for this
+    # round would make "sends the first time" fail for a reason that has
+    # nothing to do with the code. Clearing the copy costs nothing.
+    with db.connect() as _nc:
+        _nc.execute("DELETE FROM notice_sent")
+        _nc.execute("DELETE FROM push_subscription")
 
     # Subscriptions.
     _pc = TestClient(app)
@@ -1700,7 +1780,13 @@ bk = TestClient(app)
 bk.get(f"/m/{db.manager_by_key('RM')['token']}")
 gwb = engine.current_gameweek()["gameweek"]
 
-# A bank only fills from a trade that carried points.
+# A bank only fills from a trade that carried points. Measured as a change,
+# not as a total: a league that has already traded for points starts with a
+# balance, and an absolute figure here only ever held on an empty database.
+_tx0 = db.transactions() + engine.effective_trades(db.trades())
+_was = engine.bank_status("RM", gwb + 1, _tx0, db.manager_clubs())["balance"]
+_af_was = engine.bank_status("AF", gwb + 1, _tx0, db.manager_clubs())["balance"]
+
 sqb = engine.squads_for_gameweek(gwb, db.trades())
 give = [p for p in sqb["AF"] if p["position"] == "MID"][0]
 back = [p for p in sqb["RM"] if p["position"] == "MID"][0]
@@ -1709,13 +1795,14 @@ db.set_trade_status(tid, "accepted")
 alltx = db.transactions() + engine.effective_trades(db.trades())
 
 st = engine.bank_status("RM", gwb + 1, alltx, db.manager_clubs())
-check("receiving points fills the bank", st["balance"], 25)
-check("the manager who paid has nothing banked",
-      engine.bank_status("AF", gwb + 1, alltx, db.manager_clubs())["balance"], 0)
+check("receiving points fills the bank", st["balance"] - _was, 25)
+check("and the manager who paid banks nothing for paying",
+      engine.bank_status("AF", gwb + 1, alltx, db.manager_clubs())["balance"],
+      _af_was)
 
 r = bk.post(f"/declare/{gwb}/bank", data={"points": "10"})
 check("spending within the balance is allowed", r.json()["ok"], True)
-check("and says what's left", r.json()["left"], 15)
+check("and says what's left", r.json()["left"], st["balance"] - 10)
 r = bk.post(f"/declare/{gwb}/bank", data={"points": "999"})
 check("spending more than you have is refused", r.status_code, 422)
 r = bk.post(f"/declare/{gwb}/bank", data={"points": "0"})
@@ -2083,6 +2170,55 @@ check("and forty points is a thrashing",
       (tby["C"]["blowout_wins"], tby["D"]["blowout_losses"]), (1, 1))
 check("neither is the other",
       (tby["A"]["blowout_wins"], tby["C"]["close_wins"]), (0, 0))
+
+# ── Stats wait for the round to finish ─────────────────────────────────────
+# Every figure on this page is a verdict on a completed week. Folded a live
+# round in, a team whose players kick off on Monday reads as a 0, which is not
+# a bad week — it is a week that hasn't happened — and it drags their form,
+# average, spread and luck with it.
+_mid = _round(3, [("A", 4, "B", 0), ("C", 0, "D", 2)])
+_mid["state"] = "in progress"
+_halfway = {"ready": True, "table": worked["table"],
+            "rounds": [_mid] + worked["rounds"], "returns": {}}
+_live = engine.analytics(_halfway)
+_lby = {t["key"]: t for t in _live["teams"]}
+check("a round still being played is not counted", _live["played"], 2)
+check("the page can name the last round that was", _live["through"], 2)
+check("and the one it is waiting on", _live["live"], 3)
+check("so a team's scores stop at the settled rounds",
+      _lby["A"]["scores"], [50, 10])
+check("their form doesn't gain a result from a half-played week",
+      _lby["A"]["form"], ["W", "L"])
+check("and the figures are the ones from before it kicked off",
+      (_lby["A"]["average"], _lby["A"]["spread"], _lby["A"]["luck"]),
+      (by["A"]["average"], by["A"]["spread"], by["A"]["luck"]))
+
+# "provisional" is a finished round waiting on a bonus check, not a live one.
+_prov = dict(_mid, state="provisional")
+_settled = engine.analytics({"ready": True, "table": worked["table"],
+                             "rounds": [_prov] + worked["rounds"],
+                             "returns": {}})
+check("a round that has finished counts, check pending or not",
+      (_settled["played"], _settled["through"], _settled["live"]), (3, 3, None))
+
+# Position is read off the last counted round too, or the arrow measures a
+# live standing against a settled one.
+check("the ranking is as of the round it stops at",
+      [t["key"] for t in _live["teams"]],
+      [t["key"] for t in engine.analytics(
+          {"ready": True, "table": worked["table"],
+           "rounds": worked["rounds"], "returns": {}})["teams"]])
+
+# Before anything has finished there is nothing to say — and the page still
+# has to render, which a short dict would not let it do.
+_none = engine.analytics({"ready": True, "table": worked["table"],
+                          "rounds": [_mid], "returns": {}})
+check("no completed round means nothing to report",
+      (_none["played"], _none["through"], _none["live"]), (0, None, 3))
+check_true("but the full shape comes back regardless",
+           all(k in _none for k in ("teams", "weeks", "league_average",
+                                    "max_spread", "max_luck", "max_margin",
+                                    "returns", "max_return")))
 
 sp = vc.get("/stats")
 check("the stats page renders", sp.status_code, 200)
@@ -2956,6 +3092,11 @@ check_true("and the media-query block agrees with the toggle",
            token_names(dark) == token_names(
                sheet[sheet.find('@media (prefers-color-scheme: dark)'):
                      sheet.find(':root[data-theme="dark"]')]))
+
+print()
+check_true("the working database was never touched",
+           db.DB_PATH.parent == _SANDBOX, str(db.DB_PATH))
+shutil.rmtree(_SANDBOX, ignore_errors=True)
 
 print()
 if FAILS:

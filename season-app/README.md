@@ -122,6 +122,18 @@ python3 test_app.py          # smoke tests
 `SHADOW_DIR` overrides where the engine and its data are found; it defaults to
 `../shadow` and is set to `/srv/shadow` in the container.
 
+**The tests run on a copy of the database.** They save teams, play boosts,
+propose trades and settle them, so pointed at the working database they leave
+all of it behind — and the debris is not inert. Eight leftover boosts spend
+the season's allowance and the next run's first boost is refused; a pile of
+trades in one gameweek starts refusing each other over players an earlier
+leftover already moved. Both happened, and both read as product bugs until you
+go looking. So `test_app.py` copies `matchweek.db` to a temp directory and
+sets `DB_PATH` before `app.db` is imported: real managers, real squads, real
+lineups, every assertion still against real data, and nothing the run does
+survives it. The last check in the file asserts the working file was never
+touched.
+
 ## Storage
 
 The database holds what managers declare, and a container's filesystem is
@@ -168,6 +180,32 @@ Three things make it work:
 
 **Nothing here feeds the league.** The table is scored from the saved gameweek
 files by the same engine as always; this is a window onto the football.
+
+## Stats
+
+`/stats` reads the season sideways — form, consistency, luck, margins and
+returns — off the rounds the engine has already scored. Boosts and traded
+points are included, because these are the same numbers as the table.
+
+**It only counts rounds that have finished.** Every figure on the page is a
+verdict on a completed week, and a round two thirds of the way through
+supplies none of that: a team whose players kick off on Monday reads as a 0,
+which is not a bad week, it is a week that hasn't happened. Left in, a live
+round drags form, average, spread, luck and position with it, and the page
+looks authoritative while being wrong. So `analytics()` filters to rounds
+`concluded()` calls done, and `season()` banks goals and assists on the same
+condition. The subheading names the last round counted and the one being
+waited on.
+
+"Finished" means FPL's `finished` **or** `data_checked` — provisional counts.
+Every match has been played and the score is the score, bar a late bonus
+adjustment; waiting for the data check would leave the page several days
+behind the football for no gain.
+
+Position is read off the last counted round too, not off the live table, or
+the arrow in the Form panel would measure a live standing against a settled
+one. The table itself goes on updating live — it is the one place a
+half-played round belongs.
 
 ## Picking a team
 

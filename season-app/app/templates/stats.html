@@ -4,12 +4,20 @@
 {% block heading %}Stats{% endblock %}
 {% block subheading %}
 <p class="sub">
-  {{ stats.played }} of {{ season.scheduled }} rounds scored &middot;
-  league average {{ stats.league_average }} a week.
-  {% if stats.played < 5 %}
-    Every figure here is drawn from {{ stats.played }}
-    round{{ '' if stats.played == 1 else 's' }}, which is not yet enough to
-    tell a good manager from a lucky one.
+  {% if stats.played %}
+    Finished rounds only &mdash; {{ stats.played }} of
+    {{ season.scheduled }}, up to gameweek {{ stats.through }} &middot;
+    league average {{ stats.league_average }} a week.
+  {% else %}
+    Nothing to read yet: every figure here is a verdict on a finished round,
+    and none has finished.
+  {% endif %}
+  {% if stats.live %}
+    Gameweek {{ stats.live }} is still being played and joins when it ends.
+  {% endif %}
+  {% if stats.played and stats.played < 5 %}
+    {{ stats.played }} round{{ '' if stats.played == 1 else 's' }} is not yet
+    enough to tell a good manager from a lucky one.
   {% endif %}
 </p>
 {% endblock %}
@@ -68,8 +76,9 @@
       <span class="eyebrow">standard deviation</span>
     </div>
     {% if stats.played < 2 %}
-    <p class="note">A spread needs at least two rounds. Come back after
-    gameweek {{ stats.weeks[-1] + 1 }}.</p>
+    <p class="note">A spread needs at least two completed rounds.
+    {% if stats.weeks %}Come back after gameweek
+    {{ stats.weeks[-1] + 1 }}.{% endif %}</p>
     {% else %}
     <div class="panel">
       {% for t in stats.teams|sort(attribute='spread', reverse=true) %}
