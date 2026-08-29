@@ -194,6 +194,20 @@ had been thrown away. The `pending` flag separates them. Paying nothing until
 the match is final is right, since the result can still change; the boost pays
 in full, and the use is consumed, the moment FPL marks it settled.
 
+**A boost pays a whole number of points**, rounded before it is added, so no
+fraction ever reaches a total. That matters because a fixture is decided by
+comparing two scores for equality: a boost that paid 0.2 of a point would turn
+a genuine draw into a win, in a table showing whole numbers that could never
+show why.
+
+The half goes **away from zero** — 2.5 pays 3 — via `ROUND_HALF_UP` rather
+than the built-in `round`, which is banker's rounding and sends a half to the
+*even* neighbour: 1.5 pays 2, and so does 2.5. Exact halves are common here
+rather than exotic (a 20% band on a draw is a tenth of the XI, and twenty of
+them turn up in the first 200 points of XI score), so which way they went was
+decided by the parity of the number below — not a rule anyone could hold in
+their head, and a bad one to lose a fixture to.
+
 ## The transfer week
 
 A gameweek has two windows, not one.

@@ -562,6 +562,48 @@ check("blank gameweek pays nothing", pts, 0)
 check("and flags that the club didn't play", detail["played"], False)
 check("and that there is nothing still to come", detail["pending"], False)
 
+# A boost pays a whole number of points, always. A fixture is decided by
+# comparing two scores for equality, so a fraction surviving into a total
+# would turn a genuine draw into a win by two tenths of a point.
+HALF_FIX = [{"event": 7, "finished": True, "team_h": 1, "team_a": 2,
+             "team_h_score": 2, "team_a_score": 0}]
+for xi in range(0, 60):
+    pts, _ = boost_value(xi, club_id=1, gameweek=7, pl_fixtures=HALF_FIX)
+    if not isinstance(pts, int):
+        check_true(f"a boost on {xi} pays a whole number", False, repr(pts))
+        break
+else:
+    check_true("a boost always pays a whole number of points", True)
+
+# And the half goes away from zero. The built-in round() is banker's rounding
+# — 1.5 to 2 but 2.5 also to 2 — so which way a half went was decided by the
+# parity of the number below it. Exact halves are common rather than exotic
+# here: a 20% band on a draw is a tenth of the XI.
+#
+# Checked against what the engine says the band and multiplier were, rather
+# than against numbers written here, so the assertion is about the rounding
+# rule and not about which band a made-up fixture list puts a club in.
+import math as _math
+
+wrong, halves = [], 0
+for xi in range(0, 200):
+    pts, d = boost_value(xi, club_id=1, gameweek=7, pl_fixtures=HALF_FIX)
+    exact = xi * (d["pct"] / 100.0) * d["multiplier"]
+    if abs(exact % 1 - 0.5) < 1e-9:
+        halves += 1
+    want = _math.floor(exact + 0.5)          # nearest, halves away from zero
+    if pts != want:
+        wrong.append((xi, exact, pts, want))
+check_true("exact halves really do come up", halves > 0, f"{halves} of them")
+check("every boost rounds to the nearest, halves up", wrong, [])
+
+# The case that used to go the other way, stated outright.
+_five, _d5 = boost_value(5, club_id=1, gameweek=7, pl_fixtures=HALF_FIX)
+_exact5 = 5 * (_d5["pct"] / 100.0) * _d5["multiplier"]
+if abs(_exact5 % 1 - 0.5) < 1e-9:
+    check("a half pays up rather than to the even neighbour",
+          _five, _math.floor(_exact5 + 0.5))
+
 # Kicked off but not finished. Reported from the app: a manager watched their
 # boosted club win 1-0 while the page told them "they didn't play, so nothing
 # was paid" — which reads as a boost thrown away rather than one not yet

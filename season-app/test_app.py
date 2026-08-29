@@ -1015,6 +1015,25 @@ finally:
 
 # And the ordering the manager actually cares about: the boost is priced on
 # the eleven, before points paid away in a trade are taken off.
+# Asked directly: if a boost made one score 40.2 and the other 40, is that a
+# draw? It cannot arise — the boost is rounded to a whole number before it is
+# added, so no fraction ever reaches a total and 40 against 40 is a draw by
+# plain equality. Worth an assertion rather than an assurance: a fraction
+# surviving here would turn draws into wins by a fifth of a point, in a table
+# that shows whole numbers and so would never show why.
+_season_now = engine.season(db.all_lineups() or None,
+                            db.transactions() + engine.effective_trades(db.trades()),
+                            db.manager_clubs())
+_all_scores = [s for r in _season_now["rounds"] for m in r["matches"]
+               for s in (m["home_score"], m["away_score"])]
+check_true("every score in the table is a whole number",
+           bool(_all_scores) and all(isinstance(s, int) for s in _all_scores),
+           str([s for s in _all_scores if not isinstance(s, int)][:3]))
+_boost_pts = [b["points"] for r in _season_now["rounds"]
+              for b in (r.get("boosts") or {}).values()]
+check_true("and so is every boost that has paid",
+           all(isinstance(p, int) for p in _boost_pts), str(_boost_pts))
+
 _bfx_final = [dict(_bfx[0], finished=True)]
 _xi, _paid = 15, -15
 _boost, _ = _bv(_xi, club_id=2, gameweek=40, pl_fixtures=_bfx_final)

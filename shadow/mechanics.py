@@ -84,6 +84,7 @@ Final gameweek score
 from __future__ import annotations
 
 import json
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent / "data"
@@ -671,7 +672,16 @@ def boost_value(xi_points, club_id, gameweek, pl_fixtures):
                    "pct": pct, "result": None, "multiplier": 0.0}
 
     multiplier = sum(BOOST_RESULT[r] for r in results) / len(results)
-    points = round(xi_points * (pct / 100.0) * multiplier)
+    # Nearest whole point, with a half going away from zero — 2.5 pays 3.
+    #
+    # Not the built-in `round`, which is banker's rounding: it sends a half to
+    # the *even* neighbour, so 1.5 pays 2 and 2.5 also pays 2. Exact halves
+    # are common here rather than exotic — a 20% band on a draw is a tenth of
+    # the XI, and 138 of them turn up in the first 120 points of XI score — so
+    # which way they go is decided by the parity of the number below, which is
+    # not a rule anyone could hold in their head or would accept losing to.
+    points = int(Decimal(xi_points * (pct / 100.0) * multiplier
+                         ).quantize(Decimal(1), rounding=ROUND_HALF_UP))
     return points, {
         "played": True, "pending": False, "position": position, "pct": pct,
         "result": "/".join(results), "multiplier": multiplier,
