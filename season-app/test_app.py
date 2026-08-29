@@ -1460,6 +1460,103 @@ else:
     check_true("with no key, push turns itself off rather than erroring",
                not push.configured() and push.send({}, {})[0] == 0)
 
+print("\n── Suggested substitutions ─────────────────────────────")
+
+_sg_gw = engine.current_gameweek()["gameweek"]
+_sg_tx = db.transactions() + engine.effective_trades(db.trades())
+_real_wf2 = engine.with_fixtures
+_real_el2 = engine.effective_lineup
+_real_ws = engine.with_stats
+_real_lt = engine.league_table
+
+
+def _advise(xi, bench, table=None):
+    """Run suggestions against an eleven and bench we control entirely."""
+    everyone = xi + bench
+    engine.with_fixtures = lambda squad, gw: [
+        {**p, "fixtures": p.get("fixtures", [{"opponent": "ARS", "home": True}])}
+        for p in everyone]
+    engine.with_stats = lambda players: players
+    engine.effective_lineup = lambda k, g, l, sq: (sq[:len(xi)], sq[len(xi):], "x")
+    engine.league_table = lambda fx, gw: (table or {})
+    try:
+        return engine.suggestions(P1, _sg_gw, db.all_lineups(), _sg_tx)["swaps"]
+    finally:
+        engine.with_fixtures = _real_wf2
+        engine.with_stats = _real_ws
+        engine.effective_lineup = _real_el2
+        engine.league_table = _real_lt
+
+
+def _pl(pid, name, pos, form=2.0, **extra):
+    return {"id": pid, "name": name, "position": pos,
+            "stats": {"form": form, "minutes": 900, **extra.pop("stats", {})},
+            **extra}
+
+
+# A legal 4-4-2 with a like-for-like bench, so a swap never fails on shape.
+def _eleven(over=None):
+    over = over or {}
+    xi = ([_pl(1, "Keeper", "GK")]
+          + [_pl(10 + i, f"Def{i}", "DEF") for i in range(4)]
+          + [_pl(20 + i, f"Mid{i}", "MID") for i in range(4)]
+          + [_pl(30 + i, f"Fwd{i}", "FWD") for i in range(2)])
+    for i, p in enumerate(xi):
+        if p["id"] in over:
+            xi[i] = {**p, **over[p["id"]]}
+    return xi
+
+
+# Nothing to say: everyone fit, playing, and indistinguishable.
+check("an eleven with nothing wrong gets no suggestions",
+      _advise(_eleven(), [_pl(40, "Sub", "MID")]), [])
+
+# A starter who cannot play is the one signal strong enough on its own.
+_hurt = _advise(_eleven({20: {"flag": {"level": "red", "why": "Injured"}}}),
+                [_pl(40, "Sub", "MID")])
+check("an injured starter is replaced", len(_hurt), 1)
+check_true("by the bench player, named both ways",
+           _hurt[0]["in"]["name"] == "Sub" and _hurt[0]["out"]["name"] == "Mid0",
+           str(_hurt[0]["why"]))
+check_true("and says why", "injured" in _hurt[0]["why"][0], str(_hurt[0]["why"]))
+
+_blank = _advise(_eleven({20: {"fixtures": []}}), [_pl(40, "Sub", "MID")])
+check("a starter with no fixture is replaced", len(_blank), 1)
+check_true("saying so", "no game" in _blank[0]["why"][0], str(_blank[0]["why"]))
+
+# Form alone is not enough — one signal that is not "cannot play" needs a
+# second to agree, or the page fills with noise every time a number wobbles.
+_form_only = _advise(_eleven(), [_pl(40, "Sub", "MID", form=9.0)])
+check("better form alone is not enough to suggest a change", _form_only, [])
+
+# Form plus a kinder fixture is. ARS 1st is a hard afternoon; SUN 20th is not.
+# Real club ids, so the fixture reads against a table the engine recognises.
+_clubs = engine.clubs()
+_ars = next(c for c, v in _clubs.items() if v.get("short") == "ARS")
+_sun = next(c for c, v in _clubs.items() if v.get("short") == "SUN")
+_two = _advise(
+    _eleven(), [_pl(40, "Sub", "MID", form=9.0,
+                    fixtures=[{"opponent": "SUN", "home": True}])],
+    table={_ars: 1, _sun: 20})
+check("form and fixture together are", len(_two), 1)
+check("and both reasons are given", len(_two[0]["why"]), 2)
+
+# A swap that would break the formation is never offered, however good.
+_illegal = _advise(_eleven({1: {"flag": {"level": "red", "why": "Injured"}}}),
+                   [_pl(40, "Sub", "FWD", form=9.0)])
+check_true("a swap that would break the shape is not offered",
+           all(s["out"]["position"] != "GK" for s in _illegal), str(_illegal))
+
+# One bench player cannot replace four starters.
+_many = _advise(
+    _eleven({20: {"flag": {"level": "red", "why": "Injured"}},
+             21: {"flag": {"level": "red", "why": "Injured"}}}),
+    [_pl(40, "Sub", "MID")])
+check("a bench player is only offered once", len(_many), 1)
+
+check_true("suggestions carry how many rounds they rest on",
+           "rounds" in engine.suggestions(P1, _sg_gw, db.all_lineups(), _sg_tx))
+
 print("\n── Only nudging a team that needs it ───────────────────")
 
 # A pick rolls over, so "you haven't picked" describes most managers most

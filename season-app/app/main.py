@@ -773,6 +773,11 @@ def _declare_context(request, gameweek=None):
         me["key"], target["gameweek"], db.manager_clubs(), used,
         declared=bool(db.declaration(me["key"], target["gameweek"], "boost")))
 
+    # Advice, computed only while there is still time to act on it.
+    ctx["advice"] = (engine.suggestions(
+        me["key"], target["gameweek"], db.all_lineups(),
+        db.transactions() + engine.effective_trades(db.trades()))
+        if engine.deadline_state(target).get("open") else {"swaps": [], "rounds": 0})
     ctx.update({
         "squad_json": json.dumps(squad),
         "saved_json": json.dumps(saved or {"xi": [], "bench": []}),

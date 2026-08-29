@@ -947,6 +947,171 @@ def club_fixtures(gameweek):
     return _club_fixtures(gameweek, data_version())
 
 
+# What a suggestion can be built on, and how much each is worth. Kept as
+# separate named signals rather than blended into one projected score: a
+# number like "expected 4.7 points" would have to be invented from
+# coefficients nobody agreed, and would read as authority it has not earned.
+# A manager can weigh "he's injured" against "he has the better fixture"
+# themselves — what they cannot do quickly is notice both.
+CANT_PLAY = 3        # injured, suspended, or no fixture at all
+FORM_EDGE = 1        # scoring more, lately
+FIXTURE_EDGE = 1     # an easier opponent
+UNDERLYING_EDGE = 1  # better expected-goal numbers per 90
+
+# How much better one player's number has to be before it is worth saying.
+# Below these, the two are the same to within the noise of a short season.
+FORM_MARGIN = 1.5        # points per game
+FIXTURE_MARGIN = 6       # places apart in the league table
+XGI_MARGIN = 0.15        # expected goal involvements per 90
+
+
+def _per90(stats, key):
+    minutes = (stats or {}).get("minutes") or 0
+    value = (stats or {}).get(key)
+    if value is None or minutes < 90:
+        return None
+    return value * 90.0 / minutes
+
+
+def _fixture_ease(player, table):
+    """How kind this round's fixtures look, as an average league position.
+
+    The opponent's position stands in for difficulty — 1st is the hardest
+    afternoon anyone has, 20th the kindest — and home advantage is worth about
+    two places. A blank is None rather than a number, because "no opponent" is
+    not an easy opponent.
+    """
+    fixtures = player.get("fixtures") or []
+    if not fixtures or not table:
+        return None
+    shorts = {c.get("short"): cid for cid, c in clubs().items()}
+    places = []
+    for fx in fixtures:
+        opponent = shorts.get(fx.get("opponent"))
+        if opponent is None:
+            continue
+        places.append(table.get(opponent, 10) + (2 if fx.get("home") else -2))
+    return sum(places) / len(places) if places else None
+
+
+def _cannot_play(player):
+    """Why this player will not score at all this round, or None."""
+    if not (player.get("fixtures") or []):
+        return "no game this round"
+    mark = player.get("flag")
+    if mark and mark.get("level") == "red":
+        return mark["why"].lower()
+    return None
+
+
+def suggestions(key, gameweek, lineups=None, transactions=None, config=None,
+                limit=3):
+    """Substitutions worth considering, each with the reason it is offered.
+
+    Only ever suggestions. This compares four things a manager already has
+    access to — who can play, recent scoring, who they face, and the
+    expected-goal numbers underneath — and says where a bench player looks
+    better than a starter on more of them than not. It is not a projection,
+    and it does not know that a defender is being played out of position or
+    that somebody has just been put on penalties.
+
+    Every swap returned is legal: the eleven it produces still fits the
+    formation rules, so nothing is offered that could not be made.
+    """
+    gw = next((g for g in calendar() if g["gameweek"] == gameweek), None)
+    if gw is None:
+        return {"swaps": [], "rounds": 0}
+
+    squad = market(gameweek, None, transactions, config=config
+                   )["squads"].get(key) or squad_for(key)
+    if not squad:
+        return {"swaps": [], "rounds": 0}
+    squad = with_stats(with_fixtures(squad, gameweek))
+    picked, bench, _how = effective_lineup(
+        key, gameweek, merge_lineups(lineups), squad)
+    if not picked:
+        return {"swaps": [], "rounds": 0}
+
+    by_id = {p["id"]: p for p in squad}
+    picked = [by_id.get(p["id"], p) for p in picked]
+    bench = [by_id.get(p["id"], p) for p in bench]
+    table = league_table(_read("pl_fixtures.json") or [], gameweek)
+    rounds = len(gameweek_files())
+
+    swaps = []
+    for coming in bench:
+        if _cannot_play(coming):
+            continue                      # no sense bringing on someone who can't
+        for leaving in picked:
+            eleven = [p for p in picked if p["id"] != leaving["id"]] + [coming]
+            if legal_formation(eleven):
+                continue                  # would break the shape
+            weight, why, against = 0, [], 0
+
+            blocked = _cannot_play(leaving)
+            if blocked:
+                weight += CANT_PLAY
+                why.append(f"{leaving['name']} — {blocked}")
+
+            out_form = (leaving.get("stats") or {}).get("form")
+            in_form = (coming.get("stats") or {}).get("form")
+            if out_form is not None and in_form is not None:
+                if in_form - out_form >= FORM_MARGIN:
+                    weight += FORM_EDGE
+                    why.append(f"{in_form:g} a game lately against {out_form:g}")
+                elif out_form - in_form >= FORM_MARGIN:
+                    against += FORM_EDGE
+
+            out_ease = _fixture_ease(leaving, table)
+            in_ease = _fixture_ease(coming, table)
+            if out_ease is not None and in_ease is not None:
+                if in_ease - out_ease >= FIXTURE_MARGIN:
+                    weight += FIXTURE_EDGE
+                    why.append(f"{coming['name']} has the kinder fixture")
+                elif out_ease - in_ease >= FIXTURE_MARGIN:
+                    against += FIXTURE_EDGE
+
+            # Underlying numbers, read the right way round by position: an
+            # attacker wants goal involvements, a defender wants to not be
+            # under the cosh. Only compared like for like.
+            attack = coming["position"] in ("MID", "FWD")
+            metric = ("expected_goal_involvements" if attack
+                      else "expected_goals_conceded")
+            out_p90 = _per90(leaving.get("stats"), metric)
+            in_p90 = _per90(coming.get("stats"), metric)
+            if (out_p90 is not None and in_p90 is not None
+                    and leaving["position"] == coming["position"]):
+                better = (in_p90 - out_p90) if attack else (out_p90 - in_p90)
+                if better >= XGI_MARGIN:
+                    weight += UNDERLYING_EDGE
+                    why.append(f"{in_p90:.2f} to {out_p90:.2f} "
+                               f"{'xGI' if attack else 'xGC'} per 90")
+                elif -better >= XGI_MARGIN:
+                    against += UNDERLYING_EDGE
+
+            # One signal is only enough when it is that the starter cannot
+            # play. Anything else needs a second to agree, and nothing is
+            # offered when as much points the other way.
+            if weight <= against or (weight < CANT_PLAY and len(why) < 2):
+                continue
+            swaps.append({"out": leaving, "in": coming,
+                          "weight": weight - against, "why": why})
+
+    # Best first, and never the same player twice — a bench of four cannot
+    # replace six starters, and offering it as though it could is noise.
+    swaps.sort(key=lambda s: (-s["weight"], s["out"]["name"]))
+    used_in, used_out, kept = set(), set(), []
+    for swap in swaps:
+        if swap["in"]["id"] in used_in or swap["out"]["id"] in used_out:
+            continue
+        used_in.add(swap["in"]["id"])
+        used_out.add(swap["out"]["id"])
+        kept.append(swap)
+        if len(kept) >= limit:
+            break
+    return {"swaps": kept, "rounds": rounds}
+
+
 def needs_attention(key, gameweek, lineups=None, transactions=None,
                     config=None):
     """What in a manager's eleven is worth a look before the deadline.

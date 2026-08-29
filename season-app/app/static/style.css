@@ -576,6 +576,23 @@ footer {
 }
 .linkrow .link { flex: 1 1 16rem; min-width: 0; overflow-wrap: anywhere; }
 
+/* ── Suggested substitutions ─────────────────────────── */
+.advice { margin-top: 1rem; }
+.arow {
+  display: flex; flex-wrap: wrap; gap: .2rem .6rem; align-items: baseline;
+  padding: .65rem .85rem; border-bottom: 1px solid var(--hair);
+}
+.arow:last-child { border-bottom: 0; }
+.aswap { display: flex; align-items: baseline; gap: .35rem; flex-wrap: wrap; }
+.aswap strong { font-size: .95rem; }
+/* The player going out is stated, not struck through: this is a suggestion,
+   and typography that looks like a decision already taken oversells it. */
+.aout { color: var(--muted); }
+.aarrow { color: var(--muted); font-size: .9rem; margin: 0 .1rem; }
+.awhy {
+  flex: 1 1 14rem; font-size: .8rem; color: var(--muted); line-height: 1.5;
+}
+
 /* ── Team picker ─────────────────────────────────────── */
 .pickhead {
   display: flex; align-items: flex-end; justify-content: space-between;

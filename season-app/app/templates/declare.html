@@ -64,6 +64,49 @@ you want to &mdash; a team stands until you do.</p>
     <div class="benchrow" id="benchrow"></div>
   </div>
 
+  {% if advice and advice.swaps %}
+  <section class="advice">
+    <div class="sechead">
+      <h2>Worth a look{% call info("Where these come from", "whyadvice") %}
+        <span class="ip">Four things are compared between your bench and your
+          eleven: whether a player can play at all, what they have scored
+          lately, who they face this round, and the expected-goal numbers
+          underneath &mdash; goal involvements for an attacker, goals conceded
+          for a defender.</span>
+        <span class="ip">A swap is only offered when more of those point one
+          way than the other, and when the eleven it leaves you with is still
+          a legal formation. Anything other than &ldquo;he cannot play&rdquo;
+          needs a second reason to agree with it.</span>
+        <span class="ip">These are suggestions, not predictions. Nothing here
+          knows that a defender is being played in midfield, that someone has
+          just been given the penalties, or what you saw with your own eyes
+          last week. {% if advice.rounds < 4 %}And with only
+          {{ advice.rounds }} round{{ '' if advice.rounds == 1 else 's' }}
+          played, form is still a very short story.{% endif %}</span>
+      {% endcall %}</h2>
+      <span class="eyebrow">{{ advice.swaps|length }}
+        suggestion{{ '' if advice.swaps|length == 1 else 's' }}</span>
+    </div>
+    <div class="panel">
+      {% for s in advice.swaps %}
+      <div class="arow">
+        <span class="aswap">
+          <strong>{{ s['in'].name }}</strong><span class="pclub">{{ s['in'].position }}</span>
+          <span class="aarrow" aria-hidden="true">&rarr;</span>
+          <span class="aout">{{ s.out.name }}</span><span class="pclub">{{ s.out.position }}</span>
+        </span>
+        <span class="awhy">{{ s.why|join(' &middot; ')|safe }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if advice.rounds < 4 %}
+    <p class="note">{{ advice.rounds }} round{{ '' if advice.rounds == 1 else 's' }}
+    of the season played so far, so anything here resting on form is standing
+    on very little.</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
   {% if boost %}
   <div class="boostbar {% if boost.declared %}on{% endif %}">
     <div class="bmain">

@@ -260,6 +260,34 @@ A team's week (`/team/RM/3`) now lights that tab; a whole round
 without clipping or sideways scroll from 320px up, which was measured rather
 than hoped.
 
+## Suggested substitutions
+
+The pick page offers up to three swaps under **Worth a look**, each with the
+reason it is being offered — *"Madjo — injured · 1.5 a game lately against 0 ·
+Robertson has the kinder fixture"*.
+
+Four signals are compared between the bench and the eleven: whether a player
+can play at all, recent scoring, the opponent's league position (with home
+advantage worth about two places), and the expected-goal numbers per 90 —
+involvements for an attacker, goals conceded for a defender, and only ever
+like for like.
+
+**They are kept as named signals rather than blended into one projected
+score.** "Expected 4.7 points" would have to be invented from coefficients
+nobody agreed and would read as authority it has not earned. A manager can
+weigh "he's injured" against "the other one has the better fixture"
+themselves; what they cannot do quickly is notice both.
+
+Three rules keep it quiet. **"He cannot play" stands alone**; every other
+signal needs a second to agree with it, so a form number wobbling by a point
+does not fill the page. **Nothing is offered when as much points the other
+way.** And **every swap returned is legal** — the eleven it leaves you with
+still fits the formation, so nothing is suggested that could not be made.
+
+It also says what it is standing on: early in a season the panel prints how
+many rounds have been played, because form over two games is a very short
+story and the page should say so rather than imply otherwise.
+
 ## The transfer week
 
 A gameweek has two windows, not one.
