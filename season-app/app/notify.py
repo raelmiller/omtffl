@@ -116,26 +116,35 @@ def deadlines_due():
 
     lock = engine.deadline_state(gw)
     waivers = engine.waiver_state(gw)
-    # all_lineups is {gameweek: {manager: ...}}, the shape the engine reads.
-    picked = set(db.all_lineups().get(number, {}))
 
-    # The team sheet. Only to managers who have not changed anything this
-    # round — a reminder to do something you have already done is the fastest
-    # way to be muted.
+    # The team sheet — but only when there is something wrong with it.
     #
-    # The wording matters: a pick rolls over until it is changed, so not
-    # touching it is a decision rather than an omission. This says the team
-    # stands and offers a reason to look, instead of implying a lapse.
+    # A pick rolls over until it is changed, so "you haven't picked" describes
+    # most managers most weeks and is not news. Sending it anyway is how a
+    # notification earns itself a place in the settings a manager turns off.
+    # So this asks the team instead: is anyone in the eleven injured,
+    # suspended, doubtful, or without a fixture to play in?
+    #
+    # Note this is not conditioned on whether they submitted. Someone who
+    # picked on Tuesday and had a striker pull up on Thursday is precisely who
+    # needs telling, and a "did you submit" check would skip exactly them.
     hours = (lock.get("seconds") or 0) / 3600
     if lock.get("open") and 0 < hours <= DEADLINE_WARNING_HOURS:
+        transactions = db.transactions() + engine.effective_trades(db.trades())
         for manager in db.managers():
-            if manager["key"] in picked:
+            problems = engine.needs_attention(
+                manager["key"], number, db.all_lineups(), transactions)
+            if not problems:
                 continue
+            # Three names is a notification; eleven is a wall of text nobody
+            # reads on a lock screen. The page has the rest.
+            shown = "; ".join(problems[:3])
+            if len(problems) > 3:
+                shown += f", and {len(problems) - 3} more"
             sent += once(
                 "deadline", number, manager["key"],
                 f"{gw['name']} deadline in {round(hours)}h",
-                "Your team stands as it is. Worth a look if anyone is injured "
-                "or hasn't got a game.", url="/declare")
+                f"{shown}. Your team plays as it stands.", url="/declare")
 
     # The waiver window, which shuts a day earlier and is the one people
     # forget exists. Only to managers with claims in, since it is a reminder

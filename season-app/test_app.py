@@ -1460,6 +1460,84 @@ else:
     check_true("with no key, push turns itself off rather than erroring",
                not push.configured() and push.send({}, {})[0] == 0)
 
+print("\n── Only nudging a team that needs it ───────────────────")
+
+# A pick rolls over, so "you haven't picked" describes most managers most
+# weeks and is not news. The deadline nudge now asks the team instead.
+_na_gw = engine.current_gameweek()["gameweek"]
+_na_tx = db.transactions() + engine.effective_trades(db.trades())
+_na_sq = engine.market(_na_gw, None, _na_tx)["squads"][P1]
+_na_named = {p["id"]: p["name"] for p in _na_sq}
+
+_real_wf = engine.with_fixtures
+_real_el = engine.effective_lineup
+
+
+def _attention(flag=None, fixtures=True, xi_size=11):
+    """Run needs_attention against an eleven we control."""
+    def fake_wf(squad, gameweek):
+        out = []
+        for i, pl in enumerate(squad):
+            item = {**pl, "fixtures": [{"opponent": "ARS", "home": True}]
+                    if fixtures else []}
+            if flag and i == 0:
+                item["flag"] = flag
+            out.append(item)
+        return out
+    engine.with_fixtures = fake_wf
+    engine.effective_lineup = lambda k, g, l, sq: (sq[:xi_size], sq[xi_size:], "x")
+    try:
+        return engine.needs_attention(P1, _na_gw, db.all_lineups(), _na_tx)
+    finally:
+        engine.with_fixtures = _real_wf
+        engine.effective_lineup = _real_el
+
+
+check("a team with nobody flagged and everyone playing says nothing",
+      _attention(), [])
+_hurt = _attention(flag={"level": "red", "why": "Injured"})
+check_true("an injured starter is worth a word",
+           len(_hurt) == 1 and "injured" in _hurt[0], str(_hurt))
+_doubt = _attention(flag={"level": "amber", "why": "25% chance of playing"})
+check_true("and so is a doubt", "25% chance" in (_doubt[0] if _doubt else ""),
+           str(_doubt))
+_blank = _attention(fixtures=False)
+check("a blank gameweek flags the whole eleven", len(_blank), 11)
+check_true("naming what is wrong", "has no game" in _blank[0], _blank[0])
+
+# The point of the change: not conditioned on whether they submitted.
+check_true("a manager who picked this round is still told about an injury",
+           bool(_attention(flag={"level": "red", "why": "Injured"})))
+
+# And the sweep only raises a notice for teams with something wrong.
+_real_na = engine.needs_attention
+_real_ds = engine.deadline_state
+_real_cfg = push.configured
+_asked, _raised = [], []
+engine.needs_attention = lambda key, *a, **k: (
+    _asked.append(key) or (["Someone — injured"] if key == P1 else []))
+_real_once = notify.once
+notify.once = lambda kind, gw, key, title, body, url="/": (
+    _raised.append((key, body)) or True)
+try:
+    # The sweep returns early without a key, and this is about who it asks.
+    push.configured = lambda: True
+    engine.deadline_state = lambda g: {"open": True, "seconds": 3600}
+    notify.deadlines_due()
+finally:
+    engine.needs_attention = _real_na
+    notify.once = _real_once
+    engine.deadline_state = _real_ds
+    push.configured = _real_cfg
+
+check_true("every manager is asked", len(_asked) == len(db.managers()),
+           f"{len(_asked)} of {len(db.managers())}")
+check("but only the one with a problem is told",
+      [k for k, _ in _raised], [P1])
+check_true("and the notice names the problem rather than scolding",
+           "injured" in _raised[0][1] and "haven't picked" not in _raised[0][1],
+           _raised[0][1])
+
 print("\n── Installing it to a home screen ──────────────────────")
 
 # PNG width and height live at a fixed offset in the header, so the size of an

@@ -947,6 +947,48 @@ def club_fixtures(gameweek):
     return _club_fixtures(gameweek, data_version())
 
 
+def needs_attention(key, gameweek, lineups=None, transactions=None,
+                    config=None):
+    """What in a manager's eleven is worth a look before the deadline.
+
+    A pick rolls over until it is changed, so "you haven't picked" is not
+    news and saying it every week is how a notification gets turned off. This
+    is news: someone in the eleven who is injured, suspended or doubtful, or
+    whose club has no fixture at all and will therefore score nothing.
+
+    Deliberately about the team rather than about whether anyone touched it.
+    A manager who picked on Tuesday and had a striker pull up on Thursday is
+    exactly who this is for, and a check on "did you submit" would skip them.
+
+    Returns short phrases, empty when there is nothing to say.
+    """
+    gw = next((g for g in calendar() if g["gameweek"] == gameweek), None)
+    if gw is None:
+        return []
+    squad = market(gameweek, None, transactions, config=config
+                   )["squads"].get(key) or squad_for(key)
+    if not squad:
+        return []
+    squad = with_fixtures(squad, gameweek)
+    picked, _bench, _how = effective_lineup(
+        key, gameweek, merge_lineups(lineups), squad)
+    if not picked:
+        # The one case the old wording was right about: no eleven exists at
+        # all, here or in any earlier round.
+        return ["you haven't picked a team yet"]
+
+    out = []
+    for player in picked:
+        mark = player.get("flag")
+        if mark:
+            out.append(f"{player['name']} — {mark['why'].lower()}")
+        elif not player.get("fixtures"):
+            # A blank gameweek scores nothing at all, which is worth as much
+            # attention as an injury and is far easier to miss.
+            out.append(f"{player['name']} has no game")
+    return out
+
+
 def with_fixtures(squad, gameweek):
     """A squad with each player's opponents for the round attached.
 

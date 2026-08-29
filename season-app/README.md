@@ -472,10 +472,20 @@ Two kinds, chosen per device, because they are completely different
 appetites — and a bad Saturday must not be why someone turns off the reminder
 that stops them missing a deadline.
 
-**Deadlines and trades**, on by default: the deadline when you haven't picked,
-the waiver window closing when you have claims in, and a trade offered to you.
-A handful a week. Nothing about results, nothing about other people's
-transactions, nothing you did yourself.
+**Deadlines and trades**, on by default: someone in your eleven injured or
+without a fixture as the deadline nears, the waiver window closing when you
+have claims in, and a trade offered to you. Nothing about results, nothing
+about other people's transactions, nothing you did yourself.
+
+The deadline one asks the **team**, not the manager. It used to fire for
+anyone who had not submitted for the round — which, since a pick rolls over
+until it is changed, is most managers most weeks, and a notification that
+arrives every week saying nothing has gone wrong is one that gets switched
+off. `engine.needs_attention` reports who in the eleven is injured, suspended,
+doubtful or has no fixture to play in; a team with none of those is left
+alone. It is deliberately not conditioned on submitting: a manager who picked
+on Tuesday and had a striker pull up on Thursday is exactly who needs telling,
+and a "did you submit" check skips precisely them.
 
 **What your players are doing**, off by default: goals, assists, red cards
 and penalties, for the **whole fifteen** rather than the eleven — a bench
