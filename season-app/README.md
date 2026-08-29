@@ -288,6 +288,18 @@ It also says what it is standing on: early in a season the panel prints how
 many rounds have been played, because form over two games is a very short
 story and the page should say so rather than imply otherwise.
 
+**Apply takes one tap**, and it does so by calling `choose()` twice — exactly
+what two taps on the pitch do. A second implementation of "swap these two"
+would be a second set of formation rules to keep in step with the first, and
+they would drift.
+
+It applies to the pitch, not to the server: the Save button still has to be
+pressed, and the status says so rather than leaving a change the manager
+discovers later was never saved. Each row's state is recomputed on every
+render, so a swap made **by hand** shows as *Done* too, and a suggestion
+overtaken by another swap — one of its players used, or the shape changed —
+greys out instead of offering a move that would now be refused.
+
 ## The transfer week
 
 A gameweek has two windows, not one.

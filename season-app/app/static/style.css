@@ -592,6 +592,15 @@ footer {
 .awhy {
   flex: 1 1 14rem; font-size: .8rem; color: var(--muted); line-height: 1.5;
 }
+.aapply { flex: none; margin-left: auto; }
+/* Applied, or done by hand on the pitch — either way there is nothing left
+   to do with this row, so it recedes rather than disappearing. A row that
+   vanished would take its reasoning with it. */
+.arow.done { opacity: .55; }
+.arow.done .aswap strong { color: var(--accent); }
+/* Overtaken: another swap used one of these players, or changed the shape so
+   this one no longer fits. Still readable, plainly not offered. */
+.arow.stale { opacity: .4; }
 
 /* ── Team picker ─────────────────────────────────────── */
 .pickhead {

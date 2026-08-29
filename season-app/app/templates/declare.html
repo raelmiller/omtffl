@@ -89,13 +89,15 @@ you want to &mdash; a team stands until you do.</p>
     </div>
     <div class="panel">
       {% for s in advice.swaps %}
-      <div class="arow">
+      <div class="arow" data-in="{{ s['in'].id }}" data-out="{{ s.out.id }}">
         <span class="aswap">
           <strong>{{ s['in'].name }}</strong><span class="pclub">{{ s['in'].position }}</span>
           <span class="aarrow" aria-hidden="true">&rarr;</span>
           <span class="aout">{{ s.out.name }}</span><span class="pclub">{{ s.out.position }}</span>
         </span>
         <span class="awhy">{{ s.why|join(' &middot; ')|safe }}</span>
+        <button type="button" class="btn small ghost aapply"
+                {% if not lock.open %}disabled{% endif %}>Apply</button>
       </div>
       {% endfor %}
     </div>
@@ -319,6 +321,8 @@ you want to &mdash; a team stands until you do.</p>
     f.className = 'formation ' + (bad ? 'bad' : 'good');
     document.getElementById('save').disabled = !open || !!bad;
 
+    paintAdvice();
+
     const hint = document.getElementById('hint');
     if (!open) hint.textContent = 'This gameweek is locked.';
     else if (selected === null) hint.textContent = 'Tap a player, then tap who to swap them with.';
@@ -456,6 +460,52 @@ you want to &mdash; a team stands until you do.</p>
   nameInput.addEventListener('keydown', ev => {
     if (ev.key === 'Enter') { ev.preventDefault(); saveName(); }
     if (ev.key === 'Escape') showNameBox(false);
+  });
+
+  // ── Suggestions, applied with one tap ──────────────────────────────────
+  // Routed through choose() twice, which is exactly what two taps on the
+  // pitch do. A second implementation of "swap these two" would be a second
+  // set of formation rules to keep in step with the first.
+  const adviceRows = [...document.querySelectorAll('.arow[data-in]')];
+
+  function paintAdvice() {
+    adviceRows.forEach(row => {
+      const inId = Number(row.dataset.in), outId = Number(row.dataset.out);
+      const done = starting.includes(inId) && !starting.includes(outId);
+      // Still possible? Another swap may have used one of these players, or
+      // changed the shape so this one no longer fits.
+      const canDo = !starting.includes(inId) && starting.includes(outId)
+                    && swapLegal(outId, inId);
+      row.classList.toggle('done', done);
+      row.classList.toggle('stale', !done && !canDo);
+      const btn = row.querySelector('.aapply');
+      if (!btn) return;
+      btn.disabled = !open || done || !canDo;
+      // "Done" covers the manager doing it by hand on the pitch too, which is
+      // why this is recomputed on every render rather than set on click.
+      btn.textContent = done ? 'Done' : (canDo || !open ? 'Apply' : 'n/a');
+    });
+  }
+
+  adviceRows.forEach(row => {
+    const btn = row.querySelector('.aapply');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      if (!open || btn.disabled) return;
+      const inId = Number(row.dataset.in), outId = Number(row.dataset.out);
+      selected = null;
+      choose(inId);
+      choose(outId);
+      selected = null;
+      render();
+      // The swap is on the pitch, not on the server. Saying so beats a
+      // silent change the manager only discovers was never saved.
+      const status = document.getElementById('status');
+      status.textContent = 'Swapped — press Save team';
+      status.className = 'savestate';
+      document.getElementById('save').scrollIntoView(
+        { block: 'nearest', behavior: 'smooth' });
+    });
   });
 
   render();
