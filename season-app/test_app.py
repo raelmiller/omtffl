@@ -992,6 +992,37 @@ _pts2, _det2 = _bv(100, club_id=2, gameweek=40,
                    pl_fixtures=[dict(_bfx[0], finished=True)])
 check_true("and pays as soon as it is final", _pts2 > 0, str(_pts2))
 
+# The gap this closes, end to end: City kicked off at 19:00 and the whistle
+# went at about 20:50, but FPL had not set `finished` by 21:30 — when the old
+# 2.5-hour window shut the fast refresh off. The result was on the page and
+# the boost still read "still playing" until the next morning. The app has to
+# keep looking until the flag arrives, not until a clock says the match
+# should be over.
+_three_ago = (datetime.now(_tz.utc) - timedelta(hours=3)
+              ).isoformat().replace("+00:00", "Z")
+_late = [{"id": 1, "kickoff_time": _three_ago, "finished": False}]
+_was_read = engine._read
+engine._read = lambda n: _late if n == "pl_fixtures.json" else _was_read(n)
+try:
+    check_true("three hours after kick-off with no finished flag, keep looking",
+               engine.matches_in_progress())
+    engine._read = (lambda n: [dict(_late[0], finished=True)]
+                    if n == "pl_fixtures.json" else _was_read(n))
+    check_true("and stop the moment it arrives",
+               not engine.matches_in_progress())
+finally:
+    engine._read = _was_read
+
+# And the ordering the manager actually cares about: the boost is priced on
+# the eleven, before points paid away in a trade are taken off.
+_bfx_final = [dict(_bfx[0], finished=True)]
+_xi, _paid = 15, -15
+_boost, _ = _bv(_xi, club_id=2, gameweek=40, pl_fixtures=_bfx_final)
+check_true("the boost is priced on the eleven, not on what is left after a trade",
+           _boost > 0 and _bv(_xi + _paid, club_id=2, gameweek=40,
+                              pl_fixtures=_bfx_final)[0] == 0,
+           f"on {_xi} it pays {_boost}; on {_xi + _paid} it would pay nothing")
+
 # The three states have to read differently on the page, or the fix is only
 # in the data. Driven through the real route by patching what the engine
 # reports for the boost, rather than rendering the template by hand: the page
@@ -1038,10 +1069,10 @@ _fx_now = _dt.now(_tz.utc)
 _real_read_fx = engine._read
 
 
-def _fixtures_at(hours_ago):
+def _fixtures_at(hours_ago, finished=False):
     """Pretend the only fixture kicked off `hours_ago` hours ago."""
     kick = (_fx_now - timedelta(hours=hours_ago)).isoformat().replace("+00:00", "Z")
-    return lambda name: ([{"id": 1, "kickoff_time": kick}]
+    return lambda name: ([{"id": 1, "kickoff_time": kick, "finished": finished}]
                          if name == "pl_fixtures.json" else _real_read_fx(name))
 
 
@@ -1049,13 +1080,22 @@ try:
     engine._read = _fixtures_at(0.5)
     check_true("half an hour in, a match is in progress",
                engine.matches_in_progress())
-    engine._read = _fixtures_at(2.0)
-    check_true("and still is two hours in, for stoppage and a long half-time",
-               engine.matches_in_progress())
+    # The bug this replaced: a fixed 2.5h window from kick-off. FPL sets
+    # `finished` after the whistle, often later than that, so the app watched
+    # the goals go in, stopped, and never saw the round settle — a boost read
+    # "still playing" until the next morning.
     engine._read = _fixtures_at(4.0)
-    check_true("four hours later it is not", not engine.matches_in_progress())
+    check_true("four hours in and still unsettled, it keeps looking",
+               engine.matches_in_progress())
+    engine._read = _fixtures_at(4.0, finished=True)
+    check_true("but once FPL marks it finished, it stops",
+               not engine.matches_in_progress())
+    engine._read = _fixtures_at(30.0)
+    check_true("and a fixture never marked finished gives up after a day",
+               not engine.matches_in_progress())
     engine._read = _fixtures_at(-1.0)
-    check_true("nor an hour before kick-off", not engine.matches_in_progress())
+    check_true("nor does it look an hour before kick-off",
+               not engine.matches_in_progress())
 
     # The guard has to come before the fetch, or "cheap when nothing is on"
     # is not true and the app hammers FPL through the night.
@@ -1063,7 +1103,7 @@ try:
     _real_refresh = fetcher.refresh
     fetcher.refresh = lambda *a, **k: (_fetches.append(1), True)[1]
     try:
-        engine._read = _fixtures_at(9.0)
+        engine._read = _fixtures_at(9.0, finished=True)
         check("with nothing on, FPL is not called at all",
               (_mn.refresh_if_live()["refreshed"], len(_fetches)), (False, 0))
         engine._read = _fixtures_at(1.0)

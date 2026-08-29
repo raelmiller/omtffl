@@ -770,32 +770,37 @@ def live_gameweek():
             else min(rounds, key=lambda g: g["gameweek"]))
 
 
-# How long after kick-off a match is still worth watching: ninety minutes, a
-# long half-time and generous stoppage. Beyond it the numbers still move, but
-# they are corrections rather than football, and the daily refresh collects
-# those without anyone waiting on them.
-MATCH_WINDOW_HOURS = 2.5
+# The outer bound, not the expected one. A round normally settles within a
+# couple of hours of the whistle and switches the fast cadence off by itself;
+# this only stops a fixture FPL never marks finished — a postponement recorded
+# oddly, say — from polling for the rest of the season.
+SETTLE_WINDOW_HOURS = 24
 
 
 def matches_in_progress(now=None):
-    """Whether a Premier League match is being played right now.
+    """A match is being played, or has been played and is not yet settled.
 
     The one question two different jobs need — how often to refresh the saved
     data, and whether to look for goals to notify about — so it is answered
-    once, here, rather than twice with two slightly different windows.
+    once, here, rather than twice with two windows that can disagree.
 
-    Deliberately based on kick-off times rather than on FPL's `finished` flag:
-    the flag lags the final whistle, and a fixture list on disk is something
-    this can answer without a network call, which is the point. Asking FPL
-    whether to ask FPL is not a saving.
+    It was a fixed 2.5 hours from kick-off, which was wrong in a way that only
+    showed up in use. `finished` is the flag the boost and the table wait on,
+    and FPL sets it some time *after* the whistle — often after that window
+    had already closed. So the app watched the goals go in, stopped, and never
+    saw the round settle: a boost sat on "still playing" until the next
+    morning's refresh, hours after the match everyone had watched end.
+
+    Waiting on the flag instead means the round turns the fast cadence off
+    itself, at the moment there is actually nothing left to collect.
     """
     now = now or datetime.now(timezone.utc)
     for fixture in _read("pl_fixtures.json") or []:
         stamp = fixture.get("kickoff_time")
-        if not stamp:
+        if not stamp or fixture.get("finished"):
             continue
         kick = _parse(stamp)
-        if kick <= now <= kick + timedelta(hours=MATCH_WINDOW_HOURS):
+        if kick <= now <= kick + timedelta(hours=SETTLE_WINDOW_HOURS):
             return True
     return False
 

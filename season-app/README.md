@@ -54,6 +54,17 @@ disk, so deciding *not* to fetch costs nothing and the app is silent overnight.
 It is the same question the goal notifications ask, answered in one place
 rather than two that could disagree.
 
+**It waits on `finished`, not on a clock**, and that distinction was learned
+the hard way. The first version stopped 2.5 hours after kick-off, which is
+comfortably past the whistle — but FPL sets `finished` some time *later*, and
+that flag is what the boost and the table wait on. So the app watched the
+goals go in, stopped, and never saw the round settle: a manager's boost read
+"still playing" the next morning, hours after the match everyone had watched
+end. Now anything kicked off and not yet marked finished keeps the fast
+cadence, so the round switches it off itself at the moment there is nothing
+left to collect. `SETTLE_WINDOW_HOURS` is only an outer bound, so a fixture
+FPL never flags cannot poll for ever.
+
 Running often is safe because the rule about what to pull lives in
 `fetch_gw.should_fetch`, not in the caller: a round in progress is re-fetched
 every time, and a round FPL has marked `data_checked` is never pulled again.
