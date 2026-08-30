@@ -134,6 +134,12 @@ lineups, every assertion still against real data, and nothing the run does
 survives it. The last check in the file asserts the working file was never
 touched.
 
+The copy also gets fresh sign-in links. A link shortens to an hour the first
+time it is opened, so the ones in a database anybody has signed in with are
+usually expired, and the suite would fail on the clock rather than on the
+code. Rotating them in the copy leaves the real links alone — which the old
+arrangement did not: every run used to spend them.
+
 ## Storage
 
 The database holds what managers declare, and a container's filesystem is
@@ -297,6 +303,16 @@ A team's week (`/team/RM/3`) now lights that tab; a whole round
 (`/gameweek/3`) still belongs to the Table. Eight tabs fit the bottom bar
 without clipping or sideways scroll from 320px up, which was measured rather
 than hoped.
+
+**Automatic substitutions wait for the last whistle.** They are an
+end-of-round settlement, and running them on a round still being played is a
+guess: a starter with a Monday fixture has zero minutes on Saturday evening,
+which the rule cannot tell from "didn't play", so it benched him and gave his
+shirt to whoever kicked off first — then unwound it on Monday night. Both
+callers, the table and the team page, now pass `round_is_over(gw)` into
+`apply_autosubs`, and while a round is live the page says so rather than
+leaving a blank starter looking like a rule that failed to fire. This is the
+same line the stats page draws, for the same reason.
 
 ## Suggested substitutions
 

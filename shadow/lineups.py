@@ -212,16 +212,36 @@ def _could_reach_legal(partial):
 
 
 # ── Automatic substitutions ────────────────────────────────────────────────
-def apply_autosubs(xi, bench, minutes):
+def round_is_over(gw_data) -> bool:
+    """Whether every match in a gameweek has been played.
+
+    `finished` is FPL's own flag for the last whistle; `data_checked` marks
+    the bonus double-check that follows a day or so later. Either means the
+    football is done, which is what a settlement rule needs to know.
+    """
+    return bool(gw_data.get("data_checked") or gw_data.get("finished"))
+
+
+def apply_autosubs(xi, bench, minutes, settled=True):
     """Swap out starters who didn't play, keeping the formation legal.
 
     Returns (final_xi, substitutions) where each substitution is
     (player_off, player_on). Keepers only replace keepers, and an outfield
     swap only happens if the XI is still legal afterwards — which is why a
     lone forward can't be replaced by a fifth defender.
+
+    `settled` says the minutes are final. Mid-round they are not, and this
+    rule cannot tell "didn't play" from "hasn't kicked off yet" — both are
+    zero minutes. Run on Saturday evening it would bench a starter whose
+    match is on Monday and hand his shirt to whoever happened to play first,
+    which is not what the manager picked and not what FPL does: autosubs are
+    an end-of-round settlement. So an unsettled round makes no substitutions
+    at all, and the eleven stands as picked until the last whistle.
     """
     xi, bench = list(xi), list(bench)
     subs = []
+    if not settled:
+        return xi, subs
 
     blanks = [p for p in xi if not minutes.get(p["id"], 0)]
     for off in blanks:

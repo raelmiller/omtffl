@@ -11,7 +11,8 @@ Run: python3 shadow/test_lineups.py
 import sys
 
 from lineups import (
-    apply_autosubs, effective_lineup, legal_formation, suggest_lineup, validate,
+    apply_autosubs, effective_lineup, legal_formation, round_is_over,
+    suggest_lineup, validate,
 )
 
 FAILS = []
@@ -149,6 +150,34 @@ final, subs = apply_autosubs(XI_352, BENCH_F, mins)
 check("an illegal substitution is refused", subs, [])
 check_true("and the XI is left a man light rather than made illegal",
            len([x for x in final if mins.get(x["id"], 0)]) == 10)
+
+# ── Only once the round is over ────────────────────────────────────────────
+# Saturday evening: some of the eleven have played, one has a Monday fixture.
+# His zero minutes mean "hasn't kicked off", not "didn't play", and the two
+# are indistinguishable from the minutes alone. Substituting him now hands
+# his shirt to whoever happened to play first, and the swap unwinds itself on
+# Monday night — which is what a manager saw happen to their team.
+mins = {x["id"]: 90 for x in SQUAD}
+mins[20] = 0                       # Monday fixture, not yet kicked off
+final, subs = apply_autosubs(XI_442, BENCH, mins, settled=False)
+check("nothing is substituted while the round is still being played", subs, [])
+check("and the eleven stands exactly as it was picked",
+      ids(final), ids(XI_442))
+
+final, subs = apply_autosubs(XI_442, BENCH, mins, settled=True)
+check("the same eleven and the same minutes settle normally", len(subs), 1)
+check("taking off the player who really didn't play", subs[0][0]["id"], 20)
+
+check_true("settling is the default, so old callers are unchanged",
+           apply_autosubs(XI_442, BENCH, mins)[1] == subs)
+
+# What the flag is read from: FPL says a round is over two different ways.
+check("a round nobody has played is not over", round_is_over({}), False)
+check("the last whistle is enough", round_is_over({"finished": True}), True)
+check("and so is the bonus check that follows it",
+      round_is_over({"data_checked": True}), True)
+check("a round in progress is not over",
+      round_is_over({"finished": False, "data_checked": False}), False)
 
 print("\n── Rollover ────────────────────────────────────────────")
 

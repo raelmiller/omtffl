@@ -83,6 +83,15 @@ automatic substitutions for anyone who didn't play. Lineups live in
 week's team rolls over; a rolled-over lineup naming someone since traded away
 has the slot filled from the bench.
 
+**Substitutions only happen once the round is over.** They are a settlement,
+not a running total: mid-round, a starter with a Monday fixture has zero
+minutes and is indistinguishable from one who didn't play, so applying the
+rule early benches him and hands his shirt to whoever kicked off first — then
+unwinds it when he does play. `apply_autosubs(..., settled=False)` makes no
+substitutions at all and leaves the eleven as picked; `round_is_over(gw)`
+reads FPL's `finished` or `data_checked` to decide. Every caller that has a
+gameweek to hand passes it.
+
 `lineups.py --template N --suggest` prints a pre-filled submission for
 gameweek N. The suggestion is built from prior gameweeks' points only — or, in
 gameweek 1 where no football has been played, from draft price — so it never

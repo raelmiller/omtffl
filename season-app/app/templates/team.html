@@ -123,6 +123,13 @@ document.querySelectorAll('[data-player]').forEach(el =>
       {{ s.on }} came on for {{ s.off }} and scored {{ s.points }}{% if not loop.last %}; {% endif %}
     {% endfor %}
   </p>
+  {#- Mid-round there are no substitutions to report, and the reason matters:
+      a starter on 0' may simply not have kicked off yet. Saying nothing here
+      reads as the rule having quietly not worked. -#}
+  {% elif detail.state not in ('final', 'provisional') %}
+  <p class="note">Substitutions are made when the round ends. Until then the
+  eleven stands as you picked it &mdash; a player on 0&prime; may not have
+  kicked off yet, and swapping him out now would be a guess.</p>
   {% endif %}
 
   {% if detail.boost %}

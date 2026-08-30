@@ -30,7 +30,7 @@ from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
     apply_autosubs, effective_lineup, form_before, legal_formation,
     lineup_source_gameweek,
-    load_lineups, minutes_from_gameweek, suggest_lineup,
+    load_lineups, minutes_from_gameweek, round_is_over, suggest_lineup,
     validate as validate_lineup,
 )
 from mechanics import (                             # noqa: E402
@@ -207,11 +207,14 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 pts[el["id"]] = score_entry(el, pos)
                 elements[el["id"]] = el
         minutes = minutes_from_gameweek(gw)
-        # Goals and the rest are only banked once the round is over. Half a
-        # gameweek's returns are not a smaller version of the full week's,
-        # they are a different week — so the stats page waits rather than
-        # ranking managers on who happened to kick off first.
-        count_returns = concluded(state(gw))
+        # Two rules that both hang on the round being over. Goals and the rest
+        # are only banked once it is, because half a gameweek's returns are a
+        # different week rather than a smaller one. And autosubs are an
+        # end-of-round settlement: mid-round, a starter who hasn't kicked off
+        # yet is indistinguishable from one who didn't play, and substituting
+        # him out hands his shirt to whoever happened to play first.
+        settled = round_is_over(gw)
+        count_returns = settled
 
         scores, sources, boosts, moves = {}, {}, {}, {}
         for team in squads["teams"]:
@@ -228,7 +231,7 @@ def _season(version, lineup_key, lineups_json, real_keys,
                 from_gw = lineup_source_gameweek(key, n, lineups)
                 if from_gw is None or (from_gw, key) not in real:
                     how = "placeholder"
-                final_xi, _ = apply_autosubs(picked, bench, minutes)
+                final_xi, _ = apply_autosubs(picked, bench, minutes, settled)
                 scores[key] = sum(pts.get(p["id"], 0) for p in final_xi)
                 sources[key] = how
                 for player in final_xi if count_returns else ():
@@ -1829,7 +1832,11 @@ def team_gameweek(key, gameweek, lineups=None, transactions=None, drafted=None,
         total, _, picked = best_xi(roster, points)
         bench = [p for p in roster if p not in picked]
         source = "best available"
-    final_xi, subs = apply_autosubs(picked, bench, minutes)
+    # Held back until the last whistle, same as the table. A round still being
+    # played would otherwise show a manager substitutions that are going to
+    # change, or undo themselves entirely when the Monday game kicks off.
+    settled = round_is_over(gw)
+    final_xi, subs = apply_autosubs(picked, bench, minutes, settled)
     swapped_in = {on["id"] for _, on in subs}
     swapped_out = {off["id"] for off, _ in subs}
 

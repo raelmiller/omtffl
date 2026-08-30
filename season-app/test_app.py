@@ -160,6 +160,13 @@ check("and health still reports ok", client.get("/health").json()["ok"], True)
 print("\n── Signing in ──────────────────────────────────────────")
 
 db.init()
+# A sign-in link shortens to an hour the first time anyone opens it, so the
+# links in the copied database are usually long expired — and the suite would
+# fail on the clock rather than on the code, in whichever section happened to
+# sign somebody in. Issuing fresh ones costs nothing: this is a copy, and the
+# working file's links are untouched.
+for _m in db.managers():
+    db.rotate_token(_m["key"])
 me = [m for m in db.managers() if m["key"] == "RM"][0]
 
 check("a stranger can read the table", client.get("/").status_code, 200)
@@ -1040,6 +1047,51 @@ check_true("the sign-in page offers somewhere to type one",
            'action="/pair"' in TestClient(app).get("/account").text)
 check_true("and the account page explains why a link won't do",
            "Sign in another app" in _signed_in.get("/account").text)
+
+print("\n── Substitutions wait for the last whistle ─────────────")
+
+# Reported from the app: substitutions were applied part-way through a round.
+# A starter with a Monday fixture has zero minutes on Saturday evening, which
+# the rule cannot tell from "didn't play" — so it benched him and gave his
+# shirt to whoever had already kicked off, then unwound it when he did play.
+# The rule itself is pinned in shadow/test_lineups.py; what needs proving here
+# is that the app hands it the round's real state instead of assuming settled.
+_asked = []
+_real_autosubs = engine.apply_autosubs
+engine.apply_autosubs = lambda xi, bench, mins, settled=True: (
+    _asked.append(settled) or _real_autosubs(xi, bench, mins, settled))
+try:
+    _states = {}
+    for _p in engine.gameweek_files():
+        _g = json.loads(_p.read_text())
+        _states[_g["gameweek"]] = engine.round_is_over(_g)
+    _tx_now = db.transactions() + engine.effective_trades(db.trades())
+
+    for _gwn, _over in sorted(_states.items()):
+        _asked.clear()
+        engine.team_gameweek("RM", _gwn, db.all_lineups(), _tx_now,
+                             db.manager_clubs())
+        check(f"the team page asks for GW{_gwn} what the round's state really is",
+              _asked, [_over])
+
+    _asked.clear()
+    engine.season(db.all_lineups(), _tx_now, db.manager_clubs())
+    check("and the table scores every round on its own state",
+          sorted(set(_asked)), sorted(set(_states.values())))
+    check_true("with one answer per team per round",
+               len(_asked) >= len(_states),
+               f"{len(_asked)} calls across {len(_states)} rounds")
+finally:
+    engine.apply_autosubs = _real_autosubs
+
+# A round that has finished but is still waiting on its bonus check has been
+# played in full, so it settles — the same line the stats page draws.
+check("the last whistle is enough to settle substitutions",
+      engine.round_is_over({"finished": True}), True)
+check("as is the bonus check that follows",
+      engine.round_is_over({"data_checked": True}), True)
+check("a round still being played is not",
+      engine.round_is_over({"finished": False}), False)
 
 print("\n── A boost on a match still being played ───────────────")
 

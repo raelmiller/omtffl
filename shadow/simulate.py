@@ -24,6 +24,7 @@ from pathlib import Path
 
 from lineups import (
     apply_autosubs, effective_lineup, load_lineups, minutes_from_gameweek,
+    round_is_over,
 )
 from mechanics import (
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
@@ -45,12 +46,12 @@ def load(name, required=True):
     return json.loads(p.read_text())
 
 
-def team_total(key, squad, pts, lineups, gw_num, minutes):
+def team_total(key, squad, pts, lineups, gw_num, minutes, settled=True):
     """One team's XI score, from their submitted lineup where there is one."""
     if lineups:
         picked, bench, _ = effective_lineup(key, gw_num, lineups, squad)
         if picked:
-            final_xi, _ = apply_autosubs(picked, bench, minutes)
+            final_xi, _ = apply_autosubs(picked, bench, minutes, settled)
             return sum(pts.get(p["id"], 0) for p in final_xi), "submitted lineups"
     total, _, _ = best_xi(squad, pts)
     return total, "best available (hindsight)"
@@ -77,9 +78,11 @@ def season_context(files, squads_base, transactions, positions, lineups):
         squads, adjustments, _, _, _, _ = apply_transactions(
             squads_base, transactions, gw_num)
         minutes = minutes_from_gameweek(gw)
+        settled = round_is_over(gw)
         for team in squads_base["teams"]:
             key = team["key"]
-            total, _ = team_total(key, squads[key], pts, lineups, gw_num, minutes)
+            total, _ = team_total(key, squads[key], pts, lineups, gw_num,
+                                  minutes, settled)
             total += adjustments.get(gw_num, {}).get(key, 0)
             running[key] = running.get(key, 0) + total
 
@@ -200,7 +203,8 @@ def main():
         for team in squads_base["teams"]:
             key = team["key"]
             xi_total, xi_source = team_total(
-                key, squads[key], pts, lineups, gw_num, minutes)
+                key, squads[key], pts, lineups, gw_num, minutes,
+                round_is_over(gw))
 
             boost_pts, boost_detail = 0, None
             if key in boosts_this_gw:

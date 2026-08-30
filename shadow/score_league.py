@@ -96,9 +96,14 @@ def score_one_gameweek(path, squads, positions, lineups=None):
 
     n = gw["gameweek"]
     minutes = None
+    settled = True
     if lineups:
-        from lineups import apply_autosubs, effective_lineup, minutes_from_gameweek
+        from lineups import (apply_autosubs, effective_lineup,
+                             minutes_from_gameweek, round_is_over)
         minutes = minutes_from_gameweek(gw)
+        # Run against a round still being played, autosubs cannot tell a
+        # starter who didn't play from one who hasn't kicked off yet.
+        settled = round_is_over(gw)
 
     results = []
     for team in squads["teams"]:
@@ -110,7 +115,7 @@ def score_one_gameweek(path, squads, positions, lineups=None):
         if lineups:
             picked, bench, how = effective_lineup(team["key"], n, lineups, squad)
             if picked:
-                xi, subs = apply_autosubs(picked, bench, minutes)
+                xi, subs = apply_autosubs(picked, bench, minutes, settled)
                 total = sum(pts.get(p["id"], 0) for p in xi)
                 counts = {}
                 for p in xi:
