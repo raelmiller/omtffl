@@ -11,20 +11,20 @@ of the real season.
 
 | # | Team | P | W | D | L | PF | PA | Pts |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 1 | ThunderBijol | 2 | 2 | 0 | 0 | 76 | 39 | **6** |
-| 2 | Isakly | 2 | 2 | 0 | 0 | 57 | 23 | **6** |
-| 3 | You HallWhite mate? | 2 | 1 | 0 | 1 | 60 | 46 | **3** |
-| 4 | For Beto o For Wirtz | 2 | 1 | 0 | 1 | 49 | 35 | **3** |
-| 5 | Meet me on the Roefs | 2 | 1 | 0 | 1 | 54 | 55 | **3** |
-| 6 | Brobbey'sGonnaGetYa! | 2 | 1 | 0 | 1 | 53 | 59 | **3** |
-| 7 | Becker Call Saul | 2 | 1 | 0 | 1 | 34 | 44 | **3** |
-| 8 | Palmer Sutra | 2 | 1 | 0 | 1 | 44 | 55 | **3** |
-| 9 | La Prima Dimwit | 2 | 1 | 0 | 1 | 54 | 66 | **3** |
-| 10 | Quantum of Szobos | 2 | 1 | 0 | 1 | 51 | 64 | **3** |
-| 11 | License to Kelleher | 2 | 1 | 0 | 1 | 42 | 55 | **3** |
-| 12 | Quantum of Tzolis | 2 | 1 | 0 | 1 | 31 | 44 | **3** |
-| 13 | Joao and Silent Bobb | 2 | 0 | 0 | 2 | 52 | 62 | **0** |
-| 14 | The Gyokfather | 2 | 0 | 0 | 2 | 39 | 49 | **0** |
+| 1 | You HallWhite mate? | 2 | 2 | 0 | 0 | 88 | 50 | **6** |
+| 2 | Isakly | 2 | 2 | 0 | 0 | 71 | 45 | **6** |
+| 3 | For Beto o For Wirtz | 2 | 2 | 0 | 0 | 63 | 45 | **6** |
+| 4 | Quantum of Szobos | 2 | 2 | 0 | 0 | 71 | 69 | **6** |
+| 5 | ThunderBijol | 2 | 1 | 0 | 1 | 81 | 59 | **3** |
+| 6 | Brobbey'sGonnaGetYa! | 2 | 1 | 0 | 1 | 76 | 68 | **3** |
+| 7 | Palmer Sutra | 2 | 1 | 0 | 1 | 66 | 69 | **3** |
+| 8 | License to Kelleher | 2 | 1 | 0 | 1 | 59 | 65 | **3** |
+| 9 | La Prima Dimwit | 2 | 1 | 0 | 1 | 60 | 73 | **3** |
+| 10 | Meet me on the Roefs | 2 | 1 | 0 | 1 | 63 | 78 | **3** |
+| 11 | Joao and Silent Bobb | 2 | 0 | 0 | 2 | 59 | 68 | **0** |
+| 12 | The Gyokfather | 2 | 0 | 0 | 2 | 49 | 66 | **0** |
+| 13 | Quantum of Tzolis | 2 | 0 | 0 | 2 | 41 | 58 | **0** |
+| 14 | Becker Call Saul | 2 | 0 | 0 | 2 | 38 | 72 | **0** |
 
 ### Gameweek 1
 
@@ -46,10 +46,10 @@ of the real season.
 
 | Home | | Away |
 |---|:--:|---|
-| Quantum of Szobos | **5 - 19** | ThunderBijol |
-| Brobbey'sGonnaGetYa! | **19 - 2** | Meet me on the Roefs |
-| License to Kelleher | **6 - 3** | The Gyokfather |
-| Palmer Sutra | **1 - 19** | Isakly |
-| Quantum of Tzolis | **9 - 6** | For Beto o For Wirtz |
-| Becker Call Saul | **8 - 1** | You HallWhite mate? |
-| La Prima Dimwit | **16 - 7** | Joao and Silent Bobb |
+| Quantum of Szobos | **25 - 24** | ThunderBijol |
+| Brobbey'sGonnaGetYa! | **42 - 11** | Meet me on the Roefs |
+| License to Kelleher | **23 - 13** | The Gyokfather |
+| Palmer Sutra | **23 - 33** | Isakly |
+| Quantum of Tzolis | **19 - 20** | For Beto o For Wirtz |
+| Becker Call Saul | **12 - 29** | You HallWhite mate? |
+| La Prima Dimwit | **22 - 14** | Joao and Silent Bobb |
