@@ -119,9 +119,15 @@ p { margin: 0; }
 /* ── The bar ─────────────────────────────────────────── */
 /* Full-bleed and dark in both themes. Identity on the left, the manager and
    the crest on the right, in that order so the crest is furthest out. */
+/* Wraps rather than overflowing. The bar is a fixed row of a brand, a mode
+   chip, a theme button, the signed-in manager and the crest, and on a 320px
+   phone that came to 18px more than there was — so every page scrolled
+   sideways, not just the wide ones. Wrapping costs a second row at that width
+   and nothing at any other, which beats hiding the mode chip: "archive" is
+   the difference between stale data and a broken app. */
 .topbar {
-  display: flex; align-items: center; gap: .75rem;
-  padding: 0 clamp(.75rem,3vw,1.5rem); min-height: 56px;
+  display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+  padding: .35rem clamp(.75rem,3vw,1.5rem); min-height: 56px;
   background: var(--chrome); color: var(--chrome-ink);
 }
 .topbar .mark {
@@ -1052,13 +1058,31 @@ input[type="search"] {
 /* ── Free-agent pool ─────────────────────────────────── */
 .dropbox { margin-top: 1rem; }
 .picklist.short { max-height: 11rem; }
-.filters { display: flex; gap: .7rem; flex-wrap: wrap; align-items: flex-end; margin: .8rem 0; }
 /* A select sizes itself to its widest option, so a long metric name like
    "Average points over recent gameweeks" would otherwise set the width of the
    whole control and push the row onto three lines. Every field shares the
-   space evenly and its control fills it, whatever the text inside says. */
-.filters .field { flex: 1 1 8rem; min-width: 0; }
-.filters .field.grow { flex: 2 1 10rem; }
+   space evenly and its control fills it, whatever the text inside says.
+
+   A grid rather than a wrapping flex row, because equal columns are the whole
+   point and flex could not keep them. Giving the search box `flex: 2` made it
+   wider than its neighbour on the row it happened to wrap onto — on a phone
+   that is two per row, so Club came out narrower than Show and Sort by above
+   and below it, and the boundary between the columns moved by row.
+
+   Column counts are set by hand rather than left to `auto-fit`, which chose
+   five at tablet width and left Minutes alone on a row of its own. Six fields
+   divide evenly by six, three and two, so those are the only counts used. */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: .7rem; align-items: end; margin: .8rem 0;
+}
+.filters .field { min-width: 0; }
+/* Three across once six no longer fit, then two, then one when even a pair
+   would squeeze a select down to nothing. Every step keeps the rows equal. */
+@media (max-width: 64rem) { .filters { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 38rem) { .filters { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 22rem) { .filters { grid-template-columns: 1fr; } }
 .filters select,
 .filters input[type="search"] {
   width: 100%; min-width: 0; margin-top: 0;
@@ -1116,7 +1140,6 @@ td.active { color: var(--text); font-weight: 600; }
   }
   table.pool td.active { color: var(--accent); font-weight: 700; }
   table.pool td.active::before { color: var(--accent); }
-  .filters .field { flex: 1 1 8rem; min-width: 0; }
 }
 
 /* ── A team's gameweek ───────────────────────────────── */

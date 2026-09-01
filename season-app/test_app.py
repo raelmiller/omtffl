@@ -941,6 +941,25 @@ check_true("and stops being a table on a narrow screen",
 check_true("shedding the min-width that caused the sideways scroll",
            "table.settled { min-width: 0; }" in _css)
 
+# The waiver filters: six controls that have to line up in a grid, whatever
+# the width. As a wrapping flex row the search box carried `flex: 2`, so on a
+# phone — two per row — Club came out narrower than Show above it and Sort by
+# below it, and the boundary between the columns moved from row to row.
+check_true("the filters are a grid, so every box is one column wide",
+           re.search(r"\.filters\s*\{[^}]*display:\s*grid", _css) is not None)
+check_true("with the column count set rather than guessed",
+           re.search(r"\.filters\s*\{[^}]*grid-template-columns:\s*repeat\(6",
+                     _css) is not None)
+# Six divides by six, three and two. Four and five leave an orphan on a row
+# of its own, which is what auto-fit chose at tablet width.
+check("and only ever divides six evenly",
+      sorted(set(re.findall(r"\.filters \{ grid-template-columns: repeat\((\d)",
+                            _css))), ["2", "3"])
+check_true("no field asks to be wider than its neighbours any more",
+           ".filters .field.grow" not in _css
+           and 'class="field grow"' not in (Path(__file__).parent
+                                            / "app/templates/waivers.html").read_text())
+
 with db.connect() as _conn:
     _conn.execute("DELETE FROM trade WHERE id = ?", (_rid,))
 check_true("with it gone the warning goes too",
@@ -3224,6 +3243,14 @@ print("\n── The chrome ─────────────────�
 # The bar and the tab rail are the only navigation there is now, so they get
 # the same treatment as anything else that would strand a manager if it broke.
 sheet = open("app/static/style.css").read()
+
+# The bar is a fixed row — brand, mode chip, theme button, manager, crest —
+# and on a 320px phone it came to 18px more than there was, so every page in
+# the app scrolled sideways. It wraps now rather than overflowing: a second
+# row at that width, nothing at any other, and the mode chip stays, because
+# "archive" is the difference between stale data and a broken app.
+check_true("the bar wraps rather than pushing the page sideways",
+           re.search(r"\.topbar\s*\{[^}]*flex-wrap:\s*wrap", sheet) is not None)
 
 bar = wv.get("/").text
 check_true("the bar carries the crest", 'src="/static/logo.png' in bar)
