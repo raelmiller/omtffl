@@ -252,6 +252,7 @@ if closed:
 # pick page read the stored ids raw. Two starters were gone, so ten stood on
 # the pitch and six sat on the bench — a team that could not be saved, and
 # that no swap could repair, because every swap keeps the counts.
+import app.main as _mend_main                             # noqa: E402
 _gwn2 = gw["gameweek"]
 _before = db.get_lineup("RM", _gwn2)
 try:
@@ -280,6 +281,63 @@ try:
                set(_shown["xi"] + _shown["bench"]) == {p["id"] for p in squad})
     check_true("and the page says places were filled, rather than doing it quietly",
                "filled from your bench" in _page.text)
+
+    # Displayed is not enough. A team that only looks right on the page is
+    # still an ineligible team in the database, waiting for someone to notice.
+    _stored = db.get_lineup("RM", _gwn2)
+    check("the mended team is stored, not just shown", _stored["xi"], _shown["xi"])
+    check("bench and all", _stored["bench"], _shown["bench"])
+    check_true("so nobody is left holding a side that cannot play",
+               len(_stored["xi"]) == 11 and len(_stored["bench"]) == 4)
+
+    # The sweep is what reaches a manager who never opens the app.
+    db.save_lineup("RM", _gwn2, _stale_xi, _stale_bench)
+    _swept = _mend_main.mend_lineups()
+    check_true("the sweep mends a team nobody has looked at",
+               any(m["manager"] == "RM" for m in _swept["mended"]),
+               str(_swept))
+    check("to the same team the page would have shown",
+          db.get_lineup("RM", _gwn2)["xi"], _shown["xi"])
+    check("and running it again changes nothing",
+          [m for m in _mend_main.mend_lineups()["mended"] if m["manager"] == "RM"],
+          [])
+
+    # The notice has to outlive the mend. The sweep normally gets there before
+    # the manager next opens the app, so an explanation derived from "did we
+    # change anything just now" is one they would never see — the row carries
+    # the mark until they have had their say.
+    check("the row remembers that the app filled a place",
+          db.get_lineup("RM", _gwn2)["mended"], 2)
+    _mend_main.mend_lineups()
+    check("and remembers it through later sweeps",
+          db.get_lineup("RM", _gwn2)["mended"], 2)
+    check_true("so the notice is still on the page a load later",
+               "filled from your bench" in signed.get("/declare").text)
+
+    # Saving their own team is them having their say, so the mark goes.
+    check("a manager's own save is accepted",
+          post(_gwn2, legal, bench).status_code, 200)
+    check("and clears the mark", db.get_lineup("RM", _gwn2)["mended"], 0)
+    check_true("so the notice goes with it",
+               "filled from your bench" not in signed.get("/declare").text)
+
+    # A bench with nothing legal to bring on: better a short side the manager
+    # is asked to fix than an ineligible one stored behind their back.
+    _stuck = {"xi": legal[:9], "bench": []}
+    _fresh, _filled, _wrote = _mend_main.mend_lineup(
+        "RM", _gwn2, [p for p in squad if p["id"] in legal[:9]], _stuck)
+    check("a side that cannot be legally filled is left short", len(_fresh["xi"]), 9)
+    check("and is not written to the database", _wrote, False)
+
+    # After the deadline a team is a submission, not a draft. Trade windows
+    # shut before it, so there is nothing to mend — and rewriting a locked
+    # team would be changing what someone submitted.
+    _shut = [g for g in engine.calendar() if not engine.deadline_state(g)["open"]]
+    if _shut:
+        _was = db.get_lineup("RM", _shut[0]["gameweek"])
+        _mend_main.mend_lineups()
+        check("a closed round's team is left exactly as it was",
+              db.get_lineup("RM", _shut[0]["gameweek"]), _was)
 finally:
     if _before:
         db.save_lineup("RM", _gwn2, _before["xi"], _before["bench"])

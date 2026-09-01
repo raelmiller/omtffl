@@ -112,6 +112,75 @@ def refresh_if_settling():
             "why": fetcher.STATUS.get("last_refresh_detail")}
 
 
+# Often enough that a manager who opens the app after a trade settles finds a
+# team already put right, rather than one being put right in front of them.
+MEND_MINUTES = 10
+
+
+def mend_lineup(key, gameweek, squad, saved):
+    """Bring one saved team back in line with the squad, and store it.
+
+    A lineup is a list of ids and the squad under it moves. Reading it back is
+    `engine.reconcile`'s job; this is the decision to make that reading the
+    real one. A team that only looks right on the page is still an ineligible
+    team in the database — ten on the pitch, six on the bench — and leaving
+    that lying around waiting for someone to notice is the quirk, not the fix.
+
+    Refuses one case: if the bench had nothing legal to bring on, the mended
+    side is still short, and storing a team that cannot play would be worse
+    than leaving the manager's own. The page asks them to fill it by hand.
+
+    The mark goes on the row rather than being worked out on each load: the
+    sweep normally mends a team before its manager next opens the app, so a
+    notice derived from "did we change anything just now" would be one they
+    never saw. It clears when they save a team of their own.
+
+    Returns (saved, filled, stored) — the team to show, how many places were
+    filled from the bench, and whether the database was written.
+    """
+    picked, bench, filled = engine.reconcile(saved, squad)
+    fresh = {"xi": [p["id"] for p in picked], "bench": [p["id"] for p in bench]}
+    # Whatever the row already carries stands until the manager saves: the
+    # mend that earned the notice may have happened on an earlier sweep.
+    standing = saved.get("mended", 0)
+    unchanged = (fresh["xi"] == list(saved.get("xi") or [])
+                 and fresh["bench"] == list(saved.get("bench") or []))
+    if unchanged or len(fresh["xi"]) != engine.XI_SIZE:
+        return fresh, standing, False
+    db.save_lineup(key, gameweek, fresh["xi"], fresh["bench"],
+                   mended=max(filled, standing))
+    return fresh, max(filled, standing), True
+
+
+def mend_lineups():
+    """Put right every team the squad has moved out from under.
+
+    Done on a sweep rather than only when someone opens the page, because the
+    manager who never opens it is exactly the one who would be left with an
+    ineligible team. Only while the round is open: a trade window shuts before
+    the gameweek deadline, so there is nothing to mend after it, and rewriting
+    a locked team would be changing a submission after the fact.
+    """
+    target = engine.current_gameweek()
+    if target is None or not engine.deadline_state(target).get("open"):
+        return {"mended": [], "why": "no round open for picking"}
+    n = target["gameweek"]
+    squads = engine.market(n, db.trades(), db.transactions())["squads"]
+    mended = []
+    for manager in db.managers():
+        key = manager["key"]
+        saved, squad = db.get_lineup(key, n), squads.get(key)
+        if not saved or not squad:
+            continue
+        _, filled, stored = mend_lineup(key, n, squad, saved)
+        if stored:
+            mended.append({"manager": key, "filled": filled})
+    if mended:
+        print(f"[matchweek] mended {len(mended)} team(s) for GW{n}: "
+              + ", ".join(m["manager"] for m in mended))
+    return {"mended": mended, "gameweek": n}
+
+
 @app.on_event("startup")
 def startup():
     db.init()
@@ -149,6 +218,13 @@ def startup():
     scheduler.add_job(refresh_if_settling, "interval",
                       minutes=SETTLE_REFRESH_MINUTES, id="settle-refresh",
                       replace_existing=True, max_instances=1, coalesce=True)
+    # Teams a settled trade has moved the squad out from under. Touches only
+    # the database, so it costs nothing and never waits on FPL — and it has to
+    # be a sweep, because the manager who never opens the app is the one who
+    # would otherwise be left with a team that cannot play.
+    scheduler.add_job(mend_lineups, "interval", minutes=MEND_MINUTES,
+                      id="mend", replace_existing=True,
+                      max_instances=1, coalesce=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
     # besides. Restart at 08:00 and the next refresh was a whole day away, which
@@ -798,12 +874,20 @@ def _declare_context(request, gameweek=None):
         # trade that settles after you pick takes two of your eleven and hands
         # you two more, and reading the entry back raw puts nine on the pitch
         # and seven on the bench — a team that cannot be saved, and that no
-        # swap can repair, because every swap keeps the counts. Read it the
-        # same way the engine reads it when it scores, so the page shows the
-        # team that would actually play.
-        picked, bench, mended = engine.reconcile(saved, squad)
-        saved = {"xi": [p["id"] for p in picked],
-                 "bench": [p["id"] for p in bench]}
+        # swap can repair, because every swap keeps the counts.
+        #
+        # Put right and stored, not just displayed: a team that only looks
+        # right on the page is still an ineligible team in the database. The
+        # sweep normally gets there first, so this is usually a no-op — but a
+        # manager opening the app a minute after a trade settles should find
+        # it already done rather than watch it happen.
+        if engine.deadline_state(target).get("open"):
+            saved, mended, _ = mend_lineup(
+                me["key"], target["gameweek"], squad, saved)
+        else:
+            picked, bench, mended = engine.reconcile(saved, squad)
+            saved = {"xi": [p["id"] for p in picked],
+                     "bench": [p["id"] for p in bench]}
     else:
         # Nothing submitted for this round, so show what would actually play:
         # the most recent team, which is what rollover will use. The

@@ -28,7 +28,7 @@ if str(SHADOW) not in sys.path:
 from h2h import WIN, DRAW, gameweek_scores          # noqa: E402
 from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
-    apply_autosubs, effective_lineup, form_before, legal_formation,
+    XI_SIZE, apply_autosubs, effective_lineup, form_before, legal_formation,
     lineup_source_gameweek,
     load_lineups, minutes_from_gameweek, reconcile, round_is_over,
     suggest_lineup, validate as validate_lineup,

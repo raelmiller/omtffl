@@ -18,13 +18,15 @@
 you want to &mdash; a team stands until you do.</p>
 {% endif %}
 {#- A trade or a waiver that settles after a team is picked takes players off
-    the pitch. The slots are refilled from the bench so the side is legal and
-    playable, but that is the app's guess, not a choice the manager made. -#}
+    the pitch. The slots are refilled from the bench and the mended team is
+    stored, so nobody is left holding a side that cannot play — but it is the
+    app's choice, not the manager's, so it says so plainly. -#}
 {% if mended and lock.open %}
 <p class="note">Your squad changed after you picked this team, so
 {{ mended }} place{{ '' if mended == 1 else 's' }} in the eleven
-{{ 'was' if mended == 1 else 'were' }} filled from your bench. Have a look
-before the deadline &mdash; and save it to make it yours.</p>
+{{ 'was' if mended == 1 else 'were' }} filled from your bench. This is your
+team as it stands and it will play &mdash; change it if you would rather
+have someone else.</p>
 {% endif %}
 {% if refused %}
 <p class="pending"><strong>One of your transactions could not be applied.</strong>

@@ -181,6 +181,10 @@ CREATE TABLE IF NOT EXISTS lineup (
     xi          TEXT NOT NULL,           -- JSON array of player ids
     bench       TEXT NOT NULL,           -- JSON array, in substitution order
     updated_at  TEXT NOT NULL,
+    -- How many places the app filled from the bench because a settled trade
+    -- took someone off the pitch. Zero when the manager picked it themselves,
+    -- which is what tells the page whether it owes them an explanation.
+    mended      INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (manager, gameweek)
 );
 """
@@ -239,6 +243,10 @@ def _migrate(conn):
     if subs and "want_events" not in subs:
         conn.execute("ALTER TABLE push_subscription ADD COLUMN"
                      " want_events INTEGER NOT NULL DEFAULT 0")
+    lineups = {r["name"] for r in conn.execute("PRAGMA table_info(lineup)")}
+    if lineups and "mended" not in lineups:
+        conn.execute("ALTER TABLE lineup ADD COLUMN"
+                     " mended INTEGER NOT NULL DEFAULT 0")
 
 
 def init():
@@ -538,16 +546,22 @@ def set_admin(key, is_admin=True):
                      (1 if is_admin else 0, key))
 
 
-def save_lineup(manager, gameweek, xi, bench):
+def save_lineup(manager, gameweek, xi, bench, mended=0):
+    """Store a team. `mended` records that the app filled a place, not them.
+
+    It defaults to zero, so a manager saving their own team always clears the
+    mark — which is what makes "we changed your side" a notice they see until
+    they have had their say, rather than one that vanishes on the next load.
+    """
     with connect() as conn:
         conn.execute(
-            "INSERT INTO lineup (manager, gameweek, xi, bench, updated_at)"
-            " VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO lineup (manager, gameweek, xi, bench, updated_at, mended)"
+            " VALUES (?, ?, ?, ?, ?, ?)"
             " ON CONFLICT(manager, gameweek) DO UPDATE SET"
             "   xi = excluded.xi, bench = excluded.bench,"
-            "   updated_at = excluded.updated_at",
+            "   updated_at = excluded.updated_at, mended = excluded.mended",
             (manager, gameweek, json.dumps(list(xi)), json.dumps(list(bench)),
-             now()))
+             now(), int(mended)))
 
 
 def get_lineup(manager, gameweek):
@@ -558,7 +572,8 @@ def get_lineup(manager, gameweek):
     if not row:
         return None
     return {"xi": json.loads(row["xi"]), "bench": json.loads(row["bench"]),
-            "updated_at": row["updated_at"]}
+            "updated_at": row["updated_at"],
+            "mended": row["mended"] if "mended" in row.keys() else 0}
 
 
 def all_lineups():

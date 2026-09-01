@@ -246,9 +246,25 @@ left are dropped, arrivals go to the back of the bench, and a short eleven is
 topped back up legally. Two readings of the same stored lineup is how the page
 and the table come to disagree about what someone picked.
 
-The page says when it has done this, because filling a place from the bench is
-the app's guess and not a choice the manager made — and it stands until they
-save something else.
+**The mended team is stored, not just shown.** A team that only looks right on
+the page is still an ineligible team in the database, waiting for someone to
+notice — and nobody should end up with a side that cannot play because of a
+quirk in the process. So `mend_lineup` writes it back, and `mend_lineups`
+sweeps every manager every `MEND_MINUTES` while the round is open, because the
+manager who never opens the app is exactly the one who would otherwise be left
+holding it. Only while the round is open: trade windows shut before the
+gameweek deadline, so there is nothing to mend after it, and rewriting a
+locked team would be changing a submission after the fact.
+
+One case is refused. If the bench had nothing legal to bring on, the side is
+still short, and storing a team that cannot play would be worse than leaving
+the manager's own — the page asks them to fill it by hand instead.
+
+The `lineup.mended` column carries the explanation. The sweep normally mends a
+team before its manager next opens the app, so a notice derived from "did we
+change anything just now" is one they would never see; the mark sits on the
+row until they save a team of their own, which clears it. That is why
+`save_lineup` takes `mended` and defaults it to zero.
 
 **A short eleven can also be fixed by hand**, because `reconcile` can fail to
 fill one: if nothing on the bench keeps the shape legal it leaves the side
