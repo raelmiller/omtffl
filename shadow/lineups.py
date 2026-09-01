@@ -160,21 +160,44 @@ def effective_lineup(team, gameweek, lineups, squad):
         entry = lineups[earlier[-1]][team]
         source = f"rolled over from GW{earlier[-1]}"
 
+    xi, bench, filled = reconcile(entry, squad)
+    if filled:
+        source += f", {filled} slot(s) filled from the bench"
+    return xi, bench, source
+
+
+def reconcile(entry, squad):
+    """A stored XI and bench read against the squad as it stands now.
+
+    A lineup is a list of ids, and the squad under it moves: a trade settles,
+    a waiver lands, and two of the eleven belong to someone else. Reading the
+    entry back raw then leaves ten on the pitch and six on the bench, which no
+    swap can repair — every swap keeps the counts — so the manager is left
+    with a team they cannot save and no way to fix it.
+
+    So this is the one place a stored entry is turned into a team: players who
+    have left are dropped, arrivals go to the back of the bench, and a short
+    XI is topped back up legally. Both the scoring engine and the pick page
+    go through it, because two readings of the same stored lineup is how the
+    page and the table come to disagree about what someone picked.
+
+    Returns (xi, bench, filled) — `filled` being how many slots had to be
+    taken from the bench, which is worth telling the manager about.
+    """
     by_id = {p["id"]: p for p in squad}
-    xi = [by_id[i] for i in entry.get("xi", []) if i in by_id]
+    xi = [by_id[i] for i in (entry.get("xi") or []) if i in by_id]
     named = {p["id"] for p in xi}
-    bench = [by_id[i] for i in entry.get("bench", []) if i in by_id and i not in named]
+    bench = [by_id[i] for i in (entry.get("bench") or [])
+             if i in by_id and i not in named]
     named |= {p["id"] for p in bench}
     # Anyone unaccounted for — squad churn since the lineup was picked, or an
     # incomplete bench — goes to the back of the bench rather than vanishing.
     bench += [p for p in squad if p["id"] not in named]
 
+    filled = 0
     if len(xi) < XI_SIZE:
         xi, bench, filled = _fill_to_legal(xi, bench)
-        if filled:
-            source += f", {filled} slot(s) filled from the bench"
-
-    return xi, bench, source
+    return xi, bench, filled
 
 
 def _fill_to_legal(xi, bench):

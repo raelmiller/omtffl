@@ -84,6 +84,34 @@ def refresh_if_live():
     return {"refreshed": bool(ok), "why": fetcher.STATUS.get("last_refresh_detail")}
 
 
+# And every half hour between the last whistle and FPL finalising the round.
+# Slower than the live cadence, because nothing is happening minute to minute;
+# far faster than the daily job, because a round that settles on Sunday night
+# should not read "provisional" until Monday morning.
+SETTLE_REFRESH_MINUTES = 30
+
+
+def refresh_if_settling():
+    """Go back for a round FPL has finished but not yet checked.
+
+    The live cadence stops at the last whistle, which is right — there are no
+    more goals to collect. But the numbers are not final there: bonus is still
+    ours, computed from live BPS, and FPL's own data check can move a point.
+    Until that check lands the round shows as provisional, and without this it
+    stayed that way until the next morning's refresh.
+
+    `engine.awaiting_final_data` reads the files already on disk, so deciding
+    not to fetch costs nothing, and it stops asking once a round is checked or
+    too old to be waiting on — so this is silent every day but Sunday night.
+    """
+    gameweek = engine.awaiting_final_data()
+    if gameweek is None:
+        return {"refreshed": False, "why": "nothing waiting to be finalised"}
+    ok = fetcher.refresh()
+    return {"refreshed": bool(ok), "gameweek": gameweek,
+            "why": fetcher.STATUS.get("last_refresh_detail")}
+
+
 @app.on_event("startup")
 def startup():
     db.init()
@@ -114,6 +142,12 @@ def startup():
     # for every interval it missed.
     scheduler.add_job(refresh_if_live, "interval",
                       minutes=LIVE_REFRESH_MINUTES, id="live-refresh",
+                      replace_existing=True, max_instances=1, coalesce=True)
+    # And the round's final numbers, once the football is over. Same guards,
+    # for the same reasons: one at a time, and coalesced so a container that
+    # was asleep runs it once on waking.
+    scheduler.add_job(refresh_if_settling, "interval",
+                      minutes=SETTLE_REFRESH_MINUTES, id="settle-refresh",
                       replace_existing=True, max_instances=1, coalesce=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
@@ -291,6 +325,9 @@ def _next_refresh():
     live = scheduler.get_job("live-refresh")
     live_next = getattr(live, "next_run_time", None) if live else None
     playing = engine.matches_in_progress()
+    settle = scheduler.get_job("settle-refresh")
+    settle_next = getattr(settle, "next_run_time", None) if settle else None
+    settling = engine.awaiting_final_data()
     return {
         "running": True,
         "next": nxt.isoformat(timespec="seconds") if nxt else None,
@@ -303,6 +340,17 @@ def _next_refresh():
             "matches_in_progress": playing,
             "next": live_next.isoformat(timespec="seconds") if live_next else None,
             "why": None if playing else "no match in progress — daily only",
+        },
+        # The third cadence: between the last whistle and FPL's data check.
+        # Worth reporting for the same reason as the others — "the scores are
+        # still provisional" needs to be answerable without guessing.
+        "settling": {
+            "every_minutes": SETTLE_REFRESH_MINUTES,
+            "gameweek": settling,
+            "next": (settle_next.isoformat(timespec="seconds")
+                     if settle_next else None),
+            "why": (f"gameweek {settling} is played but not yet final"
+                    if settling else "nothing waiting to be finalised"),
         },
     }
 
@@ -744,7 +792,19 @@ def _declare_context(request, gameweek=None):
                       or f"→{me['key']}:" in p or f" by {me['key']}:" in p]
     saved = db.get_lineup(me["key"], target["gameweek"])
     rolled = None
-    if not saved:
+    mended = 0
+    if saved:
+        # A saved lineup is a list of ids, and the squad under it moves. A
+        # trade that settles after you pick takes two of your eleven and hands
+        # you two more, and reading the entry back raw puts nine on the pitch
+        # and seven on the bench — a team that cannot be saved, and that no
+        # swap can repair, because every swap keeps the counts. Read it the
+        # same way the engine reads it when it scores, so the page shows the
+        # team that would actually play.
+        picked, bench, mended = engine.reconcile(saved, squad)
+        saved = {"xi": [p["id"] for p in picked],
+                 "bench": [p["id"] for p in bench]}
+    else:
         # Nothing submitted for this round, so show what would actually play:
         # the most recent team, which is what rollover will use. The
         # placeholder file counts here, since it is what the engine would fall
@@ -786,6 +846,7 @@ def _declare_context(request, gameweek=None):
         "squad": squad,
         "saved": saved,
         "rolled_from": rolled,
+        "mended": mended,
         "calendar": [g for g in rounds if g["gameweek"] <= target["gameweek"] + 3],
     })
     return ctx, target

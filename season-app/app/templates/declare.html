@@ -17,6 +17,15 @@
 <p class="note">This is {{ rolled_from }}, and it plays as-is. Change it if
 you want to &mdash; a team stands until you do.</p>
 {% endif %}
+{#- A trade or a waiver that settles after a team is picked takes players off
+    the pitch. The slots are refilled from the bench so the side is legal and
+    playable, but that is the app's guess, not a choice the manager made. -#}
+{% if mended and lock.open %}
+<p class="note">Your squad changed after you picked this team, so
+{{ mended }} place{{ '' if mended == 1 else 's' }} in the eleven
+{{ 'was' if mended == 1 else 'were' }} filled from your bench. Have a look
+before the deadline &mdash; and save it to make it yours.</p>
+{% endif %}
 {% if refused %}
 <p class="pending"><strong>One of your transactions could not be applied.</strong>
   The squad below is what you actually own, so a player you were expecting may
@@ -227,6 +236,39 @@ you want to &mdash; a team stands until you do.</p>
     return !illegal(next);
   }
 
+  // Every swap keeps the counts, so a short eleven can never be repaired by
+  // swapping — which is exactly the hole a manager fell into when a trade
+  // settled after they had picked. A short side can instead take a benched
+  // player straight into the empty slot, one tap, provided the eleven it
+  // builds towards is still a legal shape.
+  function shortOfEleven() { return starting.length < 11; }
+
+  function canPromote(id) {
+    if (!shortOfEleven() || starting.includes(id)) return false;
+    const next = starting.concat([id]);
+    if (next.length < 11) return couldReachLegal(next);
+    return !illegal(next);
+  }
+
+  // A partial side is only worth building on if eleven legal players can
+  // still be reached from it — the same question the server asks when it
+  // tops up a short lineup.
+  function couldReachLegal(ids) {
+    const c = counts(ids);
+    let spare = 11 - ids.length;
+    for (const pos of ORDER) {
+      const [lo, hi] = LIMITS[pos];
+      if (c[pos] > hi) return false;
+      spare -= Math.max(0, lo - c[pos]);
+    }
+    return spare >= 0;
+  }
+
+  function promote(id) {
+    starting = starting.concat([id]);
+    bench = bench.filter(x => x !== id);
+  }
+
   function partners(id) {
     if (starting.includes(id)) return bench.filter(b => swapLegal(id, b));
     // A benched player can come on for any starter the swap leaves legal,
@@ -238,7 +280,11 @@ you want to &mdash; a team stands until you do.</p>
   function choose(id) {
     if (!open) return;
     if (selected === id) { selected = null; return render(); }
+    // An empty slot is filled on the first tap. Asking for a second — "swap
+    // him with whom?" — has no answer when there is nobody to come off.
+    if (selected === null && canPromote(id)) { promote(id); return render(); }
     if (selected === null) { selected = id; return render(); }
+    if (canPromote(id)) { selected = null; promote(id); return render(); }
 
     const a = selected, b = id;
     const aStarts = starting.includes(a), bStarts = starting.includes(b);
@@ -279,6 +325,11 @@ you want to &mdash; a team stands until you do.</p>
     if (selected !== null && selected !== id) {
       el.classList.toggle('target', partners(selected).includes(id));
       el.classList.toggle('faded', !partners(selected).includes(id));
+    } else if (selected === null && shortOfEleven()) {
+      // With a slot empty, the move that matters is filling it — so the
+      // substitutes who legally can are the ones lit up.
+      el.classList.toggle('target', canPromote(id));
+      el.classList.toggle('faded', !canPromote(id));
     }
     if (!open) el.disabled = true;
     el.innerHTML = `
@@ -325,6 +376,9 @@ you want to &mdash; a team stands until you do.</p>
 
     const hint = document.getElementById('hint');
     if (!open) hint.textContent = 'This gameweek is locked.';
+    else if (shortOfEleven())
+      hint.textContent = `${starting.length} on the pitch — tap a highlighted `
+        + 'substitute to fill the empty slot.';
     else if (selected === null) hint.textContent = 'Tap a player, then tap who to swap them with.';
     else hint.textContent = `${byId[selected].name} selected — tap a highlighted player to swap, or tap again to cancel.`;
   }

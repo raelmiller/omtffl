@@ -34,6 +34,14 @@ on:
     # three days old with them. Committing daily pushes that floor up, and the
     # push redeploys the app with the new data in it.
     - cron: "30 7 * * *"
+    # And again in the evening, which is when FPL marks a round `data_checked`
+    # — bonus settled, adjustments applied, the numbers final. Catching that
+    # the same night rather than the next morning matters because the
+    # committed files are the floor: a redeploy between finalisation and the
+    # next commit would put the app back on provisional scores. Runs that find
+    # nothing new are cheap — `should_fetch` skips a round already marked
+    # final, and the commit step only commits when a file actually changed.
+    - cron: "30 22 * * *"
 
 permissions:
   contents: write

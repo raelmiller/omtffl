@@ -11,8 +11,8 @@ Run: python3 shadow/test_lineups.py
 import sys
 
 from lineups import (
-    apply_autosubs, effective_lineup, legal_formation, round_is_over,
-    suggest_lineup, validate,
+    apply_autosubs, effective_lineup, legal_formation, reconcile,
+    round_is_over, suggest_lineup, validate,
 )
 
 FAILS = []
@@ -202,6 +202,49 @@ check("a short XI is topped back up to eleven", len(xi), 11)
 check_true("and stays legal", legal_formation(xi) is None, str(legal_formation(xi)))
 check_true("the replacement is noted", "filled from the bench" in source, source)
 check_true("the traded player is gone", 20 not in ids(xi))
+
+# ── Reading a stored lineup against a squad that has moved ─────────────────
+# Reported from the app: a trade settled after a team had been picked, and the
+# pick page read the stored ids raw — ten on the pitch, six on the bench, a
+# team that could not be saved and that no swap could repair, because every
+# swap keeps the counts. The page and the engine now read a stored entry the
+# same way, and this is that reading.
+ENTRY = {"xi": ids(XI_442), "bench": [2, 14, 24, 32]}
+
+xi, bench, filled = reconcile(ENTRY, SQUAD)
+check("a lineup that still matches its squad is returned untouched", filled, 0)
+check("with its eleven", ids(xi), ids(XI_442))
+check("and its bench in the order it was left in", ids(bench), [2, 14, 24, 32])
+
+# Two of the eleven traded away, two arrivals nobody has placed.
+MOVED = ([x for x in SQUAD if x["id"] not in (20, 21)]
+         + [p(41, "MID", "InOne"), p(42, "MID", "InTwo")])
+xi, bench, filled = reconcile(ENTRY, MOVED)
+check("players who left are dropped from the eleven", len(xi), 11)
+check("the empty places are filled from the bench", filled, 2)
+check_true("legally", legal_formation(xi) is None, str(legal_formation(xi)))
+check_true("nobody who left is still on the pitch",
+           not ({20, 21} & set(ids(xi))))
+check("and the fifteen is still fifteen", len(xi) + len(bench), 15)
+check_true("with the arrivals accounted for rather than vanished",
+           {41, 42} <= set(ids(xi) + ids(bench)))
+
+# The bench can be too thin to fill from — nothing legal to bring on. Better a
+# short side the manager is told about than an illegal one saved behind their
+# back, which is why the page can now promote by hand.
+THIN = [x for x in SQUAD if x["id"] in ids(XI_442)][:9]
+xi, bench, filled = reconcile({"xi": ids(XI_442), "bench": []}, THIN)
+check("with nobody to bring on it stays short rather than inventing anyone",
+      len(xi), 9)
+check("and says nothing was filled", filled, 0)
+
+# An entry naming nobody is still owed a team: everyone goes to the bench and
+# the eleven is built back out of it, which beats presenting an empty pitch.
+xi, bench, filled = reconcile({}, SQUAD)
+check("an entry naming nobody still yields an eleven", len(xi), 11)
+check_true("a legal one", legal_formation(xi) is None, str(legal_formation(xi)))
+check("all of it filled from the bench", filled, 11)
+check("with the rest still benched", len(bench), 4)
 
 print("\n── Suggested lineup (no hindsight) ─────────────────────")
 

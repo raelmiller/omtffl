@@ -83,6 +83,12 @@ automatic substitutions for anyone who didn't play. Lineups live in
 week's team rolls over; a rolled-over lineup naming someone since traded away
 has the slot filled from the bench.
 
+`lineups.reconcile(entry, squad)` is the one place a stored lineup is turned
+into a team: it drops players who have left, benches arrivals, and tops a
+short XI back up legally. Both `effective_lineup` and the season app's pick
+page go through it, so a lineup that has been overtaken by a trade reads the
+same way wherever it is read.
+
 **Substitutions only happen once the round is over.** They are a settlement,
 not a running total: mid-round, a starter with a Monday fixture has zero
 minutes and is indistinguishable from one who didn't play, so applying the

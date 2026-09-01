@@ -247,6 +247,43 @@ if closed:
     check("leaving the old team exactly as it was",
           db.get_lineup("RM", closed[0]["gameweek"]), kept)
 
+# ── A squad that moves under a saved team ──────────────────────────────────
+# Reported from the app: a trade settled after the team was picked, and the
+# pick page read the stored ids raw. Two starters were gone, so ten stood on
+# the pitch and six sat on the bench — a team that could not be saved, and
+# that no swap could repair, because every swap keeps the counts.
+_gwn2 = gw["gameweek"]
+_before = db.get_lineup("RM", _gwn2)
+try:
+    # Written straight to the database, because this is a lineup the POST
+    # route would refuse: it names two players the manager no longer owns,
+    # which is exactly the state a settled trade leaves behind. Two of the
+    # eleven and two of the bench are replaced with ids from nobody's squad.
+    _gone = [999001, 999002]
+    _stale_xi = legal[:-2] + _gone
+    _stale_bench = bench[:-1] + [999003]
+    db.save_lineup("RM", _gwn2, _stale_xi, _stale_bench)
+
+    _page = signed.get("/declare")
+    check("the pick page loads even though the team names players who left",
+          _page.status_code, 200)
+    _shown = json.loads(re.search(
+        r'<script id="saved-data" type="application/json">(.*?)</script>',
+        _page.text, re.S).group(1))
+    check("and opens on eleven, not on nine", len(_shown["xi"]), 11)
+    check("with the rest of the fifteen benched", len(_shown["bench"]), 4)
+    check_true("nobody who left is still named",
+               not (set(_gone) & set(_shown["xi"] + _shown["bench"])))
+    check_true("nobody appearing twice",
+               not (set(_shown["xi"]) & set(_shown["bench"])))
+    check_true("everyone shown is really in the squad",
+               set(_shown["xi"] + _shown["bench"]) == {p["id"] for p in squad})
+    check_true("and the page says places were filled, rather than doing it quietly",
+               "filled from your bench" in _page.text)
+finally:
+    if _before:
+        db.save_lineup("RM", _gwn2, _before["xi"], _before["bench"])
+
 print("\n── A save can't rewrite a played round ─────────────────")
 
 # Saving for a future gameweek must not disturb one already scored: the
@@ -1381,6 +1418,74 @@ check("but a round in progress is pulled again every time", _go, True)
 check_true("which is the whole point of the live cadence",
            "in progress" in _why, _why)
 _tmp.unlink()
+
+# ── And once the football is over ──────────────────────────────────────────
+# The live cadence stops at the last whistle, correctly — there are no more
+# goals to collect. But the scores are not final there: bonus is ours, from
+# live BPS, until FPL's data check lands and settles it. Without a cadence for
+# that gap the round read "provisional" until the next morning's refresh.
+_real_read_fin = engine._read
+_real_files = engine.gameweek_files
+_fin_now = _dt.now(_tz.utc)
+
+
+def _round_that(finished, checked, hours_since_last_kick=2.0):
+    """A one-round season in whatever state the case needs."""
+    kick = (_fin_now - timedelta(hours=hours_since_last_kick)
+            ).isoformat().replace("+00:00", "Z")
+
+    class _Fake:
+        stem = "gw07"
+        def read_text(self):
+            return json.dumps({"gameweek": 7, "finished": finished,
+                               "data_checked": checked, "elements": []})
+
+    engine._read = lambda name: (
+        [{"id": 1, "event": 7, "kickoff_time": kick, "finished": finished}]
+        if name == "pl_fixtures.json" else _real_read_fin(name))
+    engine.gameweek_files = lambda: [_Fake()]
+
+
+try:
+    _round_that(finished=True, checked=False)
+    check("a round played out but not yet checked is waited on",
+          engine.awaiting_final_data(), 7)
+    _round_that(finished=True, checked=True)
+    check("once FPL checks it, there is nothing left to wait for",
+          engine.awaiting_final_data(), None)
+    _round_that(finished=False, checked=False)
+    check("a round still being played belongs to the live cadence, not this one",
+          engine.awaiting_final_data(), None)
+    # A round FPL never marks checked must not poll for the rest of the season.
+    _round_that(finished=True, checked=False,
+                hours_since_last_kick=engine.FINALISE_WINDOW_HOURS + 1)
+    check("and one they never check is given up on",
+          engine.awaiting_final_data(), None)
+
+    # The guard comes before the fetch here too, or the app asks FPL for
+    # nothing every half hour for the rest of the week.
+    _asks = []
+    _real_refresh2 = fetcher.refresh
+    fetcher.refresh = lambda *a, **k: (_asks.append(1), True)[1]
+    try:
+        _round_that(finished=True, checked=True)
+        check("with nothing to finalise, FPL is not called",
+              (_mn.refresh_if_settling()["refreshed"], len(_asks)), (False, 0))
+        _round_that(finished=True, checked=False)
+        _got = _mn.refresh_if_settling()
+        check("but a round waiting on its data check is fetched",
+              (_got["refreshed"], _got["gameweek"], len(_asks)), (True, 7, 1))
+    finally:
+        fetcher.refresh = _real_refresh2
+finally:
+    engine._read = _real_read_fin
+    engine.gameweek_files = _real_files
+
+# The two cadences must not both claim the same moment: while the football is
+# on, the live job owns it; the settling job only starts once it is over.
+check_true("the live cadence and the settling one never overlap",
+           not (engine.matches_in_progress()
+                and engine.awaiting_final_data() is not None))
 
 print("\n── Notifications ───────────────────────────────────────")
 

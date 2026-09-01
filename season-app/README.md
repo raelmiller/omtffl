@@ -67,6 +67,23 @@ cadence, so the round switches it off itself at the moment there is nothing
 left to collect. `SETTLE_WINDOW_HOURS` is only an outer bound, so a fixture
 FPL never flags cannot poll for ever.
 
+**And a third cadence between the whistle and FPL finalising the round.** The
+live one stops at the last whistle, which is right — there are no more goals
+to collect — but the scores are not final there. Bonus is still ours, computed
+from live BPS, until FPL's `data_checked` lands and settles it, and that
+arrives hours later. Without a cadence for that gap the round read
+"provisional" until the next morning's daily job. So `refresh_if_settling`
+runs every `SETTLE_REFRESH_MINUTES` and asks `engine.awaiting_final_data()`
+first: a round that is `finished` but not `data_checked`, and still within
+`FINALISE_WINDOW_HOURS` of its last kick-off, so a round FPL never checks
+stops being asked about. The two cadences never overlap — while the football
+is on, the live job owns it.
+
+The Actions workflow gained an evening run for the same reason. The committed
+files are the floor the app falls back to, so finalised numbers that only get
+committed the next morning are one redeploy away from reverting to
+provisional.
+
 Running often is safe because the rule about what to pull lives in
 `fetch_gw.should_fetch`, not in the caller: a round in progress is re-fetched
 every time, and a round FPL has marked `data_checked` is never pulled again.
@@ -218,6 +235,26 @@ half-played round belongs.
 Every player on the pitch carries his club and, under it, **who he plays this
 round and whether it is home or away** — `BHA` / `CHE (a)` — so the decision
 is made on the pitch rather than in another tab.
+
+**A saved team is read against the squad as it stands, not as it was.** A
+lineup is a list of ids and the squad under it moves: a trade settles after
+you pick, and two of your eleven belong to someone else. Read raw, that put
+ten on the pitch and six on the bench — a team that could not be saved, and
+that no swap could repair, because every swap keeps the counts. So the pick
+page and the scoring engine both go through `lineups.reconcile`: players who
+left are dropped, arrivals go to the back of the bench, and a short eleven is
+topped back up legally. Two readings of the same stored lineup is how the page
+and the table come to disagree about what someone picked.
+
+The page says when it has done this, because filling a place from the bench is
+the app's guess and not a choice the manager made — and it stands until they
+save something else.
+
+**A short eleven can also be fixed by hand**, because `reconcile` can fail to
+fill one: if nothing on the bench keeps the shape legal it leaves the side
+short rather than saving an illegal team. With a slot empty, the substitutes
+who can legally fill it are highlighted and one tap promotes — no second tap,
+because "swap him with whom?" has no answer when there is nobody to come off.
 
 `engine.club_fixtures` keys the round's fixtures by club id and records both
 sides of each one, so the home side and the away side can never disagree about

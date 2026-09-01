@@ -30,8 +30,8 @@ from score_league import best_xi, load_positions    # noqa: E402
 from lineups import (                               # noqa: E402
     apply_autosubs, effective_lineup, form_before, legal_formation,
     lineup_source_gameweek,
-    load_lineups, minutes_from_gameweek, round_is_over, suggest_lineup,
-    validate as validate_lineup,
+    load_lineups, minutes_from_gameweek, reconcile, round_is_over,
+    suggest_lineup, validate as validate_lineup,
 )
 from mechanics import (                             # noqa: E402
     BOOST_RESULT, BOOST_USES_PER_SEASON, apply_transactions, boost_pct,
@@ -870,6 +870,48 @@ def matches_in_progress(now=None):
         if kick <= now <= kick + timedelta(hours=SETTLE_WINDOW_HOURS):
             return True
     return False
+
+
+# How long after a round's last kick-off to keep asking whether FPL has
+# finalised it. They normally do so within a day or two of the last whistle;
+# this is the outer bound, so a round they never mark cannot poll for ever.
+FINALISE_WINDOW_HOURS = 96
+
+
+def awaiting_final_data(now=None):
+    """A round whose football is over but whose numbers are not yet final.
+
+    Between the last whistle and FPL's data check the scores are provisional:
+    bonus is computed from live BPS, and their own settlement can still move
+    a point or two. The live cadence stops at the whistle — correctly, there
+    are no more goals to collect — and the daily job might not run until the
+    next morning, so the round sat on provisional numbers for hours after FPL
+    had finalised them.
+
+    Returns the gameweek number to go back for, or None. Only rounds still
+    inside `FINALISE_WINDOW_HOURS` of their last kick-off count, so a round
+    FPL never marks checked stops being asked about.
+    """
+    now = now or datetime.now(timezone.utc)
+    last_kick = {}
+    for fixture in _read("pl_fixtures.json") or []:
+        event, stamp = fixture.get("event"), fixture.get("kickoff_time")
+        if not event or not stamp:
+            continue
+        kick = _parse(stamp)
+        if event not in last_kick or kick > last_kick[event]:
+            last_kick[event] = kick
+
+    for path in gameweek_files():
+        gw = json.loads(path.read_text())
+        n = gw["gameweek"]
+        # Already final, or still being played — neither is this job's business.
+        if gw.get("data_checked") or not gw.get("finished"):
+            continue
+        end = last_kick.get(n)
+        if end is None or now <= end + timedelta(hours=FINALISE_WINDOW_HOURS):
+            return n
+    return None
 
 
 def _parse(stamp):
