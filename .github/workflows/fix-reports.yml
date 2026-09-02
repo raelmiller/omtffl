@@ -77,12 +77,20 @@ jobs:
         if: steps.work.outputs.count != '0'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID }}
           GH_TOKEN: ${{ secrets.AGENT_GH_TOKEN }}
           APP_URL: ${{ secrets.APP_URL }}
           AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
         run: |
           set -euo pipefail
           npm install -g @anthropic-ai/claude-code
+          # An identity-linked API key must name the workspace it acts in,
+          # and the CLI has no flag for it — the header goes through
+          # ANTHROPIC_CUSTOM_HEADERS. Optional: a key scoped to a workspace
+          # carries that itself and needs nothing here.
+          if [ -n "${ANTHROPIC_WORKSPACE_ID:-}" ]; then
+            export ANTHROPIC_CUSTOM_HEADERS="anthropic-workspace-id: $ANTHROPIC_WORKSPACE_ID"
+          fi
           claude -p "Read .github/agent/fix.md and follow it exactly.
           The bug reports to work from are in bugs.json." \
             --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(curl:*)" \
