@@ -3299,6 +3299,19 @@ check_true("and it says so rather than failing quietly",
            "queue" in _capped.json()["errors"][0], str(_capped.json()["errors"]))
 
 # The queue. Admin only, and the two buttons are the whole of the job.
+# An unset token and a wrong one both answer 404, on purpose — but that is
+# exactly the pair you cannot tell apart when it will not work, so /health
+# says whether one is set. Never what it is.
+os.environ.pop("AGENT_TOKEN", None)
+check("health says the agent's door is shut when no token is set",
+      TestClient(app).get("/health").json()["agent"]["configured"], False)
+os.environ["AGENT_TOKEN"] = "test-agent-token"
+check("and open when one is",
+      TestClient(app).get("/health").json()["agent"]["configured"], True)
+check_true("without ever saying what it is",
+           "test-agent-token" not in TestClient(app).get("/health").text)
+os.environ.pop("AGENT_TOKEN", None)
+
 check("the queue is not there for a normal manager",
       plain.get("/admin/reports").status_code, 404)
 os.environ["ADMIN_KEYS"] = "RM"

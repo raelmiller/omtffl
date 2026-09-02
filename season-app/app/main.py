@@ -691,6 +691,15 @@ def health():
         "push": {**push.status(),
                  "subscriptions": len(db.push_subscriptions())},
         "database": db.stats(),
+        # Whether the agent's door is open at all. Says nothing about the
+        # token itself — only whether one is set — which is enough to tell
+        # "Railway has no AGENT_TOKEN" apart from "the two do not match".
+        # Both look like a 404 from outside, on purpose, and that is exactly
+        # the pair you cannot tell apart when it will not work.
+        "agent": {
+            "configured": bool(os.environ.get("AGENT_TOKEN")),
+            "reports_waiting": len(db.reports(state="open")),
+        },
         "admin": {
             "configured": bool(auth.admin_keys()),
             "found_as": auth.admin_source(),
