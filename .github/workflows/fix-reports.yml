@@ -86,4 +86,4 @@ jobs:
           claude -p "Read .github/agent/fix.md and follow it exactly.
           The bug reports to work from are in bugs.json." \
             --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(curl:*)" \
-            --model claude-opus-4-5
+            --model claude-opus-5
