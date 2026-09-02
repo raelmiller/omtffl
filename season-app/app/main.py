@@ -1057,14 +1057,21 @@ async def agent_hold(request: Request, report_id: int):
     said = (body.get("reply") or "").strip() or HELD_REPLY
     db.answer_report(report_id, said[:db.MESSAGE_LIMIT], lane=lane,
                      state="held", note=summary[:db.MESSAGE_LIMIT] or None)
-    notify.to_manager(
-        row["manager"], "About what you reported",
-        said[:180] + ("…" if len(said) > 180 else ""),
-        url="/reports", tag=f"report-{report_id}")
+    who = db.manager_by_key(row["manager"]) or {}
+    # Two people to tell, who are sometimes one person. The commissioner plays
+    # in this league, so a hold on their own report would otherwise buzz them
+    # twice a second apart — once as the reporter, once as the person it was
+    # handed to. When that happens the commissioner's notice is the one worth
+    # keeping: it says what to do and links to the queue rather than to the
+    # page they just came from.
+    if row["manager"] not in auth.admin_keys():
+        notify.to_manager(
+            row["manager"], "About what you reported",
+            said[:180] + ("…" if len(said) > 180 else ""),
+            url="/reports", tag=f"report-{report_id}")
     # And the other half of a hold: somebody now has to do something. Until
     # this, the manager was told and the commissioner was not — the one person
     # the report had just been handed to found out by opening /admin.
-    who = db.manager_by_key(row["manager"]) or {}
     notify.report_held(report_id, who.get("team") or row["manager"],
                        row["message"], note=summary)
     return JSONResponse({"ok": True})

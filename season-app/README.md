@@ -795,6 +795,20 @@ this" case, and a switch for one person is not worth a column. Holds are meant
 to be rare, so the volume is the argument that this is not noise — and if they
 stop being rare, a phone that keeps buzzing is the right way to find out.
 
+Who counts as a commissioner comes from `auth.admin_keys()`, never the
+`is_admin` column — two different questions wearing one name. Rights live in
+the environment so nothing the app writes can grant them, and the column is
+zero for everybody on the live deployment; the first version of this read the
+column and so sent every commissioner notice to nobody, on an app whose own
+/health reported the admin as configured. A test now asserts the column is
+empty while the notice still lands, so the environment is provably doing the
+work.
+
+And a commissioner who plays gets one notice for their own held report rather
+than two — the one that says what to do. There is a single push subscription
+in this league, so a duplicate is not a rounding error, it is half the
+notifications that manager will ever receive.
+
 ### The door
 
 `AGENT_TOKEN` opens three routes and no others: read what is waiting, answer

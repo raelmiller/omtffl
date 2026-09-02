@@ -3553,13 +3553,21 @@ notify.to_manager = (lambda key, title, body, **kw:
 # so "the commissioner was told" would pass on the reporter's own push and
 # prove nothing. A second admin who is not the reporter makes the two
 # distinguishable, which is the whole claim.
-_other_admin = next(m["key"] for m in db.managers()
-                    if not m["is_admin"] and m["key"] != P1)
-db.set_admin(_other_admin)
+_other_admin = next(m["key"] for m in db.managers() if m["key"] != P1)
+# Through the environment, because that is where admin rights actually live —
+# the is_admin column is a different question wearing the same name, and
+# reading it here is what hid a bug that sent every commissioner notice to
+# nobody on the live app.
+os.environ["ADMIN_KEYS"] = f"{P1},{_other_admin}"
 try:
-    _admins = [m["key"] for m in db.managers() if m["is_admin"]]
+    _admins = sorted(auth.admin_keys())
     check_true("the test has an admin who is not the reporter",
                _other_admin in _admins and _other_admin != P1)
+    # The column says nobody is an admin, exactly as it does on the live app.
+    # If a commissioner is still reached below, the environment is doing the
+    # work — which is the whole point, and was the bug.
+    check("no commissioner here holds the is_admin column",
+          [m["key"] for m in db.managers() if m["is_admin"]], [])
     # Filed straight into the table rather than through the door: the daily
     # cap is a rule about the front page, and it is tested where it lives.
     _nid = db.add_report(P1, "the bench order is wrong", {"manager": P1})
@@ -3579,6 +3587,27 @@ try:
                and "with Rael" not in _admin_push[0][2])
     check("and lands them on the queue", _admin_push[0][3], "/admin/reports")
 
+    # The reporter here is RM, who is also a commissioner. Both notices would
+    # otherwise land a second apart, on the one subscription in the league.
+    check("a commissioner reporting is buzzed once, not twice",
+          len([p for p in _pushed if p[0] == P1]), 1)
+    check("and it is the notice that says what to do",
+          [p[3] for p in _pushed if p[0] == P1], ["/admin/reports"])
+
+    # A manager who is not a commissioner still gets told in their own words,
+    # and the commissioner still gets told separately.
+    _pushed.clear()
+    _pid = db.add_report(P2, "my captain didn't score", {"manager": P2})
+    _ag.post(f"/agent/reports/{_pid}/hold", headers=_auth,
+             json={"lane": "adjudicate", "summary": "thinks captaincy is broken",
+                   "reply": "Nothing the app can settle — it's with Rael."})
+    check("an ordinary manager is told about their own report",
+          [p[3] for p in _pushed if p[0] == P2], ["/reports"])
+    check_true("in the words written to them",
+               "with Rael" in next(p[2] for p in _pushed if p[0] == P2))
+    check_true("and the commissioners are told separately",
+               all(a in [p[0] for p in _pushed] for a in _admins))
+
     # An answered report is not waiting on anyone, so it must not buzz.
     _pushed.clear()
     _aid = db.add_report(P1, "where is my bank?", {"manager": P1})
@@ -3588,7 +3617,7 @@ try:
           [p[0] for p in _pushed], [P1])
 finally:
     notify.to_manager = _real_to_manager
-    db.set_admin(_other_admin, False)
+    os.environ.pop("ADMIN_KEYS", None)
 
 # The door opens onto three things and nothing else. A route that could change
 # a lineup, a trade or a point would defeat every other protection here.

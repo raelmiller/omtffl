@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import threading
 
-from . import db, engine, live, push
+from . import auth, db, engine, live, push
 
 # How long before a deadline to warn. Long enough to do something about it
 # from wherever you are, short enough that "later" doesn't mean "forgotten".
@@ -78,10 +78,16 @@ def to_admin(title, body, url="/admin/reports", tag=None):
     Volume is the argument that this is not spam: a hold is the agent saying
     it could not answer, which is meant to be rare. If it ever stops being
     rare, a phone that keeps buzzing is the correct way to find that out.
+
+    Who counts as an admin comes from `auth.admin_keys()` — the environment —
+    and not from the `is_admin` column, which is a different question wearing
+    the same name. Rights are deliberately kept out of the database so nothing
+    the app writes can grant them, and on the live deployment that column is
+    zero for everybody: reading it here sent every commissioner notice to
+    nobody at all, on an app whose own /health said the admin was configured.
     """
-    admins = [m for m in db.managers() if m["is_admin"]]
-    return sum(to_manager(m["key"], title, body, url=url, tag=tag)
-               for m in admins)
+    return sum(to_manager(key, title, body, url=url, tag=tag)
+               for key in sorted(auth.admin_keys()))
 
 
 def report_held(report_id, team, message, note=None):
