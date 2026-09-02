@@ -969,8 +969,23 @@ def agent_reports(request: Request, state: str = "open"):
     cheap and keeps it honest.
     """
     _agent(request)
-    waiting = db.reports(state=state)
-    return JSONResponse({"reports": [triage.brief(r) for r in waiting]})
+    briefs = []
+    for row in db.reports(state=state):
+        # Findings are recomputed from the manager's state now, not from the
+        # snapshot taken when they reported. They are the one reading the
+        # reply and they care about today: a problem they have since fixed
+        # themselves should not come back as an answer, and a finding added
+        # since should still reach them. The snapshot stays as the record,
+        # and the brief says which of the two it is carrying.
+        try:
+            live = triage.findings(evidence.gather(row["manager"]))
+        except Exception:                               # noqa: BLE001
+            # A report must stay answerable even when the app is unhappy —
+            # the stored evidence is worse than current, and much better
+            # than nothing.
+            live = None
+        briefs.append(triage.brief(row, live=live))
+    return JSONResponse({"reports": briefs})
 
 
 @app.post("/agent/reports/{report_id}/reply")

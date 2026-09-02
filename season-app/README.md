@@ -760,6 +760,16 @@ reporter can then say it answered them, which marks the report `resolved` and
 is the only real evidence any of this works. Anything not settled there stays
 in the queue.
 
+**Findings are recomputed at triage time, not read off the snapshot.** The
+manager is the one about to read the reply and they care about today: a
+problem they have since fixed themselves must not come back as an answer, and
+a finding added since must still reach them — the first real report was held
+for want of a waiver finding that existed by the time anything read it. The
+stored evidence stays as the record and is what `resolved_since` is measured
+against, so "that looks sorted now" is available as a reply. If re-gathering
+fails the brief falls back to the snapshot and says which it is carrying,
+because worse evidence beats none.
+
 `triage.brief()` is what an agent gets: the message fenced as quoted material,
 the findings, and the lane if the evidence set one. Not the codebase — a reply
 is written by choosing among true statements, and a report needing more than

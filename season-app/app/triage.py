@@ -224,15 +224,25 @@ def answerable(found):
 FENCE = "-----BEGIN REPORTED MESSAGE-----", "-----END REPORTED MESSAGE-----"
 
 
-def brief(report, found=None):
+def brief(report, live=None):
     """Everything an agent needs to answer one report, and nothing else.
 
     Deliberately small. It carries the facts and the words, not the codebase:
     a reply is written from findings, and a report that needs more than this
     is one that needs a fix rather than an answer.
+
+    `live` is findings computed from the manager's state *now*, which is what
+    a reply is written from — they are the ones who will read it, and they
+    care about today rather than about Tuesday. The stored evidence is still
+    the record, and it is what `resolved_since` is measured against: anything
+    that was conclusively wrong when they reported and is not wrong any more.
+    Saying "that looks sorted now" is a better reply than either ignoring it
+    or describing a problem that has gone.
     """
-    found = findings(report["context"]) if found is None else found
-    lane = suggested_lane(found)
+    stored = findings(report["context"])
+    found = stored if live is None else live
+    gone = ({f["code"] for f in stored if f["confidence"] == CERTAIN}
+            - {f["code"] for f in found})
     return {
         "report_id": report["id"],
         "manager": report["context"].get("manager", report["manager"]),
@@ -243,6 +253,8 @@ def brief(report, found=None):
         # Trusted. Computed from the app's own state, and the only material a
         # reply may assert.
         "findings": found,
-        "lane_from_evidence": lane,
+        "findings_are": "current" if live is not None else "as reported",
+        "resolved_since": sorted(gone),
+        "lane_from_evidence": suggested_lane(found),
         "facts_alone_are_enough": answerable(found),
     }

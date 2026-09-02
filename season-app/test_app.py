@@ -3427,6 +3427,44 @@ check_true("the message is fenced as quoted material",
            _brief["reported_message"].startswith(triage.FENCE[0])
            and _brief["reported_message"].endswith(triage.FENCE[1]))
 check_true("and the findings travel with it", isinstance(_brief["findings"], list))
+check("which by default are the ones from when they reported",
+      _brief["findings_are"], "as reported")
+
+# Findings are recomputed at triage time, because the manager reads the reply
+# today. A problem they have since fixed themselves must not come back as an
+# answer, and a finding added since must still reach them.
+_snap = {"round": {"gameweek": 3, "open": True},
+         "team_sheet": {"would_be_refused_because": ["illegal XI — 10 players, needs 11"]},
+         "standing": {}, "last_scored_round": {}}
+_mended = dict(db.report(_bid), context=_snap)
+_now = triage.findings({"round": {"gameweek": 3, "open": True},
+                        "team_sheet": {"would_be_refused_because": []},
+                        "standing": {}, "last_scored_round": {}})
+_b = triage.brief(_mended, live=_now)
+check("a live brief says so", _b["findings_are"], "current")
+check("and names what has been put right since",
+      _b["resolved_since"], ["save_refused"])
+check_true("without still asserting it",
+           "save_refused" not in [f["code"] for f in _b["findings"]])
+check("so nothing forces a lane any more", _b["lane_from_evidence"], None)
+
+# The door serves the current ones, and survives not being able to.
+os.environ["AGENT_TOKEN"] = "test-agent-token"
+_door = TestClient(app)
+_door_auth = {"Authorization": "Bearer test-agent-token"}
+_served = _door.get("/agent/reports", headers=_door_auth).json()["reports"]
+check_true("the agent is served current findings",
+           all(b["findings_are"] == "current" for b in _served), str(_served)[:200])
+_real_gather2 = evidence.gather
+evidence.gather = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom"))
+try:
+    _fallback = _door.get("/agent/reports", headers=_door_auth).json()["reports"]
+    check_true("and falls back to the snapshot rather than to nothing",
+               all(b["findings_are"] == "as reported" for b in _fallback)
+               and len(_fallback) == len(_served))
+finally:
+    evidence.gather = _real_gather2
+os.environ.pop("AGENT_TOKEN", None)
 
 print("\n── The agent's door ────────────────────────────────────")
 
