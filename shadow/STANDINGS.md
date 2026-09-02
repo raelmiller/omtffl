@@ -42,7 +42,7 @@ of the real season.
 
 ### Gameweek 2
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
