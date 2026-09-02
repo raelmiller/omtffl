@@ -1061,6 +1061,12 @@ async def agent_hold(request: Request, report_id: int):
         row["manager"], "About what you reported",
         said[:180] + ("…" if len(said) > 180 else ""),
         url="/reports", tag=f"report-{report_id}")
+    # And the other half of a hold: somebody now has to do something. Until
+    # this, the manager was told and the commissioner was not — the one person
+    # the report had just been handed to found out by opening /admin.
+    who = db.manager_by_key(row["manager"]) or {}
+    notify.report_held(report_id, who.get("team") or row["manager"],
+                       row["message"], note=summary)
     return JSONResponse({"ok": True})
 
 

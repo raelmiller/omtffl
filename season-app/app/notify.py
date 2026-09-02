@@ -61,6 +61,45 @@ def to_manager(key, title, body, url="/", tag=None, background=True,
     return len(subscriptions)
 
 
+def to_admin(title, body, url="/admin/reports", tag=None):
+    """Notify whoever runs the league. Returns how many were reachable.
+
+    The escalation path ended in a page nobody was told to open: a held report
+    sat silently on /admin until the commissioner happened to look, while the
+    manager who reported it had already been pushed to. This closes that.
+
+    Sent on the deadline channel rather than a third preference of its own.
+    That channel is the one a manager cannot turn off piecemeal and is already
+    the "you would be annoyed to have missed this" line, which is exactly what
+    a report waiting on you is. A per-commissioner setting would be a column,
+    a checkbox and a migration to give one person a switch they would never
+    touch.
+
+    Volume is the argument that this is not spam: a hold is the agent saying
+    it could not answer, which is meant to be rare. If it ever stops being
+    rare, a phone that keeps buzzing is the correct way to find that out.
+    """
+    admins = [m for m in db.managers() if m["is_admin"]]
+    return sum(to_manager(m["key"], title, body, url=url, tag=tag)
+               for m in admins)
+
+
+def report_held(report_id, team, message, note=None):
+    """A report the agent could not answer, now waiting on a person.
+
+    The note is what the agent said about it, so the commissioner can tell a
+    design ask from a rules argument without opening anything. Falling back to
+    the manager's own words is deliberate — better a fragment of the real
+    question than "a report is waiting".
+    """
+    said = (note or message or "").strip().replace("\n", " ")
+    if len(said) > 140:
+        said = said[:139].rstrip() + "…"
+    return to_admin(f"{team} needs you",
+                    said or "A report is waiting on a person.",
+                    url="/admin/reports", tag=f"held-{report_id}")
+
+
 def once(kind, gameweek, key, title, body, url="/"):
     """Send a notice that must not repeat, claiming it before sending.
 

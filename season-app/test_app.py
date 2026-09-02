@@ -3542,6 +3542,54 @@ check("a hold with no reply falls back to the app's own words",
 check_true("which names who has it",
            "Rael" in db.report(_qid)["reply"])
 
+# A hold has two halves: the manager is told, and the person it was handed to
+# is told. Only the first of those existed, so a held report waited on
+# somebody who had not been asked to look.
+_pushed = []
+_real_to_manager = notify.to_manager
+notify.to_manager = (lambda key, title, body, **kw:
+                     _pushed.append((key, title, body, kw.get("url"))) or 1)
+# The commissioner is RM, who is also the manager reporting in these tests —
+# so "the commissioner was told" would pass on the reporter's own push and
+# prove nothing. A second admin who is not the reporter makes the two
+# distinguishable, which is the whole claim.
+_other_admin = next(m["key"] for m in db.managers()
+                    if not m["is_admin"] and m["key"] != P1)
+db.set_admin(_other_admin)
+try:
+    _admins = [m["key"] for m in db.managers() if m["is_admin"]]
+    check_true("the test has an admin who is not the reporter",
+               _other_admin in _admins and _other_admin != P1)
+    # Filed straight into the table rather than through the door: the daily
+    # cap is a rule about the front page, and it is tested where it lives.
+    _nid = db.add_report(P1, "the bench order is wrong", {"manager": P1})
+    _pushed.clear()
+    _ag.post(f"/agent/reports/{_nid}/hold", headers=_auth,
+             json={"lane": "escalate", "summary": "wants a different bench order",
+                   "reply": "Not the app's call — it's with Rael."})
+    _to = [p[0] for p in _pushed]
+    check_true("the manager who reported is told", P1 in _to)
+    check_true("and so is the commissioner", all(a in _to for a in _admins))
+    check("and nobody else at all", sorted(set(_to)), sorted({P1, *_admins}))
+
+    _admin_push = [p for p in _pushed if p[0] == _other_admin]
+    check("the commissioner is pushed exactly once", len(_admin_push), 1)
+    check_true("their push carries the note, not the manager's reply",
+               "wants a different bench order" in _admin_push[0][2]
+               and "with Rael" not in _admin_push[0][2])
+    check("and lands them on the queue", _admin_push[0][3], "/admin/reports")
+
+    # An answered report is not waiting on anyone, so it must not buzz.
+    _pushed.clear()
+    _aid = db.add_report(P1, "where is my bank?", {"manager": P1})
+    _ag.post(f"/agent/reports/{_aid}/reply", headers=_auth,
+             json={"reply": "Under the pitch on /declare.", "lane": "answer"})
+    check("an answered report tells only the manager",
+          [p[0] for p in _pushed], [P1])
+finally:
+    notify.to_manager = _real_to_manager
+    db.set_admin(_other_admin, False)
+
 # The door opens onto three things and nothing else. A route that could change
 # a lineup, a trade or a point would defeat every other protection here.
 _reachable = sorted({r.path for r in app.routes

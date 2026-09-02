@@ -775,6 +775,26 @@ the findings, and the lane if the evidence set one. Not the codebase — a reply
 is written by choosing among true statements, and a report needing more than
 that needs a fix rather than an answer.
 
+**Two texts, two readers.** `reply` is written to the manager in the second
+person and is the only half they ever see; `note` is written to the
+commissioner and appears only on `/admin/reports`. These were one column, and
+the first held report duly showed its own reporter "Asking how to earn bank
+points. Findings show current state but don't explain earning mechanism" — a
+note about somebody, printed on their own page. A hold with no manager-facing
+text falls back to the app's own line, which names who has it and promises a
+reply, because "with the commissioner" on a pill is a status rather than an
+answer.
+
+**A hold notifies both of them.** The manager is told their report went to a
+person; the commissioner is told they have one. Only the first of those
+existed to begin with, which meant the escalation path ended in a page nobody
+had been asked to open — the manager knew and the person holding it did not.
+`notify.to_admin` sends on the deadline channel rather than a preference of
+its own: a held report is precisely the "you would be annoyed to have missed
+this" case, and a switch for one person is not worth a column. Holds are meant
+to be rare, so the volume is the argument that this is not noise — and if they
+stop being rare, a phone that keeps buzzing is the right way to find out.
+
 ### The door
 
 `AGENT_TOKEN` opens three routes and no others: read what is waiting, answer
