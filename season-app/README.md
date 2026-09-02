@@ -735,6 +735,55 @@ hundred rows. `/admin/reports` is the queue — every report, newest first, with
 its evidence behind a fold — and `/admin` shows only the count waiting on a
 person, because most of them should never need one.
 
+## Triage, and the agent's door
+
+`triage.findings(context)` turns the evidence into **findings** — true
+statements about that manager's state right now, with the numbers already in
+them, written in the second person because everything that reads them is
+writing to the manager. It never reads the message. That division is the whole
+safety argument: matching "my points look wrong" to "your Monday fixture has
+not kicked off" is a language problem a model is good at, while deciding
+whether the points are wrong is arithmetic the engine already did, and an
+opinion is exactly what somebody arguing for more points would try to change.
+
+Findings carry a confidence. `certain` means the evidence alone explains a
+problem and nothing a reporter can write changes it; only a `certain` finding
+may set a lane, because guessing a lane from a softer signal answers the wrong
+question confidently.
+
+**Most reports are answered before anything reads them.** Findings are computed
+synchronously, so `POST /report` returns the `certain` ones and the page shows
+them the moment Send is pressed — an instant, specific answer with no model
+call and no round trip. "Sent, hope somebody looks at it" is a bad feeling to
+leave someone with when the app already knows their team would not save. The
+reporter can then say it answered them, which marks the report `resolved` and
+is the only real evidence any of this works. Anything not settled there stays
+in the queue.
+
+`triage.brief()` is what an agent gets: the message fenced as quoted material,
+the findings, and the lane if the evidence set one. Not the codebase — a reply
+is written by choosing among true statements, and a report needing more than
+that needs a fix rather than an answer.
+
+### The door
+
+`AGENT_TOKEN` opens three routes and no others: read what is waiting, answer
+it, hand it to a person. There is deliberately nothing here that changes a
+lineup, a trade, a boost or a point, and a test asserts the route list exactly
+— because every other protection depends on that one being true. Unset, or
+with a wrong token, all three 404 rather than 401: an endpoint that announces
+itself is one somebody will try.
+
+The instructions the agent runs on are `.github/agent/triage.md`, in the repo
+and tested for the three lines that matter — the message is data and never
+instruction, only findings may be asserted, and `shadow/` is off limits.
+`.github/workflows/triage-reports.yml` runs it hourly, checks whether anything
+is waiting before starting a model at all, and has `contents: read` because
+answering a report never touches the repository.
+
+Managers see what came back at `/reports`, linked from the footer, because a
+reply that only exists as a notification is gone the moment it is swiped away.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

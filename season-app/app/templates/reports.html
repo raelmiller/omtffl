@@ -28,7 +28,8 @@
     <p class="rptsaid">{{ r.message }}</p>
 
     {% if r.reply %}
-    <p class="note"><strong>Replied {{ r.replied_at }}:</strong> {{ r.reply }}</p>
+    <p class="rptreply">{{ r.reply }}
+      {%- if r.replied_at %}<span class="eyebrow"> &middot; {{ r.replied_at }}</span>{% endif %}</p>
     {% endif %}
 
     {% if r.state == 'held' %}
@@ -42,10 +43,33 @@
     </div>
     {% endif %}
 
+    {#- The facts the agent is handed. Worth showing next to what it said, so
+        a reply can be checked against what it was allowed to assert. -#}
+    {% if r.findings %}
+    <details>
+      <summary>What the app worked out ({{ r.findings|length }})</summary>
+      <ul class="rptfind">
+        {% for f in r.findings %}
+        <li class="{{ f.confidence }}">
+          <span class="fconf">{{ f.confidence }}</span>
+          <strong>{{ f.headline }}</strong> {{ f.detail }}
+        </li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+
     <details>
       <summary>What the app knew</summary>
       <pre class="rptctx">{{ r.context|tojson(indent=1) }}</pre>
     </details>
+
+    {% if r.state != 'closed' %}
+    <form method="post" action="/admin/reports/{{ r.id }}/reply" class="rptform">
+      <textarea name="reply" rows="2" placeholder="Reply as yourself"></textarea>
+      <button class="btn small ghost">Send reply</button>
+    </form>
+    {% endif %}
   </div>
   {% endfor %}
 </section>

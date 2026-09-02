@@ -1354,3 +1354,26 @@ td.team .pn.tappable { font-weight: 600; }
   background: var(--surface-2); padding: .6rem; border-radius: 6px;
 }
 .rpt .tacts { display: flex; gap: .5rem; margin: .6rem 0; }
+/* A reply, set apart from the report it answers. The accent edge is the one
+   place on this page that says "this came back", so it earns the colour. */
+.rptreply {
+  margin: .6rem 0 0; padding: .55rem .8rem;
+  border-left: 3px solid var(--accent);
+  background: var(--surface-2); border-radius: 0 6px 6px 0;
+}
+.rptfind { margin: .5rem 0 0; padding-left: 1.1rem; font-size: .85rem; }
+.rptfind li { margin-bottom: .35rem; }
+.fconf {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 0 .25rem; margin-right: .35rem;
+}
+.rptfind li.certain .fconf { color: var(--accent); border-color: var(--accent); }
+.rptform { display: flex; gap: .5rem; align-items: flex-end; margin-top: .7rem; }
+.rptform textarea {
+  flex: 1; min-width: 0; font: inherit; font-size: .9rem;
+  color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .45rem .6rem;
+  resize: vertical;
+}

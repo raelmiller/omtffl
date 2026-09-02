@@ -134,6 +134,7 @@
     Running alongside FPL Draft this season &middot; <a href="/health">status</a>
     {%- if me %} &middot;
     <button type="button" class="linkbtn" id="reportopen">Something wrong?</button>
+    &middot; <a href="/reports">what you reported</a>
     {%- endif %}
   </footer>
 </div>
@@ -323,6 +324,18 @@
       <span id="report-status" class="savestate"></span>
       <button id="report-send" class="btn">Send</button>
     </div>
+    {#- Answered on the spot where the app can. The findings are computed from
+        state it has just gathered, so this needs nothing and nobody. -#}
+    <div id="report-found" hidden>
+      <div class="sechead"><h2>What the app can see</h2></div>
+      <ul id="report-facts" class="rptfind"></ul>
+      <p class="note">If that is not it, it stays in the queue and someone
+      will come back to you.</p>
+      <div class="tacts">
+        <button id="report-solved" class="btn small">That answers it</button>
+        <button id="report-unsolved" class="btn small ghost">Not that</button>
+      </div>
+    </div>
   </div>
 </dialog>
 
@@ -334,10 +347,27 @@
   var text = document.getElementById('report-text');
   var send = document.getElementById('report-send');
   var status = document.getElementById('report-status');
+  var found = document.getElementById('report-found');
+  var facts = document.getElementById('report-facts');
+  var lastId = null;
 
   open.addEventListener('click', function () {
     status.textContent = ''; status.className = 'savestate';
+    found.hidden = true; lastId = null;
     dlg.showModal(); text.focus();
+  });
+
+  document.getElementById('report-solved').addEventListener('click', async function () {
+    if (lastId) {
+      try { await fetch('/report/' + lastId + '/resolved', { method: 'POST' }); }
+      catch (e) { /* it stays in the queue, which is the safe way to be wrong */ }
+    }
+    dlg.close();
+  });
+  document.getElementById('report-unsolved').addEventListener('click', function () {
+    // Left open on purpose: not marking it is what sends it to be looked at.
+    found.hidden = true;
+    status.textContent = 'Left for someone to look at.';
   });
   document.getElementById('report-close').addEventListener('click', function () {
     dlg.close();
@@ -357,10 +387,27 @@
       });
       var data = await res.json();
       if (data.ok) {
-        status.textContent = 'Sent — thanks.';
+        // Where the answer will turn up. Push carries it too, but a manager
+        // who has never allowed notifications would otherwise have no way of
+        // knowing there is anywhere to look.
+        status.innerHTML = 'Sent — the reply lands in '
+          + '<a href="/reports">what you reported</a>.';
         status.className = 'savestate ok';
         text.value = '';
-        setTimeout(function () { dlg.close(); }, 1200);
+        lastId = data.id;
+        if ((data.found || []).length) {
+          facts.innerHTML = '';
+          data.found.forEach(function (f) {
+            var li = document.createElement('li');
+            li.className = 'certain';
+            var b = document.createElement('strong');
+            b.textContent = f.headline;
+            li.appendChild(b);
+            li.appendChild(document.createTextNode(' ' + f.detail));
+            facts.appendChild(li);
+          });
+          found.hidden = false;
+        }
       } else {
         status.textContent = (data.errors || ['Could not send that']).join(' · ');
         status.className = 'savestate bad';

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}What you reported — Matchweek{% endblock %}
+{% block heading %}What you reported{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {% if mine %}
+    {{ mine|length }} report{{ '' if mine|length == 1 else 's' }} &middot;
+    replies land here as well as on your phone.
+  {% else %}
+    Nothing yet. The &ldquo;Something wrong?&rdquo; link at the foot of any page
+    is where to start.
+  {% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+<section>
+  {% for r in mine %}
+  <div class="panel rpt {{ r.state }}">
+    <div class="rpthead">
+      <span class="eyebrow">{{ r.created_at }}</span>
+      <span class="pill">
+        {%- if r.state == 'answered' %}answered
+        {%- elif r.state == 'held' %}with the commissioner
+        {%- elif r.state == 'approved' %}being worked on
+        {%- elif r.state == 'closed' %}closed
+        {%- else %}looking into it{% endif -%}
+      </span>
+    </div>
+    <p class="rptsaid">{{ r.message }}</p>
+    {% if r.reply %}
+    <p class="rptreply">{{ r.reply }}</p>
+    {% elif r.state == 'open' %}
+    <p class="note">Nobody has had to look at this yet &mdash; most things are
+    answered within the hour.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+
+<p class="sub"><a href="/week">&larr; Your week</a></p>
+{% endblock %}

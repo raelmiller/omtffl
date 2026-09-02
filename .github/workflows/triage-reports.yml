@@ -1,0 +1,81 @@
+name: Answer player reports
+
+# Reports are answered from facts the app has already worked out, so this is a
+# small job: pull what is waiting, write a reply from the findings, post it
+# back. It never touches the repository, which is why it needs no write
+# permission and cannot open a pull request — fixing bugs is a separate job
+# with a separate gate.
+on:
+  schedule:
+    # Hourly. Nobody in a 14-person league is waiting on a sub-hour reply, and
+    # an idle run costs one API call that returns an empty list.
+    - cron: "20 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Draft replies to the log without sending them"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: triage-reports
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    # No point starting a model run to find nothing waiting, and no point
+    # having the secrets checked out on a fork.
+    if: github.repository == 'raelmiller/omtffl'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is anything waiting?
+        id: waiting
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+        run: |
+          set -euo pipefail
+          briefs=$(curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
+                     "$APP_URL/agent/reports?state=open")
+          count=$(printf '%s' "$briefs" | python3 -c \
+                    'import json,sys; print(len(json.load(sys.stdin)["reports"]))')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          printf '%s' "$briefs" > briefs.json
+          echo "$count report(s) waiting"
+
+      - uses: actions/setup-node@v4
+        if: steps.waiting.outputs.count != '0'
+        with:
+          node-version: "22"
+
+      - name: Answer them
+        if: steps.waiting.outputs.count != '0'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          npm install -g @anthropic-ai/claude-code
+          # Triage reads facts and writes prose. It does not read this
+          # repository and does not need to, so the tools it is given are the
+          # ones that reach the app and nothing else.
+          claude -p "$(cat <<'PROMPT'
+          Read .github/agent/triage.md and follow it exactly.
+
+          The reports waiting are in briefs.json in the working directory.
+          Answer each one by calling the app, using $APP_URL and $AGENT_TOKEN.
+
+          If DRY_RUN is true, print the reply you would send for each report
+          and post nothing.
+          PROMPT
+          )" \
+            --allowedTools "Read,Bash(curl:*)" \
+            --model claude-haiku-4-5-20251001

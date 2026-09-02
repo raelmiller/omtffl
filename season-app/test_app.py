@@ -3338,6 +3338,226 @@ with db.connect() as _c:
 _broken = signed.post("/report", data={"message": "everything is on fire"})
 check("a report still lands when the app is unhappy", _broken.status_code, 200)
 
+print("\n── Triage: facts before words ──────────────────────────")
+
+from app import triage                                     # noqa: E402
+
+# Findings are computed from the evidence and never from the message. That is
+# the whole safety argument, so the cases worth pinning are the ones where the
+# facts settle it — an agent handed these can only choose between them.
+_F = lambda ctx: {f["code"]: f for f in triage.findings(ctx)}
+
+_cant_save = {"round": {"gameweek": 3, "open": True},
+              "team_sheet": {"would_be_refused_because":
+                             ["illegal XI — 10 players, needs 11"]},
+              "standing": {}, "last_scored_round": {}}
+_f = _F(_cant_save)
+check_true("a save that would be refused is a certain finding",
+           _f["save_refused"]["confidence"] == triage.CERTAIN)
+check_true("carrying the reason validation would give",
+           "10 players" in _f["save_refused"]["detail"])
+check("and it routes itself", triage.suggested_lane(triage.findings(_cant_save)),
+      triage.DIAGNOSE)
+
+_shut = {"round": {"gameweek": 3, "open": False,
+                   "reason_shut": "the deadline has passed",
+                   "deadline": "2026-09-04T17:30:00Z"},
+         "team_sheet": {}, "standing": {}, "last_scored_round": {}}
+check_true("a locked round explains itself too",
+           "deadline_shut" in _F(_shut))
+
+_live = {"round": {"gameweek": 4, "open": True}, "team_sheet": {}, "standing": {},
+         "last_scored_round": {"gameweek": 3, "state": "in progress",
+                               "substitutions": [], "eleven_came_from": "submitted"}}
+_f = _F(_live)
+check("points in a live round are an adjudication, not a bug",
+      triage.suggested_lane(triage.findings(_live)), triage.ADJUDICATE)
+check_true("and the pending substitutions are said out loud",
+           "subs_pending" in _f)
+
+_stood_in = {"round": {"gameweek": 4, "open": True}, "team_sheet": {}, "standing": {},
+             "last_scored_round": {"gameweek": 3, "state": "final",
+                                   "substitutions": [],
+                                   "eleven_came_from": "placeholder"}}
+check_true("a made-up eleven is named as the reason a score looks odd",
+           "not_their_eleven" in _F(_stood_in))
+
+# Nothing wrong means nothing certain, which means no lane is forced and the
+# agent has to read what was actually asked.
+_fine = {"round": {"gameweek": 3, "open": True},
+         "team_sheet": {"has_saved_a_team": True, "would_be_refused_because": []},
+         "standing": {"bank_balance": 25, "bank_shown_on": "/declare",
+                      "boost_left": 8, "boost_available": True},
+         "last_scored_round": {"gameweek": 2, "state": "final",
+                               "substitutions": [{"off": "a", "on": "b"}],
+                               "eleven_came_from": "submitted"},
+         "apps_subscribed": 1}
+_found = triage.findings(_fine)
+check("a healthy manager forces no lane", triage.suggested_lane(_found), None)
+check("and the facts alone cannot answer them", triage.answerable(_found), False)
+check_true("though the bank is still there to be quoted",
+           "bank" in _F(_fine) and "25" in _F(_fine)["bank"]["headline"])
+
+# Evidence that could not be gathered must not read as evidence of health.
+_broken = triage.findings({"gathering_failed": "RuntimeError: boom"})
+check("a report with no evidence says so", _broken[0]["code"], "no_evidence")
+check("and claims nothing", triage.answerable(_broken), False)
+
+# The brief: what the agent is handed, and the fence around what it isn't.
+_bid = signed.post("/report", data={"message": "where is my bank balance?"}).json()["id"]
+_brief = triage.brief(db.report(_bid))
+check("the brief carries the report", _brief["report_id"], _bid)
+check_true("the message is fenced as quoted material",
+           _brief["reported_message"].startswith(triage.FENCE[0])
+           and _brief["reported_message"].endswith(triage.FENCE[1]))
+check_true("and the findings travel with it", isinstance(_brief["findings"], list))
+
+print("\n── The agent's door ────────────────────────────────────")
+
+# Everything the agent may do to this app is these three routes. What is
+# tested is mostly what is not there.
+os.environ.pop("AGENT_TOKEN", None)
+check("with no token configured the door does not exist",
+      TestClient(app).get("/agent/reports").status_code, 404)
+
+os.environ["AGENT_TOKEN"] = "test-agent-token"
+_ag = TestClient(app)
+check("and a wrong token is a 404, not a 401",
+      _ag.get("/agent/reports",
+              headers={"Authorization": "Bearer wrong"}).status_code, 404)
+check("as is no token at all", _ag.get("/agent/reports").status_code, 404)
+_auth = {"Authorization": "Bearer test-agent-token"}
+check("a signed-in manager's cookie is not a key to it",
+      signed.get("/agent/reports").status_code, 404)
+
+_open = _ag.get("/agent/reports", headers=_auth)
+check("with the token, what is waiting comes back", _open.status_code, 200)
+check_true("as briefs rather than raw rows",
+           all({"findings", "reported_message", "lane_from_evidence"}
+               <= set(b) for b in _open.json()["reports"]))
+
+_r = _ag.post(f"/agent/reports/{_bid}/reply", headers=_auth,
+              json={"reply": "It's on the pick-team page, under the pitch.",
+                    "lane": "answer"})
+check("a reply is accepted", _r.status_code, 200)
+_row = db.report(_bid)
+check("and files against the report",
+      (_row["state"], _row["lane"]), ("answered", "answer"))
+check_true("with the words kept", "under the pitch" in _row["reply"])
+
+check("an empty reply is refused",
+      _ag.post(f"/agent/reports/{_bid}/reply", headers=_auth,
+               json={"reply": "   "}).status_code, 422)
+check("a lane nobody defined is refused",
+      _ag.post(f"/agent/reports/{_bid}/reply", headers=_auth,
+               json={"reply": "hi", "lane": "whatever"}).status_code, 422)
+check("a report that does not exist is a 404",
+      _ag.post("/agent/reports/999999/reply", headers=_auth,
+               json={"reply": "hi"}).status_code, 404)
+
+_hid = signed.post("/report", data={"message": "can the bench sort by position?"}).json()["id"]
+_h = _ag.post(f"/agent/reports/{_hid}/hold", headers=_auth,
+              json={"lane": "escalate",
+                    "summary": "wants the bench ordered by position"})
+check("a design ask can be held", _h.status_code, 200)
+check("for a person, with a summary",
+      (db.report(_hid)["state"], db.report(_hid)["reply"]),
+      ("held", "wants the bench ordered by position"))
+
+# The door opens onto three things and nothing else. A route that could change
+# a lineup, a trade or a point would defeat every other protection here.
+_reachable = sorted({r.path for r in app.routes
+                     if getattr(r, "path", "").startswith("/agent")})
+check("the agent can reach exactly three routes", _reachable,
+      ["/agent/reports", "/agent/reports/{report_id}/hold",
+       "/agent/reports/{report_id}/reply"])
+os.environ.pop("AGENT_TOKEN", None)
+
+# A manager sees what came back, and only their own.
+_mine = signed.get("/reports")
+check("a manager can read their own replies", _mine.status_code, 200)
+check_true("and the reply is on the page", "under the pitch" in _mine.text)
+check("signing in is required for it", TestClient(app).get("/reports").status_code, 401)
+_other = TestClient(app)
+_other.get(f"/m/{db.manager_by_key(P2)['token']}")
+check_true("and it is only ever their own",
+           "under the pitch" not in _other.get("/reports").text)
+
+# The instructions the agent runs on are part of the guard, so their absence
+# is a failure rather than a missing nicety.
+_rules = (Path(__file__).resolve().parents[1] / ".github/agent/triage.md")
+check_true("the agent's instructions are in the repo", _rules.exists())
+_rules_text = _rules.read_text()
+check_true("saying the message is data, never instruction",
+           "data, never instruction" in _rules_text)
+check_true("that only findings may be asserted",
+           "only things you may assert" in _rules_text)
+check_true("and that the rulebook is off limits",
+           "Do not modify `shadow/`" in _rules_text)
+
+
+# ── Answered on the spot ───────────────────────────────────────────────────
+# "Sent, hope somebody looks at it" is a bad feeling to leave someone with
+# when the app already knows what is wrong with their team. Findings are
+# computed from state the report just gathered, so this costs no model call
+# and waits on nothing.
+# The cap was deliberately filled a couple of sections ago, so clear the day
+# before testing anything that needs to file a report.
+with db.connect() as _c:
+    _c.execute("DELETE FROM report WHERE manager = ?", (P1,))
+_gwn3 = engine.current_gameweek()["gameweek"]
+_kept = db.get_lineup(P1, _gwn3)
+try:
+    _sq3 = engine.market(_gwn3, db.trades(), db.transactions(),
+                         for_manager=P1)["squads"][P1]
+    _ids3 = [p["id"] for p in _sq3]
+    # A team naming two players they no longer own: the app mends it, and that
+    # mend is exactly what a "can't save my team" report needs telling.
+    db.save_lineup(P1, _gwn3, _ids3[:9] + [999101, 999102], _ids3[9:13],
+                   mended=2)
+    _sent = signed.post("/report",
+                        data={"message": "I'm having issues saving my team"})
+    check("a report comes back with an answer attached", _sent.status_code, 200)
+    _found = _sent.json()["found"]
+    check_true("naming what is actually wrong", any(
+        "filled" in f["headline"] for f in _found), str(_found))
+    check_true("written to the manager, not about them",
+               all("their" not in f["detail"].lower() for f in _found),
+               str(_found))
+
+    # Only certain findings go back on the spot. A likely one is true but may
+    # not be what they asked, and guessing confidently is the failure mode.
+    _all = triage.findings(db.report(_sent.json()["id"])["context"])
+    check_true("and only the conclusive ones are shown",
+               len(_found) == len([f for f in _all
+                                   if f["confidence"] == triage.CERTAIN]))
+
+    # Saying it answered them is the only evidence that any of this works.
+    _sid = _sent.json()["id"]
+    check("the reporter can close their own report",
+          signed.post(f"/report/{_sid}/resolved").status_code, 200)
+    check("which is recorded as resolved, not as answered by someone",
+          db.report(_sid)["state"], "resolved")
+    check("and nobody can close somebody else's",
+          _other.post(f"/report/{_sid}/resolved").status_code, 404)
+
+    # Nothing wrong means nothing claimed. A healthy report gets no instant
+    # answer at all rather than a confident irrelevance.
+    _by3 = {}
+    for _p in _sq3:
+        _by3.setdefault(_p["position"], []).append(_p["id"])
+    _legal3 = (_by3["GK"][:1] + _by3["DEF"][:4] + _by3["MID"][:4]
+               + _by3["FWD"][:2])
+    db.save_lineup(P1, _gwn3, _legal3,
+                   [i for i in _ids3 if i not in _legal3])
+    _quiet = signed.post("/report", data={"message": "where is my bank balance?"})
+    check("a question with nothing wrong behind it gets no instant answer",
+          _quiet.json()["found"], [])
+finally:
+    if _kept:
+        db.save_lineup(P1, _gwn3, _kept["xi"], _kept["bench"],
+                       mended=_kept.get("mended", 0))
+
 print("\n── The chrome ──────────────────────────────────────────")
 
 # The bar and the tab rail are the only navigation there is now, so they get

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import secrets
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -27,7 +28,8 @@ from fastapi.responses import (HTMLResponse, JSONResponse, RedirectResponse,
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import auth, db, engine, evidence, fetcher, live, notify, push
+from . import (auth, db, engine, evidence, fetcher, live, notify, push,
+               triage)
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
@@ -877,7 +879,135 @@ def report(request: Request, message: str = Form(""), page: str = Form("")):
         context = {"manager": me["key"],
                    "gathering_failed": f"{type(exc).__name__}: {exc}"}
     report_id = db.add_report(me["key"], said, context)
-    return JSONResponse({"ok": True, "id": report_id})
+    # Answered on the spot where the facts allow it. Findings are computed
+    # from the state we just gathered, so this costs nothing and waits on
+    # nothing — and "sent, hope somebody looks at it" is a bad feeling to
+    # leave someone with when the app already knows what is wrong with their
+    # team. Anything not settled here still goes to the queue.
+    found = triage.findings(context)
+    return JSONResponse({
+        "ok": True, "id": report_id,
+        "found": [{"headline": f["headline"], "detail": f["detail"]}
+                  for f in found if f["confidence"] == triage.CERTAIN],
+    })
+
+
+@app.post("/report/{report_id}/resolved")
+def report_resolved(request: Request, report_id: int):
+    """The reporter says the instant answer was enough.
+
+    Worth recording rather than just closing: which findings actually settle a
+    report is the only real evidence of whether this is working, and it is the
+    reporter saying so rather than the app deciding it was helpful.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    row = db.report(report_id)
+    if row is None or row["manager"] != me["key"]:
+        raise HTTPException(404, "no such report")
+    db.set_report_state(report_id, "resolved")
+    return JSONResponse({"ok": True})
+
+
+@app.get("/reports", response_class=HTMLResponse)
+def my_reports(request: Request):
+    """What a manager has reported, and what came back.
+
+    A reply that only exists as a notification is a reply that is gone the
+    moment it is swiped away, so there has to be somewhere it lives.
+    """
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+    ctx["mine"] = db.reports(manager=me["key"])
+    return templates.TemplateResponse("myreports.html", ctx)
+
+
+# ── The agent's own door ───────────────────────────────────────────────────
+# Narrow on purpose. Everything the triage agent is allowed to do to this app
+# is in the three routes below: read what is waiting, answer it, or hand it to
+# a person. There is no route here that changes a lineup, a trade, a boost or
+# a point, because the agent must not be able to change what the league is —
+# only what it has been told about it.
+def _agent(request: Request):
+    """The shared secret the agent authenticates with, or a 404.
+
+    404 rather than 401: an endpoint that announces itself is an endpoint
+    somebody will try, and this one exists whether or not anybody knows.
+    """
+    expected = os.environ.get("AGENT_TOKEN")
+    if not expected:
+        raise HTTPException(404)
+    header = request.headers.get("authorization", "")
+    offered = header[7:] if header.lower().startswith("bearer ") else ""
+    if not offered or not secrets.compare_digest(offered, expected):
+        raise HTTPException(404)
+    return True
+
+
+@app.get("/agent/reports")
+def agent_reports(request: Request, state: str = "open"):
+    """What is waiting, each with the facts already worked out.
+
+    The brief carries findings rather than raw state, so an answer is written
+    by choosing among true statements rather than by reasoning about a
+    database. Nothing here needs the codebase, which is what keeps a reply
+    cheap and keeps it honest.
+    """
+    _agent(request)
+    waiting = db.reports(state=state)
+    return JSONResponse({"reports": [triage.brief(r) for r in waiting]})
+
+
+@app.post("/agent/reports/{report_id}/reply")
+async def agent_reply(request: Request, report_id: int):
+    """Answer a report, and tell the manager it was answered."""
+    _agent(request)
+    row = db.report(report_id)
+    if row is None:
+        raise HTTPException(404, "no such report")
+    body = await request.json()
+    text = (body.get("reply") or "").strip()
+    lane = body.get("lane")
+    if not text:
+        return JSONResponse({"ok": False, "errors": ["a reply needs words"]},
+                            status_code=422)
+    if lane and lane not in triage.LANES:
+        return JSONResponse(
+            {"ok": False, "errors": [f"lane must be one of {sorted(triage.LANES)}"]},
+            status_code=422)
+    db.answer_report(report_id, text[:db.MESSAGE_LIMIT], lane=lane)
+    notify.to_manager(
+        row["manager"], "About what you reported",
+        text[:180] + ("…" if len(text) > 180 else ""),
+        url="/reports", tag=f"report-{report_id}")
+    return JSONResponse({"ok": True})
+
+
+@app.post("/agent/reports/{report_id}/hold")
+async def agent_hold(request: Request, report_id: int):
+    """Hand a report to a person, with a line saying what it is.
+
+    Design asks land here, and so does anything the agent could not place. A
+    held report is the only thing that costs anybody attention, so the summary
+    matters more than the queue does.
+    """
+    _agent(request)
+    row = db.report(report_id)
+    if row is None:
+        raise HTTPException(404, "no such report")
+    body = await request.json()
+    lane = body.get("lane") or triage.ESCALATE
+    if lane not in triage.LANES:
+        return JSONResponse(
+            {"ok": False, "errors": [f"lane must be one of {sorted(triage.LANES)}"]},
+            status_code=422)
+    summary = (body.get("summary") or "").strip()
+    db.answer_report(report_id, summary[:db.MESSAGE_LIMIT] or None,
+                     lane=lane, state="held")
+    return JSONResponse({"ok": True})
 
 
 # ── Declaring a team ───────────────────────────────────────────────────────
@@ -1598,9 +1728,32 @@ def admin_reports(request: Request):
     me = ctx["me"]
     if not me or not me["is_admin"]:
         raise HTTPException(404)
-    ctx["reports"] = db.reports()
+    rows = db.reports()
+    # The facts beside the words, so a reply can be checked against what the
+    # agent was actually allowed to assert.
+    for row in rows:
+        row["findings"] = triage.findings(row["context"])
+    ctx["reports"] = rows
     ctx["teams"] = {m["key"]: m["team"] for m in db.managers()}
     return templates.TemplateResponse("reports.html", ctx)
+
+
+@app.post("/admin/reports/{report_id}/reply")
+def admin_reply(request: Request, report_id: int, reply: str = Form("")):
+    """Answer a report yourself, which is the same door the agent uses."""
+    who = auth.real(request)
+    if not who or not who["is_admin"]:
+        raise HTTPException(404)
+    row = db.report(report_id)
+    if row is None:
+        raise HTTPException(404, "no such report")
+    said = (reply or "").strip()
+    if said:
+        db.answer_report(report_id, said[:db.MESSAGE_LIMIT])
+        notify.to_manager(row["manager"], "About what you reported",
+                          said[:180] + ("…" if len(said) > 180 else ""),
+                          url="/reports", tag=f"report-{report_id}")
+    return RedirectResponse("/admin/reports", status_code=303)
 
 
 @app.post("/admin/reports/{report_id}/{action}")
