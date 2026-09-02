@@ -26,6 +26,9 @@ jobs:
     # Only pull requests the fix job raised. Anything a person opens is
     # theirs to merge, and this job should keep its hands off it.
     if: startsWith(github.event.pull_request.head.ref, 'agent/fix-')
+    outputs:
+      ok: ${{ steps.radius.outputs.ok }}
+      verdict: ${{ steps.radius.outputs.verdict }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,30 +74,41 @@ jobs:
           ( cd season-app && python3 test_app.py )
           for t in mechanics scoring lineups; do python3 "shadow/test_$t.py"; done
 
-      # Green tests and inside the radius: it goes. Anything else waits, and
-      # says on the pull request exactly which rule it tripped, so the person
-      # reading it does not have to work that out.
+  # Merging is a second job on purpose, and this is the detail that makes
+  # branch protection work at all. Once `gate` is a required check, a merge
+  # requested from inside `gate` is refused — the check is still running, so
+  # from GitHub's side it has not passed. Waiting for the job to finish means
+  # asking from a job that `needs` it.
+  merge:
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
       - name: Merge it
-        if: steps.radius.outputs.ok == 'yes'
+        if: needs.gate.outputs.ok == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr merge "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
             --squash --delete-branch --body "Gate: within the blast radius."
 
+      # Tests passed — this job only runs if they did — but a rule was tripped.
+      # The comment says which one, so whoever reads it starts with the answer.
       - name: Or hand it over
-        if: steps.radius.outputs.ok != 'yes'
+        if: needs.gate.outputs.ok != 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr comment "${{ github.event.pull_request.number }}" --body \
-          "$(printf 'Tests pass, but this one is not merging itself.\n\n```\n%s\n```\n\nIt needs a person. Nothing has been merged.' "${{ steps.radius.outputs.verdict }}")"
-          gh pr edit "${{ github.event.pull_request.number }}" --add-label "needs-a-person" || true
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" --body \
+          "$(printf 'Tests pass, but this one is not merging itself.\n\n```\n%s\n```\n\nIt needs a person. Nothing has been merged.' "${{ needs.gate.outputs.verdict }}")"
+          gh pr edit "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" --add-label "needs-a-person" || true
 
       # Whoever reported it hears when it is live, which is the only version
       # of the news they can check for themselves.
       - name: Tell whoever reported it
-        if: steps.radius.outputs.ok == 'yes'
+        if: needs.gate.outputs.ok == 'yes'
         env:
           APP_URL: ${{ secrets.APP_URL }}
           AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}

@@ -56,8 +56,9 @@ Engine suites run from the repository root — they take paths relative to it.
 
 ## Opening it
 
-Branch as `agent/fix-<report id>`, and put **`Fixes report #<id>`** in the body
-on its own line. The merge job reads that to tell the manager when it is live;
+Branch as `agent/fix-<report id>` — the gate only runs on branches named that
+way, so a different name means nothing merges. Put **`Fixes report #<id>`** in
+the body on its own line. The merge job reads that to tell the manager when it is live;
 without it they hear nothing.
 
 The body should say what was wrong, what you changed, and how you know — name

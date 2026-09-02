@@ -814,11 +814,30 @@ the agent's own instructions and this gate, `main.py` holds the agent's door,
 shows, `db.py` is the schema and the sign-in links, and `requirements.txt` and
 the Dockerfile are what gets installed and run.
 
-Two details make the gate worth trusting. `auto-merge.yml` checks out **main's**
-copy of the gate before running it, so a pull request that widened the
-allow-list would still be judged by the old one — otherwise it is no gate at
-all. And the gate runs alongside all four suites; green tests are necessary
-but never sufficient, since deleting a test is also a way to make it pass.
+Four details make the gate worth trusting, and three of them are only obvious
+once branch protection is on:
+
+- `auto-merge.yml` checks out **main's** copy of the gate before running it, so
+  a pull request that widened the allow-list would still be judged by the old
+  one. Judged by its own copy it would be no gate at all.
+- The gate runs alongside all four suites. Green tests are necessary and never
+  sufficient, since deleting a test is also a way to make it pass.
+- **Merging is a second job.** Once `gate` is a required status check, a merge
+  requested from inside `gate` is refused — the check is still running, so from
+  GitHub's side it has not passed. Waiting for it means asking from a job that
+  `needs` it.
+- **The fix job opens its pull request with its own token** (`AGENT_GH_TOKEN`),
+  not the default one. A pull request opened with `GITHUB_TOKEN` does not
+  trigger `pull_request` workflows — GitHub blocks that to stop a workflow
+  setting itself off for ever — so the gate would never run on the very pull
+  requests it exists for. The job refuses to start without that token rather
+  than opening one nothing responds to.
+
+None of this is enforced until `main` is protected: **require a pull request
+before merging** (no approvals — an approval requirement means the agent's
+work can never merge itself) and **require the `gate` check**. Until then the
+gate is a convention, and the fix job's write token could push straight past
+it.
 
 ```bash
 python3 .github/gate/test_blast_radius.py      # the gate's own suite
