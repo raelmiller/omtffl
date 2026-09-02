@@ -34,6 +34,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A missing secret should say so. Without this the first sign of one is
+      # `curl: (3) URL rejected: No host part in the URL`, which is a poor way
+      # to find out you skipped a box.
+      - name: Check the secrets are set
+        run: |
+          missing=""
+          [ -z "${{ secrets.APP_URL }}" ] && missing="$missing APP_URL"
+          [ -z "${{ secrets.AGENT_TOKEN }}" ] && missing="$missing AGENT_TOKEN"
+          [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ] && missing="$missing ANTHROPIC_API_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Not set:$missing. Add them under Settings →"\
+                 " Secrets and variables → Actions. AGENT_TOKEN must match the"\
+                 " one in Railway exactly, or the app answers 404."
+            exit 1
+          fi
+
       - name: Is anything waiting?
         id: waiting
         env:
@@ -41,8 +57,13 @@ jobs:
           AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
         run: |
           set -euo pipefail
-          briefs=$(curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
-                     "$APP_URL/agent/reports?state=open")
+          if ! briefs=$(curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
+                          "$APP_URL/agent/reports?state=open"); then
+            echo "::error::Could not read $APP_URL/agent/reports. A 404 here"\
+                 " means AGENT_TOKEN does not match the one in Railway, or"\
+                 " Railway has not redeployed since the agent routes landed."
+            exit 1
+          fi
           count=$(printf '%s' "$briefs" | python3 -c \
                     'import json,sys; print(len(json.load(sys.stdin)["reports"]))')
           echo "count=$count" >> "$GITHUB_OUTPUT"
