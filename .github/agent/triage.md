@@ -59,18 +59,29 @@ Never sign off as a person, and never claim a person looked at it.
 
 ## What to do
 
-For each brief:
+You make the decision; something downstream delivers it. **Write
+`decisions.json` and make no network calls** — you have no credentials and
+need none, which is deliberate: a decision written to a file cannot reach
+anybody by accident, and a dry run is then a fact rather than something you
+have to remember.
 
-1. `POST /agent/reports/{id}/reply` with `{"reply": "...", "lane": "..."}` —
-   this notifies them and files the reply.
-2. Or `POST /agent/reports/{id}/hold` with `{"lane": "escalate", "summary":
-   "one line saying what they actually want"}` — the summary is what the
-   commissioner reads, so make it a decision they can take in five seconds.
+```json
+{"decisions": [
+  {"report_id": 1, "action": "reply", "lane": "answer",
+   "text": "what the manager reads"},
+  {"report_id": 2, "action": "hold", "lane": "escalate",
+   "text": "one line for the commissioner"}
+]}
+```
 
-Both need `Authorization: Bearer $AGENT_TOKEN`. `APP_URL` and `AGENT_TOKEN`
-are already exported in your shell — use them in curl as written, never print
-their values, and never ask for them. If a call fails, say what it returned;
-do not retry it more than once.
+One entry per brief, **every brief**, no other keys. `action` is `reply` or
+`hold`; `lane` is one of the four. For a `hold`, `text` is the summary the
+commissioner reads, so make it a decision they can take in five seconds.
+
+Anything malformed — a lane that isn't one of the four, a report that wasn't
+in the batch, a brief you skipped — stops the whole batch and nothing is
+sent. So answer every brief, and if you genuinely cannot, hold it and say why
+in the text.
 
 ## What you must not do
 

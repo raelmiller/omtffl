@@ -3510,6 +3510,16 @@ check_true("that only findings may be asserted",
            "only things you may assert" in _rules_text)
 check_true("and that the rulebook is off limits",
            "Do not modify `shadow/`" in _rules_text)
+# The agent decides; the shell delivers. It is handed no credentials, which
+# is what makes a dry run a fact rather than a promise — so its instructions
+# must not tell it to make calls it cannot make.
+check_true("triage writes a file rather than calling anything",
+           "make no network calls" in _rules_text)
+check_true("and is told nothing about credentials",
+           "AGENT_TOKEN" not in _rules_text and "curl" not in _rules_text)
+
+_poster = Path(__file__).resolve().parents[1] / ".github/agent/post_decisions.py"
+check_true("and the thing that does deliver is in the repo", _poster.exists())
 
 
 # ── Answered on the spot ───────────────────────────────────────────────────

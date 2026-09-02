@@ -82,46 +82,54 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Answer them
+      # The model decides; the shell acts. Two reasons, and the second is
+      # the one that matters: a decision written to a file cannot post
+      # anything by accident, so the secrets never go near the model and
+      # DRY_RUN is honoured by the shell rather than by asking a model to
+      # remember a flag. The first is duller — the tool sandbox does not
+      # expand environment variables inside a permitted command, so a model
+      # told to curl "$APP_URL" spent its turn asking for the value.
+      - name: Decide what to say
         if: steps.waiting.outputs.count != '0'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID }}
-          APP_URL: ${{ secrets.APP_URL }}
-          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
-          DRY_RUN: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
           npm install -g @anthropic-ai/claude-code
-          # An identity-linked API key must name the workspace it acts in,
-          # and the CLI has no flag for it — the header goes through
-          # ANTHROPIC_CUSTOM_HEADERS. Optional: a key scoped to a workspace
-          # carries that itself and needs nothing here.
           if [ -n "${ANTHROPIC_WORKSPACE_ID:-}" ]; then
             export ANTHROPIC_CUSTOM_HEADERS="anthropic-workspace-id: $ANTHROPIC_WORKSPACE_ID"
           fi
-          # Triage reads facts and writes prose. It does not read this
-          # repository and does not need to, so the tools it is given are the
-          # ones that reach the app and nothing else.
-          # The heredoc is quoted, so the prompt reaches the model as written
-          # rather than with the secrets substituted into it — they belong in
-          # the environment, not in the text of a prompt. Which means the
-          # prompt has to say they are already there: told "$APP_URL", the
-          # first real run read it as a placeholder and asked for the value.
           claude -p "$(cat <<'PROMPT'
           Read .github/agent/triage.md and follow it exactly.
 
           The reports waiting are in briefs.json in the working directory.
 
-          APP_URL and AGENT_TOKEN are already exported in your shell. Use them
-          in curl as written — curl -sS -X POST -H "Authorization: Bearer
-          $AGENT_TOKEN" -H 'Content-Type: application/json' -d '{...}'
-          "$APP_URL/agent/reports/<id>/reply" — and never print their values.
+          Write your decisions to decisions.json and do nothing else. No
+          network calls — something downstream makes them. The file is:
 
-          DRY_RUN is exported too. Run `echo "$DRY_RUN"` and look: if it says
-          true, print the reply you would send for each report and post
-          nothing at all. Otherwise post, and report what each call returned.
+          {"decisions": [
+            {"report_id": 1, "action": "reply", "lane": "answer",
+             "text": "what the manager reads"},
+            {"report_id": 2, "action": "hold", "lane": "escalate",
+             "text": "one line for the commissioner"}
+          ]}
+
+          One entry per brief, every brief, no other keys.
           PROMPT
           )" \
-            --allowedTools "Read,Bash(curl:*)" \
+            --allowedTools "Read,Write" \
             --model claude-haiku-4-5
+
+      # Posting is the shell's job, so a dry run is a fact rather than a
+      # promise, and a malformed decision is caught before it reaches anyone.
+      - name: Say it
+        if: steps.waiting.outputs.count != '0'
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          APP_URL="${APP_URL%/}"
+          python3 .github/agent/post_decisions.py
