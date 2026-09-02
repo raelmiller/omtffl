@@ -139,8 +139,12 @@ def findings(context):
         out.append(_finding(
             "bank", CONTEXT,
             f"Your points bank holds {standing['bank_balance']}.",
-            f"Shown on {standing.get('bank_shown_on', '/declare')}, under the "
-            "pitch, where it can also be spent on the round being picked.",
+            "There is one way to fill it: taking points as part of a trade. "
+            "Nothing else pays into it — not a good week, not an unspent "
+            "boost — so a bank at zero means no trade has ever brought you "
+            "points. Spending it is the other half: it is shown on "
+            f"{standing.get('bank_shown_on', '/declare')}, under the pitch, "
+            "where any part of it can be added to the round being picked.",
             lane=ANSWER))
 
     if "boost_left" in standing:
@@ -163,8 +167,8 @@ def findings(context):
             "Priority is the league table upside down — last place claims "
             "first — and it snakes, so whoever leads a round goes last in the "
             f"next. You are {_ordinal(waivers['table_position'])} in the "
-            "table, which is why you sit where you do. Losing a race costs "
-            "you that round "
+            "table, which is why you sit where you do. The whole order is on "
+            "/waivers. Losing a race costs you that round "
             "rather than your next choice.",
             lane=ANSWER))
 

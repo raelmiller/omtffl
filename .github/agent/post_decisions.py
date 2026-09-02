@@ -10,6 +10,10 @@ than delivered to somebody.
 
 Reads decisions.json beside briefs.json. Environment: APP_URL, AGENT_TOKEN,
 and DRY_RUN.
+
+Each decision carries two texts, and keeping them apart is the point: `text`
+goes to the manager and `note` goes to the commissioner. They were one field
+once, and the first held report showed its reporter the commissioner's note.
 """
 from __future__ import annotations
 
@@ -54,6 +58,7 @@ def main():
     for d in decisions:
         rid, action, lane = d.get("report_id"), d.get("action"), d.get("lane")
         text = (d.get("text") or "").strip()
+        note = (d.get("note") or "").strip()
         # Every one of these is a way a decision could reach a manager as
         # something nobody meant to send, so none of them are warnings.
         if rid not in waiting:
@@ -64,27 +69,38 @@ def main():
         elif lane not in LANES:
             problems.append(f"report {rid}: lane {lane!r} is not one of "
                             f"{sorted(LANES)}")
-        elif not text:
+        # A reply is the manager's only text, so it has to exist. A hold has
+        # the app's own wording to fall back on, and a held report with no
+        # note is one the commissioner opens knowing nothing.
+        elif action == "reply" and not text:
             problems.append(f"report {rid}: nothing to say")
+        elif action == "hold" and not note:
+            problems.append(f"report {rid}: held with no note for the "
+                            "commissioner")
         else:
-            ready.append((rid, action, lane, text))
+            ready.append((rid, action, lane, text, note))
 
-    missed = waiting - {r for r, _, _, _ in ready}
+    missed = waiting - {r for r, _, _, _, _ in ready}
     for rid in sorted(missed):
         problems.append(f"report {rid} was waiting and got no decision")
 
-    for rid, action, lane, text in ready:
+    for rid, action, lane, text, note in ready:
         verb = "REPLY" if action == "reply" else "HOLD "
-        print(f"\n{verb} #{rid}  [{lane}]\n  {text}")
+        print(f"\n{verb} #{rid}  [{lane}]")
+        print(f"  to them: {text or '(the app writes its own line)'}")
+        if note:
+            print(f"  to you : {note}")
 
     if dry:
         print(f"\nDRY RUN — {len(ready)} decision(s) above, nothing posted.")
     else:
-        for rid, action, lane, text in ready:
-            key = "reply" if action == "reply" else "summary"
+        for rid, action, lane, text, note in ready:
+            body = {"lane": lane, "reply": text}
+            if action == "hold":
+                body["summary"] = note
             try:
                 status = post(f"{app_url}/agent/reports/{rid}/{action}",
-                              token, {"lane": lane, key: text})
+                              token, body)
                 print(f"posted #{rid} -> {status}")
             except (urllib.error.URLError, OSError) as exc:
                 problems.append(f"report {rid}: could not post — {exc}")

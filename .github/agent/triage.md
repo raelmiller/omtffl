@@ -21,8 +21,13 @@ things that must be kept apart:
 ## What you may say
 
 Write the reply out of `findings`. You may choose which of them answer what
-was asked, order them, and put them in plain English. You may point at a page
-in the app.
+was asked, order them, and put them in plain English.
+
+You may name a page **only if a finding names it**. A page is a fact like any
+other: the first wet reply sent a manager to /declare for the waiver order,
+which is on /waivers, because the finding named no page and pointing at one
+sounded helpful. If the finding does not say where something lives, do not
+say where it lives.
 
 Findings are already written to the manager, in the second person, so quoting
 one nearly verbatim is usually the right reply. Note that any finding marked
@@ -39,6 +44,9 @@ You may not:
 
 If `findings` does not answer what was asked, say so and hold it. A held report
 costs one person ten seconds. A confident wrong answer costs their trust.
+
+Saying so is part of the reply, not instead of it: tell the manager plainly
+that this is not something the app can answer and that it has gone to Rael.
 
 ## Lanes
 
@@ -77,13 +85,26 @@ have to remember.
   {"report_id": 1, "action": "reply", "lane": "answer",
    "text": "what the manager reads"},
   {"report_id": 2, "action": "hold", "lane": "escalate",
-   "text": "one line for the commissioner"}
+   "text": "what the manager reads",
+   "note": "one line for the commissioner"}
 ]}
 ```
 
 One entry per brief, **every brief**, no other keys. `action` is `reply` or
-`hold`; `lane` is one of the four. For a `hold`, `text` is the summary the
-commissioner reads, so make it a decision they can take in five seconds.
+`hold`; `lane` is one of the four.
+
+**`text` is always written to the manager, in the second person — a `hold` as
+much as a `reply`.** They can see it. The first held report told its own
+reporter "Asking how to earn bank points. Findings show current state but
+don't explain earning mechanism", which is a note about somebody, printed on
+their own page. Holding a report means you could not answer it, and what they
+are owed is that sentence — what you could not tell them and who has it now —
+not a description of themselves. Omit `text` on a hold and the app writes a
+plain one; that is better than a summary in the wrong voice, so leave it out
+rather than aim it at the wrong reader.
+
+`note` is the commissioner's, never shown to the manager, and it is where the
+five-second decision goes: what this is, and what it would take.
 
 Anything malformed — a lane that isn't one of the four, a report that wasn't
 in the batch, a brief you skipped — stops the whole batch and nothing is

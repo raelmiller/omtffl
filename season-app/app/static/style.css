@@ -1361,6 +1361,13 @@ td.team .pn.tappable { font-weight: 600; }
   border-left: 3px solid var(--accent);
   background: var(--surface-2); border-radius: 0 6px 6px 0;
 }
+/* The commissioner's note. Deliberately not the accent edge — that one says
+   "this went back to them", and this is the half that did not. */
+.rptnote {
+  margin: .5rem 0 0; padding: .5rem .8rem; font-size: .85rem;
+  border-left: 3px solid var(--border); color: var(--muted);
+}
+.rptnote .eyebrow { margin-right: .4rem; }
 .rptfind { margin: .5rem 0 0; padding-left: 1.1rem; font-size: .85rem; }
 .rptfind li { margin-bottom: .35rem; }
 .fconf {

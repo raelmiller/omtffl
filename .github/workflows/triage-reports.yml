@@ -28,6 +28,9 @@ concurrency:
 jobs:
   triage:
     runs-on: ubuntu-latest
+    # A run takes under a minute. The default is six hours, which is how long
+    # an hourly job would sit on a runner if the model call ever hung.
+    timeout-minutes: 10
     # No point starting a model run to find nothing waiting, and no point
     # having the secrets checked out on a fork.
     if: github.repository == 'raelmiller/omtffl'
@@ -112,10 +115,14 @@ jobs:
             {"report_id": 1, "action": "reply", "lane": "answer",
              "text": "what the manager reads"},
             {"report_id": 2, "action": "hold", "lane": "escalate",
-             "text": "one line for the commissioner"}
+             "text": "what the manager reads",
+             "note": "one line for the commissioner"}
           ]}
 
-          One entry per brief, every brief, no other keys.
+          One entry per brief, every brief, no other keys. "text" is always
+          written to the manager, in the second person, on a hold as much as
+          on a reply — they can see it. "note" is the commissioner's and is
+          required on a hold.
           PROMPT
           )" \
             --allowedTools "Read,Write" \

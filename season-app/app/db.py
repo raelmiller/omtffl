@@ -202,7 +202,13 @@ CREATE TABLE IF NOT EXISTS report (
     -- person, which is where anything touching design or the rules lands.
     state       TEXT NOT NULL DEFAULT 'open',
     lane        TEXT,                    -- set by triage; absent until then
+    -- Written to the manager, in the second person, and shown to them. Held
+    -- reports get one too: "it is with Rael" is an answer, and silence is not.
     reply       TEXT,
+    -- Written to the commissioner about the manager, and never shown to them.
+    -- These were one column once, which meant a held report showed its reader
+    -- a note about themselves in the third person.
+    note        TEXT,
     replied_at  TEXT,
     -- The pull request carrying the fix, once one exists. Kept so a report
     -- can be told "this is live" rather than "this is fixed", which are not
@@ -272,6 +278,8 @@ def _migrate(conn):
     reports = {r["name"] for r in conn.execute("PRAGMA table_info(report)")}
     if reports and "pr" not in reports:
         conn.execute("ALTER TABLE report ADD COLUMN pr INTEGER")
+    if reports and "note" not in reports:
+        conn.execute("ALTER TABLE report ADD COLUMN note TEXT")
 
 
 def init():
@@ -1057,15 +1065,23 @@ def _report(row):
             "created_at": row["created_at"], "message": row["message"],
             "context": context, "state": row["state"], "lane": row["lane"],
             "reply": row["reply"], "replied_at": row["replied_at"],
+            "note": row["note"] if "note" in row.keys() else None,
             "pr": row["pr"] if "pr" in row.keys() else None}
 
 
-def answer_report(report_id, reply, lane=None, state="answered"):
+def answer_report(report_id, reply, lane=None, state="answered", note=None):
+    """Record what was said, and to whom.
+
+    `reply` is read by the manager; `note` is read by the commissioner. A
+    None `note` leaves any existing one alone, so answering twice never
+    silently drops the reason a report was held the first time.
+    """
     with connect() as conn:
         conn.execute(
             "UPDATE report SET reply = ?, replied_at = ?, state = ?,"
-            " lane = COALESCE(?, lane) WHERE id = ?",
-            (reply, now(), state, lane, report_id))
+            " lane = COALESCE(?, lane), note = COALESCE(?, note)"
+            " WHERE id = ?",
+            (reply, now(), state, lane, note, report_id))
 
 
 def set_report_state(report_id, state, lane=None, pr=None):

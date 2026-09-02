@@ -27,9 +27,15 @@
     {# Their words, shown as words. Never rendered as anything else. #}
     <p class="rptsaid">{{ r.message }}</p>
 
+    {# What the manager was told, in the words they can see on /reports. #}
     {% if r.reply %}
     <p class="rptreply">{{ r.reply }}
       {%- if r.replied_at %}<span class="eyebrow"> &middot; {{ r.replied_at }}</span>{% endif %}</p>
+    {% endif %}
+
+    {# And what the agent said about it, which only ever appears here. #}
+    {% if r.note %}
+    <p class="rptnote"><span class="eyebrow">For you</span> {{ r.note }}</p>
     {% endif %}
 
     {% if r.state == 'held' %}

@@ -118,6 +118,20 @@ def refresh_if_settling():
 # team already put right, rather than one being put right in front of them.
 MEND_MINUTES = 10
 
+# What a held report says to the manager when the agent supplies nothing. It
+# says who has it and what happens next, because "with the commissioner" on a
+# pill is a status rather than a reply, and being escalated should not feel
+# like being ignored.
+HELD_REPLY = ("This one needs Rael rather than the app — it is on his desk "
+              "now, and you will get a reply here when he has looked.")
+
+# Likewise for a report read as a defect. It promises a fix is being attempted
+# and nothing about when, because the honest answer to when is that nobody
+# knows until the change is written and the gate has had a look at it.
+BUG_REPLY = ("That looks like a fault in the app rather than anything you "
+             "did. A fix is being written, and this page will say when it "
+             "is live.")
+
 
 def mend_lineup(key, gameweek, squad, saved):
     """Bring one saved team back in line with the squad, and store it.
@@ -1020,6 +1034,14 @@ async def agent_hold(request: Request, report_id: int):
     Design asks land here, and so does anything the agent could not place. A
     held report is the only thing that costs anybody attention, so the summary
     matters more than the queue does.
+
+    Two texts, because there are two readers and they are owed different
+    things. `summary` is the commissioner's — what this is, in five seconds.
+    `reply` is the manager's, and it is written to them. These were one field
+    to begin with, and the first held report showed its own reporter
+    "Asking how to earn bank points" — a note about them, in the third person,
+    on their own page. Being handed to a person is not a reason to be talked
+    about rather than to.
     """
     _agent(request)
     row = db.report(report_id)
@@ -1032,8 +1054,13 @@ async def agent_hold(request: Request, report_id: int):
             {"ok": False, "errors": [f"lane must be one of {sorted(triage.LANES)}"]},
             status_code=422)
     summary = (body.get("summary") or "").strip()
-    db.answer_report(report_id, summary[:db.MESSAGE_LIMIT] or None,
-                     lane=lane, state="held")
+    said = (body.get("reply") or "").strip() or HELD_REPLY
+    db.answer_report(report_id, said[:db.MESSAGE_LIMIT], lane=lane,
+                     state="held", note=summary[:db.MESSAGE_LIMIT] or None)
+    notify.to_manager(
+        row["manager"], "About what you reported",
+        said[:180] + ("…" if len(said) > 180 else ""),
+        url="/reports", tag=f"report-{report_id}")
     return JSONResponse({"ok": True})
 
 
@@ -1056,9 +1083,14 @@ async def agent_bug(request: Request, report_id: int):
         return JSONResponse({"ok": False, "errors": ["pr must be a number"]},
                             status_code=422)
     summary = (body.get("summary") or "").strip()
-    if summary:
-        db.answer_report(report_id, summary[:db.MESSAGE_LIMIT],
-                         lane=triage.DIAGNOSE, state="bug")
+    said = (body.get("reply") or "").strip()
+    if summary or said:
+        # Same split as a hold: what the manager reads, and what the
+        # commissioner reads about them. Only the first ever reaches a page
+        # they can open.
+        db.answer_report(report_id, said[:db.MESSAGE_LIMIT] or BUG_REPLY,
+                         lane=triage.DIAGNOSE, state="bug",
+                         note=summary[:db.MESSAGE_LIMIT] or None)
     db.set_report_state(report_id, "bug", lane=triage.DIAGNOSE, pr=pr)
     return JSONResponse({"ok": True})
 

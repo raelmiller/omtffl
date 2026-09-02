@@ -3512,11 +3512,35 @@ check("a report that does not exist is a 404",
 _hid = signed.post("/report", data={"message": "can the bench sort by position?"}).json()["id"]
 _h = _ag.post(f"/agent/reports/{_hid}/hold", headers=_auth,
               json={"lane": "escalate",
-                    "summary": "wants the bench ordered by position"})
+                    "summary": "wants the bench ordered by position",
+                    "reply": "Not something the app decides — it's with Rael."})
 check("a design ask can be held", _h.status_code, 200)
+_held = db.report(_hid)
 check("for a person, with a summary",
-      (db.report(_hid)["state"], db.report(_hid)["reply"]),
+      (_held["state"], _held["note"]),
       ("held", "wants the bench ordered by position"))
+
+# The two texts have two readers, and the manager only ever gets one of them.
+# They were one field once, and a held report showed its own reporter the
+# note written about them.
+check("what the manager reads is written to them",
+      _held["reply"], "Not something the app decides — it's with Rael.")
+check_true("and the commissioner's note is not what they read",
+           _held["note"] not in (_held["reply"] or ""))
+_seen = signed.get("/reports").text
+check_true("so the note stays off their page",
+           "wants the bench ordered by position" not in _seen)
+check_true("while the reply reaches it", "it&#39;s with Rael" in _seen)
+
+# A hold with nothing said to the manager still says something to them,
+# because "with the commissioner" on a pill is a status rather than a reply.
+_qid = signed.post("/report", data={"message": "why is the table that order?"}).json()["id"]
+_ag.post(f"/agent/reports/{_qid}/hold", headers=_auth,
+         json={"lane": "escalate", "summary": "wants the tie-break explained"})
+check("a hold with no reply falls back to the app's own words",
+      db.report(_qid)["reply"], _mn.HELD_REPLY)
+check_true("which names who has it",
+           "Rael" in db.report(_qid)["reply"])
 
 # The door opens onto three things and nothing else. A route that could change
 # a lineup, a trade or a point would defeat every other protection here.
