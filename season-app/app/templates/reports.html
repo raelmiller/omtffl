@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Reports — Matchweek{% endblock %}
+{% block heading %}Reports{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {% if reports %}
+    {{ reports|length }} in all &middot;
+    {{ reports|selectattr('state', 'equalto', 'held')|list|length }} waiting on you
+  {% else %}
+    Nothing reported yet.
+  {% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+<section>
+  {% for r in reports %}
+  <div class="panel rpt {{ r.state }}">
+    <div class="rpthead">
+      <span class="eyebrow">
+        #{{ r.id }} &middot; {{ teams.get(r.manager, r.manager) }}
+        <span class="mgr">{{ r.manager }}</span> &middot; {{ r.created_at }}
+      </span>
+      <span class="pill">{{ r.lane or r.state }}</span>
+    </div>
+
+    {# Their words, shown as words. Never rendered as anything else. #}
+    <p class="rptsaid">{{ r.message }}</p>
+
+    {% if r.reply %}
+    <p class="note"><strong>Replied {{ r.replied_at }}:</strong> {{ r.reply }}</p>
+    {% endif %}
+
+    {% if r.state == 'held' %}
+    <div class="tacts">
+      <form method="post" action="/admin/reports/{{ r.id }}/approve">
+        <button class="btn small">Approve</button>
+      </form>
+      <form method="post" action="/admin/reports/{{ r.id }}/ignore">
+        <button class="btn small ghost">Ignore</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <details>
+      <summary>What the app knew</summary>
+      <pre class="rptctx">{{ r.context|tojson(indent=1) }}</pre>
+    </details>
+  </div>
+  {% endfor %}
+</section>
+
+<p class="sub"><a href="/admin">&larr; Admin</a></p>
+{% endblock %}

@@ -39,7 +39,14 @@ try:
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     AVAILABLE = True
     UNAVAILABLE_BECAUSE = None
-except Exception as exc:                    # ImportError, or a broken build
+except (KeyboardInterrupt, SystemExit):     # never swallow these
+    raise
+except BaseException as exc:                # ImportError, or a broken build
+    # BaseException rather than Exception, because the broken-build case does
+    # not raise an ordinary one. A half-installed `cryptography` fails inside
+    # its Rust extension and comes out as pyo3's PanicException, which derives
+    # from BaseException — so the guard written for exactly this let it
+    # through, and importing anything that touches push took the app with it.
     AVAILABLE = False
     UNAVAILABLE_BECAUSE = f"{type(exc).__name__}: {exc}"
 

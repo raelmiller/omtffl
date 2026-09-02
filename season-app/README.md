@@ -699,6 +699,42 @@ the first real send is the first proof — which is why `/account` has a **Send
 a test** button that reports the push service's raw status rather than
 "sent".
 
+## Something wrong?
+
+A "Something wrong?" link in the footer of every page, for anyone signed in.
+One box, no dropdown: asking someone to categorise their own problem gets it
+wrong about as often as not, and the app already knows which page they were
+on, which round is open, whether their team would save and what they last
+scored. The sorting is done from what is known, not from what they guessed.
+
+**The claim is theirs; the evidence is ours.** Those are two columns, and
+keeping them apart is the whole design. `message` is what they wrote, read
+only ever as words — nothing downstream may take an instruction from it.
+`context` is what `evidence.gather` found at that moment, from the session and
+the database rather than from the request body. "I saved my team in time" is a
+claim; the stored timestamp is a fact, and a reply can tell them apart.
+
+Who is reporting comes from the session. A form field naming somebody else is
+ignored, and there is no way to attach evidence about a team that isn't yours
+— both pinned by tests, because that is the door manipulation would come
+through.
+
+The evidence pack is a summary, not a dump: the round and its deadline, their
+team sheet and *why a save would be refused right now*, their bank and boost,
+and the engine's full working for the last scored round — the eleven, each
+player's points and minutes, substitutions, boost and traded points. That is
+enough to answer the common reports without a follow-up question, and it is
+also exactly what a scoring dispute has to be answered with.
+
+Gathering it is wrapped: a report about the app being broken has to survive
+the app being broken, so a failure to collect evidence still files the report,
+with the failure recorded in place of the evidence.
+
+Ten reports per manager per day, so one frustrated evening cannot become a
+hundred rows. `/admin/reports` is the queue — every report, newest first, with
+its evidence behind a fold — and `/admin` shows only the count waiting on a
+person, because most of them should never need one.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

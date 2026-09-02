@@ -561,6 +561,22 @@ footer {
   border-top: 1px solid var(--border); padding-top: 1.1rem;
   font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 1.7;
 }
+/* A button that reads as a link. "Something wrong?" belongs beside the status
+   link in the footer, not as a floating widget over the page — it is the last
+   resort, and it should look like one rather than tout for trade. */
+.linkbtn {
+  font: inherit; color: var(--accent); background: none; border: 0;
+  padding: 0; cursor: pointer; text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.linkbtn:hover { color: var(--text); }
+/* One box, sized to write a couple of sentences in and no more. */
+#reportbox textarea {
+  width: 100%; box-sizing: border-box; resize: vertical;
+  font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .6rem;
+}
+#reportbox .tacts { margin-top: .7rem; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 /* The chrome is dark in both themes, so a deep-green ring would be lost on
    it — up there the ring is the lime. */
@@ -1319,3 +1335,22 @@ td.team .pn.tappable { font-weight: 600; }
   color: var(--text);
 }
 .pending strong { color: var(--warn); font-weight: 700; }
+
+/* ── Reports ─────────────────────────────────────────── */
+.rpt { margin-bottom: .8rem; padding: .8rem .9rem; }
+.rpthead { display: flex; justify-content: space-between; align-items: baseline;
+           gap: .6rem; flex-wrap: wrap; }
+/* What a manager wrote, set apart from everything the app says about it. It
+   is quoted text, not instruction, and it should read that way. */
+.rptsaid {
+  margin: .5rem 0; padding-left: .7rem;
+  border-left: 3px solid var(--border); white-space: pre-wrap;
+}
+.rpt.held { border-color: var(--accent); }
+.rpt summary { cursor: pointer; font-family: var(--mono); font-size: .7rem;
+               color: var(--muted); }
+.rptctx {
+  overflow-x: auto; font-size: .7rem; line-height: 1.5;
+  background: var(--surface-2); padding: .6rem; border-radius: 6px;
+}
+.rpt .tacts { display: flex; gap: .5rem; margin: .6rem 0; }

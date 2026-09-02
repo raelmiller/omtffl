@@ -187,6 +187,24 @@ CREATE TABLE IF NOT EXISTS lineup (
     mended      INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (manager, gameweek)
 );
+
+CREATE TABLE IF NOT EXISTS report (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    manager     TEXT NOT NULL REFERENCES manager(key),
+    created_at  TEXT NOT NULL,
+    -- What they wrote. Their words, and only ever read as words: nothing
+    -- downstream may take an instruction from this column.
+    message     TEXT NOT NULL,
+    -- What the app knew at that moment, gathered here rather than sent by the
+    -- browser. The claim is theirs; the evidence is ours.
+    context     TEXT NOT NULL,           -- JSON
+    -- open → in the queue. answered → a reply went back. held → waiting on a
+    -- person, which is where anything touching design or the rules lands.
+    state       TEXT NOT NULL DEFAULT 'open',
+    lane        TEXT,                    -- set by triage; absent until then
+    reply       TEXT,
+    replied_at  TEXT
+);
 """
 
 
@@ -961,3 +979,88 @@ def record_notice(kind, gameweek, key):
         conn.execute("INSERT OR IGNORE INTO notice_sent"
                      " (kind, gameweek, manager, sent_at) VALUES (?, ?, ?, ?)",
                      (kind, gameweek, key, now()))
+
+
+# ── Reports ────────────────────────────────────────────────────────────────
+# What a manager says is wrong, and what the app knew when they said it.
+
+# A cap, so one frustrated evening cannot become a hundred rows or a hundred
+# triage runs. Generous enough that nobody hits it in normal use.
+REPORTS_PER_DAY = 10
+MESSAGE_LIMIT = 2000
+
+
+def report_count_today(manager):
+    with connect() as conn:
+        return conn.execute(
+            "SELECT COUNT(*) FROM report WHERE manager = ?"
+            " AND created_at >= ?",
+            (manager, (datetime.now(timezone.utc) - timedelta(days=1)
+                       ).isoformat(timespec="seconds"))).fetchone()[0]
+
+
+def add_report(manager, message, context):
+    """Record a report. Returns its id.
+
+    `context` is written by the caller from what the server knows, never from
+    what the browser sent — the whole point of gathering it here is that it
+    cannot be dressed up by whoever is reporting.
+    """
+    with connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO report (manager, created_at, message, context)"
+            " VALUES (?, ?, ?, ?)",
+            (manager, now(), message[:MESSAGE_LIMIT], json.dumps(context)))
+        return cur.lastrowid
+
+
+def reports(state=None, manager=None, limit=200):
+    where, args = [], []
+    if state:
+        where.append("state = ?")
+        args.append(state)
+    if manager:
+        where.append("manager = ?")
+        args.append(manager)
+    sql = "SELECT * FROM report"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY id DESC LIMIT ?"
+    args.append(limit)
+    with connect() as conn:
+        rows = conn.execute(sql, args).fetchall()
+    return [_report(r) for r in rows]
+
+
+def report(report_id):
+    with connect() as conn:
+        row = conn.execute("SELECT * FROM report WHERE id = ?",
+                           (report_id,)).fetchone()
+    return _report(row) if row else None
+
+
+def _report(row):
+    try:
+        context = json.loads(row["context"])
+    except (TypeError, ValueError):
+        # A row written by an older shape, or truncated. The report itself is
+        # still worth showing — losing the evidence is not losing the report.
+        context = {}
+    return {"id": row["id"], "manager": row["manager"],
+            "created_at": row["created_at"], "message": row["message"],
+            "context": context, "state": row["state"], "lane": row["lane"],
+            "reply": row["reply"], "replied_at": row["replied_at"]}
+
+
+def answer_report(report_id, reply, lane=None, state="answered"):
+    with connect() as conn:
+        conn.execute(
+            "UPDATE report SET reply = ?, replied_at = ?, state = ?,"
+            " lane = COALESCE(?, lane) WHERE id = ?",
+            (reply, now(), state, lane, report_id))
+
+
+def set_report_state(report_id, state, lane=None):
+    with connect() as conn:
+        conn.execute("UPDATE report SET state = ?, lane = COALESCE(?, lane)"
+                     " WHERE id = ?", (state, lane, report_id))

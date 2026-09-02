@@ -60,6 +60,19 @@ page.</p>
 
 <section>
   <div class="sechead">
+    <h2>Reports</h2>
+    <span class="eyebrow"><a href="/admin/reports">all of them</a></span>
+  </div>
+  {% if waiting %}
+  <p class="note">{{ waiting|length }} waiting on a person.
+  <a href="/admin/reports">Go and look</a>.</p>
+  {% else %}
+  <p class="note">Nothing waiting on you.</p>
+  {% endif %}
+</section>
+
+<section>
+  <div class="sechead">
     <h2>Drafted managers</h2>
     <form method="post" action="/admin/assign-clubs"
           onsubmit="return confirm('Give every team a different club at random? This replaces any current assignment.')">

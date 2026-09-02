@@ -132,6 +132,9 @@
   <footer>
     Scored from raw match stats by our own engine, not copied from FPL.<br>
     Running alongside FPL Draft this season &middot; <a href="/health">status</a>
+    {%- if me %} &middot;
+    <button type="button" class="linkbtn" id="reportopen">Something wrong?</button>
+    {%- endif %}
   </footer>
 </div>
 <script>
@@ -297,6 +300,80 @@
   </div>
   <div id="pc-body"><p class="empty">Loading…</p></div>
 </dialog>
+
+{% if me %}
+{#- Deliberately one box and no dropdown. Asking someone to categorise their
+    own problem gets it wrong about as often as not, and the app already knows
+    which page they were on, which round is open, whether their team would
+    save and what they last scored — so the sorting is done from what is
+    known rather than from what they guessed. -#}
+<dialog id="reportbox" class="pcard">
+  <div class="pcard-head">
+    <div>
+      <h2>Something wrong?</h2>
+      <p class="sub">Say what happened in your own words.</p>
+    </div>
+    <button id="report-close" class="btn small ghost" aria-label="Close">Close</button>
+  </div>
+  <div>
+    <textarea id="report-text" rows="5" placeholder="e.g. I can't save my team &mdash; the button stays greyed out"></textarea>
+    <p class="note">Your team, the round you're in and what you last scored go
+    with this, so nobody has to ask you for them.</p>
+    <div class="tacts">
+      <span id="report-status" class="savestate"></span>
+      <button id="report-send" class="btn">Send</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var open = document.getElementById('reportopen');
+  var dlg = document.getElementById('reportbox');
+  if (!open || !dlg) return;
+  var text = document.getElementById('report-text');
+  var send = document.getElementById('report-send');
+  var status = document.getElementById('report-status');
+
+  open.addEventListener('click', function () {
+    status.textContent = ''; status.className = 'savestate';
+    dlg.showModal(); text.focus();
+  });
+  document.getElementById('report-close').addEventListener('click', function () {
+    dlg.close();
+  });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+  send.addEventListener('click', async function () {
+    var said = text.value.trim();
+    if (!said) { status.textContent = 'Say what went wrong.';
+                 status.className = 'savestate bad'; return; }
+    send.disabled = true;
+    status.textContent = 'Sending…'; status.className = 'savestate';
+    try {
+      var res = await fetch('/report', {
+        method: 'POST',
+        body: new URLSearchParams({ message: said, page: location.pathname }),
+      });
+      var data = await res.json();
+      if (data.ok) {
+        status.textContent = 'Sent — thanks.';
+        status.className = 'savestate ok';
+        text.value = '';
+        setTimeout(function () { dlg.close(); }, 1200);
+      } else {
+        status.textContent = (data.errors || ['Could not send that']).join(' · ');
+        status.className = 'savestate bad';
+      }
+    } catch (e) {
+      status.textContent = 'Could not reach the server — nothing was sent.';
+      status.className = 'savestate bad';
+    }
+    send.disabled = false;
+  });
+})();
+</script>
+{% endif %}
 
 <script>
 // One popup, shared by every page that shows players. Opened by dispatching

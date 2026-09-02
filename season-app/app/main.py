@@ -27,7 +27,7 @@ from fastapi.responses import (HTMLResponse, JSONResponse, RedirectResponse,
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import auth, db, engine, fetcher, live, notify, push
+from . import auth, db, engine, evidence, fetcher, live, notify, push
 
 HERE = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(HERE / "templates"))
@@ -837,6 +837,49 @@ def signout_everywhere(request: Request):
     return auth.sign_out(RedirectResponse("/", status_code=303), request)
 
 
+# ── Something wrong? ───────────────────────────────────────────────────────
+@app.post("/report")
+def report(request: Request, message: str = Form(""), page: str = Form("")):
+    """Take a report, and gather the state around it.
+
+    Two things are kept apart on purpose. The message is what the manager
+    says, and is only ever read as words — nothing downstream may take an
+    instruction from it. The context is what the app knew at that moment,
+    gathered here from the session and the database rather than sent by the
+    browser, so a claim and the facts about it can be told apart. That is what
+    makes "I saved my team in time" answerable.
+
+    Who is reporting comes from the session, not the form. Nobody can file a
+    report as somebody else, and nobody can attach evidence about a team that
+    isn't theirs.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    said = (message or "").strip()
+    if not said:
+        return JSONResponse({"ok": False, "errors": ["Say what went wrong."]},
+                            status_code=422)
+    if db.report_count_today(me["key"]) >= db.REPORTS_PER_DAY:
+        return JSONResponse(
+            {"ok": False, "errors": [
+                f"That's {db.REPORTS_PER_DAY} reports in a day, which is as "
+                "many as this takes. Anything already sent is still in the "
+                "queue."]},
+            status_code=429)
+
+    try:
+        context = evidence.gather(me["key"], page=(page or None)[:200]
+                                  if page else None)
+    except Exception as exc:                            # noqa: BLE001
+        # A report about the app being broken must survive the app being
+        # broken. Losing the evidence is not a reason to lose the report.
+        context = {"manager": me["key"],
+                   "gathering_failed": f"{type(exc).__name__}: {exc}"}
+    report_id = db.add_report(me["key"], said, context)
+    return JSONResponse({"ok": True, "id": report_id})
+
+
 # ── Declaring a team ───────────────────────────────────────────────────────
 def _declare_context(request, gameweek=None):
     ctx = _context(request)
@@ -1541,7 +1584,42 @@ def admin(request: Request):
     job = scheduler.get_job("refresh") if scheduler.running else None
     ctx["next_refresh"] = (job.next_run_time.isoformat()
                            if job and job.next_run_time else None)
+    # Only what is waiting on a person. Anything answered is on /admin/reports
+    # for whoever wants to read it, and nowhere near the front page of admin —
+    # the point of the queue is that most of it never needs you.
+    ctx["waiting"] = db.reports(state="held") + db.reports(state="open")
     return templates.TemplateResponse("admin.html", ctx)
+
+
+@app.get("/admin/reports", response_class=HTMLResponse)
+def admin_reports(request: Request):
+    """Every report, newest first, with the evidence that came with it."""
+    ctx = _context(request)
+    me = ctx["me"]
+    if not me or not me["is_admin"]:
+        raise HTTPException(404)
+    ctx["reports"] = db.reports()
+    ctx["teams"] = {m["key"]: m["team"] for m in db.managers()}
+    return templates.TemplateResponse("reports.html", ctx)
+
+
+@app.post("/admin/reports/{report_id}/{action}")
+def admin_report_action(request: Request, report_id: int, action: str):
+    """Approve or ignore something that was held for a person.
+
+    Deliberately thin. This is the only place a person has to act, so it is
+    two buttons and nothing else — a held report is either worth doing, in
+    which case it goes back to the queue as approved work, or it isn't.
+    """
+    who = auth.real(request)
+    if not who or not who["is_admin"]:
+        raise HTTPException(404)
+    if action not in ("approve", "ignore"):
+        raise HTTPException(400, "no such action")
+    if db.report(report_id) is None:
+        raise HTTPException(404, "no such report")
+    db.set_report_state(report_id, "approved" if action == "approve" else "closed")
+    return RedirectResponse("/admin/reports", status_code=303)
 
 
 @app.post("/admin/view-as/{key}")

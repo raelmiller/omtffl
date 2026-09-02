@@ -36,7 +36,7 @@ os.environ["DB_PATH"] = str(_SANDBOX / "matchweek.db")
 
 from fastapi.testclient import TestClient          # noqa: E402
 
-from app import auth, db, engine, fetcher           # noqa: E402
+from app import auth, db, engine, evidence, fetcher  # noqa: E402
 from app.main import _claims_from_declarations as _claims_for  # noqa: E402
 from app.main import app                           # noqa: E402
 
@@ -3237,6 +3237,106 @@ check("the polled fragment is served on its own", frag.status_code, 200)
 check_true("and is a fragment, not a whole page",
            "<html" not in frag.text and "games" in frag.text)
 live.fetch = real_fetch
+
+print("\n── Something wrong? ────────────────────────────────────")
+
+# The intake for player reports. The claim is theirs and the evidence is ours,
+# and the whole design rests on those being told apart — so what is tested
+# here is mostly that the second one cannot be dressed up by the first.
+
+_rc = TestClient(app)
+check("a stranger cannot file a report",
+      _rc.post("/report", data={"message": "hello"}).status_code, 401)
+
+_before_n = len(db.reports(manager=P1))
+_rep = signed.post("/report", data={"message": "  ", "page": "/declare"})
+check("an empty report is refused", _rep.status_code, 422)
+check("and nothing is stored for it", len(db.reports(manager=P1)), _before_n)
+
+_said = "I can't save my team - the button stays greyed out"
+_rep = signed.post("/report", data={"message": _said, "page": "/declare"})
+check("a report is taken", _rep.status_code, 200)
+_rid = _rep.json()["id"]
+_row = db.report(_rid)
+check("stored word for word", _row["message"], _said)
+check("open, and unclassified until something triages it",
+      (_row["state"], _row["lane"]), ("open", None))
+
+# The evidence, gathered here rather than sent by the browser.
+_ctx = _row["context"]
+check("the reporter is whoever holds the session", _ctx["manager"], P1)
+check_true("with the round they are in",
+           _ctx["round"]["gameweek"] == engine.current_gameweek()["gameweek"])
+check_true("whether it is still open", isinstance(_ctx["round"]["open"], bool))
+check_true("what their team sheet would do if they saved it",
+           "squad_size" in _ctx["team_sheet"])
+check_true("the two numbers people ask about",
+           {"bank_balance", "boost_left"} <= set(_ctx["standing"]))
+check_true("and how the last scored round was arrived at",
+           {"players", "substitutions", "total"}
+           <= set(_ctx["last_scored_round"]))
+
+# Nobody may file as somebody else, or attach another manager's evidence.
+_rep = signed.post("/report", data={"message": "not mine",
+                                    "manager": P2, "team": "someone else",
+                                    "context": '{"bank_balance": 9999}'})
+check("a report naming someone else is still filed as the sender",
+      db.report(_rep.json()["id"])["context"]["manager"], P1)
+check("and the evidence is the server's, not the form's",
+      db.report(_rep.json()["id"])["context"]["standing"]["bank_balance"],
+      _ctx["standing"]["bank_balance"])
+
+# The page is the one thing the browser is asked for, and it is a hint.
+check("where they were is recorded as a hint",
+      db.report(_rid)["context"]["reported_from_page"], "/declare")
+
+# One frustrated evening must not become a hundred triage runs.
+for _i in range(db.REPORTS_PER_DAY):
+    signed.post("/report", data={"message": f"again {_i}"})
+_capped = signed.post("/report", data={"message": "and again"})
+check("reports are capped per day", _capped.status_code, 429)
+check_true("and it says so rather than failing quietly",
+           "queue" in _capped.json()["errors"][0], str(_capped.json()["errors"]))
+
+# The queue. Admin only, and the two buttons are the whole of the job.
+check("the queue is not there for a normal manager",
+      plain.get("/admin/reports").status_code, 404)
+os.environ["ADMIN_KEYS"] = "RM"
+_queue = signed.get("/admin/reports")
+check("an admin can read it", _queue.status_code, 200)
+# The apostrophe in the message is escaped on the way out, which is the
+# point — so match on a stretch of it that has none.
+check_true("and the report is on it",
+           "the button stays greyed out" in _queue.text)
+
+db.set_report_state(_rid, "held", lane="design")
+check("acting on a held report needs an admin",
+      plain.post(f"/admin/reports/{_rid}/approve",
+                 follow_redirects=False).status_code, 404)
+check("approving marks it approved",
+      (signed.post(f"/admin/reports/{_rid}/approve", follow_redirects=False),
+       db.report(_rid)["state"])[1], "approved")
+db.set_report_state(_rid, "held")
+check("ignoring closes it",
+      (signed.post(f"/admin/reports/{_rid}/ignore", follow_redirects=False),
+       db.report(_rid)["state"])[1], "closed")
+check("an action nobody offers is refused",
+      signed.post(f"/admin/reports/{_rid}/delete").status_code, 400)
+os.environ.pop("ADMIN_KEYS", None)
+
+# A report about the app being broken has to survive the app being broken.
+_real_gather = evidence.gather
+evidence.gather = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom"))
+try:
+    _broken = signed.post("/report", data={"message": "everything is on fire"})
+    # Still capped from above, so lift the cap for this one case.
+finally:
+    evidence.gather = _real_gather
+with db.connect() as _c:
+    _c.execute("DELETE FROM report WHERE manager = ? AND message LIKE 'again %'",
+               (P1,))
+_broken = signed.post("/report", data={"message": "everything is on fire"})
+check("a report still lands when the app is unhappy", _broken.status_code, 200)
 
 print("\n── The chrome ──────────────────────────────────────────")
 
