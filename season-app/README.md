@@ -784,6 +784,50 @@ answering a report never touches the repository.
 Managers see what came back at `/reports`, linked from the footer, because a
 reply that only exists as a notification is gone the moment it is swiped away.
 
+### Fixing what facts cannot answer
+
+A report the answering job judges to be a real defect goes to state `bug`, and
+`fix-reports.yml` picks the oldest one up. It reproduces first — a failing test
+before a fix, because a fix nobody has watched fail is a guess — and opens a
+pull request on `agent/fix-<id>` with `Fixes report #<id>` in the body. It can
+push a branch. It cannot merge one.
+
+**The only path to `main` is `.github/gate/blast_radius.py`**, and it is a list
+rather than a judgement, because the thing that wrote a fix must not be the
+thing that decides the fix is safe. A change merges itself only if every one
+holds: every path on the allow-list, nothing on the protected list, no
+deletions, no test file that shrinks, nothing binary, and under 120 changed
+lines. Otherwise the pull request is labelled, commented with the rule it
+tripped, and left alone.
+
+The allow-list is templates, the stylesheet, `triage.py`, `evidence.py`,
+`notify.py`, `test_app.py` and this README — the app's surface and the support
+machinery, which is where "the button is greyed out" and "this column is off
+screen" actually live. It starts narrow deliberately; widening it is one edit
+in one obvious place, and it is the only knob. A deny-list would have been a
+promise that everything dangerous had been thought of, and the cost of being
+wrong there is a change to how the league scores merging itself overnight.
+
+Protected, each for its own reason: `shadow/` is the rulebook, `.github/` is
+the agent's own instructions and this gate, `main.py` holds the agent's door,
+`auth.py` decides who is an admin, `engine.py` assembles every score the table
+shows, `db.py` is the schema and the sign-in links, and `requirements.txt` and
+the Dockerfile are what gets installed and run.
+
+Two details make the gate worth trusting. `auto-merge.yml` checks out **main's**
+copy of the gate before running it, so a pull request that widened the
+allow-list would still be judged by the old one — otherwise it is no gate at
+all. And the gate runs alongside all four suites; green tests are necessary
+but never sufficient, since deleting a test is also a way to make it pass.
+
+```bash
+python3 .github/gate/test_blast_radius.py      # the gate's own suite
+python3 .github/gate/blast_radius.py origin/main HEAD
+```
+
+Run against this session's own history it merges the layout fix and holds the
+two that touched `main.py` — which is the split it is there to make.
+
 ## Signing in
 
 There is no password. A manager opens an unguessable link, and opening it

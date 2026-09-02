@@ -1010,6 +1010,32 @@ async def agent_hold(request: Request, report_id: int):
     return JSONResponse({"ok": True})
 
 
+@app.post("/agent/reports/{report_id}/bug")
+async def agent_bug(request: Request, report_id: int):
+    """Mark a report as a defect worth trying to fix.
+
+    A separate state rather than a reply, because the fix job picks work up
+    from here and because "we think this is broken" is worth being able to
+    count. `pr` arrives once a branch exists, so the reporter can be told the
+    fix is *live* rather than merely written — which is the only version of
+    that news they can check.
+    """
+    _agent(request)
+    if db.report(report_id) is None:
+        raise HTTPException(404, "no such report")
+    body = await request.json()
+    pr = body.get("pr")
+    if pr is not None and not isinstance(pr, int):
+        return JSONResponse({"ok": False, "errors": ["pr must be a number"]},
+                            status_code=422)
+    summary = (body.get("summary") or "").strip()
+    if summary:
+        db.answer_report(report_id, summary[:db.MESSAGE_LIMIT],
+                         lane=triage.DIAGNOSE, state="bug")
+    db.set_report_state(report_id, "bug", lane=triage.DIAGNOSE, pr=pr)
+    return JSONResponse({"ok": True})
+
+
 # ── Declaring a team ───────────────────────────────────────────────────────
 def _declare_context(request, gameweek=None):
     ctx = _context(request)

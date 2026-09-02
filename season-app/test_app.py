@@ -3468,9 +3468,9 @@ check("for a person, with a summary",
 # a lineup, a trade or a point would defeat every other protection here.
 _reachable = sorted({r.path for r in app.routes
                      if getattr(r, "path", "").startswith("/agent")})
-check("the agent can reach exactly three routes", _reachable,
-      ["/agent/reports", "/agent/reports/{report_id}/hold",
-       "/agent/reports/{report_id}/reply"])
+check("the agent can reach exactly four routes, and no more", _reachable,
+      ["/agent/reports", "/agent/reports/{report_id}/bug",
+       "/agent/reports/{report_id}/hold", "/agent/reports/{report_id}/reply"])
 os.environ.pop("AGENT_TOKEN", None)
 
 # A manager sees what came back, and only their own.
@@ -3557,6 +3557,58 @@ finally:
     if _kept:
         db.save_lineup(P1, _gwn3, _kept["xi"], _kept["bench"],
                        mended=_kept.get("mended", 0))
+
+
+# ── Handing a report to the fix job ────────────────────────────────────────
+os.environ["AGENT_TOKEN"] = "test-agent-token"
+_bugid = signed.post("/report", data={"message": "the outcome column is cut off"}).json()["id"]
+_b = _ag.post(f"/agent/reports/{_bugid}/bug", headers=_auth,
+              json={"summary": "outcome column clipped on a phone"})
+check("a report can be called a bug", _b.status_code, 200)
+_row = db.report(_bugid)
+check("which is its own state, so the fix job can find it",
+      (_row["state"], _row["lane"]), ("bug", "diagnose"))
+check("no pull request yet", _row["pr"], None)
+
+_ag.post(f"/agent/reports/{_bugid}/bug", headers=_auth, json={"pr": 42})
+check("and a branch can be recorded against it", db.report(_bugid)["pr"], 42)
+check("but not a made-up one",
+      _ag.post(f"/agent/reports/{_bugid}/bug", headers=_auth,
+               json={"pr": "not-a-number"}).status_code, 422)
+check("a bug on a report that does not exist is a 404",
+      _ag.post("/agent/reports/999999/bug", headers=_auth, json={}).status_code, 404)
+check("and the fix job can list what is waiting",
+      [b["report_id"] for b in
+       _ag.get("/agent/reports?state=bug", headers=_auth).json()["reports"]],
+      [_bugid])
+os.environ.pop("AGENT_TOKEN", None)
+
+# ── The gate ───────────────────────────────────────────────────────────────
+# The rules have their own suite next door. What matters here is that the gate
+# exists and protects the things this app's correctness actually rests on —
+# if any of these stopped being protected, nothing else in the design holds.
+_gatefile = Path(__file__).resolve().parents[1] / ".github/gate/blast_radius.py"
+check_true("the gate is in the repo", _gatefile.exists())
+sys.path.insert(0, str(_gatefile.parent))
+import blast_radius as _radius                             # noqa: E402
+
+for _p, _what in (("shadow/scoring.py", "the rules engine"),
+                  ("shadow/mechanics.py", "the mechanics"),
+                  (".github/gate/blast_radius.py", "the gate itself"),
+                  (".github/agent/fix.md", "the agent's own instructions"),
+                  ("season-app/app/main.py", "the agent's door"),
+                  ("season-app/app/auth.py", "who is an admin"),
+                  ("season-app/app/db.py", "the schema"),
+                  ("season-app/app/engine.py", "every score the table shows")):
+    check_true(f"nothing auto-merges into {_what}",
+               _radius._protected(_p)[0] is not None, _p)
+
+check_true("no allowed path is also protected — a gate that contradicts "
+           "itself is worse than none",
+           not [a for a in _radius.ALLOWED if _radius._protected(a)[0]])
+check_true("and the fix job's instructions say the rulebook is off limits",
+           "Never modify `shadow/`" in
+           (Path(__file__).resolve().parents[1] / ".github/agent/fix.md").read_text())
 
 print("\n── The chrome ──────────────────────────────────────────")
 

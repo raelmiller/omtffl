@@ -1,0 +1,111 @@
+name: Gate and merge
+
+# The only path to main for an agent's pull request, and the one job in this
+# repository that has to be right.
+#
+# Two things make it trustworthy. The gate is a list rather than a judgement,
+# so no model decides its own change is safe. And the gate is taken from
+# main's copy of itself, not from the branch under review — otherwise a pull
+# request that widened the allow-list would be judged by the widened version,
+# which is no gate at all.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    # Only pull requests the fix job raised. Anything a person opens is
+    # theirs to merge, and this job should keep its hands off it.
+    if: startsWith(github.event.pull_request.head.ref, 'agent/fix-')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Take the gate from main, not from the branch
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.event.pull_request.base.ref }}"
+          git checkout "origin/${{ github.event.pull_request.base.ref }}" -- .github/gate/
+          echo "gate is main's copy:"
+          git log -1 --format='%h %s' "origin/${{ github.event.pull_request.base.ref }}" -- .github/gate/
+
+      - name: Is it within the blast radius?
+        id: radius
+        run: |
+          set +e
+          out=$(python3 .github/gate/blast_radius.py \
+                  "origin/${{ github.event.pull_request.base.ref }}" \
+                  "${{ github.event.pull_request.head.sha }}")
+          code=$?
+          set -e
+          echo "$out"
+          {
+            echo "verdict<<EOF"
+            echo "$out"
+            echo "EOF"
+            echo "ok=$([ $code -eq 0 ] && echo yes || echo no)"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: pip install -q -r season-app/requirements.txt httpx
+
+      - name: The suites
+        id: suites
+        run: |
+          set -euo pipefail
+          python3 .github/gate/test_blast_radius.py
+          ( cd season-app && python3 test_app.py )
+          for t in mechanics scoring lineups; do python3 "shadow/test_$t.py"; done
+
+      # Green tests and inside the radius: it goes. Anything else waits, and
+      # says on the pull request exactly which rule it tripped, so the person
+      # reading it does not have to work that out.
+      - name: Merge it
+        if: steps.radius.outputs.ok == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge "${{ github.event.pull_request.number }}" \
+            --squash --delete-branch --body "Gate: within the blast radius."
+
+      - name: Or hand it over
+        if: steps.radius.outputs.ok != 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body \
+          "$(printf 'Tests pass, but this one is not merging itself.\n\n```\n%s\n```\n\nIt needs a person. Nothing has been merged.' "${{ steps.radius.outputs.verdict }}")"
+          gh pr edit "${{ github.event.pull_request.number }}" --add-label "needs-a-person" || true
+
+      # Whoever reported it hears when it is live, which is the only version
+      # of the news they can check for themselves.
+      - name: Tell whoever reported it
+        if: steps.radius.outputs.ok == 'yes'
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          # The fix job puts "Fixes report #N" in the body; no id, no message.
+          id=$(printf '%s' "$BODY" | grep -oiE 'fixes report #[0-9]+' | head -1 \
+               | grep -oE '[0-9]+' || true)
+          if [ -z "$id" ]; then echo "no report id in the body — nothing to tell"; exit 0; fi
+          curl -fsS -X POST -H "Authorization: Bearer $AGENT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"lane\":\"diagnose\",\"reply\":\"Fixed and live. Thanks for reporting it — give it another go and say if it is still wrong.\"}" \
+            "$APP_URL/agent/reports/$id/reply"

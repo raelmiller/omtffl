@@ -203,7 +203,11 @@ CREATE TABLE IF NOT EXISTS report (
     state       TEXT NOT NULL DEFAULT 'open',
     lane        TEXT,                    -- set by triage; absent until then
     reply       TEXT,
-    replied_at  TEXT
+    replied_at  TEXT,
+    -- The pull request carrying the fix, once one exists. Kept so a report
+    -- can be told "this is live" rather than "this is fixed", which are not
+    -- the same thing to whoever reported it.
+    pr          INTEGER
 );
 """
 
@@ -265,6 +269,9 @@ def _migrate(conn):
     if lineups and "mended" not in lineups:
         conn.execute("ALTER TABLE lineup ADD COLUMN"
                      " mended INTEGER NOT NULL DEFAULT 0")
+    reports = {r["name"] for r in conn.execute("PRAGMA table_info(report)")}
+    if reports and "pr" not in reports:
+        conn.execute("ALTER TABLE report ADD COLUMN pr INTEGER")
 
 
 def init():
@@ -1049,7 +1056,8 @@ def _report(row):
     return {"id": row["id"], "manager": row["manager"],
             "created_at": row["created_at"], "message": row["message"],
             "context": context, "state": row["state"], "lane": row["lane"],
-            "reply": row["reply"], "replied_at": row["replied_at"]}
+            "reply": row["reply"], "replied_at": row["replied_at"],
+            "pr": row["pr"] if "pr" in row.keys() else None}
 
 
 def answer_report(report_id, reply, lane=None, state="answered"):
@@ -1060,7 +1068,8 @@ def answer_report(report_id, reply, lane=None, state="answered"):
             (reply, now(), state, lane, report_id))
 
 
-def set_report_state(report_id, state, lane=None):
+def set_report_state(report_id, state, lane=None, pr=None):
     with connect() as conn:
-        conn.execute("UPDATE report SET state = ?, lane = COALESCE(?, lane)"
-                     " WHERE id = ?", (state, lane, report_id))
+        conn.execute("UPDATE report SET state = ?, lane = COALESCE(?, lane),"
+                     " pr = COALESCE(?, pr) WHERE id = ?",
+                     (state, lane, pr, report_id))

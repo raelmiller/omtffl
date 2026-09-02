@@ -1,0 +1,73 @@
+name: Fix a reported bug
+
+# The second half of triage. Reports the answering job could not answer with
+# facts, and judged to be real defects, land in state `bug`; this picks one up
+# and tries to fix it.
+#
+# It can push a branch and open a pull request. It cannot merge one — nothing
+# here touches main, and the only path to main is the gate in
+# auto-merge.yml, which runs from main's own copy of itself.
+on:
+  schedule:
+    - cron: "40 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: fix-reports
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    if: github.repository == 'raelmiller/omtffl'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Anything to fix?
+        id: work
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
+            "$APP_URL/agent/reports?state=bug" > bugs.json
+          count=$(python3 -c \
+            'import json;print(len(json.load(open("bugs.json"))["reports"]))')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "$count bug report(s) waiting"
+
+      - uses: actions/setup-python@v5
+        if: steps.work.outputs.count != '0'
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        if: steps.work.outputs.count != '0'
+        with:
+          node-version: "22"
+
+      - name: Install what the tests need
+        if: steps.work.outputs.count != '0'
+        run: pip install -q -r season-app/requirements.txt httpx
+
+      - name: Have a go
+        if: steps.work.outputs.count != '0'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          APP_URL: ${{ secrets.APP_URL }}
+          AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm install -g @anthropic-ai/claude-code
+          claude -p "Read .github/agent/fix.md and follow it exactly.
+          The bug reports to work from are in bugs.json." \
+            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(curl:*)" \
+            --model claude-opus-4-5
