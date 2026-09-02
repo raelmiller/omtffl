@@ -661,9 +661,6 @@ def push_test(request: Request):
 
 
 @app.get("/health")
-
-
-@app.get("/health")
 def health():
     """Deployment truth: what's on disk, and whether we can refresh it.
 

@@ -51,6 +51,7 @@ jobs:
           AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
         run: |
           set -euo pipefail
+          APP_URL="${APP_URL%/}"
           curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
             "$APP_URL/agent/reports?state=bug" > bugs.json
           count=$(python3 -c \

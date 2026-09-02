@@ -57,6 +57,9 @@ jobs:
           AGENT_TOKEN: ${{ secrets.AGENT_TOKEN }}
         run: |
           set -euo pipefail
+          # A trailing slash makes the path "//agent/reports", which 404s and
+          # looks exactly like a token that does not match.
+          APP_URL="${APP_URL%/}"
           if ! briefs=$(curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
                           "$APP_URL/agent/reports?state=open"); then
             echo "::error::Could not read $APP_URL/agent/reports. A 404 here"\
