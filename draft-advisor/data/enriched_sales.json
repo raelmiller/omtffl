@@ -2679,9 +2679,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 3.25,
-  "fpl_id": 201,
-  "fpl_name": "Mu\u00f1oz",
-  "points_that_season": 142
+  "fpl_id": 377,
+  "fpl_name": "Munoz",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4890,8 +4890,8 @@
   "player": "Barcola",
   "club": "LIV",
   "cost": 0.0,
-  "fpl_id": null,
-  "fpl_name": null,
+  "fpl_id": 627,
+  "fpl_name": "Barcola",
   "points_that_season": null
  },
  {
@@ -4989,9 +4989,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 2.75,
-  "fpl_id": 201,
-  "fpl_name": "Mu\u00f1oz",
-  "points_that_season": 136
+  "fpl_id": 377,
+  "fpl_name": "Munoz",
+  "points_that_season": null
  },
  {
   "season": "2025-26",

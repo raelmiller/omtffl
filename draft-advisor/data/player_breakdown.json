@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-01T09:49:06Z",
+  "fpl_baked_at": "2026-09-02T09:21:37Z",
   "sales": 645,
   "unique_players": 393,
-  "matched_to_fpl": 261
+  "matched_to_fpl": 262
  },
  "players": [
   {
@@ -186,7 +186,7 @@
    "display": "Watkins",
    "position": "FWD",
    "current_club": "AVL",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -3385,14 +3385,14 @@
    }
   },
   {
-   "key": "fpl_201",
-   "fpl_id": 201,
-   "display": "Mu\u00f1oz",
+   "key": "fpl_377",
+   "fpl_id": 377,
+   "display": "Munoz",
    "position": "DEF",
-   "current_club": "CRY",
+   "current_club": "LIV",
    "status": "a",
-   "last_season_points": 0,
-   "xgi": "0.24",
+   "last_season_points": 10,
+   "xgi": "0.65",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -3401,13 +3401,13 @@
      "price": 3.25,
      "buyer": "Tiggy",
      "club_then": "CRY",
-     "points_that_season": 142
+     "points_that_season": null
     },
     "2025-26": {
      "price": 2.75,
      "buyer": "Tiggy",
      "club_then": "CRY",
-     "points_that_season": 136
+     "points_that_season": null
     }
    }
   },
@@ -5049,7 +5049,7 @@
    "display": "Marc Guiu",
    "position": "FWD",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -8931,7 +8931,7 @@
    "display": "Perri",
    "position": "GK",
    "current_club": "LEE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -8968,14 +8968,14 @@
    }
   },
   {
-   "key": "name_barcola",
-   "fpl_id": null,
+   "key": "fpl_627",
+   "fpl_id": 627,
    "display": "Barcola",
    "position": "MID",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "LIV",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
