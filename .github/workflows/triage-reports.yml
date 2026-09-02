@@ -103,14 +103,24 @@ jobs:
           # Triage reads facts and writes prose. It does not read this
           # repository and does not need to, so the tools it is given are the
           # ones that reach the app and nothing else.
+          # The heredoc is quoted, so the prompt reaches the model as written
+          # rather than with the secrets substituted into it — they belong in
+          # the environment, not in the text of a prompt. Which means the
+          # prompt has to say they are already there: told "$APP_URL", the
+          # first real run read it as a placeholder and asked for the value.
           claude -p "$(cat <<'PROMPT'
           Read .github/agent/triage.md and follow it exactly.
 
           The reports waiting are in briefs.json in the working directory.
-          Answer each one by calling the app, using $APP_URL and $AGENT_TOKEN.
 
-          If DRY_RUN is true, print the reply you would send for each report
-          and post nothing.
+          APP_URL and AGENT_TOKEN are already exported in your shell. Use them
+          in curl as written — curl -sS -X POST -H "Authorization: Bearer
+          $AGENT_TOKEN" -H 'Content-Type: application/json' -d '{...}'
+          "$APP_URL/agent/reports/<id>/reply" — and never print their values.
+
+          DRY_RUN is exported too. Run `echo "$DRY_RUN"` and look: if it says
+          true, print the reply you would send for each report and post
+          nothing at all. Otherwise post, and report what each call returned.
           PROMPT
           )" \
             --allowedTools "Read,Bash(curl:*)" \

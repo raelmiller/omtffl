@@ -128,6 +128,30 @@ def _scoring(key):
     }
 
 
+def _waivers(key, target):
+    """Where they claim in the run, and why there.
+
+    Asked on the first real report the agent ever saw — "why am I so low in
+    the waiver list" — which it correctly refused to answer, because nothing
+    in the evidence said. It is not a hard question: priority is the table
+    upside down, and the app already computes it.
+    """
+    if target is None:
+        return None
+    try:
+        season = engine.season(db.all_lineups(),
+                               db.transactions() + engine.effective_trades(db.trades()),
+                               db.manager_clubs())
+        order = engine.waiver_order(target["gameweek"], season)
+    except Exception as exc:                       # noqa: BLE001
+        return {"unavailable": f"{type(exc).__name__}: {exc}"}
+    if key not in order:
+        return None
+    # waiver_order is the table best-first; claims run from the bottom up.
+    return {"claims": len(order) - order.index(key), "of": len(order),
+            "table_position": order.index(key) + 1}
+
+
 def gather(key, page=None):
     """Everything worth knowing about one manager's report.
 
@@ -144,6 +168,7 @@ def gather(key, page=None):
         "round": _round(target),
         "team_sheet": _team(key, target),
         "standing": _standing(key, target),
+        "waivers": _waivers(key, target),
         "last_scored_round": _scoring(key),
         # "I'm not getting notifications" needs this, and nothing else does.
         "apps_subscribed": len(db.push_subscriptions(key)),

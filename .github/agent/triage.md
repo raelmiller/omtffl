@@ -67,7 +67,10 @@ For each brief:
    "one line saying what they actually want"}` — the summary is what the
    commissioner reads, so make it a decision they can take in five seconds.
 
-Both need `Authorization: Bearer $AGENT_TOKEN`.
+Both need `Authorization: Bearer $AGENT_TOKEN`. `APP_URL` and `AGENT_TOKEN`
+are already exported in your shell — use them in curl as written, never print
+their values, and never ask for them. If a call fails, say what it returned;
+do not retry it more than once.
 
 ## What you must not do
 

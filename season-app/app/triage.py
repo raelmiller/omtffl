@@ -33,6 +33,13 @@ ANSWER, DIAGNOSE, ADJUDICATE, ESCALATE = (
 LANES = frozenset((ANSWER, DIAGNOSE, ADJUDICATE, ESCALATE))
 
 
+def _ordinal(n):
+    """1st, 2nd, 3rd — because "you are 6 in the table" reads like a typo."""
+    if 10 <= n % 100 <= 20:
+        return f"{n}th"
+    return f"{n}{ {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th') }"
+
+
 def _finding(code, confidence, headline, detail, lane=None):
     return {"code": code, "confidence": confidence, "headline": headline,
             "detail": detail, "lane": lane}
@@ -144,6 +151,21 @@ def findings(context):
                else ", none available this round."),
             "Declared before kick-off on /declare, and withdrawable until the "
             "deadline.",
+            lane=ANSWER))
+
+    # ── Where they claim, and why there ────────────────────────────────────
+    waivers = context.get("waivers") or {}
+    if "claims" in waivers:
+        out.append(_finding(
+            "waiver_place", CONTEXT,
+            f"You claim {waivers['claims']} of {waivers['of']} in the waiver "
+            "run.",
+            "Priority is the league table upside down — last place claims "
+            "first — and it snakes, so whoever leads a round goes last in the "
+            f"next. You are {_ordinal(waivers['table_position'])} in the "
+            "table, which is why you sit where you do. Losing a race costs "
+            "you that round "
+            "rather than your next choice.",
             lane=ANSWER))
 
     # ── Things that explain silence ────────────────────────────────────────
