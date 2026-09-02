@@ -3310,6 +3310,9 @@ check("and open when one is",
       TestClient(app).get("/health").json()["agent"]["configured"], True)
 check_true("without ever saying what it is",
            "test-agent-token" not in TestClient(app).get("/health").text)
+check("only how long it is, which is what makes two copies comparable",
+      TestClient(app).get("/health").json()["agent"]["token_chars"],
+      len("test-agent-token"))
 os.environ.pop("AGENT_TOKEN", None)
 
 check("the queue is not there for a normal manager",

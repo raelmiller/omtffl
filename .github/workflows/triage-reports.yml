@@ -62,9 +62,13 @@ jobs:
           APP_URL="${APP_URL%/}"
           if ! briefs=$(curl -fsS -H "Authorization: Bearer $AGENT_TOKEN" \
                           "$APP_URL/agent/reports?state=open"); then
-            echo "::error::Could not read $APP_URL/agent/reports. A 404 here"\
-                 " means AGENT_TOKEN does not match the one in Railway, or"\
-                 " Railway has not redeployed since the agent routes landed."
+            echo "::error::Could not read $APP_URL/agent/reports."
+            # A length is not the secret, so it prints. Compare it with
+            # agent.token_chars on $APP_URL/health: different lengths mean
+            # the two copies are different strings, which is the usual cause.
+            echo "This copy of AGENT_TOKEN is ${#AGENT_TOKEN} characters."
+            echo "Check $APP_URL/health — agent.configured false means Railway"
+            echo "has none; a different agent.token_chars means they differ."
             exit 1
           fi
           count=$(printf '%s' "$briefs" | python3 -c \

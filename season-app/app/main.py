@@ -695,6 +695,12 @@ def health():
         # the pair you cannot tell apart when it will not work.
         "agent": {
             "configured": bool(os.environ.get("AGENT_TOKEN")),
+            # The length, never the token. Two copies that must match are
+            # otherwise impossible to compare — one of them is write-only —
+            # and a mismatched length says "you pasted something else"
+            # immediately, which is the common case. A length leaks nothing
+            # about 32 bytes of randomness.
+            "token_chars": len(os.environ.get("AGENT_TOKEN") or ""),
             "reports_waiting": len(db.reports(state="open")),
         },
         "admin": {
