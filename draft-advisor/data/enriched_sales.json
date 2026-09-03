@@ -721,9 +721,9 @@
   "player": "Ben Chilwell",
   "club": "CHE",
   "cost": 4.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 643,
+  "fpl_name": "Chilwell",
+  "points_that_season": 24
  },
  {
   "season": "2023-24",
@@ -6430,9 +6430,9 @@
   "player": "Fleming",
   "club": "BUR",
   "cost": 1.0,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 640,
+  "fpl_name": "Flemming",
+  "points_that_season": 99
  },
  {
   "season": "2025-26",

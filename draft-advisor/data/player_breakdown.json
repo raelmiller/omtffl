@@ -1,9 +1,9 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-02T09:21:37Z",
+  "fpl_baked_at": "2026-09-03T09:31:49Z",
   "sales": 645,
   "unique_players": 393,
-  "matched_to_fpl": 262
+  "matched_to_fpl": 264
  },
  "players": [
   {
@@ -1454,7 +1454,7 @@
    "fpl_id": 238,
    "display": "Grealish",
    "position": "MID",
-   "current_club": "MCI",
+   "current_club": "EVE",
    "status": "a",
    "last_season_points": 1,
    "xgi": "0.00",
@@ -1488,7 +1488,7 @@
    "display": "D.Essugo",
    "position": "FWD",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -1736,7 +1736,7 @@
    "fpl_id": 578,
    "display": "Mudryk",
    "position": "MID",
-   "current_club": "CHE",
+   "current_club": "TOT",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
@@ -2565,7 +2565,7 @@
    "display": "Beto",
    "position": "FWD",
    "current_club": "EVE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 2,
    "xgi": "0.09",
    "penalties": false,
@@ -2803,14 +2803,14 @@
    }
   },
   {
-   "key": "name_ben chilwell",
-   "fpl_id": null,
-   "display": "Ben Chilwell",
+   "key": "fpl_643",
+   "fpl_id": 643,
+   "display": "Chilwell",
    "position": "DEF",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "CRY",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -2819,7 +2819,7 @@
      "price": 4.0,
      "buyer": "Richard",
      "club_then": "CHE",
-     "points_that_season": null
+     "points_that_season": 24
     }
    }
   },
@@ -3083,13 +3083,13 @@
    "fpl_id": 155,
    "display": "Enzo",
    "position": "MID",
-   "current_club": "CHE",
+   "current_club": "MCI",
    "status": "a",
    "last_season_points": 1,
    "xgi": "0.02",
    "penalties": false,
    "corners": false,
-   "freekicks": true,
+   "freekicks": false,
    "sales": {
     "2023-24": {
      "price": 2.25,
@@ -3143,11 +3143,11 @@
    "fpl_id": 237,
    "display": "Ndiaye",
    "position": "MID",
-   "current_club": "EVE",
+   "current_club": "MCI",
    "status": "a",
    "last_season_points": 13,
    "xgi": "0.65",
-   "penalties": true,
+   "penalties": false,
    "corners": false,
    "freekicks": false,
    "sales": {
@@ -4356,7 +4356,7 @@
    "display": "S\u00e1nchez",
    "position": "GK",
    "current_club": "CHE",
-   "status": "a",
+   "status": "u",
    "last_season_points": 2,
    "xgi": "0.01",
    "penalties": false,
@@ -5950,14 +5950,14 @@
    }
   },
   {
-   "key": "name_flemming",
-   "fpl_id": null,
-   "display": "Fleming",
+   "key": "fpl_640",
+   "fpl_id": 640,
+   "display": "Flemming",
    "position": "FWD",
-   "current_club": null,
-   "status": null,
-   "last_season_points": null,
-   "xgi": null,
+   "current_club": "IPS",
+   "status": "a",
+   "last_season_points": 0,
+   "xgi": "0.00",
    "penalties": false,
    "corners": false,
    "freekicks": false,
@@ -5966,7 +5966,7 @@
      "price": 1.0,
      "buyer": "Oli",
      "club_then": "BUR",
-     "points_that_season": null
+     "points_that_season": 99
     }
    }
   },
@@ -6786,7 +6786,7 @@
    "display": "Nwaneri",
    "position": "MID",
    "current_club": "ARS",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -7515,7 +7515,7 @@
    "display": "Morato",
    "position": "DEF",
    "current_club": "NFO",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -8507,7 +8507,7 @@
    "fpl_id": 147,
    "display": "Tosin",
    "position": "DEF",
-   "current_club": "CHE",
+   "current_club": "TOT",
    "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
@@ -9246,7 +9246,7 @@
    "display": "F\u00e1bio Vieira",
    "position": "FWD",
    "current_club": "ARS",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -9414,7 +9414,7 @@
    "display": "Sosa",
    "position": "DEF",
    "current_club": "CRY",
-   "status": "a",
+   "status": "u",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
