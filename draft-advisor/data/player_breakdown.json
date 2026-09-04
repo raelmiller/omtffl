@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-03T09:31:49Z",
+  "fpl_baked_at": "2026-09-04T09:24:42Z",
   "sales": 645,
   "unique_players": 393,
   "matched_to_fpl": 264
@@ -3705,7 +3705,7 @@
    "display": "Florentino",
    "position": "FWD",
    "current_club": "IPS",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -9288,7 +9288,7 @@
    "display": "Emersonn",
    "position": "DEF",
    "current_club": "IPS",
-   "status": "d",
+   "status": "a",
    "last_season_points": 10,
    "xgi": "0.88",
    "penalties": false,
