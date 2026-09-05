@@ -20,10 +20,10 @@ of the real season.
 | 7 | For Beto o For Wirtz | 3 | 1 | 0 | 2 | 84 | 70 | **3** |
 | 8 | La Prima Dimwit | 3 | 1 | 0 | 2 | 98 | 101 | **3** |
 | 9 | License to Kelleher | 3 | 1 | 0 | 2 | 76 | 82 | **3** |
-| 10 | The Gyokfather | 3 | 1 | 0 | 2 | 72 | 84 | **3** |
+| 10 | The Gyokfather | 3 | 1 | 0 | 2 | 72 | 82 | **3** |
 | 11 | Palmer Sutra | 3 | 1 | 0 | 2 | 85 | 104 | **3** |
 | 12 | Brobbey'sGonnaGetYa! | 3 | 1 | 0 | 2 | 81 | 103 | **3** |
-| 13 | Becker Call Saul | 3 | 1 | 0 | 2 | 78 | 100 | **3** |
+| 13 | Becker Call Saul | 3 | 1 | 0 | 2 | 76 | 100 | **3** |
 | 14 | Joao and Silent Bobb | 3 | 1 | 0 | 2 | 77 | 106 | **3** |
 
 ### Gameweek 1
@@ -63,7 +63,7 @@ of the real season.
 | You HallWhite mate? | **0 - 3** | Quantum of Szobos |
 | For Beto o For Wirtz | **3 - 5** | Joao and Silent Bobb |
 | Isakly | **15 - 3** | La Prima Dimwit |
-| The Gyokfather | **6 - 12** | Becker Call Saul |
+| The Gyokfather | **6 - 10** | Becker Call Saul |
 | Meet me on the Roefs | **0 - 0** | Quantum of Tzolis |
 | ThunderBijol | **5 - 0** | Palmer Sutra |
 | Brobbey'sGonnaGetYa! | **0 - 11** | License to Kelleher |
