@@ -7643,6 +7643,623 @@
   }
  },
  {
+  "name": "Ciaran",
+  "years": [
+   "2023-24",
+   "2024-25",
+   "2025-26"
+  ],
+  "avg_spend": 50.0,
+  "top3_share": 45.8,
+  "pos_split": {
+   "GK": 1.8,
+   "DEF": 3.5,
+   "MID": 39.7,
+   "FWD": 55.0
+  },
+  "fav_clubs": [
+   [
+    "BOU",
+    5
+   ],
+   [
+    "LIV",
+    5
+   ],
+   [
+    "TOT",
+    3
+   ]
+  ],
+  "pts_per_million": 14.0,
+  "total_points_bought": 2104,
+  "max_ever_bid": 29.0,
+  "seasons": {
+   "2023-24": {
+    "squad": [
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Mohamed Salah",
+      "club": "LIV",
+      "cost": 29.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Harry Kane",
+      "club": "TOT",
+      "cost": 10.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Pascal Gross",
+      "club": "BHA",
+      "cost": 5.5,
+      "fpl_id": 124,
+      "fpl_name": "Gro\u00df",
+      "points_that_season": 153
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Diogo Jota",
+      "club": "LIV",
+      "cost": 5.5,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "James Shea",
+      "club": "LUT",
+      "cost": 0.0,
+      "fpl_id": 142,
+      "fpl_name": "James",
+      "points_that_season": 11
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "Neto",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 156,
+      "fpl_name": "Neto",
+      "points_that_season": 86
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Anel Ahmedhodzic",
+      "club": "SHU",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Milos Kerkez",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 358,
+      "fpl_name": "Kerkez",
+      "points_that_season": 59
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Cristian Romero",
+      "club": "TOT",
+      "cost": 0.0,
+      "fpl_id": 500,
+      "fpl_name": "Romero",
+      "points_that_season": 107
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Kurt Zouma",
+      "club": "WHU",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Rico Lewis",
+      "club": "MCI",
+      "cost": 0.0,
+      "fpl_id": 395,
+      "fpl_name": "Lewis",
+      "points_that_season": 52
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Jadon Sancho",
+      "club": "MUN",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Miguel Almiron",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "David Brooks",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 74,
+      "fpl_name": "Brooks",
+      "points_that_season": 23
+     },
+     {
+      "season": "2023-24",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Tino Livramento",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": 450,
+      "fpl_name": "Livramento",
+      "points_that_season": 45
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 536,
+    "points_matched_players": 8,
+    "best_value": {
+     "season": "2023-24",
+     "manager": "Ciaran",
+     "position": "GK",
+     "player": "Neto",
+     "club": "BOU",
+     "cost": 0.0,
+     "fpl_id": 156,
+     "fpl_name": "Neto",
+     "points_that_season": 86
+    },
+    "biggest_bust": {
+     "season": "2023-24",
+     "manager": "Ciaran",
+     "position": "MID",
+     "player": "Pascal Gross",
+     "club": "BHA",
+     "cost": 5.5,
+     "fpl_id": 124,
+     "fpl_name": "Gro\u00df",
+     "points_that_season": 153
+    }
+   },
+   "2024-25": {
+    "squad": [
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Salah",
+      "club": "LIV",
+      "cost": 19.75,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Solanke",
+      "club": "TOT",
+      "cost": 15.0,
+      "fpl_id": 526,
+      "fpl_name": "Solanke",
+      "points_that_season": 108
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Hwang Hee Chan",
+      "club": "WOL",
+      "cost": 6.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Gabriel",
+      "club": "ARS",
+      "cost": 4.25,
+      "fpl_id": 4,
+      "fpl_name": "Gabriel",
+      "points_that_season": 117
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Armstrong",
+      "club": "SOU",
+      "cost": 3.25,
+      "fpl_id": 244,
+      "fpl_name": "Armstrong",
+      "points_that_season": 2
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "Jose S\u00e1",
+      "club": "WOL",
+      "cost": 1.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "L. Martinez",
+      "club": "MUN",
+      "cost": 0.5,
+      "fpl_id": 419,
+      "fpl_name": "Martinez",
+      "points_that_season": 68
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Estupinan",
+      "club": "BRI",
+      "cost": 0.25,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "Bazunu",
+      "club": "SOU",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Riad",
+      "club": "CRY",
+      "cost": 0.0,
+      "fpl_id": 206,
+      "fpl_name": "Chadi Riad",
+      "points_that_season": 1
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Shaw",
+      "club": "MUN",
+      "cost": 0.0,
+      "fpl_id": 423,
+      "fpl_name": "Shaw",
+      "points_that_season": 5
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Bobb",
+      "club": "MCI",
+      "cost": 0.0,
+      "fpl_id": 264,
+      "fpl_name": "Bobb",
+      "points_that_season": 3
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Kluivert",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 70,
+      "fpl_name": "Kluivert",
+      "points_that_season": 158
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Enzo",
+      "club": "CHE",
+      "cost": 0.0,
+      "fpl_id": 155,
+      "fpl_name": "Enzo",
+      "points_that_season": 135
+     },
+     {
+      "season": "2024-25",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Jebbison",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 608,
+      "fpl_name": "Jebbison",
+      "points_that_season": 20
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 617,
+    "points_matched_players": 10,
+    "best_value": {
+     "season": "2024-25",
+     "manager": "Ciaran",
+     "position": "MID",
+     "player": "Kluivert",
+     "club": "BOU",
+     "cost": 0.0,
+     "fpl_id": 70,
+     "fpl_name": "Kluivert",
+     "points_that_season": 158
+    },
+    "biggest_bust": {
+     "season": "2024-25",
+     "manager": "Ciaran",
+     "position": "FWD",
+     "player": "Solanke",
+     "club": "TOT",
+     "cost": 15.0,
+     "fpl_id": 526,
+     "fpl_name": "Solanke",
+     "points_that_season": 108
+    }
+   },
+   "2025-26": {
+    "squad": [
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Saka",
+      "club": "ARS",
+      "cost": 20.0,
+      "fpl_id": 12,
+      "fpl_name": "Saka",
+      "points_that_season": 157
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Isak",
+      "club": "FOR",
+      "cost": 19.75,
+      "fpl_id": 379,
+      "fpl_name": "Isak",
+      "points_that_season": 41
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Gordon",
+      "club": "NEW",
+      "cost": 8.25,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "Kelleher",
+      "club": "BRE",
+      "cost": 1.75,
+      "fpl_id": 82,
+      "fpl_name": "Kelleher",
+      "points_that_season": 143
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Van Hecke",
+      "club": "BRI",
+      "cost": 0.25,
+      "fpl_id": 356,
+      "fpl_name": "Virgil",
+      "points_that_season": 175
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "GK",
+      "player": "Perri",
+      "club": "LEE",
+      "cost": 0.0,
+      "fpl_id": 326,
+      "fpl_name": "Perri",
+      "points_that_season": 43
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Walker-Peters",
+      "club": "WHU",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Bradley",
+      "club": "LIV",
+      "cost": 0.0,
+      "fpl_id": 360,
+      "fpl_name": "Bradley",
+      "points_that_season": 42
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "Williams",
+      "club": "NFO",
+      "cost": 0.0,
+      "fpl_id": 469,
+      "fpl_name": "N.Williams",
+      "points_that_season": 128
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "DEF",
+      "player": "O'Brien",
+      "club": "EVE",
+      "cost": 0.0,
+      "fpl_id": 232,
+      "fpl_name": "O'Brien",
+      "points_that_season": 116
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Barcola",
+      "club": "LIV",
+      "cost": 0.0,
+      "fpl_id": 627,
+      "fpl_name": "Barcola",
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Hannibal",
+      "club": "",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "MID",
+      "player": "Arias",
+      "club": "WOL",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Barnes",
+      "club": "BUR",
+      "cost": 0.0,
+      "fpl_id": 453,
+      "fpl_name": "Barnes",
+      "points_that_season": 106
+     },
+     {
+      "season": "2025-26",
+      "manager": "Ciaran",
+      "position": "FWD",
+      "player": "Vlahovic",
+      "club": "",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 951,
+    "points_matched_players": 9,
+    "best_value": {
+     "season": "2025-26",
+     "manager": "Ciaran",
+     "position": "DEF",
+     "player": "Williams",
+     "club": "NFO",
+     "cost": 0.0,
+     "fpl_id": 469,
+     "fpl_name": "N.Williams",
+     "points_that_season": 128
+    },
+    "biggest_bust": {
+     "season": "2025-26",
+     "manager": "Ciaran",
+     "position": "FWD",
+     "player": "Isak",
+     "club": "FOR",
+     "cost": 19.75,
+     "fpl_id": 379,
+     "fpl_name": "Isak",
+     "points_that_season": 41
+    }
+   }
+  }
+ },
+ {
   "name": "Rael",
   "years": [
    "2023-24",
@@ -8255,623 +8872,6 @@
      "fpl_id": 348,
      "fpl_name": "Piroe",
      "points_that_season": 17
-    }
-   }
-  }
- },
- {
-  "name": "Ciaran",
-  "years": [
-   "2023-24",
-   "2024-25",
-   "2025-26"
-  ],
-  "avg_spend": 50.0,
-  "top3_share": 45.8,
-  "pos_split": {
-   "GK": 1.8,
-   "DEF": 3.5,
-   "MID": 39.7,
-   "FWD": 55.0
-  },
-  "fav_clubs": [
-   [
-    "BOU",
-    5
-   ],
-   [
-    "LIV",
-    5
-   ],
-   [
-    "TOT",
-    3
-   ]
-  ],
-  "pts_per_million": 12.9,
-  "total_points_bought": 1929,
-  "max_ever_bid": 29.0,
-  "seasons": {
-   "2023-24": {
-    "squad": [
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Mohamed Salah",
-      "club": "LIV",
-      "cost": 29.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Harry Kane",
-      "club": "TOT",
-      "cost": 10.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Pascal Gross",
-      "club": "BHA",
-      "cost": 5.5,
-      "fpl_id": 124,
-      "fpl_name": "Gro\u00df",
-      "points_that_season": 153
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Diogo Jota",
-      "club": "LIV",
-      "cost": 5.5,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "James Shea",
-      "club": "LUT",
-      "cost": 0.0,
-      "fpl_id": 142,
-      "fpl_name": "James",
-      "points_that_season": 11
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "Neto",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 156,
-      "fpl_name": "Neto",
-      "points_that_season": 86
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Anel Ahmedhodzic",
-      "club": "SHU",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Milos Kerkez",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 358,
-      "fpl_name": "Kerkez",
-      "points_that_season": 59
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Cristian Romero",
-      "club": "TOT",
-      "cost": 0.0,
-      "fpl_id": 500,
-      "fpl_name": "Romero",
-      "points_that_season": 107
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Kurt Zouma",
-      "club": "WHU",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Rico Lewis",
-      "club": "MCI",
-      "cost": 0.0,
-      "fpl_id": 395,
-      "fpl_name": "Lewis",
-      "points_that_season": 52
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Jadon Sancho",
-      "club": "MUN",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Miguel Almiron",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "David Brooks",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 74,
-      "fpl_name": "Brooks",
-      "points_that_season": 23
-     },
-     {
-      "season": "2023-24",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Tino Livramento",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": 450,
-      "fpl_name": "Livramento",
-      "points_that_season": 45
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 536,
-    "points_matched_players": 8,
-    "best_value": {
-     "season": "2023-24",
-     "manager": "Ciaran",
-     "position": "GK",
-     "player": "Neto",
-     "club": "BOU",
-     "cost": 0.0,
-     "fpl_id": 156,
-     "fpl_name": "Neto",
-     "points_that_season": 86
-    },
-    "biggest_bust": {
-     "season": "2023-24",
-     "manager": "Ciaran",
-     "position": "MID",
-     "player": "Pascal Gross",
-     "club": "BHA",
-     "cost": 5.5,
-     "fpl_id": 124,
-     "fpl_name": "Gro\u00df",
-     "points_that_season": 153
-    }
-   },
-   "2024-25": {
-    "squad": [
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Salah",
-      "club": "LIV",
-      "cost": 19.75,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Solanke",
-      "club": "TOT",
-      "cost": 15.0,
-      "fpl_id": 526,
-      "fpl_name": "Solanke",
-      "points_that_season": 108
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Hwang Hee Chan",
-      "club": "WOL",
-      "cost": 6.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Gabriel",
-      "club": "ARS",
-      "cost": 4.25,
-      "fpl_id": 4,
-      "fpl_name": "Gabriel",
-      "points_that_season": 117
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Armstrong",
-      "club": "SOU",
-      "cost": 3.25,
-      "fpl_id": 244,
-      "fpl_name": "Armstrong",
-      "points_that_season": 2
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "Jose S\u00e1",
-      "club": "WOL",
-      "cost": 1.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "L. Martinez",
-      "club": "MUN",
-      "cost": 0.5,
-      "fpl_id": 419,
-      "fpl_name": "Martinez",
-      "points_that_season": 68
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Estupinan",
-      "club": "BRI",
-      "cost": 0.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "Bazunu",
-      "club": "SOU",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Riad",
-      "club": "CRY",
-      "cost": 0.0,
-      "fpl_id": 206,
-      "fpl_name": "Chadi Riad",
-      "points_that_season": 1
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Shaw",
-      "club": "MUN",
-      "cost": 0.0,
-      "fpl_id": 423,
-      "fpl_name": "Shaw",
-      "points_that_season": 5
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Bobb",
-      "club": "MCI",
-      "cost": 0.0,
-      "fpl_id": 264,
-      "fpl_name": "Bobb",
-      "points_that_season": 3
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Kluivert",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 70,
-      "fpl_name": "Kluivert",
-      "points_that_season": 158
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Enzo",
-      "club": "CHE",
-      "cost": 0.0,
-      "fpl_id": 155,
-      "fpl_name": "Enzo",
-      "points_that_season": 135
-     },
-     {
-      "season": "2024-25",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Jebbison",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 608,
-      "fpl_name": "Jebbison",
-      "points_that_season": 20
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 617,
-    "points_matched_players": 10,
-    "best_value": {
-     "season": "2024-25",
-     "manager": "Ciaran",
-     "position": "MID",
-     "player": "Kluivert",
-     "club": "BOU",
-     "cost": 0.0,
-     "fpl_id": 70,
-     "fpl_name": "Kluivert",
-     "points_that_season": 158
-    },
-    "biggest_bust": {
-     "season": "2024-25",
-     "manager": "Ciaran",
-     "position": "FWD",
-     "player": "Solanke",
-     "club": "TOT",
-     "cost": 15.0,
-     "fpl_id": 526,
-     "fpl_name": "Solanke",
-     "points_that_season": 108
-    }
-   },
-   "2025-26": {
-    "squad": [
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Saka",
-      "club": "ARS",
-      "cost": 20.0,
-      "fpl_id": 12,
-      "fpl_name": "Saka",
-      "points_that_season": 157
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Isak",
-      "club": "FOR",
-      "cost": 19.75,
-      "fpl_id": 379,
-      "fpl_name": "Isak",
-      "points_that_season": 41
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Gordon",
-      "club": "NEW",
-      "cost": 8.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "Kelleher",
-      "club": "BRE",
-      "cost": 1.75,
-      "fpl_id": 82,
-      "fpl_name": "Kelleher",
-      "points_that_season": 143
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Van Hecke",
-      "club": "BRI",
-      "cost": 0.25,
-      "fpl_id": 175,
-      "fpl_name": "van Ewijk",
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "GK",
-      "player": "Perri",
-      "club": "LEE",
-      "cost": 0.0,
-      "fpl_id": 326,
-      "fpl_name": "Perri",
-      "points_that_season": 43
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Walker-Peters",
-      "club": "WHU",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Bradley",
-      "club": "LIV",
-      "cost": 0.0,
-      "fpl_id": 360,
-      "fpl_name": "Bradley",
-      "points_that_season": 42
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "Williams",
-      "club": "NFO",
-      "cost": 0.0,
-      "fpl_id": 469,
-      "fpl_name": "N.Williams",
-      "points_that_season": 128
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "DEF",
-      "player": "O'Brien",
-      "club": "EVE",
-      "cost": 0.0,
-      "fpl_id": 232,
-      "fpl_name": "O'Brien",
-      "points_that_season": 116
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Barcola",
-      "club": "LIV",
-      "cost": 0.0,
-      "fpl_id": 627,
-      "fpl_name": "Barcola",
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Hannibal",
-      "club": "",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "MID",
-      "player": "Arias",
-      "club": "WOL",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Barnes",
-      "club": "BUR",
-      "cost": 0.0,
-      "fpl_id": 453,
-      "fpl_name": "Barnes",
-      "points_that_season": 106
-     },
-     {
-      "season": "2025-26",
-      "manager": "Ciaran",
-      "position": "FWD",
-      "player": "Vlahovic",
-      "club": "",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 776,
-    "points_matched_players": 8,
-    "best_value": {
-     "season": "2025-26",
-     "manager": "Ciaran",
-     "position": "DEF",
-     "player": "Williams",
-     "club": "NFO",
-     "cost": 0.0,
-     "fpl_id": 469,
-     "fpl_name": "N.Williams",
-     "points_that_season": 128
-    },
-    "biggest_bust": {
-     "season": "2025-26",
-     "manager": "Ciaran",
-     "position": "FWD",
-     "player": "Isak",
-     "club": "FOR",
-     "cost": 19.75,
-     "fpl_id": 379,
-     "fpl_name": "Isak",
-     "points_that_season": 41
     }
    }
   }
