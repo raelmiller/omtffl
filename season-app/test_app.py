@@ -2942,7 +2942,10 @@ for path in ("/waivers", "/trade", "/declare", "/stats"):
     page = wv2.get(path)
     if page.status_code != 200:
         continue
-    opens = re.findall(r'aria-controls="([^"]+)"', page.text)
+    # Only the explainer buttons. A bare aria-controls scan swept up the
+    # crest's menu button too, which controls a nav rather than an infobox.
+    opens = re.findall(r'class="infobtn"[^>]*aria-controls="([^"]+)"',
+                       page.text)
     boxes = re.findall(r'<span class="infobox" id="([^"]+)"', page.text)
     check(f"{path}: every icon opens a box that is there",
           sorted(opens), sorted(boxes))
@@ -3839,6 +3842,59 @@ os.environ.pop("ADMIN_KEYS", None)
 check_true("and the tab goes with the rights", ">Admin<" not in wv.get("/").text)
 check_true("a signed-out visitor has no rail at all",
            '<nav class="rail"' not in client.get("/").text)
+
+# ── The crest's menu ───────────────────────────────────────────────────────
+# A second way around the app, for the two cases the rail cannot serve: a
+# phone, where every label is cut to five characters, and the pages that were
+# never on it at all.
+def menu(html):
+    """The crest menu's destinations, in order."""
+    block = re.search(r'<nav id="crestnav".*?</nav>', html, re.S)
+    return re.findall(r'<a class="cnav[^"]*" href="([^"]+)"',
+                      block.group(0)) if block else []
+
+
+def menu_on(html):
+    block = re.search(r'<nav id="crestnav".*?</nav>', html, re.S)
+    return re.findall(r'<a class="cnav on" href="([^"]+)"',
+                      block.group(0)) if block else []
+
+
+_menu = menu(bar)
+check("the menu carries every section the rail does, in the same order",
+      _menu[:len(rail_hrefs)], rail_hrefs)
+# The whole reason for it: neither of these has ever been on the rail, and
+# /account is behind an avatar that loses its name on a phone.
+check("and the two places the rail has no room for",
+      _menu[len(rail_hrefs):], ["/account", "/reports"])
+check_true("every one of them opens",
+           all(wv.get(h).status_code == 200 for h in _menu),
+           ", ".join(f"{h} -> {wv.get(h).status_code}" for h in _menu
+                     if wv.get(h).status_code != 200))
+
+# It has to agree with the rail about where you are, or the two disagree on
+# screen and one of them is lying.
+for _page, _want in (("/table", "/table"), ("/waivers", "/waivers"),
+                     ("/", "/week"), ("/team/RM", "/week")):
+    _html = wv.get(_page).text
+    check(f"the menu marks {_want} on {_page}, as the rail does",
+          (menu_on(_html), tab_on(_html)), ([_want], [_want]))
+# These two are only ever marked by the menu — the rail does not carry them.
+check("and marks the pages the rail cannot",
+      menu_on(wv.get("/account").text), ["/account"])
+check("including what you reported", menu_on(wv.get("/reports").text), ["/reports"])
+
+os.environ["ADMIN_KEYS"] = "RM"
+check_true("an admin's menu carries admin", "/admin" in menu(wv.get("/").text))
+os.environ.pop("ADMIN_KEYS", None)
+check_true("and nobody else's does", "/admin" not in menu(wv.get("/").text))
+
+# Signed out there is nowhere to go, so the crest goes back to being a badge
+# rather than a button that opens an empty menu.
+_out = client.get("/").text
+check_true("a signed-out visitor gets no menu", not menu(_out))
+check_true("and the crest is not a button", 'id="crestbtn"' not in _out)
+check_true("but the crest is still there", '<span class="crest"' in _out)
 
 # The thing that was actually asked for: light unless the device says dark.
 light = sheet[:sheet.find("@media (prefers-color-scheme: dark)")]

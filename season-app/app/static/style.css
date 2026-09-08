@@ -177,13 +177,53 @@ p { margin: 0; }
 }
 /* The crest's own white ground is the coin: clipped round and ringed so it
    keeps its edge against the aubergine. */
-.crest { display: block; flex: none; margin-left: .25rem; }
+.crest {
+  display: block; flex: none; margin-left: .25rem;
+  /* It is a button when signed in and a span when not, and it must look
+     identical either way. */
+  padding: 0; border: 0; background: none; cursor: pointer;
+}
 .crest img {
   display: block; width: 38px; height: 38px; border-radius: 999px;
   box-shadow: 0 0 0 1px rgba(255,255,255,.2);
   transition: box-shadow .18s ease, transform .18s ease;
 }
 .crest:hover img { box-shadow: 0 0 0 1px var(--fill); transform: scale(1.04); }
+.crest:focus-visible { outline: none; }
+.crest:focus-visible img { box-shadow: 0 0 0 2px var(--fill); }
+.crest[aria-expanded="true"] img { box-shadow: 0 0 0 2px var(--fill); }
+
+/* ── Everywhere you can go, behind the crest ─────────── */
+/* A second way around the app, not a replacement for the rail: the rail is
+   where the thumb goes, and this is where you go when the rail's five-letter
+   labels are not enough or the place you want was never on it. */
+.crestmenu { position: relative; flex: none; margin-left: .25rem; }
+.crestmenu .crest { margin-left: 0; }
+.crestnav {
+  position: absolute; top: calc(100% + .5rem); right: 0; z-index: 30;
+  min-width: 14rem; padding: .35rem; border-radius: 10px;
+  background: var(--chrome); border: 1px solid var(--chrome-line);
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  display: flex; flex-direction: column;
+  /* Ten destinations on a short phone is taller than the screen. Scroll the
+     menu rather than the page behind it. */
+  max-height: calc(100vh - 5rem); overflow-y: auto;
+}
+.crestnav hr {
+  border: 0; border-top: 1px solid var(--chrome-line); margin: .3rem .5rem;
+}
+.cnav {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .5rem .6rem; border-radius: 6px; white-space: nowrap;
+  font-size: .86rem; font-weight: 600; text-decoration: none;
+  color: var(--chrome-muted);
+  transition: color .14s ease, background .14s ease;
+}
+.cnav svg { flex: none; width: 18px; height: 18px; opacity: .85; }
+.cnav:hover { color: #fff; background: rgba(255,255,255,.09); text-decoration: none; }
+.cnav:focus-visible { outline: 2px solid var(--fill); outline-offset: -2px; }
+.cnav.on { color: var(--fill); background: rgba(255,255,255,.06); }
+.cnav.on svg { opacity: 1; }
 
 /* ── The tab rail ────────────────────────────────────── */
 .rail {

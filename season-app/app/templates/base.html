@@ -56,6 +56,28 @@
   {% set tabs = tabs + [("/admin", "Admin", "Admin", '<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.2M12 18.8V21M4.2 7.5l1.9 1.1M17.9 15.4l1.9 1.1M4.2 16.5l1.9-1.1M17.9 8.6l1.9-1.1"/>', [])] %}
 {% endif %}
 
+{#- Which section the current path belongs to. / and /team/RM/3 both show a
+    team's week, so they light This week; /gameweek/3 is a whole round, so it
+    lights the Table.
+
+    A bare "/" in that list means the root and only the root — startswith("/")
+    is true of every path there has ever been, so treating it as a prefix
+    would light This week on every page in the app.
+
+    Worked out here rather than beside the rail because the crest's menu is
+    above it in the document and marks the same section. -#}
+{% set here = namespace(tab=none) %}
+{% for href, label, short, icon, also in tabs %}
+  {% if path == href %}{% set here.tab = href %}{% endif %}
+  {% for prefix in also %}
+    {% if prefix == "/" %}
+      {% if path == "/" %}{% set here.tab = href %}{% endif %}
+    {% elif path.startswith(prefix) %}
+      {% set here.tab = href %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
 <a class="skip" href="#main">Skip to the page</a>
 
 <header class="topbar">
@@ -77,30 +99,54 @@
     </a>
     {% endif %}
     {#- The crest is a badge, not a second wordmark: at 38px the ring's
-        lettering reads as texture and the lamb carries it. -#}
+        lettering reads as texture and the lamb carries it.
+
+        Signed in it is also the way around the app. The rail is the primary
+        navigation and stays exactly as it is — this is a second route to the
+        same places, which matters most on a phone, where the rail shortens
+        every label to five characters and drops Account and What you reported
+        entirely. Signed out there is nowhere to go, so it stays a badge. -#}
+    {% if me %}
+    <div class="crestmenu">
+      <button id="crestbtn" class="crest" type="button" aria-haspopup="true"
+              aria-expanded="false" aria-controls="crestnav"
+              title="Everywhere you can go">
+        <img src="/static/logo.png?v={{ asset_version }}" alt="Menu"
+             width="38" height="38">
+      </button>
+      <nav id="crestnav" class="crestnav" aria-label="Everywhere" hidden>
+        {% for href, label, short, icon, also in tabs %}
+          <a class="cnav{{ ' on' if href == here.tab }}" href="{{ href }}"
+             {% if href == here.tab %}aria-current="page"{% endif %}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ icon|safe }}</svg>
+            <span>{{ label }}</span>
+          </a>
+        {% endfor %}
+        <hr>
+        {#- The two the rail has no room for. Both exist elsewhere — /account
+            behind an avatar that loses its name on a phone, /reports in the
+            footer — which is to say neither is anywhere you would look. -#}
+        <a class="cnav{{ ' on' if path == '/account' }}" href="/account"
+           {% if path == '/account' %}aria-current="page"{% endif %}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+          <span>Your account</span>
+        </a>
+        <a class="cnav{{ ' on' if path == '/reports' }}" href="/reports"
+           {% if path == '/reports' %}aria-current="page"{% endif %}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16l-7-3.5L5 20V4Z"/></svg>
+          <span>What you reported</span>
+        </a>
+      </nav>
+    </div>
+    {% else %}
     <span class="crest" title="OMTFFL"><img
       src="/static/logo.png?v={{ asset_version }}" alt="" width="38" height="38"></span>
+    {% endif %}
   </div>
 </header>
-
-{#- Which section the current path belongs to. / and /team/RM/3 both show a
-    team's week, so they light This week; /gameweek/3 is a whole round, so it
-    lights the Table.
-
-    A bare "/" in that list means the root and only the root — startswith("/")
-    is true of every path there has ever been, so treating it as a prefix
-    would light This week on every page in the app. -#}
-{% set here = namespace(tab=none) %}
-{% for href, label, short, icon, also in tabs %}
-  {% if path == href %}{% set here.tab = href %}{% endif %}
-  {% for prefix in also %}
-    {% if prefix == "/" %}
-      {% if path == "/" %}{% set here.tab = href %}{% endif %}
-    {% elif path.startswith(prefix) %}
-      {% set here.tab = href %}
-    {% endif %}
-  {% endfor %}
-{% endfor %}
 
 {% if me %}
 <nav class="rail" aria-label="Sections">
@@ -179,10 +225,53 @@
   paint();
 })();
 </script>
+<script>
+// The crest opens the way around the app. A second route to the rail's
+// sections plus the two it has no room for, which is the difference between
+// "Team" in five characters at the bottom of a phone and a list you can read.
+(function () {
+  var btn = document.getElementById("crestbtn");
+  var menu = document.getElementById("crestnav");
+  if (!btn || !menu) return;
+
+  function shut(focus) {
+    if (menu.hidden) return;
+    menu.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    // Only pull focus back when the menu was dismissed rather than left
+    // through — following a link and then being yanked to the crest would
+    // undo the navigation the click just started.
+    if (focus) btn.focus();
+  }
+  function open() {
+    menu.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+  }
+
+  btn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (menu.hidden) open(); else shut(false);
+  });
+  document.addEventListener("click", function (e) {
+    if (!menu.hidden && !menu.contains(e.target)) shut(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") shut(true);
+  });
+  // Tabbing out of the last link should close it, the same as clicking away.
+  menu.addEventListener("focusout", function (e) {
+    if (!menu.contains(e.relatedTarget) && e.relatedTarget !== btn) shut(false);
+  });
+})();
+</script>
 <noscript><style>
   /* Without scripting there is nothing to open the box with, so the rules are
      simply printed where they stand rather than being lost behind an icon. */
   .infobtn { display: none; }
+  /* Nor the menu — but the rail is the primary navigation and is plain HTML,
+     so the crest simply goes back to being a badge rather than a button that
+     does nothing when pressed. */
+  .crestmenu .crest { cursor: default; }
   .infobox, .infobox[hidden] {
     display: flex; position: static; max-width: none; width: auto;
     margin-top: .6rem; box-shadow: none;
