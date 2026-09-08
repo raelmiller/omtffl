@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-07T10:00:10Z",
+  "fpl_baked_at": "2026-09-08T09:25:40Z",
   "sales": 645,
   "unique_players": 393,
   "matched_to_fpl": 264
@@ -4690,7 +4690,7 @@
    "last_season_points": 9,
    "xgi": "0.90",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": true,
    "sales": {
     "2024-25": {
