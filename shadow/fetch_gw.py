@@ -94,13 +94,39 @@ def fetch_gameweek(gw, meta):
         # one and score appearance points once. FPL's own breakdown carries
         # the raw values per fixture, so keep those and let the engine score
         # each match separately. We take `value`, never `points`.
-        per_fixture = []
+        #
+        # The same breakdown says WHICH match each set belongs to, and that is
+        # worth keeping on its own account. Working it out afterwards means
+        # asking which club a player belongs to, and the only club list we
+        # hold is today's — so a transfer silently moves a player's history
+        # into a match he never played in. That is not hypothetical: Ndiaye
+        # moved to City and took his Everton gameweek with him, which put the
+        # bonus reconciliation out for six players across two matches.
+        per_fixture, fixture_ids = [], []
         for block in el.get("explain") or []:
-            lines = block[0] if isinstance(block, (list, tuple)) and block else []
-            per_fixture.append({ln["stat"]: ln.get("value", 0)
-                                for ln in lines if "stat" in ln})
+            # FPL has served this as [[lines], fixture_id] and as
+            # {"fixture": id, "stats": [lines]}, and the lines have called the
+            # stat's name both "stat" and "identifier". Read either, since
+            # guessing wrong here loses a double gameweek silently.
+            if isinstance(block, dict):
+                lines, fixture = block.get("stats") or [], block.get("fixture")
+            elif isinstance(block, (list, tuple)) and block:
+                lines = block[0] or []
+                fixture = block[1] if len(block) > 1 else None
+            else:
+                lines, fixture = [], None
+            per_fixture.append({(ln.get("stat") or ln.get("identifier")):
+                                ln.get("value", 0)
+                                for ln in lines
+                                if ln.get("stat") or ln.get("identifier")})
+            if isinstance(fixture, int):
+                fixture_ids.append(fixture)
         if len(per_fixture) > 1:
             row["fixtures"] = per_fixture
+        # Always, even for the ordinary one-match week — that is the case the
+        # reconciliation needs and the one nothing else records.
+        if fixture_ids:
+            row["fixture_ids"] = fixture_ids
         elements.append(row)
     played = sum(1 for e in elements if (e["stats"].get("minutes") or 0) > 0)
     print(f"  {len(elements)} players, {played} with minutes")
