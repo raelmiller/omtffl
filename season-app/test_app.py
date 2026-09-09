@@ -1891,6 +1891,12 @@ def _attention(flag=None, fixtures=True, xi_size=11):
         for i, pl in enumerate(squad):
             item = {**pl, "fixtures": [{"opponent": "ARS", "home": True}]
                     if fixtures else []}
+            # Whatever today's data says about these particular players is not
+            # the subject. This only added a flag, so a real one came through
+            # untouched and the eleven was controlled only by half — until the
+            # daily refresh injured somebody in this squad and "nobody
+            # flagged" started reporting a flag.
+            item.pop("flag", None)
             if flag and i == 0:
                 item["flag"] = flag
             out.append(item)
@@ -2795,9 +2801,20 @@ check("but FPL's own note wins when there is one, rather than stuttering",
 
 # The data only arrives with a fetch. Until then nobody is flagged, and
 # nobody is wrongly cleared either — the absence has to be silent.
-check("no availability data means no flags",
-      [p for p in engine.squad_for("RM") if p.get("flag")], [])
-
+#
+# Said with the data actually taken away. This used to assert it against
+# whatever was on disk, which was silent only for as long as nobody in RM's
+# fifteen happened to be injured; the refresh that gave O'Reilly a back
+# problem turned a passing test into a failing one without a line changing.
+_no_avail = engine.availability
+engine.availability = lambda pid=None: ({} if pid is None else None)
+try:
+    check("no availability data means no flags",
+          [p for p in engine.squad_for("RM") if p.get("flag")], [])
+finally:
+    engine.availability = _no_avail
+# That the lookup works rather than merely being quiet is the block below,
+# which stubs an injury in rather than hoping for one in today's data.
 hurt = engine.squad_for("RM")[0]
 was = engine.availability
 engine.availability = lambda pid=None: (
