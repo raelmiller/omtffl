@@ -295,31 +295,37 @@ check("one player takes the three", provisional_bonus({1: 12}), {1: 3})
 check("negative bps still ranks", provisional_bonus({1: -2, 2: -5}), {1: 3, 2: 2})
 
 # The hard test: FPL's own awards, for every player in a real gameweek.
+#
+# Grouped by the fixture FPL itself says each player featured in. It used to
+# group by club, taken from players.json — which holds today's clubs, not the
+# gameweek's. Ndiaye moved to City and his Everton gameweek moved with him:
+# scored in a match he was not in, and missing from the one he was, which put
+# six players out across the two matches. The engine was right throughout.
+#
+# So the partition has to come from the same fetch as the stats. Anything
+# derived after the fact is a guess about a season that has since moved on.
 import collections, json
 from pathlib import Path
 DATA = Path(__file__).resolve().parent / "data"
 gw = json.loads((DATA / "gw01.json").read_text())
 meta = json.loads((DATA / "players.json").read_text())
-club_of = {int(k): v for k, v in meta["player_clubs"].items()}
-fx = [f for f in json.loads((DATA / "pl_fixtures.json").read_text())
-      if f.get("event") == gw["gameweek"]]
-seen = collections.Counter()
-for f in fx:
-    seen[f["team_h"]] += 1
-    seen[f["team_a"]] += 1
 
 stats = {e["id"]: e["stats"] for e in gw["elements"]}
+# Only players with exactly one match this round. A double gameweek's saved
+# stats are the round's total rather than one match's, and this rule is per
+# match, so there is nothing here to reconcile them against.
+played_in = {e["id"]: (e.get("fixture_ids") or [])[0]
+             for e in gw["elements"]
+             if len(e.get("fixture_ids") or []) == 1
+             and (e["stats"].get("minutes") or 0) > 0}
+
+by_fixture = collections.defaultdict(dict)
+for pid, fixture in played_in.items():
+    by_fixture[fixture][pid] = stats[pid]
+
 matched = missed = 0
 offenders = []
-for f in fx:
-    # Only matches where both clubs played once that round: for a double, the
-    # saved stats are the round's total rather than one match's, and this rule
-    # is per match.
-    if seen[f["team_h"]] > 1 or seen[f["team_a"]] > 1:
-        continue
-    pool = {pid: st for pid, st in stats.items()
-            if club_of.get(pid) in (f["team_h"], f["team_a"])
-            and (st.get("minutes") or 0) > 0}
+for fixture, pool in by_fixture.items():
     got = provisional_bonus({pid: st.get("bps") or 0 for pid, st in pool.items()})
     for pid, st in pool.items():
         if got[pid] == (st.get("bonus") or 0):
@@ -329,6 +335,15 @@ for f in fx:
             offenders.append((meta["names"].get(str(pid), pid),
                               st.get("bps"), got[pid], st.get("bonus")))
 
+# A gameweek saved before the fetcher recorded fixtures has nothing to group
+# by, and this would quietly reconcile nobody and pass. Say so instead: a
+# green tick over an empty loop is worse than a failure.
+_enough = matched + missed > 250
+check_true(f"gameweek {gw['gameweek']} says which match each player was in",
+           _enough,
+           "" if _enough else
+           f"only {matched + missed} players carry a fixture — re-fetch it "
+           f"(shadow-fetch-gw.yml, refetch) so the partition exists")
 check_true(f"reproduces FPL's own bonus for all {matched + missed} players who "
            f"featured in gameweek {gw['gameweek']}",
            missed == 0, f"{missed} wrong: {offenders[:4]}")
