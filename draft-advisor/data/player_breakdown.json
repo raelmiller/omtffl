@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-09T09:32:58Z",
+  "fpl_baked_at": "2026-09-10T09:26:14Z",
   "sales": 645,
   "unique_players": 393,
   "matched_to_fpl": 264
@@ -1308,7 +1308,7 @@
    "display": "Gakpo",
    "position": "FWD",
    "current_club": "LIV",
-   "status": "a",
+   "status": "d",
    "last_season_points": 28,
    "xgi": "1.56",
    "penalties": false,
@@ -6210,7 +6210,7 @@
    "display": "Cash",
    "position": "DEF",
    "current_club": "AVL",
-   "status": "a",
+   "status": "d",
    "last_season_points": 7,
    "xgi": "0.19",
    "penalties": false,
