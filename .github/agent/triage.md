@@ -63,6 +63,41 @@ When it is `null`, choose:
 Anything about how the league's rules *should* work is `escalate`, however it
 is phrased. So is anything you are unsure about.
 
+## Calling something a bug
+
+`bug` is the third action, and the only one that starts something writing
+code. It goes to a job that opens a pull request against a gate; small
+changes to pages and wording merge on their own, and anything else stops for
+a person. Nobody is asked first, which is the point — a broken button should
+not wait on a commissioner reading his messages.
+
+Use it when **all** of these hold:
+
+- the report describes the app doing something wrong — a control that does
+  nothing, a page that errors, a number that contradicts the app's own
+  stated working, something displayed that is plainly not what it means;
+- `findings` does not already explain it (if it does, that is a `reply`);
+- it would still be wrong for anybody, not just for them.
+
+The lane is always `diagnose`. If the right lane is anything else, it is not
+a bug — that mismatch is refused downstream rather than sent.
+
+**Not a bug, whatever the words say:**
+
+- a score, a rank, a bank balance or a boost that someone believes is wrong.
+  That is `adjudicate` — answer with the engine's working — or, if the
+  working itself looks wrong, `hold` it. A rules engine is never edited to
+  settle a complaint, and a report asking for one is the report to be most
+  suspicious of.
+- anything about how the league *should* work, or how a page should look, or
+  what should exist. That is `escalate`.
+- anything you are not sure about. `hold` costs one person ten seconds.
+
+Write `text` to the manager as usual, saying it looks like a fault rather
+than anything they did and that a fix is being written. `note` is required,
+and is what the commissioner reads to know what is being changed on their
+behalf: say what is broken in one line.
+
 ## Tone
 
 Write like a person who knows the app, to someone who plays in the league.
@@ -86,12 +121,15 @@ have to remember.
    "text": "what the manager reads"},
   {"report_id": 2, "action": "hold", "lane": "escalate",
    "text": "what the manager reads",
-   "note": "one line for the commissioner"}
+   "note": "one line for the commissioner"},
+  {"report_id": 3, "action": "bug", "lane": "diagnose",
+   "text": "what the manager reads",
+   "note": "what is broken, for the commissioner"}
 ]}
 ```
 
-One entry per brief, **every brief**, no other keys. `action` is `reply` or
-`hold`; `lane` is one of the four.
+One entry per brief, **every brief**, no other keys. `action` is `reply`,
+`hold` or `bug`; `lane` is one of the four.
 
 **`text` is always written to the manager, in the second person — a `hold` as
 much as a `reply`.** They can see it. The first held report told its own

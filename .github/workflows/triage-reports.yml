@@ -116,13 +116,17 @@ jobs:
              "text": "what the manager reads"},
             {"report_id": 2, "action": "hold", "lane": "escalate",
              "text": "what the manager reads",
-             "note": "one line for the commissioner"}
+             "note": "one line for the commissioner"},
+            {"report_id": 3, "action": "bug", "lane": "diagnose",
+             "text": "what the manager reads",
+             "note": "what is broken, for the commissioner"}
           ]}
 
           One entry per brief, every brief, no other keys. "text" is always
-          written to the manager, in the second person, on a hold as much as
-          on a reply — they can see it. "note" is the commissioner's and is
-          required on a hold.
+          written to the manager, in the second person, whichever the action
+          — they can see it. "note" is the commissioner's and is required on
+          a hold and on a bug. Read the file on when "bug" applies before
+          using it; it is the one action that starts something writing code.
           PROMPT
           )" \
             --allowedTools "Read,Write" \

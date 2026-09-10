@@ -22,7 +22,9 @@
       <span class="pill">
         {%- if r.state == 'answered' %}answered
         {%- elif r.state == 'held' %}with the commissioner
-        {%- elif r.state == 'approved' %}being worked on
+        {#- `approved` is the old name for the same thing, kept so rows
+            written before the rename still read properly. -#}
+        {%- elif r.state in ('bug', 'approved') %}being worked on
         {%- elif r.state == 'closed' %}closed
         {%- else %}looking into it{% endif -%}
       </span>

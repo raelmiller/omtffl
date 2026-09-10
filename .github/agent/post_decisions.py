@@ -24,7 +24,7 @@ import urllib.error
 import urllib.request
 
 LANES = {"answer", "diagnose", "adjudicate", "escalate"}
-ACTIONS = {"reply", "hold"}
+ACTIONS = {"reply", "hold", "bug"}
 
 
 def load(path):
@@ -74,9 +74,16 @@ def main():
         # note is one the commissioner opens knowing nothing.
         elif action == "reply" and not text:
             problems.append(f"report {rid}: nothing to say")
-        elif action == "hold" and not note:
-            problems.append(f"report {rid}: held with no note for the "
+        elif action in ("hold", "bug") and not note:
+            problems.append(f"report {rid}: {action} with no note for the "
                             "commissioner")
+        # A bug is the one decision that starts a job writing code, so it is
+        # the one that must not be reachable by accident. `diagnose` is what
+        # the evidence says when something is broken; anything about the rules
+        # or the design is a different lane and belongs to a person.
+        elif action == "bug" and lane != "diagnose":
+            problems.append(f"report {rid}: a bug must be lane 'diagnose', "
+                            f"not {lane!r}")
         else:
             ready.append((rid, action, lane, text, note))
 
@@ -85,7 +92,7 @@ def main():
         problems.append(f"report {rid} was waiting and got no decision")
 
     for rid, action, lane, text, note in ready:
-        verb = "REPLY" if action == "reply" else "HOLD "
+        verb = {"reply": "REPLY", "hold": "HOLD ", "bug": "BUG  "}[action]
         print(f"\n{verb} #{rid}  [{lane}]")
         print(f"  to them: {text or '(the app writes its own line)'}")
         if note:
@@ -93,10 +100,17 @@ def main():
 
     if dry:
         print(f"\nDRY RUN — {len(ready)} decision(s) above, nothing posted.")
+    elif problems:
+        # All or nothing, which is what the agent's instructions promise and
+        # what this did not do: malformed entries were dropped and the rest
+        # went out regardless. A batch that came back wrong in one place is
+        # not a batch to trust in the others — and one of the actions now
+        # starts a job writing code, so "mostly fine" is not good enough.
+        print(f"\n{len(problems)} problem(s) — nothing posted at all.")
     else:
         for rid, action, lane, text, note in ready:
             body = {"lane": lane, "reply": text}
-            if action == "hold":
+            if action in ("hold", "bug"):
                 body["summary"] = note
             try:
                 status = post(f"{app_url}/agent/reports/{rid}/{action}",

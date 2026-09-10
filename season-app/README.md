@@ -785,6 +785,28 @@ text falls back to the app's own line, which names who has it and promises a
 reply, because "with the commissioner" on a pill is a status rather than an
 answer.
 
+**A bug is routed without asking anybody.** Triage has a third action, and
+it is the only one that starts something writing code: the report goes to
+`bug`, the fix job opens a pull request, and the blast-radius gate decides
+whether it merges itself or stops for a person. Nobody is asked first, which
+is the point — a broken button should not wait on a commissioner reading his
+messages.
+
+It was unreachable until it was wired. Triage could only reply or hold, the
+Approve button set a state nothing read, and the fix job queried `bug`
+through 52 scheduled runs that could never have found any. Approve now sends
+a report to the same place, so the button means what the reporter's page has
+been telling them all along: *being worked on*.
+
+What keeps it safe is what the agent may not call a bug. A score, a rank, a
+balance or a boost that somebody thinks is wrong is `adjudicate` or `hold` —
+never a code change, because a rules engine edited to settle a complaint is
+exactly the failure this design exists to prevent. The lane must be
+`diagnose`, and a bug arriving in any other lane is refused before it is
+sent. And the batch is now genuinely all-or-nothing: the instructions always
+promised that a malformed decision stopped everything, and until now the
+valid ones went out anyway.
+
 **A hold notifies both of them.** The manager is told their report went to a
 person; the commissioner is told they have one. Only the first of those
 existed to begin with, which meant the escalation path ended in a page nobody

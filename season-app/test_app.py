@@ -3349,9 +3349,12 @@ db.set_report_state(_rid, "held", lane="design")
 check("acting on a held report needs an admin",
       plain.post(f"/admin/reports/{_rid}/approve",
                  follow_redirects=False).status_code, 404)
-check("approving marks it approved",
+# Approving sends it to be fixed. It used to set `approved`, a state nothing
+# anywhere read — this assertion agreed with that and so kept a dead button
+# looking alive.
+check("approving sends it to be fixed",
       (signed.post(f"/admin/reports/{_rid}/approve", follow_redirects=False),
-       db.report(_rid)["state"])[1], "approved")
+       db.report(_rid)["state"])[1], "bug")
 db.set_report_state(_rid, "held")
 check("ignoring closes it",
       (signed.post(f"/admin/reports/{_rid}/ignore", follow_redirects=False),
@@ -3638,6 +3641,36 @@ try:
 finally:
     notify.to_manager = _real_to_manager
     os.environ.pop("ADMIN_KEYS", None)
+
+# ── A bug goes to be fixed, and nobody is asked first ──────────────────────
+# The one action that starts something writing code. It was unreachable until
+# now: triage could only reply or hold, and Approve set a state nothing read,
+# so the fix job queried `bug` for 52 scheduled runs and could never find any.
+_bid2 = db.add_report(P1, "the save button does nothing", {"manager": P1})
+_b = _ag.post(f"/agent/reports/{_bid2}/bug", headers=_auth,
+              json={"lane": "diagnose", "summary": "save button is inert",
+                    "reply": "That looks like a fault — a fix is being written."})
+check("a defect can be sent to be fixed", _b.status_code, 200)
+_brow = db.report(_bid2)
+check("and lands in the state the fix job reads",
+      (_brow["state"], _brow["lane"]), ("bug", "diagnose"))
+check("with the manager told in their own words",
+      _brow["reply"], "That looks like a fault — a fix is being written.")
+check("and the commissioner told what is broken",
+      _brow["note"], "save button is inert")
+check_true("it shows as being worked on, not as a mystery",
+           "being worked on" in signed.get("/reports").text)
+
+# Approve now means what the reporter has already been told it means.
+_apid = db.add_report(P1, "the table sorts backwards", {"manager": P1})
+db.set_report_state(_apid, "held")
+os.environ["ADMIN_KEYS"] = "RM"
+signed.post(f"/admin/reports/{_apid}/approve")
+check("approving a held report sends it to be fixed",
+      db.report(_apid)["state"], "bug")
+signed.post(f"/admin/reports/{_apid}/ignore")
+check("and ignoring still closes it", db.report(_apid)["state"], "closed")
+os.environ.pop("ADMIN_KEYS", None)
 
 # The door opens onto three things and nothing else. A route that could change
 # a lineup, a trade or a point would defeat every other protection here.

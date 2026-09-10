@@ -1095,16 +1095,27 @@ async def agent_bug(request: Request, report_id: int):
     if pr is not None and not isinstance(pr, int):
         return JSONResponse({"ok": False, "errors": ["pr must be a number"]},
                             status_code=422)
+    row = db.report(report_id)
     summary = (body.get("summary") or "").strip()
     said = (body.get("reply") or "").strip()
-    if summary or said:
-        # Same split as a hold: what the manager reads, and what the
-        # commissioner reads about them. Only the first ever reaches a page
-        # they can open.
-        db.answer_report(report_id, said[:db.MESSAGE_LIMIT] or BUG_REPLY,
-                         lane=triage.DIAGNOSE, state="bug",
-                         note=summary[:db.MESSAGE_LIMIT] or None)
+    # Always, rather than only when something was said. A report arriving here
+    # is being worked on, and the manager should be told that in words — the
+    # app has its own line for when the agent supplies none.
+    db.answer_report(report_id, said[:db.MESSAGE_LIMIT] or BUG_REPLY,
+                     lane=triage.DIAGNOSE, state="bug",
+                     note=summary[:db.MESSAGE_LIMIT] or None)
     db.set_report_state(report_id, "bug", lane=triage.DIAGNOSE, pr=pr)
+    # `pr` arrives on a second call, once a branch exists. Telling them twice
+    # that it is being looked at would be noise; the news they can check is
+    # that it went live, and the gate sends that itself when it merges.
+    if pr is None:
+        notify.to_manager(
+            row["manager"], "About what you reported",
+            (said or BUG_REPLY)[:180], url="/reports",
+            tag=f"report-{report_id}")
+        notify.to_admin("A bug is being fixed",
+                        summary or row["message"][:140],
+                        url="/admin/reports", tag=f"bug-{report_id}")
     return JSONResponse({"ok": True})
 
 
@@ -1869,7 +1880,12 @@ def admin_report_action(request: Request, report_id: int, action: str):
         raise HTTPException(400, "no such action")
     if db.report(report_id) is None:
         raise HTTPException(404, "no such report")
-    db.set_report_state(report_id, "approved" if action == "approve" else "closed")
+    # Approve puts it where the fix job looks. It used to set `approved`,
+    # which nothing read: the reporter's page said "being worked on" and no
+    # code anywhere worked on it. A button that makes a promise the system
+    # cannot keep is worse than no button.
+    db.set_report_state(report_id, "bug" if action == "approve" else "closed",
+                        lane=triage.DIAGNOSE if action == "approve" else None)
     return RedirectResponse("/admin/reports", status_code=303)
 
 
