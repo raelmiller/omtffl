@@ -3978,6 +3978,117 @@ check_true("and the media-query block agrees with the toggle",
                sheet[sheet.find('@media (prefers-color-scheme: dark)'):
                      sheet.find(':root[data-theme="dark"]')]))
 
+print("\n── Importing a draft ───────────────────────────────────")
+from app import draft                                      # noqa: E402
+
+# The parser, on what a spreadsheet actually puts on a clipboard.
+_cols = draft.parse("Manager\tPlayer\tPos\tTeam\tPaid\n"
+                    "Rael\tSalah\tMID\tLIV\t£12.50")[0]
+check("columns are read by meaning, in any order, tabs or commas",
+      _cols, [{"name": "Salah", "position": "MID", "club": "LIV",
+               "owner": "Rael", "price": 12.5}])
+check("a table with no player column says which columns it found",
+      "No name or owner column" in draft.parse("a,b\n1,2")[1][0], True)
+
+# Resolution, against the app's own player data — the ids that actually score.
+_pmeta = engine._read("players.json")
+_index = draft.index_players(_pmeta["names"], _pmeta["positions"],
+                             _pmeta["player_clubs"], engine.clubs())
+_dupes = [c for c in _index.values() if len(c) > 1]
+if _dupes:
+    _one = _dupes[0][0]
+    check("a shared surname alone is not resolved",
+          draft.resolve({"name": _one["name"], "position": "", "club": ""},
+                        _index), None)
+    check("but position and club settle it",
+          draft.resolve({"name": _one["name"], "position": _one["position"],
+                         "club": _one["club"]}, _index)["id"], _one["id"])
+check("a player who does not exist resolves to nothing",
+      draft.resolve({"name": "Nobody At All", "position": "MID",
+                     "club": "LIV"}, _index), None)
+
+# The whole round trip: the real squads out as an export, back in, unchanged.
+# A resolver that quietly loses players is the failure that shows up in
+# November as a team scoring less than it should.
+_real = engine._read("squads.json")
+_export = ["Name,Position,Club,Owner,Price"]
+_ident = {}
+for _t in _real["teams"]:
+    _ident[f"owner-{_t['key']}"] = {"key": _t["key"], "team": _t["team"]}
+    for _p in _t["squad"]:
+        _export.append(f"{_p['name']},{_p['position']},{_p['club']},"
+                       f"owner-{_t['key']},{_p['price']}")
+_rows, _probs = draft.parse("\n".join(_export))
+check("every drafted row is read back", (len(_rows), _probs),
+      (sum(len(t["squad"]) for t in _real["teams"]), []))
+_built, _lost = draft.build(_rows, _index, _ident)
+check("and nobody is lost on the way", _lost, [])
+check("every squad comes back exactly as it went in",
+      [(t["key"], sorted(p["id"] for p in t["squad"])) for t in _built["teams"]],
+      [(t["key"], sorted(p["id"] for p in t["squad"])) for t in _real["teams"]])
+
+# The page. An import writes the roster and gives any new team a manager.
+os.environ["ADMIN_KEYS"] = "RM"
+_live = Path(tempfile.mkdtemp(prefix="matchweek-live-"))
+_was_live = engine.LIVE
+engine.LIVE = _live
+try:
+    _two = _real["teams"][:2]
+    _csv = ["Player,Pos,Club,Manager,Paid"]
+    for _t in _two:
+        for _p in _t["squad"]:
+            _csv.append(f"{_p['name']},{_p['position']},{_p['club']},"
+                        f"Bought by {_t['key']},{_p['price']}")
+    _csv = "\n".join(_csv)
+
+    _pv = signed.post("/admin/draft/preview", data={"pasted": _csv})
+    check("the preview asks who each owner is", _pv.text.count('name="key::'), 2)
+    check_true("and writes nothing", not (_live / "squads.json").exists())
+
+    _form = {"pasted": _csv}
+    for _n, _t in enumerate(_two):
+        _form[f"key::Bought by {_t['key']}"] = ["Y1", "Y2"][_n]
+        _form[f"team::Bought by {_t['key']}"] = f"Imported {_t['key']}"
+
+    # The season is underway in this database, so it has to be told twice.
+    _no = signed.post("/admin/draft/apply", data=_form)
+    check_true("importing over a season in progress is refused",
+               "season has already started" in _no.text)
+    check_true("with what was typed still on the page", 'value="Y1"' in _no.text)
+    check_true("and nothing written", not (_live / "squads.json").exists())
+
+    # Two owners sharing initials would merge into one squad of thirty.
+    _clash = {**_form, "i_know": "1"}
+    for _t in _two:
+        _clash[f"key::Bought by {_t['key']}"] = "ZZ"
+    check_true("two owners with the same initials is refused",
+               "same initials" in signed.post("/admin/draft/apply",
+                                              data=_clash).text)
+    check_true("and still nothing written", not (_live / "squads.json").exists())
+
+    _ok = signed.post("/admin/draft/apply", data={**_form, "i_know": "1"},
+                      follow_redirects=False)
+    check("a confirmed import redirects with what it did", _ok.status_code, 303)
+    _written = json.loads((_live / "squads.json").read_text())
+    check("the roster lands on the volume, not in the image",
+          [(t["key"], len(t["squad"])) for t in _written["teams"]],
+          [("Y1", 15), ("Y2", 15)])
+    check("and the engine reads it in preference to the committed file",
+          [t["key"] for t in engine._read("squads.json")["teams"]], ["Y1", "Y2"])
+    check("every imported team has a manager who can sign in",
+          [bool(db.manager_by_key(k) and db.manager_by_key(k)["token"])
+           for k in ("Y1", "Y2")], [True, True])
+    # The export names real people. Initials are the whole point of the
+    # mapping screen, so a name reaching the stored file would defeat it.
+    check_true("and no owner's name is stored anywhere in it",
+               "Bought by" not in (_live / "squads.json").read_text())
+finally:
+    engine.LIVE = _was_live
+    shutil.rmtree(_live, ignore_errors=True)
+    os.environ.pop("ADMIN_KEYS", None)
+check_true("the draft page is not reachable without admin rights",
+           signed.get("/admin/draft").status_code == 404)
+
 print()
 check_true("the working database was never touched",
            db.DB_PATH.parent == _SANDBOX, str(db.DB_PATH))

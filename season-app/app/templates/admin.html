@@ -73,6 +73,15 @@ page.</p>
 
 <section>
   <div class="sechead">
+    <h2>Squads</h2>
+    <span class="eyebrow"><a href="/admin/draft">import a draft</a></span>
+  </div>
+  <p class="note">{{ squad_count }} squads loaded. The roster comes out of the
+  auction and everything else is worked out from it.</p>
+</section>
+
+<section>
+  <div class="sechead">
     <h2>Drafted managers</h2>
     <form method="post" action="/admin/assign-clubs"
           onsubmit="return confirm('Give every team a different club at random? This replaces any current assignment.')">

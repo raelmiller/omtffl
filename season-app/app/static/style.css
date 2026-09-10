@@ -364,6 +364,15 @@ section { display: flex; flex-direction: column; gap: .8rem; }
   border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
   background: var(--surface); box-shadow: 0 1px 2px rgba(16,24,32,.04);
 }
+/* A panel that is saying something rather than holding something. The edge
+   carries the meaning, so these read the same in either theme. */
+.panel.ok, .panel.warn, .panel.bad {
+  padding: .7rem .9rem; border-left-width: 3px;
+}
+.panel.ok { border-left-color: var(--accent); }
+.panel.warn { border-left-color: var(--amber); }
+.panel.bad { border-left-color: var(--warn); background: var(--warn-dim); }
+.panel.ok + .panel, .panel.warn + .panel, .panel.bad + .panel { margin-top: .6rem; }
 :root[data-theme="dark"] .panel { box-shadow: none; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .panel { box-shadow: none; }

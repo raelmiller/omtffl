@@ -22,13 +22,13 @@ from urllib.parse import urlparse
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import (HTMLResponse, JSONResponse, RedirectResponse,
                                Response)
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import (auth, db, engine, evidence, fetcher, live, notify, push,
+from . import (auth, db, draft, engine, evidence, fetcher, live, notify, push,
                triage)
 
 HERE = Path(__file__).resolve().parent
@@ -1827,6 +1827,7 @@ def admin(request: Request):
     # for whoever wants to read it, and nowhere near the front page of admin —
     # the point of the queue is that most of it never needs you.
     ctx["waiting"] = db.reports(state="held") + db.reports(state="open")
+    ctx["squad_count"] = len((engine._read("squads.json") or {}).get("teams") or [])
     return templates.TemplateResponse("admin.html", ctx)
 
 
@@ -1904,6 +1905,160 @@ def view_as(request: Request, key: str):
 @app.get("/stop-viewing")
 def stop_viewing(request: Request):
     return auth.view_as(RedirectResponse("/admin", status_code=303), "")
+
+
+# ── Importing a draft ──────────────────────────────────────────────────────
+# The roster used to arrive by running a script on somebody's laptop and
+# pushing the result, which meant a draft was not in the app until a developer
+# put it there. This is the same import with that part removed.
+def _draft_index():
+    """Player names to FPL ids, from the app's own data.
+
+    The command-line importer reads a second copy of the players feed. This
+    reads the file the scoring engine already uses, so an id resolved here is
+    an id that scores.
+    """
+    meta = engine._read("players.json") or {}
+    return draft.index_players(meta.get("names") or {},
+                               meta.get("positions") or {},
+                               meta.get("player_clubs") or {},
+                               engine.clubs())
+
+
+def _season_underway():
+    """What an import would overwrite, if anything.
+
+    The squad file is the base every trade and waiver is applied to, so
+    replacing it mid-season silently rewrites the history of every score. The
+    import refuses unless it is told to go ahead anyway.
+    """
+    return {"lineups": len(db.all_lineups()),
+            "transactions": len(db.transactions()),
+            "trades": len(db.trades())}
+
+
+def _draft_context(request):
+    """The page's context, with everything every path needs already in it.
+
+    Every route here can end up rendering the same page — on success, on a
+    refusal, on an unreadable file — and each one that built its own context
+    was a way to reach the template missing something. The first refusal to
+    fire did exactly that.
+    """
+    ctx = _context(request)
+    if not ctx["me"] or not ctx["me"]["is_admin"]:
+        raise HTTPException(404)
+    current = engine._read("squads.json") or {"teams": []}
+    ctx.update(underway=_season_underway(), current=current,
+               # Shown every time rather than only after an import: a squad
+               # one player short is worth knowing about in March as much as
+               # on draft day, and this is the page that can say so.
+               audit=[a for a in draft.audit(current) if a["notes"]],
+               managers=db.managers(), pasted="", rows=[], problems=[],
+               mapping=[])
+    return ctx
+
+
+@app.get("/admin/draft", response_class=HTMLResponse)
+def draft_import(request: Request):
+    return templates.TemplateResponse("draft.html", _draft_context(request))
+
+
+@app.post("/admin/draft/preview", response_class=HTMLResponse)
+async def draft_preview(request: Request, pasted: str = Form(""),
+                        upload: UploadFile = File(None)):
+    """Read the export and show what it would do. Writes nothing."""
+    ctx = _draft_context(request)
+    text = pasted or ""
+    if upload is not None and upload.filename:
+        raw = await upload.read()
+        try:
+            text = raw.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            # A spreadsheet saved on a Windows machine, most likely. Worth
+            # trying rather than telling somebody their file is broken.
+            text = raw.decode("latin-1", errors="replace")
+
+    rows, problems = draft.parse(text)
+    ctx.update(pasted=text, rows=rows, problems=problems)
+    if not rows:
+        return templates.TemplateResponse("draft.html", ctx)
+
+    # Prefill the mapping from the managers already here, so a second import
+    # is a glance rather than fourteen boxes. An exact match on initials or
+    # on team name is safe to assume; anything else is left for a person.
+    known = {m["key"].upper(): m for m in db.managers()}
+    by_team = {m["team"].strip().lower(): m for m in db.managers()}
+    mapping = []
+    for owner in draft.owners(rows):
+        guess = known.get(owner.strip().upper()) or by_team.get(owner.strip().lower())
+        mapping.append({
+            "owner": owner,
+            "key": guess["key"] if guess else "",
+            "team": guess["team"] if guess else "",
+            "count": sum(1 for r in rows if r["owner"] == owner),
+        })
+    ctx.update(mapping=mapping)
+    return templates.TemplateResponse("draft.html", ctx)
+
+
+@app.post("/admin/draft/apply")
+async def draft_apply(request: Request):
+    """Write the roster and make sure every team in it has a manager."""
+    ctx = _draft_context(request)
+    form = await request.form()
+    text = form.get("pasted") or ""
+    rows, problems = draft.parse(text)
+
+    def again(*extra):
+        """Back to the mapping screen with what they typed still in it."""
+        ctx.update(pasted=text, rows=rows, problems=problems + list(extra),
+                   mapping=[{"owner": o,
+                             "count": sum(1 for r in rows if r["owner"] == o),
+                             "key": (form.get(f"key::{o}") or "").strip().upper(),
+                             "team": (form.get(f"team::{o}") or "").strip()}
+                            for o in draft.owners(rows)])
+        return templates.TemplateResponse("draft.html", ctx)
+
+    underway = ctx["underway"]
+    if any(underway.values()) and not form.get("i_know"):
+        return again("The season has already started. Importing now would "
+                     "rewrite the squads every existing trade, waiver and "
+                     "score was worked out from. Tick the box if that is "
+                     "really what you want.")
+
+    identities = {}
+    for owner in draft.owners(rows):
+        key = (form.get(f"key::{owner}") or "").strip().upper()
+        team = (form.get(f"team::{owner}") or "").strip()
+        if key:
+            identities[owner] = {"key": key, "team": team or key}
+
+    unmapped = [o for o in draft.owners(rows) if o not in identities]
+    if unmapped:
+        return again("No initials for: " + ", ".join(unmapped)
+                     + ". Every owner needs initials, or their players go "
+                       "nowhere.")
+    clash = [k for k in {i["key"] for i in identities.values()}
+             if sum(1 for i in identities.values() if i["key"] == k) > 1]
+    if clash:
+        # Two owners sharing initials would silently merge into one squad of
+        # thirty, which is a hard thing to notice and a worse one to undo.
+        return again("Two owners have the same initials: " + ", ".join(clash))
+
+    squads, unresolved = draft.build(rows, _draft_index(), identities)
+    if not squads["teams"]:
+        return again("Nothing to import.")
+
+    # Onto the volume, not into the image: the container's copy of
+    # shadow/data is replaced on every deploy, and a roster that vanished on
+    # the next push would be a very confusing way to lose a season.
+    engine.LIVE.mkdir(parents=True, exist_ok=True)
+    (engine.LIVE / "squads.json").write_text(json.dumps(squads, indent=2))
+    added = db.seed_managers(squads["teams"])
+    return RedirectResponse(
+        f"/admin/draft?imported={len(squads['teams'])}&added={len(added)}"
+        f"&unresolved={len(unresolved)}", status_code=303)
 
 
 @app.post("/admin/assign-clubs")

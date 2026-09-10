@@ -17,6 +17,38 @@ anything depends on them.
 | `/health` | what data is on disk, how settled it is, and whether this host can reach the FPL API |
 | `POST /admin/refresh` | pull new gameweek data by hand |
 
+## Importing a draft
+
+`/admin/draft` takes the auction's results and makes them the league: paste
+the rows or upload the CSV, confirm who is who, and every squad is loaded and
+every new team has a manager who can sign in. It used to mean running
+`shadow/import_squads.py` on somebody's laptop and pushing the result, which
+meant a draft was not in the app until a developer put it there.
+
+Three things it does that the script did, because all three were learned
+once. A player who cannot be matched is **reported, never dropped** — a
+silently missing player is a team that mysteriously scores less all season
+and is noticed in November. Duplicate surnames are real, so a name matching
+more than one player is narrowed on the position and club the draft recorded,
+and a name that stays ambiguous is reported rather than guessed at. And the
+owner names in the export are mapped to initials on the way in, so a person's
+name never reaches anything the app stores.
+
+**The roster lands on the volume, not in the image.** `shadow/data` is baked
+into the container and replaced on every deploy, so an imported file written
+there would revert on the next push — the same property that makes the
+committed files "the floor". `engine.LIVE` is the mounted volume and
+`engine._source` prefers its copy, which `data_version` fingerprints too, so
+an import reaches the pages immediately rather than at the next restart.
+Only the draft roster goes there, and only because it is set once: trades and
+waivers are transactions applied on top of it, never edits to it.
+
+**It refuses to import over a season in progress** unless told twice. The
+squad file is what every trade, waiver and score was worked out from, so
+replacing it mid-season rewrites history that has already been published.
+Two owners sharing initials is refused outright, since that silently merges
+two squads into one of thirty.
+
 ## The one architectural rule
 
 `app/engine.py` is the only file that talks to `shadow/`, and nothing in

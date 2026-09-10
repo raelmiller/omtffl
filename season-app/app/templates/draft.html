@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Import a draft — Matchweek{% endblock %}
+{% block heading %}Import a draft{% endblock %}
+{% block subheading %}
+<p class="sub">Paste the auction's results, or upload the CSV. Nothing is
+written until you have seen what it would do.</p>
+{% endblock %}
+
+{% block content %}
+
+{% if request.query_params.get('imported') %}
+<div class="panel ok">
+  <p><strong>{{ request.query_params.get('imported') }} squads imported.</strong>
+  {% if request.query_params.get('added')|int %}
+    {{ request.query_params.get('added') }} new manager(s) created — their
+    sign-in links are on <a href="/admin">the admin page</a>.
+  {% else %}
+    Every team already had a manager, so nobody's sign-in link changed.
+  {% endif %}
+  {% if request.query_params.get('unresolved')|int %}
+    <br><strong>{{ request.query_params.get('unresolved') }} player(s) could
+    not be matched</strong> and are not in anybody's squad. They would score
+    nothing, so import again with their names corrected.
+  {% endif %}</p>
+</div>
+{% endif %}
+
+{% if problems %}
+<div class="panel bad">
+  {% for p in problems %}<p>{{ p }}</p>{% endfor %}
+</div>
+{% endif %}
+
+{# Only when nothing has been refused — the refusal says this already, and
+   twice is how a warning stops being read. #}
+{% if not problems and underway and (underway.lineups or underway.transactions or underway.trades) %}
+<div class="panel warn">
+  <p><strong>This season is already being played.</strong>
+  {{ underway.lineups }} team sheet(s), {{ underway.transactions }} waiver
+  move(s) and {{ underway.trades }} trade(s) exist. The squad file is what all
+  of those are worked out from, so replacing it changes scores that have
+  already been published. You will be asked to confirm.</p>
+</div>
+{% endif %}
+
+{% if not mapping %}
+<section>
+  <div class="sechead"><h2>The export</h2></div>
+  <form method="post" action="/admin/draft/preview" enctype="multipart/form-data">
+    <p class="note">One row per drafted player. It needs a column for the
+    player and one for whoever bought them; position, club and price are used
+    where they are there. Column order does not matter, and tabs, commas or
+    semicolons all work — so pasting straight from a spreadsheet is fine.</p>
+    <textarea name="pasted" rows="10" placeholder="Name,Position,Club,Owner,Price&#10;Pedro Porro,DEF,TOT,Rael,4.75">{{ pasted or '' }}</textarea>
+    <p class="note">Or choose a file: <input type="file" name="upload" accept=".csv,.tsv,.txt"></p>
+    <div class="tacts"><button class="btn">Read it</button></div>
+  </form>
+</section>
+
+{% if current.teams %}
+<section>
+  <div class="sechead">
+    <h2>What is loaded now</h2>
+    <span class="eyebrow">{{ current.teams|length }} squads</span>
+  </div>
+  <p class="note">From <code>{{ current.source or 'the committed file' }}</code>.</p>
+  {% if audit %}
+  <p class="note">Worth a look:</p>
+  <ul class="rptfind">
+    {% for a in audit %}
+    <li><strong>{{ a.team }}</strong> — {{ a.notes|join('; ') }} ({{ a.shape }})</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="note">Every squad is fifteen players in the right shape.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% else %}
+<form method="post" action="/admin/draft/apply">
+<input type="hidden" name="pasted" value="{{ pasted }}">
+
+<section>
+  <div class="sechead">
+    <h2>Who is who</h2>
+    <span class="eyebrow">{{ mapping|length }} owners in the export</span>
+  </div>
+  <p class="note">The export records whoever ran the draft typed in. Initials
+  are what the rest of the app uses, and the only thing stored — a person's
+  name never leaves this page. Anyone already in the league is filled in.</p>
+  <div class="scroll">
+    <table class="pc-table">
+      <thead><tr><th>In the export</th><th>Players</th><th>Initials</th><th>Team name</th></tr></thead>
+      <tbody>
+        {% for m in mapping %}
+        <tr>
+          <td>{{ m.owner }}</td>
+          <td class="num">{{ m.count }}</td>
+          <td><input name="key::{{ m.owner }}" value="{{ m.key }}" size="4"
+                     maxlength="4" list="known-keys" autocapitalize="characters"></td>
+          <td><input name="team::{{ m.owner }}" value="{{ m.team }}" size="24"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <datalist id="known-keys">
+    {% for m in managers %}<option value="{{ m.key }}">{{ m.team }}</option>{% endfor %}
+  </datalist>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>What was read</h2>
+    <span class="eyebrow">{{ rows|length }} rows</span>
+  </div>
+  <p class="note">Squads are checked once you import — anything short of
+  fifteen, or the wrong shape, is reported then.</p>
+</section>
+
+{% if underway and (underway.lineups or underway.transactions or underway.trades) %}
+<label class="note"><input type="checkbox" name="i_know" value="1">
+I understand this replaces the squads that {{ underway.lineups }} team
+sheet(s) and {{ underway.trades + underway.transactions }} settled move(s)
+were scored from.</label>
+{% endif %}
+
+<div class="tacts">
+  <button class="btn">Import these squads</button>
+  <a class="btn small ghost" href="/admin/draft">Start again</a>
+</div>
+</form>
+{% endif %}
+
+<p class="sub"><a href="/admin">&larr; Admin</a></p>
+{% endblock %}

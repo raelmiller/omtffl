@@ -42,8 +42,26 @@ from scoring import (contributions, entry_breakdown,  # noqa: E402
                      provisional_bonus, score_entry)
 
 
+# Data written by the running app rather than baked into the image. The
+# container's copy of shadow/data is replaced on every deploy, so anything
+# imported through the admin has to live on the mounted volume or it lasts
+# until the next push and then silently reverts to whatever was committed.
+#
+# Only the draft roster goes here, and only because it is set once and then
+# never edited: trades and waivers are transactions applied on top of it, not
+# changes to it. A file the fetcher rewrites daily would be a bad fit.
+LIVE = Path(os.environ.get("LIVE_DATA_DIR")
+            or (Path("/data") if Path("/data").is_dir() else DATA / "live"))
+
+
+def _source(name):
+    """Where a data file actually is: the volume's copy wins over the image."""
+    imported = LIVE / name
+    return imported if imported.exists() else DATA / name
+
+
 def _read(name):
-    path = DATA / name
+    path = _source(name)
     if not path.exists():
         return None
     return json.loads(path.read_text())
@@ -71,7 +89,11 @@ def data_version():
     when the fetcher writes. Keying the cache on file mtimes means a refresh
     is picked up immediately without a restart.
     """
-    files = gameweek_files() + [DATA / name for name in WATCHED]
+    # Through _source, so an imported squad file invalidates the cache the
+    # moment it lands. Fingerprinting the image's copy instead would mean a
+    # draft imported through the admin did not reach a page until the process
+    # restarted — which is exactly how players.json bit once already.
+    files = gameweek_files() + [_source(name) for name in WATCHED]
     return tuple((f.name, f.stat().st_mtime_ns) for f in files if f.exists())
 
 

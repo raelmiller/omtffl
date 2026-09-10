@@ -289,13 +289,28 @@ def init():
     the app never invents a manager. Anyone already present keeps their token,
     which means re-running this is safe and never breaks a bookmarked link.
     """
+    squads_file = DATA / "squads.json"
+    if not squads_file.exists():
+        return
+    seed_managers(json.loads(squads_file.read_text())["teams"])
+
+
+def seed_managers(teams):
+    """Make sure every team in a roster has a manager. Returns the new keys.
+
+    Shared by the boot-time seed and the draft import, because they are the
+    same job: the roster is the record of who is in this league, and the app
+    never invents a manager of its own.
+
+    Anyone already present keeps their token and their team name, so this is
+    safe to run again and a bookmarked sign-in link never breaks. Renaming a
+    team is a manager's own business — the squad file carries the draft-day
+    name and `engine.team_names` already prefers whatever they changed it to.
+    """
+    added = []
     with connect() as conn:
-        squads_file = DATA / "squads.json"
-        if not squads_file.exists():
-            return
-        squads = json.loads(squads_file.read_text())
         existing = {r["key"] for r in conn.execute("SELECT key FROM manager")}
-        for team in squads["teams"]:
+        for team in teams:
             if team["key"] in existing:
                 continue
             conn.execute(
@@ -303,12 +318,14 @@ def init():
                 " VALUES (?, ?, ?, 0, ?)",
                 (team["key"], team.get("team", team["key"]),
                  secrets.token_hex(16), now()))
+            added.append(team["key"])
         # Seeded links expire like any other. The admin's own is reissued at
         # startup if it has, so the deploy log is always a way back in.
         conn.execute(
             "UPDATE manager SET token_expires = ? WHERE token_expires IS NULL",
             ((datetime.now(timezone.utc) + timedelta(days=LINK_DAYS))
              .isoformat(timespec="seconds"),))
+    return added
 
 
 def managers():
