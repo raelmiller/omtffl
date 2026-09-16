@@ -70,7 +70,7 @@ of the real season.
 
 ### Gameweek 4
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
