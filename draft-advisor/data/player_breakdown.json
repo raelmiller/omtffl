@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-15T09:51:06Z",
+  "fpl_baked_at": "2026-09-16T09:48:15Z",
   "sales": 645,
   "unique_players": 391,
   "matched_to_fpl": 262
@@ -2343,7 +2343,7 @@
    "display": "White",
    "position": "DEF",
    "current_club": "ARS",
-   "status": "a",
+   "status": "d",
    "last_season_points": 21,
    "xgi": "0.47",
    "penalties": false,
@@ -5034,7 +5034,7 @@
    "display": "Georginio",
    "position": "MID",
    "current_club": "BHA",
-   "status": "d",
+   "status": "a",
    "last_season_points": 5,
    "xgi": "0.52",
    "penalties": false,
