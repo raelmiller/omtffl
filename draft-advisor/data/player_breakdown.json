@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-17T09:54:19Z",
+  "fpl_baked_at": "2026-09-18T09:29:29Z",
   "sales": 645,
   "unique_players": 391,
   "matched_to_fpl": 262
@@ -2502,7 +2502,7 @@
    "display": "Sarr",
    "position": "MID",
    "current_club": "CRY",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -5142,7 +5142,7 @@
    "display": "Caicedo",
    "position": "MID",
    "current_club": "CHE",
-   "status": "i",
+   "status": "d",
    "last_season_points": 1,
    "xgi": "0.00",
    "penalties": false,
@@ -5898,7 +5898,7 @@
    "display": "J.Ramsey",
    "position": "MID",
    "current_club": "NEW",
-   "status": "d",
+   "status": "i",
    "last_season_points": 7,
    "xgi": "0.33",
    "penalties": false,
@@ -6240,7 +6240,7 @@
    "display": "Nketiah",
    "position": "FWD",
    "current_club": "CRY",
-   "status": "d",
+   "status": "a",
    "last_season_points": 7,
    "xgi": "1.68",
    "penalties": false,
