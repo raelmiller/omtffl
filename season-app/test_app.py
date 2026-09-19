@@ -614,12 +614,21 @@ check_true("and moves the players",
                           engine.squads_for_gameweek(gwt, db.trades())["AF"]})
 
 # A points trade goes to the league instead.
+#
+# To somebody RM is not playing this round. Points cannot be traded with the
+# team you are about to face — the rule tested a few lines up — and which team
+# that is belongs to the draw rather than to this test. Hardcoding AF here was
+# fine until the schedule paired them, at which point a correct refusal read
+# as a broken endpoint and took the rest of the suite down with it.
+pts_to = next(k for k in sq if k not in ("RM", rival, "CH"))
+pb = TestClient(app)
+pb.get(f"/m/{db.manager_by_key(pts_to)['token']}")
 mine2 = [p for p in sq["RM"] if p["position"] == "DEF"][0]
-hers2 = [p for p in sq["AF"] if p["position"] == "DEF"][0]
+hers2 = [p for p in sq[pts_to] if p["position"] == "DEF"][0]
 check("a points offer within the cap is allowed",
-      offer(points=10, give=mine2, take=hers2).status_code, 200)
+      offer(points=10, give=mine2, take=hers2, to=pts_to).status_code, 200)
 pts_trade = [t for t in db.trades("proposed") if t["points"] == 10][0]
-b.post(f"/trade/{pts_trade['id']}/accept")
+pb.post(f"/trade/{pts_trade['id']}/accept")
 check("accepting publishes it rather than settling it",
       db.trade(pts_trade["id"])["status"], "published")
 out = engine.trade_outcome(db.trade(pts_trade["id"]))
@@ -638,7 +647,7 @@ check("and can be withdrawn", len(db.trade(pts_trade["id"])["vetoes"]), 0)
 
 from mechanics import DEFAULTS
 for key in [m["key"] for m in db.managers()
-            if m["key"] not in ("RM", "AF")][:DEFAULTS["veto_threshold"]]:
+            if m["key"] not in ("RM", pts_to)][:DEFAULTS["veto_threshold"]]:
     db.veto_trade(pts_trade["id"], key)
 check("enough objections vote it down",
       engine.trade_outcome(db.trade(pts_trade["id"]))["state"], "vetoed")
@@ -1740,10 +1749,73 @@ else:
                    "·" in _sent[0][2] and _sent[0][1].startswith("2 "), _sent[0][2])
 
         # A player nobody in this league owns is nobody's business.
+        #
+        # In a fixture of its own, because a poll that reports fixture 900
+        # without the goals it reported last time is a poll saying those goals
+        # have been taken off — which is now a notification in its own right,
+        # and would be the thing this check was measuring.
         _sent.clear()
-        notify.live.fetch = lambda gw, force=False: (_fx(goals=1, who=99999), None)
+        notify.live.fetch = lambda gw, force=False: (
+            [{"id": 901, "stats": [{"identifier": "goals_scored",
+                                    "h": [{"element": 99999, "value": 1}],
+                                    "a": []}]}], None)
         notify.match_events()
         check("a goal by an unowned player notifies nobody", len(_sent), 0)
+
+        # ── When a goal is taken off again ─────────────────────────────────
+        # VAR, mostly, though FPL also reassigns assists for a day or two
+        # after the whistle. The manager is holding a notification that says
+        # something untrue, so the correction is itself news.
+        _var = _ev_squad[2]["id"]
+        _var_who = engine.player_names()[_var]
+
+        def _var_fx(goals):
+            return [{"id": 902, "stats":
+                     ([{"identifier": "goals_scored",
+                        "h": [{"element": _var, "value": goals}], "a": []}]
+                      if goals else
+                      [{"identifier": "goals_scored", "h": [], "a": []}])}]
+
+        _sent.clear()
+        notify.live.fetch = lambda gw, force=False: (_var_fx(1), None)
+        notify.match_events()
+        check("the goal is announced", len(_sent), 1)
+
+        notify.live.fetch = lambda gw, force=False: (_var_fx(0), None)
+        notify.match_events()
+        check("and taking it off is announced too", len(_sent), 2)
+        check_true("saying it was disallowed",
+                   "disallowed" in _sent[1][2] and _var_who in _sent[1][2],
+                   _sent[1][2])
+        check_true("under a tag of its own, so it does not replace the goal",
+                   _sent[1][3]["tag"] != _sent[0][3]["tag"], str(_sent[1][3]))
+
+        notify.match_events()
+        check("a goal that stays off is not retracted twice", len(_sent), 2)
+
+        # The part that is easy to miss: the claim has to be dropped with the
+        # news, or the goal that finally counts is the one nobody hears about.
+        notify.live.fetch = lambda gw, force=False: (_var_fx(1), None)
+        notify.match_events()
+        check("and if it is given back, it is announced again", len(_sent), 3)
+
+        # Two goals down to one is a retraction that has to say so, or it
+        # reads as both being chalked off.
+        notify.live.fetch = lambda gw, force=False: (_var_fx(2), None)
+        notify.match_events()
+        notify.live.fetch = lambda gw, force=False: (_var_fx(1), None)
+        notify.match_events()
+        check_true("a retraction says what still stands",
+                   "now 1" in _sent[-1][2], _sent[-1][2])
+
+        # A fetch that says nothing must not be read as saying everything was
+        # taken off — fourteen phones announcing the afternoon was cancelled.
+        _before = len(_sent)
+        notify.live.fetch = lambda gw, force=False: ([], None)
+        notify.match_events()
+        notify.live.fetch = lambda gw, force=False: ([{"id": 902, "stats": []}], None)
+        notify.match_events()
+        check("an empty or statless fetch retracts nothing", len(_sent), _before)
 
         # And nothing is asked of FPL when there is no football on.
         notify._kicked_off = lambda: False

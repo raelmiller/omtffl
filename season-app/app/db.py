@@ -1001,6 +1001,37 @@ def notice_already_sent(kind, gameweek, key):
             " AND manager = ?", (kind, gameweek, key)).fetchone() is not None
 
 
+def notices_sent(prefix, gameweek, key):
+    """Every notice of a kind already sent to one manager this round.
+
+    The counterpart to `notice_already_sent`, which can only answer about a
+    notice you can already name. Retracting a goal means asking the opposite
+    question — what have we told them? — and that needs the list.
+    """
+    with connect() as conn:
+        return [r["kind"] for r in conn.execute(
+            "SELECT kind FROM notice_sent WHERE gameweek = ? AND manager = ?"
+            " AND kind LIKE ? ESCAPE '\\'",
+            (gameweek, key, prefix.replace("\\", "\\\\").replace("%", "\\%")
+             .replace("_", "\\_") + "%"))]
+
+
+def forget_notices(kinds, gameweek, key):
+    """Unclaim notices, so the same news can be sent again if it returns.
+
+    A goal given, taken off by VAR and then given again is one a manager has
+    to hear about twice. The claim is what stops a repeat, so withdrawing the
+    news has to withdraw the claim with it — otherwise the goal that finally
+    counts is the one nobody is told about.
+    """
+    if not kinds:
+        return
+    with connect() as conn:
+        conn.executemany(
+            "DELETE FROM notice_sent WHERE kind = ? AND gameweek = ?"
+            " AND manager = ?", [(k, gameweek, key) for k in kinds])
+
+
 def record_notice(kind, gameweek, key):
     """Claim a notice before sending it.
 

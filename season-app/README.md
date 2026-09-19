@@ -49,6 +49,31 @@ replacing it mid-season rewrites history that has already been published.
 Two owners sharing initials is refused outright, since that silently merges
 two squads into one of thirty.
 
+## When an event is taken back
+
+Goals get chalked off, and FPL reassigns assists for a day or two after the
+whistle. FPL reports running totals rather than events, so a total that went
+up can come back down — and by then the manager is holding a notification
+saying the opposite. So anything already announced and since withdrawn gets a
+second notification saying so, under a tag of its own: replacing the original
+would mean that for anyone who had not looked yet, the news simply never
+happened.
+
+**The claim is dropped along with the news**, and that is the part worth
+keeping. A notice is claimed in `notice_sent` under a key naming the fixture,
+the player and which goal it was, which is what stops the same goal being
+reported on every poll for the rest of the match. Leave the claim standing
+through a retraction and a goal disallowed and then awarded again is one
+nobody is ever told about — the second announcement looks exactly like the
+first and is skipped.
+
+A poll can also be wrong about a fixture rather than about an event. A
+fixture missing from the response, or carrying no stats block yet, says
+nothing about what happened in it, so only fixtures the poll actually
+describes are eligible for a retraction. Without that, an empty or partial
+fetch reads as every event being taken off at once and fourteen phones
+announce that the afternoon has been cancelled.
+
 ## The one architectural rule
 
 `app/engine.py` is the only file that talks to `shadow/`, and nothing in

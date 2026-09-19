@@ -214,14 +214,20 @@ def deadlines_due():
 # Only the events that move points enough to be worth a buzz. Bonus is
 # deliberately absent: it moves all match and is not settled until well after
 # full time, so it would notify repeatedly and be wrong most of those times.
+# Each is (FPL's identifier, what to say when it happens, what to say when it
+# stops having happened). Nothing here is final while a match is on: VAR takes
+# goals off, and FPL reassigns assists freely for a day or two afterwards. An
+# event that goes away is news in its own right, because the manager has
+# already been told the opposite.
 WATCHED_EVENTS = [
-    ("goals_scored", "Goal"),
-    ("assists", "Assist"),
-    ("penalties_saved", "Penalty saved"),
-    ("penalties_missed", "Penalty missed"),
-    ("own_goals", "Own goal"),
-    ("red_cards", "Red card"),
+    ("goals_scored", "Goal", "goal disallowed"),
+    ("assists", "Assist", "assist taken off"),
+    ("penalties_saved", "Penalty saved", "penalty save taken off"),
+    ("penalties_missed", "Penalty missed", "penalty miss taken off"),
+    ("own_goals", "Own goal", "own goal overturned"),
+    ("red_cards", "Red card", "red card rescinded"),
 ]
+UNDO = {label: undo for _, label, undo in WATCHED_EVENTS}
 
 
 def _kicked_off():
@@ -245,7 +251,7 @@ def _events_now(fixtures):
     out = []
     for fixture in fixtures:
         stats = {s.get("identifier"): s for s in (fixture.get("stats") or [])}
-        for identifier, label in WATCHED_EVENTS:
+        for identifier, label, _undo in WATCHED_EVENTS:
             block = stats.get(identifier) or {}
             for side in ("h", "a"):
                 for row in block.get(side) or []:
@@ -253,6 +259,17 @@ def _events_now(fixtures):
                         out.append((row["element"], label, row["value"],
                                     fixture.get("id")))
     return out
+
+
+def _reported(fixtures):
+    """Which fixtures this poll can be trusted to describe.
+
+    A fixture missing from the response, or carrying no stats block yet, says
+    nothing about what happened in it. Without this an empty or partial fetch
+    would read as every event being taken off at once, and fourteen phones
+    would announce that the afternoon had been cancelled.
+    """
+    return {f.get("id") for f in fixtures if f.get("stats")}
 
 
 def match_events():
@@ -266,6 +283,16 @@ def match_events():
     Batched on purpose: two things in the same minute are one notification,
     not two a few seconds apart. A manager owns fifteen players and a busy
     Saturday would otherwise be a phone that will not stop.
+
+    And an event can go away again. VAR takes goals off, and FPL reassigns
+    assists for a day or two after the whistle, so a total that went up can
+    come back down — at which point the manager is holding a notification
+    saying something that is no longer true. Anything already announced and
+    since withdrawn gets a second notification saying so, and the claim on it
+    is dropped so the same news can be sent again if it is given back. That
+    last part matters more than it sounds: without it, a goal disallowed and
+    then awarded again is one nobody is ever told about, because the claim
+    from the first announcement is still standing.
     """
     if not push.configured():
         return {"notices": 0, "why": "push not configured"}
@@ -282,9 +309,14 @@ def match_events():
         return {"notices": 0, "why": error}
 
     events = _events_now(fixtures)
-    if not events:
+    reported = _reported(fixtures)
+    # Not `if not events` any more: a round where every goal has just been
+    # chalked off has nothing to announce and a great deal to retract.
+    if not events and not reported:
         return {"notices": 0, "gameweek": number}
 
+    standing = {(fixture, player, label): count
+                for player, label, count, fixture in events}
     names = engine.player_names()
     squads = engine.market(number, db.trades(), db.transactions())["squads"]
     sent = 0
@@ -308,6 +340,43 @@ def match_events():
                 continue
             db.record_notice(kind, number, key)
             fresh.append((player, label, count))
+
+        # What we have told them that is no longer true. Read from the claims
+        # rather than from the events, because the whole point is the ones
+        # that have stopped appearing.
+        taken_off, stale = [], []
+        for kind in db.notices_sent("ev:", number, key):
+            try:
+                _, fixture, player, label, count = kind.split(":", 4)
+                fixture, player, count = int(fixture), int(player), int(count)
+            except ValueError:                      # not a shape we wrote
+                continue
+            if player not in owned or fixture not in reported:
+                continue
+            still = standing.get((fixture, player, label), 0)
+            if count > still:
+                stale.append(kind)
+                taken_off.append((player, label, still))
+
+        if taken_off:
+            # Dropped before sending, and on its own: a retraction that fails
+            # half way should leave the news retractable rather than claimed.
+            db.forget_notices(stale, number, key)
+            lines = []
+            # One line per player and event, however many counts were dropped
+            # at once — "goal disallowed" twice in a message reads like a bug.
+            for player, label, still in sorted(set(taken_off)):
+                who = names.get(player, f"player {player}")
+                lines.append(f"{who} — {UNDO.get(label, label + ' taken off')}"
+                             + (f", now {still}" if still else ""))
+            lines = sorted(set(lines))
+            title = lines[0] if len(lines) == 1 else f"{len(lines)} taken off"
+            # A tag of its own, so it arrives as a new notification rather
+            # than quietly replacing the one it is correcting — which, if they
+            # had not looked yet, would mean the news simply never happened.
+            to_manager(key, title, " · ".join(lines), url="/live",
+                       tag=f"undo-{number}", wanting="want_events")
+            sent += 1
 
         if not fresh:
             continue
