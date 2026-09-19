@@ -3840,9 +3840,19 @@ try:
                + _by3["FWD"][:2])
     db.save_lineup(P1, _gwn3, _legal3,
                    [i for i in _ids3 if i not in _legal3])
-    _quiet = signed.post("/report", data={"message": "where is my bank balance?"})
-    check("a question with nothing wrong behind it gets no instant answer",
-          _quiet.json()["found"], [])
+    # With the round settled, because a round still being played is a true
+    # thing to say and not a problem with their team — which is what this is
+    # about. Left to the real season it passed only while no football was on,
+    # and started failing the moment a gameweek was in progress.
+    _real_scoring = evidence._scoring
+    evidence._scoring = lambda key: {**_real_scoring(key), "state": "final"}
+    try:
+        _quiet = signed.post("/report",
+                             data={"message": "where is my bank balance?"})
+        check("a question with nothing wrong behind it gets no instant answer",
+              _quiet.json()["found"], [])
+    finally:
+        evidence._scoring = _real_scoring
 finally:
     if _kept:
         db.save_lineup(P1, _gwn3, _kept["xi"], _kept["bench"],
