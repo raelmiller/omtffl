@@ -615,7 +615,7 @@ def _nothing_yet(names, live=None):
         "weeks": [], "teams": [], "names": names,
         "close": CLOSE_MARGIN, "blowout": BLOWOUT_MARGIN,
         "league_average": 0.0, "max_spread": 0, "max_luck": 0,
-        "max_margin": 0, "max_average": 0,
+        "max_margin": 0, "max_average": 0, "max_difficulty": 0, "par": 0.0,
         "returns": RETURN_METRICS,
         "max_return": {m: 0 for m, _, _ in RETURN_METRICS},
     }
@@ -649,21 +649,26 @@ def analytics(season_data):
         return _nothing_yet(names, live)
 
     weeks = [r["gameweek"] for r in rounds]
-    scores, results, margins = {}, {}, {}
+    scores, results, margins, faced = {}, {}, {}, {}
     for key in names:
         scores[key], results[key], margins[key] = [], [], []
+        faced[key] = []
 
     for rnd in rounds:
         for m in rnd["matches"]:
             h, a = m["home_key"], m["away_key"]
             hs, as_ = m["home_score"], m["away_score"]
-            for me, mine, theirs in ((h, hs, as_), (a, as_, hs)):
+            for me, mine, theirs, them in ((h, hs, as_, a), (a, as_, hs, h)):
                 if me not in scores:
                     continue
                 scores[me].append(mine)
                 results[me].append("W" if mine > theirs
                                    else "D" if mine == theirs else "L")
                 margins[me].append(mine - theirs)
+                # Who it was and what they put up, which is the difference
+                # between "a hard week" and "a good team having a bad one".
+                faced[me].append({"gameweek": rnd["gameweek"], "key": them,
+                                  "scored": theirs})
 
     # League position after each round, so form can say which way a team is
     # travelling rather than only where it has arrived.
@@ -744,6 +749,45 @@ def analytics(season_data):
 
     teams.sort(key=lambda t: t["rank"])
 
+    # ── Who the draw gave you ──────────────────────────────────────────────
+    # The same score is a win or a loss depending on the fixture list, which
+    # `luck` already measures. This is the half before that: whether the
+    # teams themselves were any good.
+    #
+    # Two readings, because they can disagree and the disagreement is the
+    # point. `calibre` is how good your opponents have been all season, so it
+    # says whether the draw was kind. `faced` is what they actually scored
+    # against you, so it says whether they turned up. Drawing the leaders on
+    # their worst week is a hard fixture that was not a hard afternoon.
+    #
+    # An opponent's calibre leaves out the match against you. Otherwise
+    # beating somebody drags their average down and makes your own schedule
+    # look easier for having won it, which is backwards.
+    by_key = {t["key"]: t for t in teams}
+    par = _mean([t["average"] for t in teams])
+    finished = {t["key"]: t["rank"] for t in teams}
+    for team in teams:
+        met = [f for f in faced[team["key"]] if f["key"] in by_key]
+        others = []
+        for f in met:
+            them = f["key"]
+            # Their scores in the weeks they were not playing you. Both legs
+            # once the draw comes round twice, which is why this is a filter
+            # rather than dropping one week.
+            apart = [s for i, s in enumerate(by_key[them]["scores"])
+                     if faced[them][i]["key"] != team["key"]]
+            f["their_average"] = _mean(apart or by_key[them]["scores"])
+            f["their_rank"] = finished.get(them)
+            others.append(f["their_average"])
+        team["faced"] = met
+        team["opponent_calibre"] = _mean(others)
+        team["opponent_scored"] = _mean([f["scored"] for f in met])
+        team["opponent_rank"] = _mean([finished[f["key"]] for f in met
+                                       if f["key"] in finished])
+        # Positive means a harder draw than the league had on average.
+        team["difficulty"] = round(team["opponent_calibre"] - par, 1)
+        team["faced_vs_par"] = round(team["opponent_scored"] - par, 1)
+
     # Bars are drawn as a share of the widest, so the scale travels with the
     # data rather than being guessed at in the template.
     return {
@@ -763,6 +807,9 @@ def analytics(season_data):
         "max_margin": max([max(t["won_by"], t["lost_by"]) for t in teams],
                           default=0),
         "max_average": max([t["average"] for t in teams], default=0),
+        "max_difficulty": max([abs(t["difficulty"]) for t in teams], default=0),
+        # The middle of the road, so a bar can be drawn either side of it.
+        "par": par,
         # One scale per metric, so a bar means the same thing down a column.
         "returns": RETURN_METRICS,
         "max_return": {m: max([t["returns"][m] for t in teams], default=0)

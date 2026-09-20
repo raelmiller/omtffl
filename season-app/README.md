@@ -74,6 +74,29 @@ describes are eligible for a retraction. Without that, an empty or partial
 fetch reads as every event being taken off at once and fourteen phones
 announce that the afternoon has been cancelled.
 
+## How hard the draw has been
+
+`luck` measures the same score being a win or a loss depending on who the
+fixture list paired you with. **Who you played** is the half before that:
+whether the teams themselves were any good.
+
+Two readings, because they disagree and the disagreement is the answer.
+**Calibre** is what your opponents have averaged all season, so it says
+whether the draw was kind. **What they scored** is what those teams actually
+put up against you, so it says whether they turned up. Drawing the leaders on
+their worst week is a hard fixture that was not a hard afternoon, and only
+holding both numbers shows that.
+
+An opponent's calibre leaves out the week they played you — both legs, once
+the draw comes round twice. Otherwise beating somebody drags their average
+down and makes your own schedule look easier for having won it, which is
+backwards. A test asserts it is their other weeks rather than all of them.
+
+Averaged across the league the whole thing comes out at zero, because one
+team's hard week is another's easy one. That is asserted too: a schedule
+measure that does not cancel out is measuring something other than the
+schedule.
+
 ## The one architectural rule
 
 `app/engine.py` is the only file that talks to `shadow/`, and nothing in

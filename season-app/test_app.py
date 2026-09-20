@@ -2530,16 +2530,62 @@ check("no completed round means nothing to report",
 check_true("but the full shape comes back regardless",
            all(k in _none for k in ("teams", "weeks", "league_average",
                                     "max_spread", "max_luck", "max_margin",
-                                    "returns", "max_return")))
+                                    "returns", "max_return",
+                                    "max_difficulty", "par")))
+
+# ── Strength of the draw ───────────────────────────────────────────────────
+# Whether the fixture list handed you the good teams. `luck` already covers
+# the same score being a win or a loss depending on who you met; this is the
+# half before it — whether the teams themselves were any good.
+_sos = engine.analytics(worked)
+_one = _sos["teams"][0]
+check_true("every team gets a difficulty against par",
+           all({"difficulty", "opponent_calibre", "opponent_scored",
+                "opponent_rank", "faced", "faced_vs_par"} <= set(t)
+               for t in _sos["teams"]))
+check("difficulty is the calibre of who you met, against the league's average",
+      _one["difficulty"], round(_one["opponent_calibre"] - _sos["par"], 1))
+check("and one entry per round played",
+      [len(t["faced"]) for t in _sos["teams"]],
+      [t["played"] for t in _sos["teams"]])
+
+# Nobody plays themselves, and everybody's opponents add up to everybody.
+check_true("you never appear in your own fixtures",
+           all(f["key"] != t["key"] for t in _sos["teams"] for f in t["faced"]))
+check("the draw is symmetrical — if they played you, you played them",
+      sorted((t["key"], f["key"], f["gameweek"])
+             for t in _sos["teams"] for f in t["faced"]),
+      sorted((f["key"], t["key"], f["gameweek"])
+             for t in _sos["teams"] for f in t["faced"]))
+
+# Averaged over everyone, the draw is by definition par: one team's hard week
+# is another's easy one. A measure that did not come out flat here would be
+# measuring something other than the schedule.
+check("across the league the draw averages out to nothing",
+      round(sum(t["difficulty"] for t in _sos["teams"]), 0), 0.0)
+
+# An opponent's calibre leaves out the week they played you. Otherwise
+# beating somebody lowers their average and flatters your own schedule.
+_pair = next((t, f) for t in _sos["teams"] for f in t["faced"])
+_mine, _met = _pair
+_them = next(x for x in _sos["teams"] if x["key"] == _met["key"])
+_apart = [s for i, s in enumerate(_them["scores"])
+          if _them["faced"][i]["key"] != _mine["key"]]
+check("an opponent's calibre is their other weeks, not all of them",
+      _met["their_average"], round(sum(_apart) / len(_apart), 1))
+check_true("which is not simply their overall average",
+           len(_apart) < len(_them["scores"]))
 
 sp = vc.get("/stats")
 check("the stats page renders", sp.status_code, 200)
 check_true("without signing in", TestClient(app).get("/stats").status_code == 200)
 check_true("with every analysis on it",
            all(f'data-panel="{p}"' in sp.text
-               for p in ("form", "spread", "luck", "margins", "returns")))
+               for p in ("form", "spread", "luck", "draw", "margins",
+                         "returns")))
 blocks = re.findall(r'<div class="panelblock"[^>]*>', sp.text)
-check("all five are there", len(blocks), 5)
+check("one block per chip, and no orphans",
+      len(blocks), sp.text.count('class="gwchip wide'))
 check("and only one of them open",
       sum(1 for b in blocks if "hidden" not in b), 1)
 nav = TestClient(app)
