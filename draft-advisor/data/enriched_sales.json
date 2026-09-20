@@ -2679,9 +2679,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 3.25,
-  "fpl_id": 377,
-  "fpl_name": "Munoz",
-  "points_that_season": null
+  "fpl_id": 201,
+  "fpl_name": "Mu\u00f1oz",
+  "points_that_season": 142
  },
  {
   "season": "2024-25",
@@ -4428,9 +4428,9 @@
   "player": "Cunha",
   "club": "WOL",
   "cost": 7.0,
-  "fpl_id": 428,
-  "fpl_name": "Cunha",
-  "points_that_season": 178
+  "fpl_id": 474,
+  "fpl_name": "Jair Cunha",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4824,9 +4824,9 @@
   "player": "Van Hecke",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 175,
-  "fpl_name": "van Ewijk",
-  "points_that_season": null
+  "fpl_id": 112,
+  "fpl_name": "Van Hecke",
+  "points_that_season": 148
  },
  {
   "season": "2025-26",
@@ -4989,9 +4989,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 2.75,
-  "fpl_id": 377,
-  "fpl_name": "Munoz",
-  "points_that_season": null
+  "fpl_id": 201,
+  "fpl_name": "Mu\u00f1oz",
+  "points_that_season": 136
  },
  {
   "season": "2025-26",
