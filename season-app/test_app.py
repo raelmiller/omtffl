@@ -2541,10 +2541,12 @@ _sos = engine.analytics(worked)
 _one = _sos["teams"][0]
 check_true("every team gets a difficulty against par",
            all({"difficulty", "opponent_calibre", "opponent_scored",
-                "opponent_rank", "faced", "faced_vs_par"} <= set(t)
+                "opponent_place", "opponent_rank_now", "faced",
+                "faced_vs_par", "calibre_vs_par"} <= set(t)
                for t in _sos["teams"]))
-check("difficulty is the calibre of who you met, against the league's average",
-      _one["difficulty"], round(_one["opponent_calibre"] - _sos["par"], 1))
+check("difficulty is where they sat on the day, against what the league drew",
+      _one["difficulty"],
+      round(_sos["par_place"] - _one["opponent_place"], 2))
 check("and one entry per round played",
       [len(t["faced"]) for t in _sos["teams"]],
       [t["played"] for t in _sos["teams"]])
@@ -2575,6 +2577,28 @@ check("an opponent's calibre is their other weeks, not all of them",
       _met["their_average"], round(sum(_apart) / len(_apart), 1))
 check_true("which is not simply their overall average",
            len(_apart) < len(_them["scores"]))
+
+# Where they stood on the day, which is the whole point of the change: half
+# the teams above you now were not that team when you played them.
+check("week one has no table behind it, so no place is claimed for it",
+      [f["their_place"] for t in _sos["teams"] for f in t["faced"]
+       if f["week"] == 0], [None] * len(_sos["teams"]))
+check_true("nor any form, for the same reason",
+           all(f["their_form"] is None for t in _sos["teams"]
+               for f in t["faced"] if f["week"] == 0))
+_later = [(t, f) for t in _sos["teams"] for f in t["faced"] if f["week"] > 0]
+if _later:
+    _t2, _f2 = _later[0]
+    _opp = next(x for x in _sos["teams"] if x["key"] == _f2["key"])
+    check("after that it is their place going into the round",
+          _f2["their_place"], _opp["ranks"][_f2["week"] - 1])
+    check("and their average up to then, not including the day itself",
+          _f2["their_form"],
+          round(sum(_opp["scores"][:_f2["week"]]) / _f2["week"], 1))
+    check_true("which can differ from where they ended up",
+               any(f["their_place"] != f["their_rank_now"]
+                   for t in _sos["teams"] for f in t["faced"]
+                   if f["their_place"]))
 
 sp = vc.get("/stats")
 check("the stats page renders", sp.status_code, 200)

@@ -80,12 +80,18 @@ announce that the afternoon has been cancelled.
 fixture list paired you with. **Who you played** is the half before that:
 whether the teams themselves were any good.
 
-Two readings, because they disagree and the disagreement is the answer.
-**Calibre** is what your opponents have averaged all season, so it says
-whether the draw was kind. **What they scored** is what those teams actually
-put up against you, so it says whether they turned up. Drawing the leaders on
-their worst week is a hard fixture that was not a hard afternoon, and only
-holding both numbers shows that.
+**Read as of the week it was played.** Where a team finished is hindsight —
+half of them were not that team in August — so what counts is the table as it
+stood the morning of the fixture. Nobody has a position before a ball is
+kicked, so week one counts as exactly average: true, and better than dropping
+the week or inventing an order for it.
+
+The headline is where your opponents sat going into each round, against the
+average place the league drew. Beside it sit two other readings, because they
+disagree and the disagreement is the answer. **Calibre** is what those teams
+averaged across the season. **What they scored** is what they actually put up
+against you. Drawing the leaders on their worst week is a hard fixture that
+was not a hard afternoon.
 
 An opponent's calibre leaves out the week they played you — both legs, once
 the draw comes round twice. Otherwise beating somebody drags their average

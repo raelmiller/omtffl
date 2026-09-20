@@ -128,19 +128,20 @@
   <div class="panelblock" id="panel-draw" data-panel="draw" hidden>
     <div class="sechead">
       <h2>Who you played{% call info("How difficulty is measured", "whatdraw") %}
-      <span class="ip">Two different questions, and they often disagree.
-      <strong>Calibre</strong> is what your opponents have averaged all season,
-      so it says whether the draw was kind. It leaves out the week they played
-      you &mdash; otherwise beating somebody drags their average down and makes
-      your own run look easier for having won it.</span>
+      <span class="ip">Where your opponents sat <strong>when you played
+      them</strong>, not where they finished. Half the teams above you now
+      were not that team in August, so finishing position is hindsight and
+      this is what you actually walked into.</span>
+      <span class="ip">Par is {{ stats.par_place }} &mdash; the average place
+      the league has drawn. A plus means your opponents sat further up the
+      table than everyone else's did. Nobody has a position before a ball is
+      kicked, so week one counts as exactly average.</span>
       <span class="ip"><strong>What they scored</strong> is what those teams
-      actually put up against you. Drawing the leaders on their worst week is a
-      hard fixture that was not a hard afternoon.</span>
-      <span class="ip">Both are shown against par &mdash; the league's average
-      score of {{ stats.par }} &mdash; so a plus means harder than everyone
-      else has had it.</span>
+      actually put up against you. Drawing the leaders on their worst week is
+      a hard fixture that was not a hard afternoon, so the two can disagree
+      and it is worth reading both.</span>
       {% endcall %}</h2>
-      <span class="eyebrow">how good the teams you drew have been</span>
+      <span class="eyebrow">where they stood on the day</span>
     </div>
     <div class="panel">
       {% for t in stats.teams|sort(attribute='difficulty', reverse=true) %}
@@ -152,8 +153,8 @@
         </span>
         <span class="bval {{ 'up' if t.difficulty > 0 else 'down' if t.difficulty < 0 }}">
           {{ '+' if t.difficulty > 0 }}{{ t.difficulty }}</span>
-        <span class="bnote">opponents average {{ t.opponent_calibre }},
-          {{ t.opponent_rank }} in the table &middot; scored
+        <span class="bnote">opponents sat {{ t.opponent_place }} on the day
+          &middot; {{ t.opponent_rank_now }} now &middot; scored
           {{ t.opponent_scored }} against you</span>
       </div>
       {% endfor %}
@@ -164,20 +165,24 @@
     {% if mine and mine.faced %}
     <div class="sechead">
       <h2>Your run</h2>
-      <span class="eyebrow">where each opponent stands now</span>
+      <span class="eyebrow">as it looked on the day</span>
     </div>
     <div class="panel scroll">
       <table>
-        <thead><tr><th>GW</th><th>Opponent</th><th class="num">Their place</th>
-          <th class="num">Their average</th><th class="num">Scored on you</th></tr></thead>
+        <thead><tr><th>GW</th><th>Opponent</th>
+          <th class="num">Place then</th><th class="num">Form then</th>
+          <th class="num">Scored on you</th><th class="num">Place now</th></tr></thead>
         <tbody>
           {% for f in mine.faced %}
           <tr>
             <td>{{ f.gameweek }}</td>
             <td class="team">{{ stats.names.get(f.key, f.key) }}</td>
-            <td class="num">{{ f.their_rank }}</td>
-            <td class="num">{{ f.their_average }}</td>
-            <td class="num {{ 'down' if f.scored > f.their_average }}">{{ f.scored }}</td>
+            {# Week one has no table behind it and says so, rather than
+               printing a number nobody could have seen. #}
+            <td class="num">{{ f.their_place if f.their_place else '—' }}</td>
+            <td class="num">{{ f.their_form if f.their_form else '—' }}</td>
+            <td class="num {{ 'down' if f.their_form and f.scored > f.their_form }}">{{ f.scored }}</td>
+            <td class="num dim">{{ f.their_rank_now }}</td>
           </tr>
           {% endfor %}
         </tbody>

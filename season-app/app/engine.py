@@ -654,7 +654,7 @@ def analytics(season_data):
         scores[key], results[key], margins[key] = [], [], []
         faced[key] = []
 
-    for rnd in rounds:
+    for week, rnd in enumerate(rounds):
         for m in rnd["matches"]:
             h, a = m["home_key"], m["away_key"]
             hs, as_ = m["home_score"], m["away_score"]
@@ -667,8 +667,10 @@ def analytics(season_data):
                 margins[me].append(mine - theirs)
                 # Who it was and what they put up, which is the difference
                 # between "a hard week" and "a good team having a bad one".
+                # `week` is kept because everything about how hard this looked
+                # at the time has to be read as of then, not as of now.
                 faced[me].append({"gameweek": rnd["gameweek"], "key": them,
-                                  "scored": theirs})
+                                  "week": week, "scored": theirs})
 
     # League position after each round, so form can say which way a team is
     # travelling rather than only where it has arrived.
@@ -754,21 +756,25 @@ def analytics(season_data):
     # `luck` already measures. This is the half before that: whether the
     # teams themselves were any good.
     #
-    # Two readings, because they can disagree and the disagreement is the
-    # point. `calibre` is how good your opponents have been all season, so it
-    # says whether the draw was kind. `faced` is what they actually scored
-    # against you, so it says whether they turned up. Drawing the leaders on
-    # their worst week is a hard fixture that was not a hard afternoon.
+    # Read as of the week it was played, not as of today. Where a team
+    # finished is hindsight: half of them were not that team yet. What a
+    # manager actually walked into was the table as it stood that morning.
     #
-    # An opponent's calibre leaves out the match against you. Otherwise
-    # beating somebody drags their average down and makes your own schedule
-    # look easier for having won it, which is backwards.
+    # Nobody has a position before a ball is kicked, so week one counts as
+    # exactly average — which is true, and better than dropping the week or
+    # inventing an order for it.
     by_key = {t["key"]: t for t in teams}
     par = _mean([t["average"] for t in teams])
     finished = {t["key"]: t["rank"] for t in teams}
+    middle = (len(teams) + 1) / 2
+
+    def standing_before(key, week):
+        """Where a team sat going into a round — the table they faced."""
+        return ranks[key][week - 1] if week else None
+
     for team in teams:
         met = [f for f in faced[team["key"]] if f["key"] in by_key]
-        others = []
+        calibre, places = [], []
         for f in met:
             them = f["key"]
             # Their scores in the weeks they were not playing you. Both legs
@@ -777,16 +783,32 @@ def analytics(season_data):
             apart = [s for i, s in enumerate(by_key[them]["scores"])
                      if faced[them][i]["key"] != team["key"]]
             f["their_average"] = _mean(apart or by_key[them]["scores"])
-            f["their_rank"] = finished.get(them)
-            others.append(f["their_average"])
+            f["their_place"] = standing_before(them, f["week"])
+            f["their_rank_now"] = finished.get(them)
+            # What they had been averaging when you met them, which is the
+            # form you were actually up against. Empty in week one, when
+            # nobody had a record yet.
+            before = by_key[them]["scores"][:f["week"]]
+            f["their_form"] = _mean(before) if before else None
+            calibre.append(f["their_average"])
+            places.append(f["their_place"] if f["their_place"] is not None
+                          else middle)
         team["faced"] = met
-        team["opponent_calibre"] = _mean(others)
+        team["opponent_calibre"] = _mean(calibre)
         team["opponent_scored"] = _mean([f["scored"] for f in met])
-        team["opponent_rank"] = _mean([finished[f["key"]] for f in met
-                                       if f["key"] in finished])
-        # Positive means a harder draw than the league had on average.
-        team["difficulty"] = round(team["opponent_calibre"] - par, 1)
+        team["opponent_place"] = _mean(places)
+        team["opponent_rank_now"] = _mean([finished[f["key"]] for f in met
+                                           if f["key"] in finished])
+        team["calibre_vs_par"] = round(team["opponent_calibre"] - par, 1)
         team["faced_vs_par"] = round(team["opponent_scored"] - par, 1)
+
+    # The headline: how far up the table your opponents sat when you played
+    # them, against what the league averaged. Positive is a harder draw.
+    # Measured against the league's own mean rather than against the middle,
+    # so it cancels to nothing across fourteen teams however the draw fell.
+    level = _mean([t["opponent_place"] for t in teams]) if teams else middle
+    for team in teams:
+        team["difficulty"] = round(level - team["opponent_place"], 2)
 
     # Bars are drawn as a share of the widest, so the scale travels with the
     # data rather than being guessed at in the template.
@@ -810,6 +832,8 @@ def analytics(season_data):
         "max_difficulty": max([abs(t["difficulty"]) for t in teams], default=0),
         # The middle of the road, so a bar can be drawn either side of it.
         "par": par,
+        "par_place": round(_mean([t["opponent_place"] for t in teams]), 1)
+        if teams else 0.0,
         # One scale per metric, so a bar means the same thing down a column.
         "returns": RETURN_METRICS,
         "max_return": {m: max([t["returns"][m] for t in teams], default=0)
