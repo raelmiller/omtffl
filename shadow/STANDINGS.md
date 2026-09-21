@@ -84,7 +84,7 @@ of the real season.
 
 ### Gameweek 5
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
