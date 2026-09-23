@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-22T09:41:12Z",
+  "fpl_baked_at": "2026-09-23T09:48:43Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -9273,7 +9273,7 @@
    "display": "Struijk",
    "position": "DEF",
    "current_club": "BHA",
-   "status": "a",
+   "status": "d",
    "last_season_points": 7,
    "xgi": "0.17",
    "penalties": false,
