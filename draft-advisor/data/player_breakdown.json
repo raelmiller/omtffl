@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-24T09:45:21Z",
+  "fpl_baked_at": "2026-09-25T10:05:14Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -978,7 +978,7 @@
    "display": "Havertz",
    "position": "FWD",
    "current_club": "ARS",
-   "status": "a",
+   "status": "d",
    "last_season_points": 19,
    "xgi": "2.04",
    "penalties": false,
@@ -2091,7 +2091,7 @@
    "display": "Semenyo",
    "position": "MID",
    "current_club": "MCI",
-   "status": "a",
+   "status": "d",
    "last_season_points": 33,
    "xgi": "1.49",
    "penalties": false,
