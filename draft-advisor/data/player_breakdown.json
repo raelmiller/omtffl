@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-27T10:25:36Z",
+  "fpl_baked_at": "2026-09-28T11:31:47Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -246,7 +246,7 @@
    "display": "Isak",
    "position": "FWD",
    "current_club": "LIV",
-   "status": "a",
+   "status": "d",
    "last_season_points": 33,
    "xgi": "3.62",
    "penalties": false,
@@ -1314,7 +1314,7 @@
    "display": "Gakpo",
    "position": "FWD",
    "current_club": "LIV",
-   "status": "a",
+   "status": "d",
    "last_season_points": 32,
    "xgi": "2.35",
    "penalties": false,
@@ -5271,7 +5271,7 @@
    "display": "Dorgu",
    "position": "DEF",
    "current_club": "MUN",
-   "status": "a",
+   "status": "d",
    "last_season_points": 10,
    "xgi": "0.87",
    "penalties": false,
@@ -6178,7 +6178,7 @@
    "last_season_points": 6,
    "xgi": "0.19",
    "penalties": false,
-   "corners": true,
+   "corners": false,
    "freekicks": false,
    "sales": {
     "2023-24": {
@@ -7240,7 +7240,7 @@
    "last_season_points": 21,
    "xgi": "1.16",
    "penalties": true,
-   "corners": false,
+   "corners": true,
    "freekicks": true,
    "sales": {
     "2023-24": {
@@ -8593,7 +8593,7 @@
    "last_season_points": 8,
    "xgi": "1.11",
    "penalties": false,
-   "corners": false,
+   "corners": true,
    "freekicks": false,
    "sales": {
     "2024-25": {
