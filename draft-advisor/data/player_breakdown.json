@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-09-30T11:01:12Z",
+  "fpl_baked_at": "2026-10-01T11:26:40Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -5202,7 +5202,7 @@
    "display": "Van Hecke",
    "position": "DEF",
    "current_club": "TOT",
-   "status": "a",
+   "status": "d",
    "last_season_points": 24,
    "xgi": "1.11",
    "penalties": false,
