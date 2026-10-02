@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-01T11:26:40Z",
+  "fpl_baked_at": "2026-10-02T10:57:10Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -5739,7 +5739,7 @@
    "display": "Mykolenko",
    "position": "DEF",
    "current_club": "EVE",
-   "status": "a",
+   "status": "d",
    "last_season_points": 27,
    "xgi": "0.20",
    "penalties": false,
