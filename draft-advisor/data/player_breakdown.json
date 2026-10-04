@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-03T10:16:41Z",
+  "fpl_baked_at": "2026-10-04T11:02:13Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -4131,7 +4131,7 @@
    "display": "Damsgaard",
    "position": "MID",
    "current_club": "BRE",
-   "status": "a",
+   "status": "d",
    "last_season_points": 16,
    "xgi": "0.90",
    "penalties": false,
