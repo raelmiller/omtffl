@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-04T11:02:13Z",
+  "fpl_baked_at": "2026-10-05T12:07:57Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -4965,7 +4965,7 @@
    "display": "Konsa",
    "position": "DEF",
    "current_club": "ARS",
-   "status": "a",
+   "status": "d",
    "last_season_points": 12,
    "xgi": "0.25",
    "penalties": false,
@@ -8769,7 +8769,7 @@
    "display": "Mazraoui",
    "position": "DEF",
    "current_club": "MUN",
-   "status": "a",
+   "status": "d",
    "last_season_points": 3,
    "xgi": "0.28",
    "penalties": false,
