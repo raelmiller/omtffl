@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-08T11:52:16Z",
+  "fpl_baked_at": "2026-10-09T11:44:48Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -3003,7 +3003,7 @@
    "display": "Wilson",
    "position": "MID",
    "current_club": "LEE",
-   "status": "i",
+   "status": "d",
    "last_season_points": 5,
    "xgi": "0.10",
    "penalties": false,
@@ -3489,7 +3489,7 @@
    "display": "Robinson",
    "position": "DEF",
    "current_club": "FUL",
-   "status": "a",
+   "status": "d",
    "last_season_points": 12,
    "xgi": "0.56",
    "penalties": false,
@@ -6390,7 +6390,7 @@
    "display": "Joelinton",
    "position": "MID",
    "current_club": "NEW",
-   "status": "i",
+   "status": "d",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
@@ -6960,7 +6960,7 @@
    "display": "Dunk",
    "position": "DEF",
    "current_club": "BHA",
-   "status": "d",
+   "status": "a",
    "last_season_points": 22,
    "xgi": "0.12",
    "penalties": false,
