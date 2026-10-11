@@ -145,6 +145,31 @@ Only today's fixtures count towards what your players did. Everything else in
 the app deals in the round's running totals, and a summary that repeated
 Saturday's goals on Sunday would be worse than no summary.
 
+## Every move
+
+`/moves` is the season read backwards: every waiver, free agent and trade,
+by week and in total. The pages that existed were all about what happens
+next — this round's claims, this round's pool, the trade you have been
+offered — so who had been busy and who was fought over sat in the database
+and nowhere else.
+
+**A claim that lost is shown as plainly as one that landed**, and that is the
+point rather than a nicety. Two managers going for the same player is the
+only evidence the league has about who was actually wanted; a view that lists
+what settled throws it away. The engine has always recorded it —
+`process_waivers` reports a losing claim and why — so this is that log
+gathered, not a second calculation that could disagree with the first.
+
+Demand is counted by the managers who went for a player rather than by the
+number of claims: naming the same man twice in a week is one manager wanting
+him, not two. It is counted across the season, so the gameweeks are listed
+beside it — four chasers over two rounds is not a four-way race, and the
+column is what stops it reading as one.
+
+It is reached from the crest menu and from the foot of `/waivers` and
+`/trade`, not from the bottom rail. Seven sections already share the width of
+a phone, and this is a page to browse rather than one to reach in a hurry.
+
 ## The one architectural rule
 
 `app/engine.py` is the only file that talks to `shadow/`, and nothing in

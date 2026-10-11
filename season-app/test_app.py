@@ -2309,6 +2309,92 @@ db.withdraw(top, gww, "waiver")
 db.withdraw(bottom, gww, "waiver")
 os.environ.pop("ADMIN_KEYS", None)
 
+print("\n── Every move the league has made ──────────────────────")
+
+# Who has been active, and who was fought over. The engine already records a
+# claim that lost and why; this is that log read back across the season
+# rather than scoped to one round the way `market` is.
+_mv_gw = engine.current_gameweek()["gameweek"]
+_mv_sq = engine.squads_for_gameweek(_mv_gw, db.trades())
+_mv_pool = engine.free_agents(_mv_gw, squads=_mv_sq)
+
+
+def _drop_for(team, position):
+    return next(p for p in _mv_sq[team] if p["position"] == position)
+
+
+_wanted_man = _mv_pool[0]
+_spare_man = next(p for p in _mv_pool[1:]
+                  if p["position"] != _wanted_man["position"])
+_chasers = ["RM", "AF", "CH"]
+_before = {d["manager"] for d in db.declarations("waiver")
+           if d["gameweek"] == _mv_gw}
+_lg_before = engine.market_history(db.trades(), db.transactions())\
+    ["by_manager"].get("LG", {"claims": 0, "free_agents": 0})
+for _t in _chasers:
+    db.declare(_t, _mv_gw, "waiver",
+               {"claims": [{"drop": _drop_for(_t, _wanted_man["position"]),
+                            "add": _wanted_man}]})
+db.take_free_agent(_mv_gw, "LG",
+                   _drop_for("LG", _spare_man["position"]), _spare_man)
+
+_hist = engine.market_history(db.trades(), db.transactions())
+_this = next(r for r in _hist["rounds"] if r["gameweek"] == _mv_gw)
+_on_him = [m for m in _this["moves"] if m["add"]["id"] == _wanted_man["id"]]
+check("every manager who went for a player is recorded, not only the winner",
+      sorted(m["team"] for m in _on_him), sorted(_chasers))
+check("exactly one of them got him",
+      sum(1 for m in _on_him if m["landed"]), 1)
+check_true("and the rest say they were beaten to him",
+           all(m["why"] == "already claimed"
+               for m in _on_him if not m["landed"]),
+           str([m["why"] for m in _on_him if not m["landed"]]))
+
+_fought = {w["id"]: w for w in _hist["fought_over"]}
+check("a contested player is counted by the managers who chased him",
+      _fought[_wanted_man["id"]]["chasing"], len(_chasers))
+check("and credited to whoever ended up with him",
+      _fought[_wanted_man["id"]]["won_by"],
+      next(m["team"] for m in _on_him if m["landed"]))
+check_true("a player nobody else wanted is not in the fought-over list",
+           _spare_man["id"] not in _fought,
+           str([w["name"] for w in _hist["fought_over"]]))
+
+_tally = _hist["by_manager"]
+check("a lost claim still counts as having been active",
+      {k: (_tally[k]["claims"], _tally[k]["landed"], _tally[k]["lost"])
+       for k in _chasers if k not in _before},
+      {k: (1, 1 if any(m["team"] == k and m["landed"] for m in _on_him) else 0,
+           0 if any(m["team"] == k and m["landed"] for m in _on_him) else 1)
+       for k in _chasers if k not in _before})
+check("a free agent counts as a move, and not as a claim",
+      (_tally["LG"]["free_agents"], _tally["LG"]["claims"]),
+      (_lg_before["free_agents"] + 1, _lg_before["claims"]))
+
+_mvp = wc.get("/moves")
+check("the page loads", _mvp.status_code, 200)
+check_true("naming the player everybody wanted",
+           _wanted_man["name"] in _mvp.text, _wanted_man["name"])
+check_true("and saying plainly that the losers were beaten to him",
+           "beaten to him" in _mvp.text)
+check_true("with a section for the week it happened in",
+           f"Gameweek {_mv_gw}" in _mvp.text)
+check("it is not a page for strangers",
+      TestClient(app).get("/moves").status_code, 401)
+check_true("the crest menu carries it, since the rail has no room",
+           '/moves' in re.search(r'<nav id="crestnav".*?</nav>',
+                                 _mvp.text, re.S).group(0))
+
+# Put the league back. A claim is a blind bid, and tests further down sign in
+# as whoever is not RM and check they have none — which they would not, if
+# this section left one behind in the round still being claimed for.
+for _t in _chasers:
+    if _t not in _before:
+        db.withdraw(_t, _mv_gw, "waiver")
+check("the claims this section made are cleared up after it",
+      sorted(d["manager"] for d in db.declarations("waiver")
+             if d["gameweek"] == _mv_gw), sorted(_before))
+
 print("\n── The free-agent pool ─────────────────────────────────")
 
 gwp = engine.current_gameweek()["gameweek"]
@@ -4199,8 +4285,8 @@ check("the menu carries every section the rail does, in the same order",
       _menu[:len(rail_hrefs)], rail_hrefs)
 # The whole reason for it: neither of these has ever been on the rail, and
 # /account is behind an avatar that loses its name on a phone.
-check("and the two places the rail has no room for",
-      _menu[len(rail_hrefs):], ["/account", "/reports"])
+check("and the places the rail has no room for",
+      _menu[len(rail_hrefs):], ["/moves", "/account", "/reports"])
 check_true("every one of them opens",
            all(wv.get(h).status_code == 200 for h in _menu),
            ", ".join(f"{h} -> {wv.get(h).status_code}" for h in _menu

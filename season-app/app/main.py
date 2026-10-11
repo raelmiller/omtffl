@@ -1666,6 +1666,56 @@ def _claims_from_declarations(gameweek):
     return claims
 
 
+@app.get("/moves", response_class=HTMLResponse)
+def moves(request: Request):
+    """Every waiver, free agent and trade the league has made.
+
+    The pages that exist are all about what happens next: this round's claims,
+    this round's pool, the trade you have been offered. Nothing looked
+    backwards, so who has been busy and who was fought over — which is most of
+    what makes a transfer market interesting to follow — was in the database
+    and nowhere else.
+
+    A claim that lost is shown as prominently as one that landed. Two
+    managers going for the same player is the only evidence the league has
+    about who was actually wanted, and it is thrown away by any view that
+    lists only what settled.
+    """
+    ctx = _context(request)
+    if not ctx["me"]:
+        return templates.TemplateResponse("signin.html", ctx, status_code=401)
+
+    trades = db.trades()
+    history = engine.market_history(trades, db.transactions())
+    names = {m["key"]: m["team"] for m in db.managers()}
+
+    # Trades alongside the waivers, since "who is active" is a question about
+    # both. A published trade is not settled until the objection window shuts,
+    # so its real state comes from the engine rather than from the column.
+    by_week = {r["gameweek"]: {"gameweek": r["gameweek"], "moves": r["moves"],
+                               "trades": []}
+               for r in history["rounds"]}
+    for trade in trades:
+        week = by_week.setdefault(trade["gameweek"],
+                                  {"gameweek": trade["gameweek"],
+                                   "moves": [], "trades": []})
+        outcome = (engine.trade_outcome(trade) or {}) if trade["status"] == "published" else {}
+        week["trades"].append({**trade, "state": outcome.get("state") or trade["status"]})
+
+    ctx.update(
+        weeks=sorted(by_week.values(), key=lambda w: -w["gameweek"]),
+        tally=sorted(
+            ({"key": k, "team": names.get(k, k), **v,
+              "total": v["claims"] + v["free_agents"],
+              "trades": sum(1 for t in trades
+                            if k in (t["proposer"], t["receiver"]))}
+             for k, v in history["by_manager"].items()),
+            key=lambda r: (-r["total"], r["team"])),
+        fought_over=history["fought_over"],
+        names=names, total_moves=history["moves"])
+    return templates.TemplateResponse("moves.html", ctx)
+
+
 @app.get("/waivers", response_class=HTMLResponse)
 def waivers(request: Request):
     ctx = _context(request)

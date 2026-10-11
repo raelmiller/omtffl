@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Every move — Matchweek{% endblock %}
+{% block heading %}Every move{% endblock %}
+{% block subheading %}
+<p class="sub">
+  {% if total_moves or weeks %}
+    Every waiver, free agent and trade this season &mdash; including the
+    claims that lost, which are the only sign of who was actually wanted.
+  {% else %}
+    Nothing yet. Waivers run before each deadline, and this fills up from
+    there.
+  {% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+
+{% if fought_over %}
+<section>
+  <div class="sechead">
+    <h2>Fought over</h2>
+    <span class="eyebrow">more than one manager has gone for them</span>
+  </div>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Player</th><th class="num">Chasing</th>
+        <th>Who wanted him</th><th>Ended up with</th><th class="num">GW</th></tr></thead>
+      <tbody>
+        {% for w in fought_over %}
+        <tr>
+          <td><span class="slot"><span class="n">{{ w.position }}</span>{{ w.name }}</span>
+            <span class="pclub">{{ w.club }}</span></td>
+          <td class="num"><b>{{ w.chasing }}</b></td>
+          <td>{% for k in w.by %}<span class="mgr">{{ k }}</span>{% endfor %}</td>
+          <td>{% if w.won_by %}<span class="team">{{ names.get(w.won_by, w.won_by) }}</span>
+              {% else %}<span class="dim">nobody</span>{% endif %}</td>
+          <td class="num dim">{{ w.gameweeks|join(', ') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if tally %}
+<section>
+  <div class="sechead">
+    <h2>Who has been busy</h2>
+    <span class="eyebrow">the whole season</span>
+  </div>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Team</th><th class="num">Moves</th><th class="num">Claims</th>
+        <th class="num">Won</th><th class="num">Lost</th>
+        <th class="num">Free agents</th><th class="num">Trades</th></tr></thead>
+      <tbody>
+        {% for t in tally %}
+        <tr>
+          <td class="team">{{ t.team }}<span class="mgr">{{ t.key }}</span></td>
+          <td class="num"><b>{{ t.total }}</b></td>
+          <td class="num">{{ t.claims }}</td>
+          <td class="num">{{ t.landed }}</td>
+          <td class="num {{ 'down' if t.lost }}">{{ t.lost }}</td>
+          <td class="num">{{ t.free_agents }}</td>
+          <td class="num">{{ t.trades }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% for week in weeks %}
+<section>
+  <div class="sechead">
+    <h2>Gameweek {{ week.gameweek }}</h2>
+    <span class="eyebrow">
+      {{ week.moves|length }} move{{ '' if week.moves|length == 1 else 's' }}
+      {%- if week.trades %} &middot; {{ week.trades|length }}
+        trade{{ '' if week.trades|length == 1 else 's' }}{% endif %}
+    </span>
+  </div>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Team</th><th>In</th><th>Out</th><th>How</th></tr></thead>
+      <tbody>
+        {% for m in week.moves %}
+        <tr class="{{ '' if m.landed else 'missed' }}">
+          <td class="team">{{ names.get(m.team, m.team) }}</td>
+          <td>{% if m.landed %}<span class="slot"><span class="n">{{ m.add.position }}</span>{{ m.add.name }}</span>
+              {% else %}<span class="dim">{{ m.add.name }}</span>{% endif %}</td>
+          <td class="dim">{{ m.drop.name if m.landed else '—' }}</td>
+          <td>
+            {%- if not m.landed %}
+              <span class="pill">{{ 'beaten to him' if m.why == 'already claimed' else m.why }}</span>
+            {%- elif m.kind == 'free_agent' %}free agent
+            {%- else %}waiver{% if m.round %}, round {{ m.round }}{% endif %}
+            {%- endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% for t in week.trades %}
+        <tr>
+          <td class="team">{{ names.get(t.proposer, t.proposer) }}
+            <span class="dim">&rarr; {{ names.get(t.receiver, t.receiver) }}</span></td>
+          <td>{% for p in t.players_in %}<span class="slot"><span class="n">{{ p.position }}</span>{{ p.name }}</span>{% endfor %}</td>
+          <td class="dim">{% for p in t.players_out %}{{ p.name }}{{ ', ' if not loop.last }}{% endfor %}
+            {%- if t.points %} + {{ t.points }} pts{% endif %}</td>
+          <td><span class="pill">{{ t.state }}</span> trade</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endfor %}
+
+<p class="sub"><a href="/waivers">&larr; This week's claims</a>
+  &middot; <a href="/trade">Trades</a></p>
+{% endblock %}

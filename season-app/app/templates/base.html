@@ -127,6 +127,12 @@
         {#- The two the rail has no room for. Both exist elsewhere — /account
             behind an avatar that loses its name on a phone, /reports in the
             footer — which is to say neither is anywhere you would look. -#}
+        <a class="cnav{{ ' on' if path == '/moves' }}" href="/moves"
+           {% if path == '/moves' %}aria-current="page"{% endif %}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h12l-3-3M20 17H8l3 3"/><circle cx="18" cy="7" r="2"/><circle cx="6" cy="17" r="2"/></svg>
+          <span>Every move</span>
+        </a>
         <a class="cnav{{ ' on' if path == '/account' }}" href="/account"
            {% if path == '/account' %}aria-current="page"{% endif %}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"

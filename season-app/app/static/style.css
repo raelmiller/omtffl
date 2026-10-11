@@ -557,6 +557,11 @@ tr.mine .mgr { text-transform: uppercase; }
 td .up { color: var(--accent); }
 td .down { color: var(--warn); }
 td .dim { color: var(--muted); }
+td.dim { color: var(--muted); }
+/* A claim that lost a race. Still listed, and listed as plainly as the ones
+   that landed — who was beaten to a player is the interesting half. */
+tr.missed td { opacity: .72; }
+tr.missed .pill { border-color: var(--warn); color: var(--warn); }
 
 @media (max-width: 30rem) {
   .barrow { grid-template-columns: 1fr 3rem;

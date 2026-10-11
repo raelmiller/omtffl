@@ -1776,6 +1776,63 @@ def market(gameweek, stored_trades=None, transactions=None, season_data=None,
     }
 
 
+def market_history(stored_trades=None, transactions=None, config=None,
+                   upto=38):
+    """Every move the league has made, and what it tells you about them.
+
+    `market` answers "what does the board look like now" and scopes itself to
+    one round. This is the season read back: who has been active, who was
+    fought over, and who lost a race. The engine already records all of it —
+    `process_waivers` reports a claim that lost and why — so this is the same
+    log gathered rather than anything computed a second time.
+
+    A claim that lost is as interesting as one that landed, and arguably more:
+    two managers going for the same player is the only evidence the league
+    has about who was actually wanted.
+    """
+    _, moves, _ = _settle(upto, stored_trades, config, list(transactions or []))
+
+    rounds, wanted, tally = {}, {}, {}
+    for move in moves:
+        gw = move.get("gameweek")
+        rounds.setdefault(gw, []).append(move)
+        team, landed = move["team"], move.get("landed")
+        seen = tally.setdefault(team, {"claims": 0, "landed": 0, "lost": 0,
+                                       "free_agents": 0})
+        if move.get("kind") == "free_agent":
+            seen["free_agents"] += 1
+        else:
+            seen["claims"] += 1
+            seen["landed" if landed else "lost"] += 1
+        # Who was wanted, counted by the people who went for him rather than
+        # by the number of claims: naming the same player twice in one week
+        # is one manager wanting him, not two.
+        add = move["add"]
+        row = wanted.setdefault(add["id"], {**add, "by": set(), "won_by": None,
+                                            "gameweeks": set()})
+        row["by"].add(team)
+        row["gameweeks"].add(gw)
+        if landed:
+            row["won_by"] = team
+
+    contested = sorted(
+        ({**row, "by": sorted(row["by"]), "chasing": len(row["by"]),
+          "gameweeks": sorted(row["gameweeks"])}
+         for row in wanted.values()),
+        key=lambda r: (-r["chasing"], r["name"]))
+
+    return {
+        "rounds": [{"gameweek": gw, "moves": rounds[gw]}
+                   for gw in sorted(rounds, reverse=True)],
+        "by_manager": tally,
+        "wanted": contested,
+        # Only the ones somebody actually had to beat. Everything else is a
+        # free agent nobody else asked for, which says nothing about demand.
+        "fought_over": [r for r in contested if r["chasing"] > 1],
+        "moves": len(moves),
+    }
+
+
 def frozen_detail(market_now):
     """The frozen players, named, so the pool can say why they are missing."""
     seen, out = set(), []
