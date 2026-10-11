@@ -116,9 +116,10 @@ O'Reilly, assist for Konsa, red card for Truffert
 ```
 
 It is the counterpart to the goal alerts rather than a replacement: those
-tell you about a moment, this tells you about an afternoon, and it is the one
-most people would rather have. So it defaults **on**, as deadlines do, while
-per-goal alerts stay opt-in.
+tell you about a moment, this tells you about an afternoon. It is its own
+thing to switch on, off until asked for — a notification nobody chose is how
+the whole lot ends up switched off. Only deadlines arrive uninvited, because
+missing one is the thing people turned notifications on for.
 
 **Not inside the events job.** That one runs only while football is in
 progress, and the moment this wants is the one just *after* the last match of
@@ -132,6 +133,13 @@ there is no score to quote and last week's would be worse than silence. And
 the claim is per manager per day, so a job running every ten minutes sends
 once — but it is claimed only when there is somebody to tell, so a manager
 who turns notifications on that evening has not already "had" it.
+
+**The settings say what the device is set to.** They used to render at
+their defaults whatever was stored, which made them write-only: turning
+something on and reloading showed it off while it kept arriving, and because
+saving sends all of them at once, changing one setting quietly reset the
+others to whatever the stale boxes showed. The page reads them back now
+before it draws them.
 
 Only today's fixtures count towards what your players did. Everything else in
 the app deals in the round's running totals, and a summary that repeated

@@ -39,7 +39,7 @@
         Saturday is still a busy Saturday.</span></span>
     </label>
     <label class="prefrow">
-      <input type="checkbox" id="wantdaily" checked>
+      <input type="checkbox" id="wantdaily">
       <span><strong>Where the day left it</strong>
         <span class="pclub">one message when the last match of the day
         finishes &mdash; how your match stands and what your players did that
@@ -329,6 +329,22 @@
     off.hidden = !sub;
     test.hidden = !sub;
     document.getElementById('prefbox').hidden = !sub;
+    // The boxes say what this device is actually set to, rather than what a
+    // new one would get. Without this they render at their defaults however
+    // the device is configured, and saving one setting resets the rest to
+    // whatever the stale boxes showed.
+    if (sub) {
+      try {
+        var r = await fetch('/push/prefs?endpoint='
+                            + encodeURIComponent(sub.endpoint));
+        if (r.ok) {
+          var p = await r.json();
+          wantDeadlines.checked = !!p.want_deadlines;
+          wantEvents.checked = !!p.want_events;
+          wantDaily.checked = !!p.want_daily;
+        }
+      } catch (e) { /* leave them at their defaults and let a save fix it */ }
+    }
     show(sub ? 'on for this app' : 'off for this app',
          sub ? 'Each app you use needs turning on separately — this one is '
              + 'done.' : '');

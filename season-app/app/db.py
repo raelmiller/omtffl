@@ -159,10 +159,10 @@ CREATE TABLE IF NOT EXISTS push_subscription (
     -- to be interrupted nine times on a Saturday.
     want_deadlines INTEGER NOT NULL DEFAULT 1,
     want_events    INTEGER NOT NULL DEFAULT 0,
-    -- And the end of a day's football, which is one message rather than nine
-    -- and is the one most people actually want: where the match stands and
-    -- what your lot did. Defaults on for the same reason deadlines do.
-    want_daily     INTEGER NOT NULL DEFAULT 1
+    -- And the end of a day's football: where the match stands and what your
+    -- lot did, once. Off until asked for, like match events — a notification
+    -- nobody chose is the one that gets the whole lot switched off.
+    want_daily     INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS push_subscription_manager
     ON push_subscription(manager);
@@ -277,7 +277,7 @@ def _migrate(conn):
                      " want_events INTEGER NOT NULL DEFAULT 0")
     if subs and "want_daily" not in subs:
         conn.execute("ALTER TABLE push_subscription ADD COLUMN"
-                     " want_daily INTEGER NOT NULL DEFAULT 1")
+                     " want_daily INTEGER NOT NULL DEFAULT 0")
     lineups = {r["name"] for r in conn.execute("PRAGMA table_info(lineup)")}
     if lineups and "mended" not in lineups:
         conn.execute("ALTER TABLE lineup ADD COLUMN"

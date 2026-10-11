@@ -1872,6 +1872,10 @@ else:
 
         notify.engine.days_football = lambda n, now=None: _day()
         notify.day_summary()
+        check("and nothing until the device asks for it", len(_sent), 0)
+
+        db.set_push_prefs(_sub["endpoint"], want_daily=True)
+        notify.day_summary()
         _digest = [s for s in _sent if s[3].get("wanting") == "want_daily"]
         check("once the day's football is done, one message goes out",
               len(_digest), 1)
@@ -1932,6 +1936,38 @@ else:
     check("someone else's endpoint cannot be reconfigured",
           TestClient(app).post("/push/prefs",
                                json={"endpoint": _sub["endpoint"]}).status_code, 401)
+
+    # ── What a device is actually set to ───────────────────────────────────
+    # Both of the ones you have to ask for are off until you do. A
+    # notification nobody chose is how the whole lot gets switched off.
+    # A device that has just subscribed and chosen nothing — not the one the
+    # tests above have been configuring.
+    db.subscribe_push(P1, "https://example.invalid/brand-new", "p", "a")
+    _fresh = [s for s in db.push_subscriptions(P1)
+              if s["endpoint"] == "https://example.invalid/brand-new"][0]
+    check("a new device gets deadlines, and only deadlines",
+          {w: bool(_fresh[w]) for w in db.WANTS},
+          {"want_deadlines": True, "want_events": False, "want_daily": False})
+    db.unsubscribe_push("https://example.invalid/brand-new")
+
+    # The boxes used to render at their defaults whatever was stored, which
+    # made them write-only: turning something on and reloading showed it off,
+    # and saving one setting reset the other two to the stale values.
+    db.set_push_prefs(_sub["endpoint"], want_daily=True, want_events=False)
+    _read = c1.get("/push/prefs", params={"endpoint": _sub["endpoint"]})
+    check("a device can be asked what it is set to", _read.status_code, 200)
+    check("and answers with what was stored, not with the defaults",
+          _read.json(), {"want_deadlines": True, "want_events": False,
+                         "want_daily": True})
+    check("a device that is not yours is not readable",
+          TestClient(app).get("/push/prefs",
+                              params={"endpoint": _sub["endpoint"]}).status_code,
+          401)
+    check("nor is an endpoint nobody has",
+          c1.get("/push/prefs", params={"endpoint": "nope"}).status_code, 404)
+    check_true("and the page asks before it draws the boxes",
+               "/push/prefs?endpoint=" in c1.get("/account").text)
+    db.set_push_prefs(_sub["endpoint"], want_daily=False)
 
     check_true("the service worker handles a push", "'push'" in c1.get("/sw.js").text)
     check_true("and a tap on it opens the page it is about",

@@ -627,6 +627,27 @@ async def push_subscribe(request: Request):
     return JSONResponse({"ok": True})
 
 
+@app.get("/push/prefs")
+def push_prefs_read(request: Request, endpoint: str = ""):
+    """What this device is actually set to receive.
+
+    The checkboxes were write-only: the page rendered them at their defaults
+    whatever was stored, so turning goal alerts on and reloading showed them
+    off while they kept arriving. Worse, saving sends all three at once, so
+    changing one setting quietly reset the other two to whatever the stale
+    boxes happened to show.
+    """
+    me = auth.current(request)
+    if not me:
+        raise HTTPException(401, "sign in first")
+    for sub in db.push_subscriptions(me["key"]):
+        if sub["endpoint"] == endpoint:
+            return JSONResponse({w: bool(sub.get(w)) for w in db.WANTS})
+    # Not a device of theirs, or not subscribed yet. The defaults are what a
+    # new subscription would get, so the page is right either way.
+    raise HTTPException(404, "not one of your apps")
+
+
 @app.post("/push/prefs")
 async def push_prefs(request: Request):
     me = auth.current(request)
