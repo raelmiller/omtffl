@@ -92,6 +92,11 @@ def refresh_if_live():
 # should not read "provisional" until Monday morning.
 SETTLE_REFRESH_MINUTES = 30
 
+# How soon after the last whistle of the day the summary goes out. Ten
+# minutes is late enough that FPL has marked the fixtures finished and early
+# enough to still be the evening it is describing.
+DAY_SUMMARY_MINUTES = 10
+
 
 def refresh_if_settling():
     """Go back for a round FPL has finished but not yet checked.
@@ -241,6 +246,14 @@ def startup():
     scheduler.add_job(mend_lineups, "interval", minutes=MEND_MINUTES,
                       id="mend", replace_existing=True,
                       max_instances=1, coalesce=True)
+    # Where the day left it, once the last match of the day is marked
+    # finished. Not inside the events job: that one runs only while football
+    # is in progress, and the moment this wants is the one just after the
+    # last match of the day stops being in progress. The check is a read of
+    # the fixture list on disk, so most runs cost nothing at all.
+    scheduler.add_job(notify.day_summary, "interval",
+                      minutes=DAY_SUMMARY_MINUTES, id="day-summary",
+                      replace_existing=True, max_instances=1, coalesce=True)
     # A daily job only fires if the process happens to be alive at that minute,
     # and this one isn't: the container is replaced on every deploy and recycled
     # besides. Restart at 08:00 and the next refresh was a whole day away, which
@@ -610,8 +623,7 @@ async def push_subscribe(request: Request):
     # on is one request rather than a subscribe followed by an update that
     # might not arrive.
     db.set_push_prefs(body["endpoint"],
-                      want_deadlines=body.get("want_deadlines"),
-                      want_events=body.get("want_events"))
+                      **{w: body.get(w) for w in db.WANTS})
     return JSONResponse({"ok": True})
 
 
@@ -627,8 +639,7 @@ async def push_prefs(request: Request):
     mine = {s["endpoint"] for s in db.push_subscriptions(me["key"])}
     if endpoint not in mine:
         raise HTTPException(404, "not one of your apps")
-    db.set_push_prefs(endpoint, want_deadlines=body.get("want_deadlines"),
-                      want_events=body.get("want_events"))
+    db.set_push_prefs(endpoint, **{w: body.get(w) for w in db.WANTS})
     return JSONResponse({"ok": True})
 
 

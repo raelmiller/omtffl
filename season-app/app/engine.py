@@ -971,6 +971,39 @@ def matches_in_progress(now=None):
 FINALISE_WINDOW_HOURS = 96
 
 
+def days_football(number, now=None):
+    """Today's fixtures in a round, and whether they are all done.
+
+    A gameweek is spread over a weekend and sometimes a Monday, so "the
+    round is over" and "today's football is over" are different questions and
+    the end-of-day summary needs the second one.
+
+    Days are UTC, which is the same day as a kick-off in this country for
+    every fixture the Premier League actually schedules — the latest finishes
+    around 21:00 UTC. Counted in UTC anyway because every other time in this
+    app is, and two clocks that agree except in March is worse than one.
+    """
+    now = now or datetime.now(timezone.utc)
+    today = now.date()
+    todays, done_in_round, in_round = [], 0, 0
+    for fixture in _read("pl_fixtures.json") or []:
+        if fixture.get("event") != number:
+            continue
+        in_round += 1
+        if fixture.get("finished"):
+            done_in_round += 1
+        stamp = fixture.get("kickoff_time")
+        if stamp and _parse(stamp).date() == today:
+            todays.append(fixture)
+    return {
+        "fixtures": todays,
+        "ids": {f.get("id") for f in todays},
+        "all_finished": bool(todays) and all(f.get("finished") for f in todays),
+        "played_in_round": done_in_round,
+        "in_round": in_round,
+    }
+
+
 def awaiting_final_data(now=None):
     """A round whose football is over but whose numbers are not yet final.
 

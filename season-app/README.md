@@ -103,6 +103,40 @@ team's hard week is another's easy one. That is asserted too: a schedule
 measure that does not cancel out is measuring something other than the
 schedule.
 
+## Where the day left it
+
+One message when the last match of the day finishes: the score your match
+stands at, how far through the round that is, and what your own players did
+that day.
+
+```
+RM 26-12 SG
+After 5 of 10 games in GW5. Goals for Ballard (2), Justin and
+O'Reilly, assist for Konsa, red card for Truffert
+```
+
+It is the counterpart to the goal alerts rather than a replacement: those
+tell you about a moment, this tells you about an afternoon, and it is the one
+most people would rather have. So it defaults **on**, as deadlines do, while
+per-goal alerts stay opt-in.
+
+**Not inside the events job.** That one runs only while football is in
+progress, and the moment this wants is the one just *after* the last match of
+the day stops being in progress. It has a cadence of its own, and most runs
+cost nothing: the check is a read of the fixture list already on disk.
+
+Three things it waits for, each of which would otherwise send something
+wrong. Every fixture that kicked off today has to be marked finished, or the
+score quoted moves ten minutes later. The round has to have been scored, or
+there is no score to quote and last week's would be worse than silence. And
+the claim is per manager per day, so a job running every ten minutes sends
+once — but it is claimed only when there is somebody to tell, so a manager
+who turns notifications on that evening has not already "had" it.
+
+Only today's fixtures count towards what your players did. Everything else in
+the app deals in the round's running totals, and a summary that repeated
+Saturday's goals on Sunday would be worse than no summary.
+
 ## The one architectural rule
 
 `app/engine.py` is the only file that talks to `shadow/`, and nothing in

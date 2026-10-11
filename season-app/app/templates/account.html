@@ -38,6 +38,13 @@
         fifteen &mdash; batched, so several at once is one buzz. A busy
         Saturday is still a busy Saturday.</span></span>
     </label>
+    <label class="prefrow">
+      <input type="checkbox" id="wantdaily" checked>
+      <span><strong>Where the day left it</strong>
+        <span class="pclub">one message when the last match of the day
+        finishes &mdash; how your match stands and what your players did that
+        day. One a day at most, and only on days there is football.</span></span>
+    </label>
   </div>
   <p class="note" id="pushwhy"></p>
 </section>
@@ -253,6 +260,7 @@
   var out = document.getElementById('pstatus');
   var wantDeadlines = document.getElementById('wantdeadlines');
   var wantEvents = document.getElementById('wantevents');
+  var wantDaily = document.getElementById('wantdaily');
   if (!box) return;
 
   async function savePrefs() {
@@ -265,13 +273,15 @@
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ endpoint: sub.endpoint,
         want_deadlines: wantDeadlines.checked,
-        want_events: wantEvents.checked }),
+        want_events: wantEvents.checked,
+        want_daily: wantDaily.checked }),
     }).catch(function () { return { ok: false }; });
     out.textContent = res.ok ? 'saved' : 'could not save that';
     out.className = 'savestate ' + (res.ok ? 'ok' : 'bad');
   }
   wantDeadlines.addEventListener('change', savePrefs);
   wantEvents.addEventListener('change', savePrefs);
+  wantDaily.addEventListener('change', savePrefs);
 
   // Base64url to the Uint8Array the subscribe call insists on. It will not
   // take the string, and the error it gives if you pass one says nothing.
@@ -346,6 +356,7 @@
         body: JSON.stringify(Object.assign(JSON.parse(JSON.stringify(sub)), {
           want_deadlines: wantDeadlines.checked,
           want_events: wantEvents.checked,
+          want_daily: wantDaily.checked,
         })),
       });
       if (!res.ok) throw new Error('the server would not take it');

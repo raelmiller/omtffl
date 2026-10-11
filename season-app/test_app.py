@@ -1430,7 +1430,7 @@ from app import notify                                    # noqa: E402
 
 # The daily refresh is right for injury news and useless for a table on a
 # Saturday afternoon, which is exactly when anyone is watching it.
-_fx_now = _dt.now(_tz.utc)
+_fx_now = datetime.now(_tz.utc)
 _real_read_fx = engine._read
 
 
@@ -1512,7 +1512,7 @@ _tmp.unlink()
 # that gap the round read "provisional" until the next morning's refresh.
 _real_read_fin = engine._read
 _real_files = engine.gameweek_files
-_fin_now = _dt.now(_tz.utc)
+_fin_now = datetime.now(_tz.utc)
 
 
 def _round_that(finished, checked, hours_since_last_kick=2.0):
@@ -1823,6 +1823,102 @@ else:
         notify.live.fetch = lambda gw, force=False: (_asked.append(1), ([], None))[1]
         check("with no match on, FPL is not called at all",
               (notify.match_events()["why"], len(_asked)), ("no match in progress", 0))
+
+        # ── Where the day left it ──────────────────────────────────────────
+        # One message when the last match of the day finishes, rather than
+        # one per goal. The score it quotes has to be the day's final one, so
+        # it waits for every fixture that kicked off today to be marked done.
+        _day_gw = engine.live_gameweek()["gameweek"]
+        _scored = [r["gameweek"] for r in engine.season()["rounds"]]
+        _day_gw = _day_gw if _day_gw in _scored else max(_scored)
+        _real_live_gw = notify.engine.live_gameweek
+        _real_days = notify.engine.days_football
+        notify.engine.live_gameweek = lambda: {"gameweek": _day_gw}
+        _day_squad = engine.market(_day_gw, db.trades(),
+                                   db.transactions())["squads"][P1]
+        _d1, _d2, _d3 = (p["id"] for p in _day_squad[:3])
+
+        def _day(all_finished=True):
+            return {"fixtures": [{"id": 11}, {"id": 12}], "ids": {11, 12},
+                    "all_finished": all_finished,
+                    "played_in_round": 5, "in_round": 10}
+
+        def _day_fx(gw, force=False):
+            return ([{"id": 11, "stats": [
+                        {"identifier": "goals_scored",
+                         "h": [{"element": _d1, "value": 2}], "a": []},
+                        {"identifier": "assists",
+                         "h": [{"element": _d2, "value": 1}], "a": []}]},
+                     {"id": 12, "stats": []},
+                     # Yesterday's match, in the same round. Its goals are
+                     # not today's news and must not be counted again.
+                     {"id": 99, "stats": [
+                        {"identifier": "goals_scored",
+                         "h": [{"element": _d3, "value": 3}], "a": []}]}], None)
+
+        notify.live.fetch = _day_fx
+        _sent.clear()
+
+        notify.engine.days_football = lambda n, now=None: _day(all_finished=False)
+        check("nothing goes out while today's matches are still on",
+              (notify.day_summary()["why"], len(_sent)),
+              ("today's matches are still on", 0))
+
+        notify.engine.days_football = lambda n, now=None: {
+            "fixtures": [], "ids": set(), "all_finished": False,
+            "played_in_round": 0, "in_round": 10}
+        check("nor on a day with no football at all",
+              notify.day_summary()["why"], "no football today")
+
+        notify.engine.days_football = lambda n, now=None: _day()
+        notify.day_summary()
+        _digest = [s for s in _sent if s[3].get("wanting") == "want_daily"]
+        check("once the day's football is done, one message goes out",
+              len(_digest), 1)
+        _title, _body = _digest[0][1], _digest[0][2]
+        check_true("the score is the headline", _title.startswith(f"{P1} "),
+                   _title)
+        check_true("naming who it is against",
+                   engine.opponents(_day_gw)[P1] in _title, _title)
+        check_true("and the body says how far through the round it is",
+                   f"After 5 of 10 games in GW{_day_gw}" in _body, _body)
+        check_true("with what your players did today",
+                   engine.player_names()[_d1] in _body
+                   and engine.player_names()[_d2] in _body, _body)
+        check_true("a brace counted as one name and two goals",
+                   "(2)" in _body and "Goals for" in _body, _body)
+        check_true("and nothing from a match played earlier in the round",
+                   engine.player_names()[_d3] not in _body, _body)
+        check_true("it points at their own week",
+                   _digest[0][3]["url"] == "/week", str(_digest[0][3]))
+
+        # Once a day, however often the job runs — it fires every ten minutes.
+        _sent.clear()
+        notify.day_summary()
+        notify.day_summary()
+        check("and not again that day", len(_sent), 0)
+
+        # A quiet day is still worth the message: the score moved even if
+        # nobody in your fifteen did anything.
+        _sent.clear()
+        notify.live.fetch = lambda gw, force=False: (
+            [{"id": 11, "stats": []}, {"id": 12, "stats": []}], None)
+        notify.day_summary(now=datetime.now(_tz.utc) + timedelta(days=1))
+        check("a day when nobody did anything still reports the score",
+              len(_sent), 1)
+        check_true("saying so plainly",
+                   "Nothing from your lot today" in _sent[0][2], _sent[0][2])
+
+        # A round whose football has happened but which the app has not
+        # scored yet: better to say nothing than to quote last week's score.
+        _sent.clear()
+        notify.engine.live_gameweek = lambda: {"gameweek": max(_scored) + 50}
+        check("an unscored round is left alone",
+              notify.day_summary(now=datetime.now(_tz.utc) + timedelta(days=2))["why"],
+              f"gameweek {max(_scored) + 50} is not scored yet")
+        check("and claims nothing, so it can still be sent later", len(_sent), 0)
+        notify.engine.live_gameweek = _real_live_gw
+        notify.engine.days_football = _real_days
     finally:
         notify.to_manager = _real_to
         notify._kicked_off = _real_kicked

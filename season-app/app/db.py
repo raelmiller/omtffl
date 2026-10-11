@@ -158,7 +158,11 @@ CREATE TABLE IF NOT EXISTS push_subscription (
     -- notifications on is asking not to miss a deadline, and has not asked
     -- to be interrupted nine times on a Saturday.
     want_deadlines INTEGER NOT NULL DEFAULT 1,
-    want_events    INTEGER NOT NULL DEFAULT 0
+    want_events    INTEGER NOT NULL DEFAULT 0,
+    -- And the end of a day's football, which is one message rather than nine
+    -- and is the one most people actually want: where the match stands and
+    -- what your lot did. Defaults on for the same reason deadlines do.
+    want_daily     INTEGER NOT NULL DEFAULT 1
 );
 CREATE INDEX IF NOT EXISTS push_subscription_manager
     ON push_subscription(manager);
@@ -271,6 +275,9 @@ def _migrate(conn):
     if subs and "want_events" not in subs:
         conn.execute("ALTER TABLE push_subscription ADD COLUMN"
                      " want_events INTEGER NOT NULL DEFAULT 0")
+    if subs and "want_daily" not in subs:
+        conn.execute("ALTER TABLE push_subscription ADD COLUMN"
+                     " want_daily INTEGER NOT NULL DEFAULT 1")
     lineups = {r["name"] for r in conn.execute("PRAGMA table_info(lineup)")}
     if lineups and "mended" not in lineups:
         conn.execute("ALTER TABLE lineup ADD COLUMN"
@@ -947,19 +954,24 @@ def unsubscribe_push(endpoint):
         return cur.rowcount
 
 
+# Every per-device preference there is. One list, so a new kind of notice is
+# added in one place rather than in a filter, a setter and two validators.
+WANTS = ("want_deadlines", "want_events", "want_daily")
+
+
 def push_subscriptions(key=None, wanting=None):
     """Subscribed apps, optionally only those that want a kind of notice.
 
-    `wanting` is a column name — "want_deadlines" or "want_events" — because
-    a device that asked only for deadlines must not be sent a goal, and the
-    filter belongs next to the rows rather than in every caller.
+    `wanting` is a column name — one of WANTS — because a device that asked
+    only for deadlines must not be sent a goal, and the filter belongs next
+    to the rows rather than in every caller.
     """
     sql = "SELECT * FROM push_subscription"
     where, args = [], []
     if key:
         where.append("manager = ?"); args.append(key)
     if wanting:
-        if wanting not in ("want_deadlines", "want_events"):
+        if wanting not in WANTS:
             raise ValueError(f"unknown preference {wanting}")
         where.append(f"{wanting} = 1")
     if where:
@@ -968,12 +980,15 @@ def push_subscriptions(key=None, wanting=None):
         return [dict(r) for r in conn.execute(sql + " ORDER BY created_at", args)]
 
 
-def set_push_prefs(endpoint, want_deadlines=None, want_events=None):
+def set_push_prefs(endpoint, **prefs):
+    """Set any of the per-device preferences. Unnamed ones are left alone."""
+    unknown = set(prefs) - set(WANTS)
+    if unknown:
+        raise ValueError(f"unknown preference {sorted(unknown)}")
     sets, args = [], []
-    if want_deadlines is not None:
-        sets.append("want_deadlines = ?"); args.append(1 if want_deadlines else 0)
-    if want_events is not None:
-        sets.append("want_events = ?"); args.append(1 if want_events else 0)
+    for name in WANTS:
+        if prefs.get(name) is not None:
+            sets.append(f"{name} = ?"); args.append(1 if prefs[name] else 0)
     if not sets:
         return 0
     args.append(endpoint)

@@ -13,6 +13,7 @@ table is not going anywhere), and nothing a manager did themselves.
 from __future__ import annotations
 
 import threading
+from datetime import datetime, timezone
 
 from . import auth, db, engine, live, push
 
@@ -208,6 +209,134 @@ def deadlines_due():
     # Notices raised, not notifications delivered — delivery is the push
     # service's business the moment it takes the message.
     return {"notices": sent, "gameweek": number}
+
+
+def _day_events(fixtures, ids, owned, names):
+    """What a manager's players did in one day's matches, as words.
+
+    Only the fixtures named — a gameweek runs Saturday to Monday, and the
+    whole point of this is what happened *today* rather than the running
+    totals everything else deals in.
+    """
+    out = {}
+    for fixture in fixtures:
+        if fixture.get("id") not in ids:
+            continue
+        stats = {s.get("identifier"): s for s in (fixture.get("stats") or [])}
+        for identifier, label, _undo in WATCHED_EVENTS:
+            block = stats.get(identifier) or {}
+            for side in ("h", "a"):
+                for row in block.get(side) or []:
+                    pid, value = row.get("element"), row.get("value") or 0
+                    if pid in owned and value > 0:
+                        out.setdefault(label, []).append(
+                            (names.get(pid, f"player {pid}"), value))
+    return out
+
+
+def _as_sentence(got):
+    """"Goals for Barry and Evanilson, assist for Rice" — or nothing."""
+    parts = []
+    for _identifier, label, _undo in WATCHED_EVENTS:
+        people = got.get(label)
+        if not people:
+            continue
+        said = []
+        for who, count in sorted(people):
+            said.append(who if count == 1 else f"{who} ({count})")
+        total = sum(c for _, c in people)
+        word = label.lower()
+        # "Goals for A and B" reads better than "Goal for A and B", and a
+        # brace is two goals from one player, so the count rather than the
+        # number of names decides it.
+        if total > 1:
+            word = {"goal": "goals", "assist": "assists",
+                    "own goal": "own goals", "red card": "red cards",
+                    "penalty saved": "penalties saved",
+                    "penalty missed": "penalties missed"}.get(word, word + "s")
+        joined = (said[0] if len(said) == 1
+                  else " and ".join([", ".join(said[:-1]), said[-1]]))
+        parts.append(f"{word} for {joined}")
+    if not parts:
+        return ""
+    return (parts[0][0].upper() + parts[0][1:]
+            + ("" if len(parts) == 1 else ", " + ", ".join(parts[1:])))
+
+
+def day_summary(now=None):
+    """Where it stands at the end of a day's football, once a day.
+
+    The goal alerts tell you about a moment; this tells you about an
+    afternoon. It waits for every one of today's matches to be marked
+    finished, so the score it quotes is the day's final one rather than a
+    number that moves ten minutes later — and it is claimed per manager per
+    day, so it goes out once however often the job runs.
+
+    Deliberately not inside `match_events`: that runs only while football is
+    in progress, and the moment this needs is the one just after the last
+    match of the day stops being in progress.
+    """
+    if not push.configured():
+        return {"notices": 0, "why": "push not configured"}
+    gw = engine.live_gameweek()
+    if not gw:
+        return {"notices": 0, "why": "no live gameweek"}
+    number = gw["gameweek"]
+
+    day = engine.days_football(number, now=now)
+    if not day["fixtures"]:
+        return {"notices": 0, "why": "no football today"}
+    if not day["all_finished"]:
+        return {"notices": 0, "why": "today's matches are still on"}
+
+    stamp = (now or datetime.now(timezone.utc)).date().isoformat()
+    kind = f"day:{number}:{stamp}"
+    # Nobody to tell is not the same as nothing to say: claiming it here
+    # would mean a manager who turns notifications on an hour later has
+    # already "had" today's summary.
+    waiting = [m for m in db.managers()
+               if not db.notice_already_sent(kind, number, m["key"])
+               and db.push_subscriptions(m["key"], wanting="want_daily")]
+    if not waiting:
+        return {"notices": 0, "why": "nobody to tell", "gameweek": number}
+
+    fixtures, error = live.fetch(number)
+    if error and not fixtures:
+        return {"notices": 0, "why": error}
+
+    season = engine.season()
+    rnd = next((r for r in season.get("rounds") or []
+                if r["gameweek"] == number), None)
+    if not rnd:
+        # The round's football has been played but the app has not scored it
+        # yet. Quoting a score from the round before would be worse than
+        # saying nothing, and nothing is claimed, so the next run can send it.
+        return {"notices": 0, "why": f"gameweek {number} is not scored yet"}
+    standing = {}
+    for m in rnd.get("matches") or []:
+        standing[m["home_key"]] = (m["home_score"], m["away_key"], m["away_score"])
+        standing[m["away_key"]] = (m["away_score"], m["home_key"], m["home_score"])
+
+    names = engine.player_names()
+    squads = engine.market(number, db.trades(), db.transactions())["squads"]
+    sent = 0
+    for manager in waiting:
+        key = manager["key"]
+        if key not in standing:
+            continue                      # no fixture this round, nothing to say
+        mine, them, theirs = standing[key]
+        got = _day_events(fixtures, day["ids"],
+                          {p["id"] for p in squads.get(key, [])}, names)
+        db.record_notice(kind, number, key)
+        did = _as_sentence(got) or "Nothing from your lot today."
+        to_manager(
+            key, f"{key} {mine}–{theirs} {them}",
+            f"After {day['played_in_round']} of {day['in_round']} games in "
+            f"GW{number}. {did}",
+            url="/week", tag=f"day-{number}-{stamp}", wanting="want_daily")
+        sent += 1
+
+    return {"notices": sent, "gameweek": number, "day": stamp}
 
 
 # ── What your players are doing, while they are doing it ───────────────────
