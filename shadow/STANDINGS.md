@@ -11,20 +11,20 @@ of the real season.
 
 | # | Team | P | W | D | L | PF | PA | Pts |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 1 | Quantum of Szobos | 6 | 5 | 0 | 1 | 264 | 202 | **15** |
-| 2 | You HallWhite mate? | 6 | 5 | 0 | 1 | 294 | 245 | **15** |
+| 1 | Quantum of Szobos | 6 | 5 | 0 | 1 | 266 | 202 | **15** |
+| 2 | You HallWhite mate? | 6 | 5 | 0 | 1 | 295 | 246 | **15** |
 | 3 | Meet me on the Roefs | 6 | 5 | 0 | 1 | 247 | 211 | **15** |
 | 4 | ThunderBijol | 6 | 4 | 0 | 2 | 229 | 187 | **12** |
-| 5 | Isakly | 6 | 4 | 0 | 2 | 265 | 224 | **12** |
-| 6 | Brobbey'sGonnaGetYa! | 6 | 4 | 0 | 2 | 254 | 240 | **12** |
-| 7 | Joao and Silent Bobb | 6 | 3 | 1 | 2 | 246 | 215 | **10** |
+| 5 | Isakly | 6 | 4 | 0 | 2 | 265 | 235 | **12** |
+| 6 | Brobbey'sGonnaGetYa! | 6 | 4 | 0 | 2 | 257 | 253 | **12** |
+| 7 | Joao and Silent Bobb | 6 | 3 | 1 | 2 | 257 | 215 | **10** |
 | 8 | The Gyokfather | 6 | 3 | 0 | 3 | 240 | 264 | **9** |
-| 9 | Palmer Sutra | 6 | 2 | 0 | 4 | 205 | 241 | **6** |
+| 9 | Palmer Sutra | 6 | 2 | 0 | 4 | 218 | 244 | **6** |
 | 10 | Becker Call Saul | 6 | 2 | 0 | 4 | 227 | 272 | **6** |
-| 11 | For Beto o For Wirtz | 6 | 1 | 2 | 3 | 202 | 230 | **5** |
+| 11 | For Beto o For Wirtz | 6 | 1 | 2 | 3 | 203 | 231 | **5** |
 | 12 | La Prima Dimwit | 6 | 1 | 1 | 4 | 219 | 241 | **4** |
 | 13 | Quantum of Tzolis | 6 | 1 | 0 | 5 | 201 | 249 | **3** |
-| 14 | License to Kelleher | 6 | 0 | 0 | 6 | 190 | 262 | **0** |
+| 14 | License to Kelleher | 6 | 0 | 0 | 6 | 190 | 264 | **0** |
 
 ### Gameweek 1
 
@@ -102,10 +102,10 @@ of the real season.
 
 | Home | | Away |
 |---|:--:|---|
-| Quantum of Szobos | **51 - 18** | License to Kelleher |
-| Palmer Sutra | **17 - 28** | Brobbey'sGonnaGetYa! |
+| Quantum of Szobos | **53 - 18** | License to Kelleher |
+| Palmer Sutra | **30 - 31** | Brobbey'sGonnaGetYa! |
 | Quantum of Tzolis | **28 - 30** | ThunderBijol |
 | Becker Call Saul | **33 - 37** | Meet me on the Roefs |
 | La Prima Dimwit | **38 - 45** | The Gyokfather |
-| Joao and Silent Bobb | **49 - 21** | Isakly |
-| You HallWhite mate? | **53 - 26** | For Beto o For Wirtz |
+| Joao and Silent Bobb | **60 - 21** | Isakly |
+| You HallWhite mate? | **54 - 27** | For Beto o For Wirtz |
