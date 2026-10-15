@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-14T09:59:15Z",
+  "fpl_baked_at": "2026-10-15T09:40:29Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -2970,7 +2970,7 @@
    "display": "Kluivert",
    "position": "MID",
    "current_club": "BOU",
-   "status": "i",
+   "status": "d",
    "last_season_points": 15,
    "xgi": "1.07",
    "penalties": false,
@@ -9273,7 +9273,7 @@
    "display": "Struijk",
    "position": "DEF",
    "current_club": "BHA",
-   "status": "s",
+   "status": "a",
    "last_season_points": 5,
    "xgi": "0.32",
    "penalties": false,
