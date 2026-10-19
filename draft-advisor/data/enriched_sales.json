@@ -1700,8 +1700,8 @@
   "player": "Thiago Silva",
   "club": "CHE",
   "cost": 0.75,
-  "fpl_id": 106,
-  "fpl_name": "Thiago",
+  "fpl_id": 566,
+  "fpl_name": "Silva",
   "points_that_season": null
  },
  {
@@ -2679,9 +2679,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 3.25,
-  "fpl_id": 377,
-  "fpl_name": "Munoz",
-  "points_that_season": null
+  "fpl_id": 201,
+  "fpl_name": "Mu\u00f1oz",
+  "points_that_season": 142
  },
  {
   "season": "2024-25",
@@ -4989,9 +4989,9 @@
   "player": "Munoz",
   "club": "CRY",
   "cost": 2.75,
-  "fpl_id": 377,
-  "fpl_name": "Munoz",
-  "points_that_season": null
+  "fpl_id": 201,
+  "fpl_name": "Mu\u00f1oz",
+  "points_that_season": 136
  },
  {
   "season": "2025-26",
