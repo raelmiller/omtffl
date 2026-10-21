@@ -112,7 +112,7 @@ of the real season.
 
 ### Gameweek 7
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
