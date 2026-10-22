@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-10-21T09:53:11Z",
+  "fpl_baked_at": "2026-10-22T09:54:00Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 261
@@ -153,7 +153,7 @@
    "display": "Saka",
    "position": "MID",
    "current_club": "ARS",
-   "status": "a",
+   "status": "d",
    "last_season_points": 37,
    "xgi": "4.83",
    "penalties": true,
@@ -1368,7 +1368,7 @@
    "display": "Gibbs-White",
    "position": "MID",
    "current_club": "NFO",
-   "status": "d",
+   "status": "a",
    "last_season_points": 30,
    "xgi": "3.52",
    "penalties": true,
@@ -2793,7 +2793,7 @@
    "display": "Chilwell",
    "position": "DEF",
    "current_club": "CRY",
-   "status": "i",
+   "status": "a",
    "last_season_points": 8,
    "xgi": "0.28",
    "penalties": false,
@@ -3258,7 +3258,7 @@
    "display": "Maatsen",
    "position": "DEF",
    "current_club": "AVL",
-   "status": "d",
+   "status": "a",
    "last_season_points": 9,
    "xgi": "0.73",
    "penalties": false,
