@@ -1194,9 +1194,9 @@
   "player": "Max Lowe",
   "club": "SHU",
   "cost": null,
-  "fpl_id": null,
-  "fpl_name": null,
-  "points_that_season": null
+  "fpl_id": 669,
+  "fpl_name": "Sharman-Lowe",
+  "points_that_season": 0
  },
  {
   "season": "2023-24",
@@ -4824,9 +4824,9 @@
   "player": "Van Hecke",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 356,
-  "fpl_name": "Virgil",
-  "points_that_season": 175
+  "fpl_id": 112,
+  "fpl_name": "Van Hecke",
+  "points_that_season": 148
  },
  {
   "season": "2025-26",
