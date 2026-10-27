@@ -126,7 +126,7 @@ of the real season.
 
 ### Gameweek 8
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
