@@ -4428,9 +4428,9 @@
   "player": "Cunha",
   "club": "WOL",
   "cost": 7.0,
-  "fpl_id": 428,
-  "fpl_name": "Cunha",
-  "points_that_season": 178
+  "fpl_id": 474,
+  "fpl_name": "Jair Cunha",
+  "points_that_season": null
  },
  {
   "season": "2024-25",
@@ -4824,9 +4824,9 @@
   "player": "Van Hecke",
   "club": "BRI",
   "cost": 0.25,
-  "fpl_id": 356,
-  "fpl_name": "Virgil",
-  "points_that_season": 175
+  "fpl_id": 112,
+  "fpl_name": "Van Hecke",
+  "points_that_season": 148
  },
  {
   "season": "2025-26",
@@ -5781,9 +5781,9 @@
   "player": "Martinez",
   "club": "AVL",
   "cost": 1.25,
-  "fpl_id": 28,
+  "fpl_id": 419,
   "fpl_name": "Martinez",
-  "points_that_season": 120
+  "points_that_season": 51
  },
  {
   "season": "2025-26",
