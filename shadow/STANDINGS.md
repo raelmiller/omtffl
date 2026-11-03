@@ -140,7 +140,7 @@ of the real season.
 
 ### Gameweek 9
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
