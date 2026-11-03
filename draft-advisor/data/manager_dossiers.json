@@ -4749,8 +4749,8 @@
     4
    ]
   ],
-  "pts_per_million": 21.3,
-  "total_points_bought": 3201,
+  "pts_per_million": 21.8,
+  "total_points_bought": 3265,
   "max_ever_bid": 16.0,
   "seasons": {
    "2023-24": {
@@ -5077,9 +5077,9 @@
       "player": "Ak\u00e9",
       "club": "MCI",
       "cost": 0.5,
-      "fpl_id": 577,
-      "fpl_name": "Tomiyasu",
-      "points_that_season": 1
+      "fpl_id": 232,
+      "fpl_name": "O'Brien",
+      "points_that_season": 65
      },
      {
       "season": "2024-25",
@@ -5116,7 +5116,7 @@
      }
     ],
     "spend": 50.0,
-    "points_bought": 1057,
+    "points_bought": 1121,
     "points_matched_players": 12,
     "best_value": {
      "season": "2024-25",
