@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-04T12:51:11Z",
+  "fpl_baked_at": "2026-11-05T13:00:11Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -2052,7 +2052,7 @@
    "display": "Saliba",
    "position": "DEF",
    "current_club": "ARS",
-   "status": "d",
+   "status": "a",
    "last_season_points": 0,
    "xgi": "0.00",
    "penalties": false,
