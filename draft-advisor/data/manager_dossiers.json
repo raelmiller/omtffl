@@ -5760,6 +5760,623 @@
   }
  },
  {
+  "name": "Oli",
+  "years": [
+   "2023-24",
+   "2024-25",
+   "2025-26"
+  ],
+  "avg_spend": 48.42,
+  "top3_share": 41.0,
+  "pos_split": {
+   "GK": 1.4,
+   "MID": 62.3,
+   "DEF": 13.1,
+   "FWD": 23.2
+  },
+  "fav_clubs": [
+   [
+    "CHE",
+    5
+   ],
+   [
+    "TOT",
+    5
+   ],
+   [
+    "AVL",
+    4
+   ]
+  ],
+  "pts_per_million": 19.4,
+  "total_points_bought": 2816,
+  "max_ever_bid": 22.75,
+  "seasons": {
+   "2023-24": {
+    "squad": [
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Alexander Isak",
+      "club": "NEW",
+      "cost": 14.25,
+      "fpl_id": 379,
+      "fpl_name": "Isak",
+      "points_that_season": 172
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "James Maddison",
+      "club": "TOT",
+      "cost": 9.5,
+      "fpl_id": 515,
+      "fpl_name": "Maddison",
+      "points_that_season": 117
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Dejan Kulusevski",
+      "club": "TOT",
+      "cost": 7.0,
+      "fpl_id": 521,
+      "fpl_name": "Kulusevski",
+      "points_that_season": 130
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Eberechi Eze",
+      "club": "CRY",
+      "cost": 6.5,
+      "fpl_id": 14,
+      "fpl_name": "Eze",
+      "points_that_season": 136
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Dominic Solanke",
+      "club": "BOU",
+      "cost": 5.75,
+      "fpl_id": 526,
+      "fpl_name": "Solanke",
+      "points_that_season": 175
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Rico Henry",
+      "club": "BRE",
+      "cost": 1.5,
+      "fpl_id": 89,
+      "fpl_name": "Henry",
+      "points_that_season": 13
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Said Benrahma",
+      "club": "WHU",
+      "cost": 1.25,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Ibrahima Konate",
+      "club": "LIV",
+      "cost": 1.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Moussa Diaby",
+      "club": "AVL",
+      "cost": 1.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Thiago Silva",
+      "club": "CHE",
+      "cost": 0.75,
+      "fpl_id": 566,
+      "fpl_name": "Silva",
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "GK",
+      "player": "Emiliano Martinez",
+      "club": "AVL",
+      "cost": 0.5,
+      "fpl_id": 28,
+      "fpl_name": "Martinez",
+      "points_that_season": 115
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Antonee Robinson",
+      "club": "FUL",
+      "cost": 0.5,
+      "fpl_id": 254,
+      "fpl_name": "Robinson",
+      "points_that_season": 104
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Dwight McNeil",
+      "club": "EVE",
+      "cost": 0.5,
+      "fpl_id": 241,
+      "fpl_name": "McNeil",
+      "points_that_season": 124
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Danilo",
+      "club": "NFO",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2023-24",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Michael Keane",
+      "club": "EVE",
+      "cost": 0.0,
+      "fpl_id": 231,
+      "fpl_name": "Keane",
+      "points_that_season": 18
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 1104,
+    "points_matched_players": 10,
+    "best_value": {
+     "season": "2023-24",
+     "manager": "Oli",
+     "position": "MID",
+     "player": "Dwight McNeil",
+     "club": "EVE",
+     "cost": 0.5,
+     "fpl_id": 241,
+     "fpl_name": "McNeil",
+     "points_that_season": 124
+    },
+    "biggest_bust": {
+     "season": "2023-24",
+     "manager": "Oli",
+     "position": "FWD",
+     "player": "Alexander Isak",
+     "club": "NEW",
+     "cost": 14.25,
+     "fpl_id": 379,
+     "fpl_name": "Isak",
+     "points_that_season": 172
+    }
+   },
+   "2024-25": {
+    "squad": [
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Fernandes",
+      "club": "MUN",
+      "cost": 16.75,
+      "fpl_id": 426,
+      "fpl_name": "B.Fernandes",
+      "points_that_season": 174
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Alexander-Arnold",
+      "club": "LIV",
+      "cost": 9.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "N. Jackson",
+      "club": "CHE",
+      "cost": 7.25,
+      "fpl_id": 166,
+      "fpl_name": "N.Jackson",
+      "points_that_season": 121
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Udogie",
+      "club": "TOT",
+      "cost": 4.25,
+      "fpl_id": 506,
+      "fpl_name": "Udogie",
+      "points_that_season": 43
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Summerville",
+      "club": "WHU",
+      "cost": 2.5,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Wilson",
+      "club": "NEW",
+      "cost": 2.0,
+      "fpl_id": 260,
+      "fpl_name": "Wilson",
+      "points_that_season": 78
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "GK",
+      "player": "Neto",
+      "club": "BOU",
+      "cost": 1.25,
+      "fpl_id": 156,
+      "fpl_name": "Neto",
+      "points_that_season": 104
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "B. Johnson",
+      "club": "TOT",
+      "cost": 1.0,
+      "fpl_id": 209,
+      "fpl_name": "Johnson",
+      "points_that_season": 137
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Hurst",
+      "club": "IPS",
+      "cost": 0.75,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Dewsbury-Hall",
+      "club": "CHE",
+      "cost": 0.5,
+      "fpl_id": 449,
+      "fpl_name": "Hall",
+      "points_that_season": 102
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "GK",
+      "player": "Travers",
+      "club": "BOU",
+      "cost": 0.0,
+      "fpl_id": 227,
+      "fpl_name": "Travers",
+      "points_that_season": 19
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Ricardo Pereira",
+      "club": "LEI",
+      "cost": 0.0,
+      "fpl_id": 566,
+      "fpl_name": "Silva",
+      "points_that_season": null
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Aina",
+      "club": "NFO",
+      "cost": 0.0,
+      "fpl_id": 473,
+      "fpl_name": "Aina",
+      "points_that_season": 128
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Hall",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": 449,
+      "fpl_name": "Hall",
+      "points_that_season": 102
+     },
+     {
+      "season": "2024-25",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Doucoure",
+      "club": "EVE",
+      "cost": 0.0,
+      "fpl_id": 218,
+      "fpl_name": "Doucour\u00e9",
+      "points_that_season": 19
+     }
+    ],
+    "spend": 45.25,
+    "points_bought": 1027,
+    "points_matched_players": 11,
+    "best_value": {
+     "season": "2024-25",
+     "manager": "Oli",
+     "position": "DEF",
+     "player": "Aina",
+     "club": "NFO",
+     "cost": 0.0,
+     "fpl_id": 473,
+     "fpl_name": "Aina",
+     "points_that_season": 128
+    },
+    "biggest_bust": {
+     "season": "2024-25",
+     "manager": "Oli",
+     "position": "DEF",
+     "player": "Udogie",
+     "club": "TOT",
+     "cost": 4.25,
+     "fpl_id": 506,
+     "fpl_name": "Udogie",
+     "points_that_season": 43
+    }
+   },
+   "2025-26": {
+    "squad": [
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Salah",
+      "club": "LIV",
+      "cost": 22.75,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Palmer",
+      "club": "CHE",
+      "cost": 20.0,
+      "fpl_id": 154,
+      "fpl_name": "Palmer",
+      "points_that_season": 114
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Romero",
+      "club": "TOT",
+      "cost": 1.25,
+      "fpl_id": 500,
+      "fpl_name": "Romero",
+      "points_that_season": 91
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Minteh",
+      "club": "BRI",
+      "cost": 1.25,
+      "fpl_id": 122,
+      "fpl_name": "Minteh",
+      "points_that_season": 117
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Kostoulas",
+      "club": "BRI",
+      "cost": 1.25,
+      "fpl_id": 138,
+      "fpl_name": "Kostoulas",
+      "points_that_season": 35
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Ramsey",
+      "club": "AVL",
+      "cost": 1.0,
+      "fpl_id": 456,
+      "fpl_name": "J.Ramsey",
+      "points_that_season": 62
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Fleming",
+      "club": "BUR",
+      "cost": 1.0,
+      "fpl_id": 640,
+      "fpl_name": "Flemming",
+      "points_that_season": 99
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Maatsen",
+      "club": "AVL",
+      "cost": 0.5,
+      "fpl_id": 36,
+      "fpl_name": "Maatsen",
+      "points_that_season": 54
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "FWD",
+      "player": "Hojlund",
+      "club": "MUN",
+      "cost": 0.5,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "GK",
+      "player": "Onana",
+      "club": "MUN",
+      "cost": 0.25,
+      "fpl_id": 48,
+      "fpl_name": "Onana",
+      "points_that_season": 76
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Totti",
+      "club": "WOL",
+      "cost": 0.25,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "GK",
+      "player": "Ramsdale",
+      "club": "NEW",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Walker",
+      "club": "BUR",
+      "cost": 0.0,
+      "fpl_id": null,
+      "fpl_name": null,
+      "points_that_season": null
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "DEF",
+      "player": "Hato",
+      "club": "CHE",
+      "cost": 0.0,
+      "fpl_id": 148,
+      "fpl_name": "Hato",
+      "points_that_season": 19
+     },
+     {
+      "season": "2025-26",
+      "manager": "Oli",
+      "position": "MID",
+      "player": "Dibling",
+      "club": "EVE",
+      "cost": 0.0,
+      "fpl_id": 245,
+      "fpl_name": "Dibling",
+      "points_that_season": 18
+     }
+    ],
+    "spend": 50.0,
+    "points_bought": 685,
+    "points_matched_players": 10,
+    "best_value": {
+     "season": "2025-26",
+     "manager": "Oli",
+     "position": "GK",
+     "player": "Onana",
+     "club": "MUN",
+     "cost": 0.25,
+     "fpl_id": 48,
+     "fpl_name": "Onana",
+     "points_that_season": 76
+    },
+    "biggest_bust": {
+     "season": "2025-26",
+     "manager": "Oli",
+     "position": "MID",
+     "player": "Palmer",
+     "club": "CHE",
+     "cost": 20.0,
+     "fpl_id": 154,
+     "fpl_name": "Palmer",
+     "points_that_season": 114
+    }
+   }
+  }
+ },
+ {
   "name": "Simon",
   "years": [
    "2024-25",
@@ -6177,623 +6794,6 @@
      "fpl_id": 26,
      "fpl_name": "Havertz",
      "points_that_season": 36
-    }
-   }
-  }
- },
- {
-  "name": "Oli",
-  "years": [
-   "2023-24",
-   "2024-25",
-   "2025-26"
-  ],
-  "avg_spend": 48.42,
-  "top3_share": 41.0,
-  "pos_split": {
-   "GK": 1.4,
-   "MID": 62.3,
-   "DEF": 13.1,
-   "FWD": 23.2
-  },
-  "fav_clubs": [
-   [
-    "CHE",
-    5
-   ],
-   [
-    "TOT",
-    5
-   ],
-   [
-    "AVL",
-    4
-   ]
-  ],
-  "pts_per_million": 18.8,
-  "total_points_bought": 2732,
-  "max_ever_bid": 22.75,
-  "seasons": {
-   "2023-24": {
-    "squad": [
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Alexander Isak",
-      "club": "NEW",
-      "cost": 14.25,
-      "fpl_id": 379,
-      "fpl_name": "Isak",
-      "points_that_season": 172
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "James Maddison",
-      "club": "TOT",
-      "cost": 9.5,
-      "fpl_id": 515,
-      "fpl_name": "Maddison",
-      "points_that_season": 117
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Dejan Kulusevski",
-      "club": "TOT",
-      "cost": 7.0,
-      "fpl_id": 521,
-      "fpl_name": "Kulusevski",
-      "points_that_season": 130
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Eberechi Eze",
-      "club": "CRY",
-      "cost": 6.5,
-      "fpl_id": 14,
-      "fpl_name": "Eze",
-      "points_that_season": 136
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Dominic Solanke",
-      "club": "BOU",
-      "cost": 5.75,
-      "fpl_id": 526,
-      "fpl_name": "Solanke",
-      "points_that_season": 175
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Rico Henry",
-      "club": "BRE",
-      "cost": 1.5,
-      "fpl_id": 89,
-      "fpl_name": "Henry",
-      "points_that_season": 13
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Said Benrahma",
-      "club": "WHU",
-      "cost": 1.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Ibrahima Konate",
-      "club": "LIV",
-      "cost": 1.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Moussa Diaby",
-      "club": "AVL",
-      "cost": 1.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Thiago Silva",
-      "club": "CHE",
-      "cost": 0.75,
-      "fpl_id": 566,
-      "fpl_name": "Silva",
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "GK",
-      "player": "Emiliano Martinez",
-      "club": "AVL",
-      "cost": 0.5,
-      "fpl_id": 28,
-      "fpl_name": "Martinez",
-      "points_that_season": 115
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Antonee Robinson",
-      "club": "FUL",
-      "cost": 0.5,
-      "fpl_id": 254,
-      "fpl_name": "Robinson",
-      "points_that_season": 104
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Dwight McNeil",
-      "club": "EVE",
-      "cost": 0.5,
-      "fpl_id": 241,
-      "fpl_name": "McNeil",
-      "points_that_season": 124
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Danilo",
-      "club": "NFO",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2023-24",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Michael Keane",
-      "club": "EVE",
-      "cost": 0.0,
-      "fpl_id": 231,
-      "fpl_name": "Keane",
-      "points_that_season": 18
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 1104,
-    "points_matched_players": 10,
-    "best_value": {
-     "season": "2023-24",
-     "manager": "Oli",
-     "position": "MID",
-     "player": "Dwight McNeil",
-     "club": "EVE",
-     "cost": 0.5,
-     "fpl_id": 241,
-     "fpl_name": "McNeil",
-     "points_that_season": 124
-    },
-    "biggest_bust": {
-     "season": "2023-24",
-     "manager": "Oli",
-     "position": "FWD",
-     "player": "Alexander Isak",
-     "club": "NEW",
-     "cost": 14.25,
-     "fpl_id": 379,
-     "fpl_name": "Isak",
-     "points_that_season": 172
-    }
-   },
-   "2024-25": {
-    "squad": [
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Fernandes",
-      "club": "MUN",
-      "cost": 16.75,
-      "fpl_id": 426,
-      "fpl_name": "B.Fernandes",
-      "points_that_season": 174
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Alexander-Arnold",
-      "club": "LIV",
-      "cost": 9.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "N. Jackson",
-      "club": "CHE",
-      "cost": 7.25,
-      "fpl_id": 166,
-      "fpl_name": "N.Jackson",
-      "points_that_season": 121
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Udogie",
-      "club": "TOT",
-      "cost": 4.25,
-      "fpl_id": 506,
-      "fpl_name": "Udogie",
-      "points_that_season": 43
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Summerville",
-      "club": "WHU",
-      "cost": 2.5,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Wilson",
-      "club": "NEW",
-      "cost": 2.0,
-      "fpl_id": 260,
-      "fpl_name": "Wilson",
-      "points_that_season": 78
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "GK",
-      "player": "Neto",
-      "club": "BOU",
-      "cost": 1.25,
-      "fpl_id": 156,
-      "fpl_name": "Neto",
-      "points_that_season": 104
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "B. Johnson",
-      "club": "TOT",
-      "cost": 1.0,
-      "fpl_id": 209,
-      "fpl_name": "Johnson",
-      "points_that_season": 137
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Hurst",
-      "club": "IPS",
-      "cost": 0.75,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Dewsbury-Hall",
-      "club": "CHE",
-      "cost": 0.5,
-      "fpl_id": 236,
-      "fpl_name": "Dewsbury-Hall",
-      "points_that_season": 18
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "GK",
-      "player": "Travers",
-      "club": "BOU",
-      "cost": 0.0,
-      "fpl_id": 227,
-      "fpl_name": "Travers",
-      "points_that_season": 19
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Ricardo Pereira",
-      "club": "LEI",
-      "cost": 0.0,
-      "fpl_id": 566,
-      "fpl_name": "Silva",
-      "points_that_season": null
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Aina",
-      "club": "NFO",
-      "cost": 0.0,
-      "fpl_id": 473,
-      "fpl_name": "Aina",
-      "points_that_season": 128
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Hall",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": 449,
-      "fpl_name": "Hall",
-      "points_that_season": 102
-     },
-     {
-      "season": "2024-25",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Doucoure",
-      "club": "EVE",
-      "cost": 0.0,
-      "fpl_id": 218,
-      "fpl_name": "Doucour\u00e9",
-      "points_that_season": 19
-     }
-    ],
-    "spend": 45.25,
-    "points_bought": 943,
-    "points_matched_players": 11,
-    "best_value": {
-     "season": "2024-25",
-     "manager": "Oli",
-     "position": "DEF",
-     "player": "Aina",
-     "club": "NFO",
-     "cost": 0.0,
-     "fpl_id": 473,
-     "fpl_name": "Aina",
-     "points_that_season": 128
-    },
-    "biggest_bust": {
-     "season": "2024-25",
-     "manager": "Oli",
-     "position": "DEF",
-     "player": "Udogie",
-     "club": "TOT",
-     "cost": 4.25,
-     "fpl_id": 506,
-     "fpl_name": "Udogie",
-     "points_that_season": 43
-    }
-   },
-   "2025-26": {
-    "squad": [
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Salah",
-      "club": "LIV",
-      "cost": 22.75,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Palmer",
-      "club": "CHE",
-      "cost": 20.0,
-      "fpl_id": 154,
-      "fpl_name": "Palmer",
-      "points_that_season": 114
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Romero",
-      "club": "TOT",
-      "cost": 1.25,
-      "fpl_id": 500,
-      "fpl_name": "Romero",
-      "points_that_season": 91
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Minteh",
-      "club": "BRI",
-      "cost": 1.25,
-      "fpl_id": 122,
-      "fpl_name": "Minteh",
-      "points_that_season": 117
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Kostoulas",
-      "club": "BRI",
-      "cost": 1.25,
-      "fpl_id": 138,
-      "fpl_name": "Kostoulas",
-      "points_that_season": 35
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Ramsey",
-      "club": "AVL",
-      "cost": 1.0,
-      "fpl_id": 456,
-      "fpl_name": "J.Ramsey",
-      "points_that_season": 62
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Fleming",
-      "club": "BUR",
-      "cost": 1.0,
-      "fpl_id": 640,
-      "fpl_name": "Flemming",
-      "points_that_season": 99
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Maatsen",
-      "club": "AVL",
-      "cost": 0.5,
-      "fpl_id": 36,
-      "fpl_name": "Maatsen",
-      "points_that_season": 54
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "FWD",
-      "player": "Hojlund",
-      "club": "MUN",
-      "cost": 0.5,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "GK",
-      "player": "Onana",
-      "club": "MUN",
-      "cost": 0.25,
-      "fpl_id": 48,
-      "fpl_name": "Onana",
-      "points_that_season": 76
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Totti",
-      "club": "WOL",
-      "cost": 0.25,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "GK",
-      "player": "Ramsdale",
-      "club": "NEW",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Walker",
-      "club": "BUR",
-      "cost": 0.0,
-      "fpl_id": null,
-      "fpl_name": null,
-      "points_that_season": null
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "DEF",
-      "player": "Hato",
-      "club": "CHE",
-      "cost": 0.0,
-      "fpl_id": 148,
-      "fpl_name": "Hato",
-      "points_that_season": 19
-     },
-     {
-      "season": "2025-26",
-      "manager": "Oli",
-      "position": "MID",
-      "player": "Dibling",
-      "club": "EVE",
-      "cost": 0.0,
-      "fpl_id": 245,
-      "fpl_name": "Dibling",
-      "points_that_season": 18
-     }
-    ],
-    "spend": 50.0,
-    "points_bought": 685,
-    "points_matched_players": 10,
-    "best_value": {
-     "season": "2025-26",
-     "manager": "Oli",
-     "position": "GK",
-     "player": "Onana",
-     "club": "MUN",
-     "cost": 0.25,
-     "fpl_id": 48,
-     "fpl_name": "Onana",
-     "points_that_season": 76
-    },
-    "biggest_bust": {
-     "season": "2025-26",
-     "manager": "Oli",
-     "position": "MID",
-     "player": "Palmer",
-     "club": "CHE",
-     "cost": 20.0,
-     "fpl_id": 154,
-     "fpl_name": "Palmer",
-     "points_that_season": 114
     }
    }
   }
@@ -8288,8 +8288,8 @@
     3
    ]
   ],
-  "pts_per_million": 12.9,
-  "total_points_bought": 1929,
+  "pts_per_million": 13.8,
+  "total_points_bought": 2077,
   "max_ever_bid": 29.0,
   "seasons": {
    "2023-24": {
@@ -8733,9 +8733,9 @@
       "player": "Van Hecke",
       "club": "BRI",
       "cost": 0.25,
-      "fpl_id": 175,
-      "fpl_name": "van Ewijk",
-      "points_that_season": null
+      "fpl_id": 112,
+      "fpl_name": "Van Hecke",
+      "points_that_season": 148
      },
      {
       "season": "2025-26",
@@ -8849,8 +8849,8 @@
      }
     ],
     "spend": 50.0,
-    "points_bought": 776,
-    "points_matched_players": 8,
+    "points_bought": 924,
+    "points_matched_players": 9,
     "best_value": {
      "season": "2025-26",
      "manager": "Ciaran",
