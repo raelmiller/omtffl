@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-09T13:42:13Z",
+  "fpl_baked_at": "2026-11-10T13:17:57Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -1395,7 +1395,7 @@
    "display": "Virgil",
    "position": "DEF",
    "current_club": "LIV",
-   "status": "a",
+   "status": "d",
    "last_season_points": 43,
    "xgi": "0.74",
    "penalties": false,
