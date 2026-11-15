@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-14T11:59:09Z",
+  "fpl_baked_at": "2026-11-15T12:34:03Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -6189,7 +6189,7 @@
    "display": "Cash",
    "position": "DEF",
    "current_club": "AVL",
-   "status": "a",
+   "status": "d",
    "last_season_points": 18,
    "xgi": "0.43",
    "penalties": false,
