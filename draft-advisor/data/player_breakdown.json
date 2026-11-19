@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-18T13:43:48Z",
+  "fpl_baked_at": "2026-11-19T14:11:51Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -9162,7 +9162,7 @@
    "display": "Xhaka",
    "position": "MID",
    "current_club": "SUN",
-   "status": "d",
+   "status": "i",
    "last_season_points": 33,
    "xgi": "1.97",
    "penalties": false,
