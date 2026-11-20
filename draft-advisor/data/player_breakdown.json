@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-19T14:11:51Z",
+  "fpl_baked_at": "2026-11-20T13:54:27Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -2883,7 +2883,7 @@
    "display": "Smith Rowe",
    "position": "MID",
    "current_club": "FUL",
-   "status": "a",
+   "status": "i",
    "last_season_points": 3,
    "xgi": "0.08",
    "penalties": false,
@@ -3678,7 +3678,7 @@
    "display": "Hudson-Odoi",
    "position": "MID",
    "current_club": "NFO",
-   "status": "a",
+   "status": "i",
    "last_season_points": 4,
    "xgi": "0.19",
    "penalties": false,
@@ -5157,7 +5157,7 @@
    "display": "Caicedo",
    "position": "MID",
    "current_club": "CHE",
-   "status": "a",
+   "status": "d",
    "last_season_points": 14,
    "xgi": "0.14",
    "penalties": false,
@@ -9267,7 +9267,7 @@
    "display": "Struijk",
    "position": "DEF",
    "current_club": "BHA",
-   "status": "i",
+   "status": "a",
    "last_season_points": 5,
    "xgi": "0.32",
    "penalties": false,
