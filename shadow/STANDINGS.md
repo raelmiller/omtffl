@@ -5,26 +5,26 @@ FPL's totals. The XI is chosen in hindsight — the best legal 11 from
 each squad — so totals run hot for everyone. Comparative, not a replay
 of the real season.
 
-*Updated automatically. 10 gameweek(s) scored.*
+*Updated automatically. 11 gameweek(s) scored.*
 
 ## H2H table
 
 | # | Team | P | W | D | L | PF | PA | Pts |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 1 | Quantum of Szobos | 10 | 8 | 1 | 1 | 519 | 346 | **25** |
-| 2 | You HallWhite mate? | 10 | 8 | 0 | 2 | 502 | 367 | **24** |
-| 3 | Meet me on the Roefs | 10 | 7 | 0 | 3 | 363 | 354 | **21** |
-| 4 | Isakly | 10 | 6 | 1 | 3 | 447 | 385 | **19** |
-| 5 | ThunderBijol | 10 | 6 | 0 | 4 | 376 | 338 | **18** |
-| 6 | Becker Call Saul | 10 | 6 | 0 | 4 | 346 | 347 | **18** |
-| 7 | Brobbey'sGonnaGetYa! | 10 | 5 | 0 | 5 | 368 | 399 | **15** |
-| 8 | The Gyokfather | 10 | 5 | 0 | 5 | 409 | 456 | **15** |
-| 9 | For Beto o For Wirtz | 10 | 3 | 2 | 5 | 335 | 392 | **11** |
-| 10 | Joao and Silent Bobb | 10 | 3 | 1 | 6 | 362 | 342 | **10** |
-| 11 | La Prima Dimwit | 10 | 3 | 1 | 6 | 351 | 387 | **10** |
-| 12 | Palmer Sutra | 10 | 3 | 1 | 6 | 330 | 387 | **10** |
-| 13 | License to Kelleher | 10 | 2 | 0 | 8 | 295 | 385 | **6** |
-| 14 | Quantum of Tzolis | 10 | 1 | 1 | 8 | 303 | 421 | **4** |
+| 1 | Quantum of Szobos | 11 | 9 | 1 | 1 | 532 | 351 | **28** |
+| 2 | You HallWhite mate? | 11 | 8 | 0 | 3 | 508 | 374 | **24** |
+| 3 | Isakly | 11 | 7 | 1 | 3 | 456 | 391 | **22** |
+| 4 | ThunderBijol | 11 | 7 | 0 | 4 | 391 | 345 | **21** |
+| 5 | Becker Call Saul | 11 | 7 | 0 | 4 | 361 | 359 | **21** |
+| 6 | Meet me on the Roefs | 11 | 7 | 0 | 4 | 368 | 367 | **21** |
+| 7 | Brobbey'sGonnaGetYa! | 11 | 5 | 0 | 6 | 374 | 408 | **15** |
+| 8 | The Gyokfather | 11 | 5 | 0 | 6 | 416 | 471 | **15** |
+| 9 | Palmer Sutra | 11 | 4 | 1 | 6 | 337 | 393 | **13** |
+| 10 | For Beto o For Wirtz | 11 | 3 | 2 | 6 | 342 | 402 | **11** |
+| 11 | Joao and Silent Bobb | 11 | 3 | 1 | 7 | 371 | 364 | **10** |
+| 12 | La Prima Dimwit | 11 | 3 | 1 | 7 | 363 | 402 | **10** |
+| 13 | License to Kelleher | 11 | 3 | 0 | 8 | 305 | 392 | **9** |
+| 14 | Quantum of Tzolis | 11 | 2 | 1 | 8 | 325 | 430 | **7** |
 
 ### Gameweek 1
 
@@ -165,3 +165,17 @@ of the real season.
 | You HallWhite mate? | **60 - 26** | ThunderBijol |
 | For Beto o For Wirtz | **40 - 33** | Meet me on the Roefs |
 | Isakly | **54 - 33** | The Gyokfather |
+
+### Gameweek 11
+
+*IN PROGRESS — round not complete*
+
+| Home | | Away |
+|---|:--:|---|
+| Meet me on the Roefs | **5 - 13** | Quantum of Szobos |
+| ThunderBijol | **15 - 7** | The Gyokfather |
+| Brobbey'sGonnaGetYa! | **6 - 9** | Isakly |
+| License to Kelleher | **10 - 7** | For Beto o For Wirtz |
+| Palmer Sutra | **7 - 6** | You HallWhite mate? |
+| Quantum of Tzolis | **22 - 9** | Joao and Silent Bobb |
+| Becker Call Saul | **15 - 12** | La Prima Dimwit |
