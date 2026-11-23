@@ -19,12 +19,12 @@ of the real season.
 | 6 | Becker Call Saul | 11 | 6 | 0 | 5 | 377 | 388 | **18** |
 | 7 | Brobbey'sGonnaGetYa! | 11 | 5 | 0 | 6 | 380 | 437 | **15** |
 | 8 | The Gyokfather | 11 | 5 | 0 | 6 | 439 | 513 | **15** |
-| 9 | For Beto o For Wirtz | 11 | 4 | 2 | 5 | 365 | 414 | **14** |
+| 9 | For Beto o For Wirtz | 11 | 4 | 2 | 5 | 365 | 413 | **14** |
 | 10 | La Prima Dimwit | 11 | 4 | 1 | 6 | 392 | 418 | **13** |
 | 11 | Palmer Sutra | 11 | 4 | 1 | 6 | 370 | 409 | **13** |
 | 12 | Joao and Silent Bobb | 11 | 3 | 1 | 7 | 383 | 393 | **10** |
 | 13 | Quantum of Tzolis | 11 | 2 | 1 | 8 | 354 | 442 | **7** |
-| 14 | License to Kelleher | 11 | 2 | 0 | 9 | 317 | 415 | **6** |
+| 14 | License to Kelleher | 11 | 2 | 0 | 9 | 316 | 415 | **6** |
 
 ### Gameweek 1
 
@@ -175,7 +175,7 @@ of the real season.
 | Meet me on the Roefs | **29 - 42** | Quantum of Szobos |
 | ThunderBijol | **57 - 30** | The Gyokfather |
 | Brobbey'sGonnaGetYa! | **12 - 38** | Isakly |
-| License to Kelleher | **22 - 30** | For Beto o For Wirtz |
+| License to Kelleher | **21 - 30** | For Beto o For Wirtz |
 | Palmer Sutra | **40 - 22** | You HallWhite mate? |
 | Quantum of Tzolis | **51 - 21** | Joao and Silent Bobb |
 | Becker Call Saul | **31 - 41** | La Prima Dimwit |
