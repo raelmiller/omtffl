@@ -168,7 +168,7 @@ of the real season.
 
 ### Gameweek 11
 
-*IN PROGRESS — round not complete*
+*final*
 
 | Home | | Away |
 |---|:--:|---|
