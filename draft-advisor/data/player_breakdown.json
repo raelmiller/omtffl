@@ -1,6 +1,6 @@
 {
  "generated_from": {
-  "fpl_baked_at": "2026-11-25T15:22:25Z",
+  "fpl_baked_at": "2026-11-26T14:48:36Z",
   "sales": 645,
   "unique_players": 390,
   "matched_to_fpl": 262
@@ -2667,7 +2667,7 @@
    "display": "Shaw",
    "position": "DEF",
    "current_club": "MUN",
-   "status": "d",
+   "status": "a",
    "last_season_points": 12,
    "xgi": "0.62",
    "penalties": false,
@@ -3678,7 +3678,7 @@
    "display": "Hudson-Odoi",
    "position": "MID",
    "current_club": "NFO",
-   "status": "i",
+   "status": "a",
    "last_season_points": 4,
    "xgi": "0.19",
    "penalties": false,
